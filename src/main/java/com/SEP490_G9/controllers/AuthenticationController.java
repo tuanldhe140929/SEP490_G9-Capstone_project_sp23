@@ -1,5 +1,8 @@
 package com.SEP490_G9.controllers;
 
+import java.io.IOException;
+
+import org.apache.http.client.ClientProtocolException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 //import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -14,6 +17,7 @@ import com.SEP490_G9.models.AuthResponse;
 import com.SEP490_G9.models.User;
 import com.SEP490_G9.services.AuthService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 //@EnableMethodSecurity(prePostEnabled = true)
@@ -34,8 +38,19 @@ public class AuthenticationController {
 	
 	@RequestMapping(value = "login", method = RequestMethod.POST)
 	public ResponseEntity<?> login(@Valid @RequestBody AuthRequest authRequest) {
+		
 		AuthResponse authResponse = authService.login(authRequest);
+		
 		return ResponseEntity.ok(authResponse);
 
+	}
+	
+	@RequestMapping(value = "loginWithGoogle", method = RequestMethod.POST)
+	public ResponseEntity<?> loginWithGoogle(@RequestBody final String code, HttpServletRequest request)
+			throws ClientProtocolException, IOException {
+		System.out.println(code);
+		AuthResponse authResponse = authService.loginWithGoogle(code, request);
+
+		return ResponseEntity.ok(authResponse);
 	}
 }

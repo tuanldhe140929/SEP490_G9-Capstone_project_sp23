@@ -1,5 +1,7 @@
 package com.SEP490_G9.models;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.*;
@@ -11,11 +13,11 @@ public class Role {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@Column(name = "name")
+	@Column(name = "name", unique = true, nullable = false, insertable = true, updatable = false)
 	private String name;
 
-	@OneToOne(mappedBy = "role")
-	private User user;
+	@OneToMany(mappedBy="role")
+    private List<User> users;
 
 	public Role() {
 		// TODO Auto-generated constructor stub

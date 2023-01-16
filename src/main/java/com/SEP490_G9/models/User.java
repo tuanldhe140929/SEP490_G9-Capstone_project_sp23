@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
 @Entity
-@Table(name="users")
+@Table(name = "users")
 public class User implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -14,7 +14,7 @@ public class User implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@Column(name = "email")
+	@Column(name = "email", nullable = false, unique = true)
 	@Email(message = "invalid format")
 	@NotBlank(message = "email can't be blank")
 	@Size(min = 5, max = 30)
@@ -26,15 +26,15 @@ public class User implements Serializable {
 	@Size(min = 8, max = 100)
 	private String password;
 
-	@Column(name = "username")
+	@Column(name = "username", nullable = true, unique = true)
 	private String username;
 	@Column(name = "enabled")
 	private boolean enabled = true;
 	@Column(name = "verified")
 	private boolean verified = false;
 
-	@OneToOne()
-	@JoinColumn(name = "role_id", referencedColumnName = "id")
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "role_id", unique = false, nullable = false)
 	private Role role;
 
 	public User() {
