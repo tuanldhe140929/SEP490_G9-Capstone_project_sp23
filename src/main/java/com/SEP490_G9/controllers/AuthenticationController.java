@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.SEP490_G9.models.AuthRequest;
 import com.SEP490_G9.models.AuthResponse;
 import com.SEP490_G9.models.User;
 import com.SEP490_G9.services.AuthService;
@@ -23,10 +24,18 @@ import jakarta.validation.Valid;
 public class AuthenticationController {
 	@Autowired
 	AuthService authService;
-	
+
 	@RequestMapping(value = "register", method = RequestMethod.POST)
 	public ResponseEntity<?> register(@Valid @RequestBody User user) {
 		authService.register(user);
 		return ResponseEntity.ok(new AuthResponse(user.getEmail(), user.getPassword(), null));
+	}
+
+	
+	@RequestMapping(value = "login", method = RequestMethod.POST)
+	public ResponseEntity<?> login(@Valid @RequestBody AuthRequest authRequest) {
+		AuthResponse authResponse = authService.login(authRequest);
+		return ResponseEntity.ok(authResponse);
+
 	}
 }

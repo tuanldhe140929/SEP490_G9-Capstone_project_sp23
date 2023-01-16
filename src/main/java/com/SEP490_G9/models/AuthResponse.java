@@ -8,14 +8,14 @@ public class AuthResponse implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private String email;
 	private String accessToken;
-	private List<String> roles;
+	private String role;
  public AuthResponse() {
 	// TODO Auto-generated constructor stub
 }
-	public AuthResponse(String email, String accessToken, List<String> roles) {
+	public AuthResponse(String email, String accessToken, String role) {
 		this.email = email;
 		this.accessToken = accessToken;
-		this.roles = roles;
+		this.role = role;
 	}
 
 	public AuthResponse(String email, String accessToken) {
@@ -38,13 +38,16 @@ public class AuthResponse implements Serializable {
 	public void setAccessToken(String accessToken) {
 		this.accessToken = accessToken;
 	}
-
-	public List<String> getRoles() {
-		return roles;
+	public String getRole() {
+		return role;
+	}
+	public void setRole(String role) {
+		this.role = role;
+	}
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 
-	public void setRoles(List<String> roles) {
-		this.roles = roles;
-	}
+
 
 }
