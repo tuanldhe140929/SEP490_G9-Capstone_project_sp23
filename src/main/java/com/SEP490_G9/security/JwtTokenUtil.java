@@ -19,7 +19,8 @@ public class JwtTokenUtil implements Serializable {
 
 	private static final long serialVersionUID = -2550185165626007488L;
 
-	public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
+	
+	public static final long JWT_TOKEN_VALIDITY = 60;
 
 	@Value("${jwt.secret}")
 	private String SECRET_KEY;
@@ -47,7 +48,9 @@ public class JwtTokenUtil implements Serializable {
 	// check if the token has expired
 	private Boolean isTokenExpired(String token) {
 		final Date expiration = getExpirationDateFromToken(token);
-		return expiration.before(new Date());
+		System.out.println(expiration);
+		System.out.println(new Date());
+		return !expiration.before(new Date());
 	}
 
 	// generate token for user
@@ -72,7 +75,7 @@ public class JwtTokenUtil implements Serializable {
 	// validate token
 	public Boolean validateToken(String token, UserDetails userDetails) {
 		final String username = getUsernameFromToken(token);
-		return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+		return (username.equals(userDetails.getUsername()) && isTokenExpired(token));
 	}
 
 }

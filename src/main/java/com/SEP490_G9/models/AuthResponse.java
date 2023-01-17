@@ -16,6 +16,7 @@ public class AuthResponse implements Serializable {
 		this.email = email;
 		this.accessToken = accessToken;
 		this.role = role;
+
 	}
 
 	public AuthResponse(String email, String accessToken) {
@@ -47,6 +48,7 @@ public class AuthResponse implements Serializable {
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
+
 
 
 

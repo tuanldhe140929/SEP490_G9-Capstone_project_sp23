@@ -68,7 +68,8 @@ public class UserDetailsImpl implements UserDetails {
 //				authorities.add(new SimpleGrantedAuthority(role.getName()));
 //			}
 //		}
-		authorities.add(new SimpleGrantedAuthority(user.getRole().getName()));
+		String role = user.getRole().getName();
+		authorities.add(new SimpleGrantedAuthority(role));
 		return authorities;
 	}
 }

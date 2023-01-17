@@ -6,6 +6,7 @@ import { LoginComponent } from './login/login.component';
 import { LoginWithGoogleComponent } from './login/login-with-google/login-with-google.component';
 import { RegisterComponent } from './register/register.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 
 @NgModule({
@@ -18,7 +19,6 @@ import { ReactiveFormsModule } from '@angular/forms';
     CommonModule,
     AuthRoutingModule,
     ReactiveFormsModule,
-    
   ]
 })
 export class AuthModule { }

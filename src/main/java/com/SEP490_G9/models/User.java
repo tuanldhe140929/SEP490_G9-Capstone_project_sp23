@@ -33,10 +33,14 @@ public class User implements Serializable {
 	@Column(name = "verified")
 	private boolean verified = false;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "role_id", unique = false, nullable = false)
 	private Role role;
 
+	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
+    private RefreshToken refreshToken;
+	
 	public User() {
 	}
 
