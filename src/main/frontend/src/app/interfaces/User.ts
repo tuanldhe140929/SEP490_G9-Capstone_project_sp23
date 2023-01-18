@@ -4,4 +4,5 @@ export interface User{
 	username:string;
 	enabled:boolean;
 	verifed:boolean;
+	role:string;
 }

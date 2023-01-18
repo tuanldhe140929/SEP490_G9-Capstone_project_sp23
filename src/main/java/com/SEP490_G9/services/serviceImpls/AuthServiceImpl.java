@@ -1,6 +1,7 @@
 package com.SEP490_G9.services.serviceImpls;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.SEP490_G9.exceptions.CustomException;
 import com.SEP490_G9.helpers.GoogleLogin;
 import com.SEP490_G9.models.AuthRequest;
 import com.SEP490_G9.models.AuthResponse;
@@ -34,6 +36,7 @@ import com.google.gson.JsonObject;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.ConstraintViolationException;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -65,19 +68,24 @@ public class AuthServiceImpl implements AuthService {
 		user.setEnabled(true);
 		user.setVerified(false);
 		user.setRole(roleRepository.getReferenceById((long) 2));
-		userRepository.save(user);
+		try {
+			userRepository.save(user);}
+		catch(Exception e) {
+			throw new CustomException("Can't register new user");
+		}
+		
 		return 1;
 	}
 
 	@Override
 	public AuthResponse login(AuthRequest authRequest, HttpServletResponse response) {
 		User user = userRepository.findByEmail(authRequest.getEmail());
-		
+
 		Authentication authentication = authenticationProvider.authenticate(
 				new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
 		SecurityContextHolder.getContext().setAuthentication(authentication);
-		
-		if(authRequest.isRememberMe()) {
+
+		if (authRequest.isRememberMe()) {
 			RefreshToken refreshToken = refreshTokenService.createRefreshToken(user);
 			Cookie cookie = new Cookie("refreshToken", refreshToken.getToken());
 			cookie.setMaxAge(120000);
@@ -87,7 +95,7 @@ public class AuthServiceImpl implements AuthService {
 			cookie.setSecure(true);
 			response.addCookie(cookie);
 		}
-	
+
 		String jwt = jwtUtil.generateToken(authRequest.getEmail());
 		Object[] authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities().toArray();
 		String role = authorities[0].toString();
@@ -99,13 +107,13 @@ public class AuthServiceImpl implements AuthService {
 			throws ClientProtocolException, IOException {
 		User googleLoginUser = googleLogin.getUserInfo(code);
 		User foundUser = userRepository.findByEmail(googleLoginUser.getEmail());
-		
+
 		if (foundUser == null) {
 			googleLoginUser.setPassword(passwordGenerator.generatePassword(8).toString());
 			register(googleLoginUser);
 			foundUser = userRepository.findByEmail(googleLoginUser.getEmail());
 		}
-		
+
 		UserDetailsImpl userDetails = new UserDetailsImpl();
 		userDetails.setUser(foundUser);
 		UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null,
@@ -122,9 +130,10 @@ public class AuthServiceImpl implements AuthService {
 		boolean isExpired = refreshTokenService.verifyExpiration(refreshToken);
 		AuthResponse authResponse = new AuthResponse();
 		if (isExpired) {
-			authResponse.setAccessToken("please make new login");
+			throw new CustomException("Refresh token expired");
 		} else {
 			User user = userRepository.findByRefreshToken(refreshTokenService.findByToken(token));
+
 			authResponse.setAccessToken(jwtUtil.generateToken(user.getEmail()));
 			authResponse.setEmail(user.getEmail());
 			authResponse.setRole(user.getRole().toString());
