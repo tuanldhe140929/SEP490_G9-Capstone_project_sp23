@@ -1,0 +1,11 @@
+<form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+	<input type="email" formControlName="email" placeholder="email"><br>
+	<input type="password" formControlName="password" placeholder="password"><br>
+	Remember me?<input type="checkbox" formControlName="rememberMe" ><br>
+	<input type="submit">
+</form>
+<br>
+<button (click) = "loginWithGoogle()">Login with google</button>
+<button (click) = "logOut()">Log out</button>
+
+Islogin? {{isLoggedIn}}
