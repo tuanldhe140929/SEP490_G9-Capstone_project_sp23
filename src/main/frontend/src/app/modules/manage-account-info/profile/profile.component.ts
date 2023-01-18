@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { User } from 'src/app/interfaces/User';
+import { AuthService } from 'src/app/services/auth.service';
 
 import { StorageService } from 'src/app/services/storage.service';
 import { UserService } from 'src/app/services/user.service';
@@ -15,7 +17,7 @@ export class ProfileComponent implements OnInit {
 	 user: User | undefined;
 	
 	
-	constructor(private userService:UserService, private storageService:StorageService){}
+	constructor(private userService:UserService, private storageService:StorageService, private authService:AuthService,private router:Router){}
 	
 	ngOnInit(): void {
 		console.log(this.storageService.getAuthResponse());
@@ -23,4 +25,9 @@ export class ProfileComponent implements OnInit {
 			(data: User) => this.user = data 
 			
     	)}
+    	public logOut(){
+		console.log('loginout');
+		this.authService.logout().subscribe();
+		this.router.navigate(['login']);
+	}
 }

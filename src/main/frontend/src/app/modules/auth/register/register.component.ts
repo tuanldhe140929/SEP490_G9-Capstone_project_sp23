@@ -10,6 +10,7 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class RegisterComponent implements OnInit {
 	
+	message= "";
 	registerForm = this.formBuilder.group({
 		"email": ['',[Validators.required,Validators.email]],
 		"password": ['',[Validators.required,Validators.minLength(5),Validators.maxLength(30)]]
@@ -22,8 +23,13 @@ export class RegisterComponent implements OnInit {
     public onRegister() {	
 		if(this.registerForm.valid){
 			this.authService.register(this.registerForm.value).subscribe(
-				data => {console.log(data)},
-				error => {}
+				data => {console.log(data)
+				this.message = "Dang ki thanh cong"},
+				error => {
+					if(error.status===400){
+						this.message = "Trung ten dang nhap";
+					}
+				}
 			);
 		}
 	}

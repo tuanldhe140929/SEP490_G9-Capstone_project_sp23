@@ -2,6 +2,7 @@ package com.SEP490_G9.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,6 +25,7 @@ public class ProfileController {
 	public ResponseEntity<?> getUserInfo(@RequestBody String email){
 		System.out.println(email);
 		User user = userService.getUserInfo(email);
+		System.out.println(SecurityContextHolder.getContext().getAuthentication().getName());
 		return ResponseEntity.ok(user);
 	}
 }
