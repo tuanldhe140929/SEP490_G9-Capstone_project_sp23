@@ -8,11 +8,12 @@ import { AppComponent } from './app.component';
 import { AuthInterceptor } from './helpers/auth.interceptor';
 import { AuthModule } from './modules/auth/auth.module';
 import { ManageAccountInfoModule } from './modules/manage-account-info/manage-account-info.module';
+import { ManageProductModule } from './modules/manage-product/manage-product.module';
 
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     BrowserModule,
@@ -23,6 +24,7 @@ import { ManageAccountInfoModule } from './modules/manage-account-info/manage-ac
     ReactiveFormsModule,
     AuthModule,
     ManageAccountInfoModule,
+    ManageProductModule,
   
   ],
   providers: [

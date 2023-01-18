@@ -98,6 +98,7 @@ public class AuthenticationController {
 	@RequestMapping(value = "forgotAndResetPasswordConfirm", method = RequestMethod.POST)
 	public ResponseEntity<?> confirmRequestResetPassword(HttpServletRequest request, @RequestParam String captcha,
 			@RequestParam String email, @RequestParam String newPassword) {
+		System.out.println(email + "\n" + captcha);
 			boolean ret = authService.confirmRequestResetPassword(request,captcha,email, newPassword);
 		return ResponseEntity.ok(ret);
 	}

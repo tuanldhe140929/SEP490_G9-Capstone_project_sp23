@@ -40,9 +40,11 @@ export class LoginComponent implements OnInit {
     public onLogin() {	
 		
 		if(this.loginForm.valid){
+			
 			this.authService.login(this.loginForm.value).subscribe(
+				
 			response => {
-				this.authService.LoggedIn = true;
+				AuthService.isLoggedIn = true;
 				this.authService.authResponse = response.body;
      			this.storageService.saveUser(response.body);
      			this.storageService.saveToken(response.body.accessToken);
@@ -52,6 +54,7 @@ export class LoginComponent implements OnInit {
 					  this.errorMessage = 'Khong tim thay email hoac sai password';
 				  }
 			  })
+			  
 		}else{
 			Object.keys(this.loginForm.controls).forEach(field => { // {1}
   			const control = this.loginForm.get(field);  
@@ -70,5 +73,9 @@ export class LoginComponent implements OnInit {
 		console.log('loginout');
 		this.authService.logout().subscribe();
 		this.router.navigate(['login']);
+	}
+	
+	public forgotPassword(){
+		this.router.navigate(['forgotPassword']);
 	}
 }

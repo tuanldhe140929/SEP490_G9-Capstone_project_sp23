@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AuthResponse } from '../interfaces/AuthResponse';
@@ -18,15 +18,9 @@ const httpOptions : Object = {
   providedIn: 'root'
 })
 export class AuthService {
-    isLoggedIn = false;
+    
+    static isLoggedIn:boolean;
   	
-  	set LoggedIn(isLoggedIn:boolean){
-		  this.isLoggedIn = isLoggedIn;
-	}
-	get LoggedIn(){
-		  return this.isLoggedIn;
-	}
-	
 	authResponse:AuthResponse|undefined;
 	
 	set AuthResponse(auth:AuthResponse){
@@ -58,6 +52,17 @@ export class AuthService {
 	}
     refreshToken(){
 		 return this.http.post<any>( baseUrl+'/refreshToken',1,httpOptions);
+	}
+	
+	resetPasswordRequest(email: String) {
+        return this.http.post<any>(baseUrl+'/forgotAndResetPassword?email='+email.toString(),{});
+    }
+	
+	resetPassword(body:any, email:String){
+		console.log(body.captcha);
+		return this.http.post<any>(baseUrl+'/forgotAndResetPasswordConfirm?email='+email.toString()+"&captcha="
+		+body.captcha+"&newPassword="+body.newPassword,{
+		});
 	}
     
 
