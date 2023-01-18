@@ -6,10 +6,8 @@ import org.apache.http.client.ClientProtocolException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 //import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,11 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.SEP490_G9.exceptions.CustomException;
 import com.SEP490_G9.models.AuthRequest;
 import com.SEP490_G9.models.AuthResponse;
-import com.SEP490_G9.models.RefreshToken;
+import com.SEP490_G9.models.EmailResponse;
 import com.SEP490_G9.models.User;
 import com.SEP490_G9.services.AuthService;
-import com.SEP490_G9.services.RefreshTokenService;
-
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -90,5 +86,19 @@ public class AuthenticationController {
 		    request.getSession().invalidate();
 		    SecurityContextHolder.getContext().setAuthentication(null);
 		return ResponseEntity.ok(null);
+	}
+	
+	@RequestMapping(value = "forgotAndResetPassword", method = RequestMethod.POST)
+	public ResponseEntity<?> resetPassword(HttpServletRequest request, @RequestParam String email) {
+			EmailResponse response = authService.sendResetPasswordMail(request,email);
+			
+		return ResponseEntity.ok(response);
+	}
+	
+	@RequestMapping(value = "forgotAndResetPasswordConfirm", method = RequestMethod.POST)
+	public ResponseEntity<?> confirmRequestResetPassword(HttpServletRequest request, @RequestParam String captcha,
+			@RequestParam String email, @RequestParam String newPassword) {
+			boolean ret = authService.confirmRequestResetPassword(request,captcha,email, newPassword);
+		return ResponseEntity.ok(ret);
 	}
 }

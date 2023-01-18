@@ -19,9 +19,6 @@ import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.stereotype.Component;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
 import com.SEP490_G9.repositories.UserRepository;
 import com.SEP490_G9.services.serviceImpls.CustomUserDetailsServiceImpl;
 
@@ -58,13 +55,15 @@ JwtAuthenticationEntryPoint authenEntryPoint;
 			configuration.addExposedHeader("Message");
 			configuration.setAllowedHeaders(List.of("Authorization","Cache-Control","Content-Type"));
 			return configuration;
-		}).and().csrf().disable()
+		}).and().csrf().disable();
 		
-		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		
 		http.authorizeHttpRequests()
 		.requestMatchers("/public/**").permitAll().and()
 		.authorizeHttpRequests().requestMatchers("/home").hasAnyRole("USER")
 		.and().authorizeHttpRequests().requestMatchers("private/profile/**").hasAnyRole("USER")
+		.and().authorizeHttpRequests().requestMatchers("private/**").hasAnyRole("USER")
 		.and().httpBasic().authenticationEntryPoint(authenEntryPoint)
 		.and().authorizeHttpRequests().anyRequest().authenticated()
 		.and().authenticationProvider(authProvider)

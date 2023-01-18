@@ -1,17 +1,11 @@
 package com.SEP490_G9.services.serviceImpls;
 
 import java.io.IOException;
-import java.sql.SQLException;
-import java.time.Duration;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.http.client.ClientProtocolException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,8 +14,8 @@ import com.SEP490_G9.exceptions.CustomException;
 import com.SEP490_G9.helpers.GoogleLogin;
 import com.SEP490_G9.models.AuthRequest;
 import com.SEP490_G9.models.AuthResponse;
+import com.SEP490_G9.models.EmailResponse;
 import com.SEP490_G9.models.RefreshToken;
-import com.SEP490_G9.models.Role;
 import com.SEP490_G9.models.User;
 import com.SEP490_G9.models.UserDetailsImpl;
 import com.SEP490_G9.repositories.RoleRepository;
@@ -29,14 +23,11 @@ import com.SEP490_G9.repositories.UserRepository;
 import com.SEP490_G9.security.JwtTokenUtil;
 import com.SEP490_G9.security.PasswordGenerator;
 import com.SEP490_G9.services.AuthService;
+import com.SEP490_G9.services.EmailService;
 import com.SEP490_G9.services.RefreshTokenService;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.ConstraintViolationException;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -61,6 +52,9 @@ public class AuthServiceImpl implements AuthService {
 	@Autowired
 	RefreshTokenService refreshTokenService;
 
+	@Autowired
+	EmailService emailService;
+	
 	@Override
 	public int register(User user) {
 		String encodedPassword = new BCryptPasswordEncoder().encode(user.getPassword());
@@ -126,9 +120,10 @@ public class AuthServiceImpl implements AuthService {
 	}
 
 	public AuthResponse refreshToken(String token) {
+		AuthResponse authResponse = new AuthResponse();
 		RefreshToken refreshToken = refreshTokenService.findByToken(token);
 		boolean isExpired = refreshTokenService.verifyExpiration(refreshToken);
-		AuthResponse authResponse = new AuthResponse();
+
 		if (isExpired) {
 			throw new CustomException("Refresh token expired");
 		} else {
@@ -146,6 +141,68 @@ public class AuthServiceImpl implements AuthService {
 		String token = refreshTokenCookie.getValue();
 		AuthResponse authResponse = refreshToken(token);
 		return authResponse;
+	}
+
+	@Override
+	public boolean verifyEmail(String verifyLink, HttpServletRequest request) {
+		String email = SecurityContextHolder.getContext().getAuthentication().getName();
+		EmailResponse response = (EmailResponse) request.getSession().getAttribute(email);
+		boolean ret = false;
+		
+		if (response == null) {
+			return ret;
+		} else {
+			if (verifyLink.equals(response.getVerifyLink()) && email.equals(response.getEmail())) {
+				ret = true;
+				User user = userRepository.findByEmail(email);
+				user.setVerified(ret);
+				userRepository.save(user);
+				return ret;
+			} else {
+				return ret;
+			}
+		}
+	}
+
+	@Override
+	public EmailResponse sendVerifyEmail(HttpServletRequest request) {
+		String email = SecurityContextHolder.getContext().getAuthentication().getName();
+		User user = userRepository.findByEmail(email);
+		if(user==null) {
+			throw new CustomException("User not logged in");
+		}
+		return emailService.sendVerifyEmail(email, request);
+	}
+
+	@Override
+	public EmailResponse sendResetPasswordMail(HttpServletRequest request, String email) {
+		 return emailService.sendResetPasswordEmail(email, request);
+		
+	}
+
+	@Override
+	public boolean confirmRequestResetPassword(HttpServletRequest request, String captcha, String email, String newPassword) {
+		boolean ret = false;
+		EmailResponse response = (EmailResponse) request.getSession().getAttribute(email);
+		if(response==null) {
+			ret = false;
+		}else {
+			if(response.getEmail().equals(email) && response.getVerifyLink().equals(captcha)) {
+				User user = userRepository.findByEmail(email);
+				user.setPassword(new BCryptPasswordEncoder().encode(newPassword));
+				try {
+					userRepository.save(user);}
+				catch(Exception e) {
+					ret= false;
+					System.out.println(e);
+					throw new CustomException("Can't update password");
+				}
+				ret = true;
+			}else {
+				ret = false;
+			}
+		}
+		return ret;
 	}
 
 }
