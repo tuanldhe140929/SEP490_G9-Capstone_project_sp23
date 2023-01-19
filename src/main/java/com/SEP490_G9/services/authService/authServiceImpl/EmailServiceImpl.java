@@ -1,4 +1,4 @@
-package com.SEP490_G9.services.serviceImpls;
+package com.SEP490_G9.services.authService.authServiceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import com.SEP490_G9.exceptions.CustomException;
 import com.SEP490_G9.helpers.VerifyLinkGenerator;
 import com.SEP490_G9.models.EmailResponse;
-import com.SEP490_G9.services.EmailService;
+import com.SEP490_G9.services.authService.EmailService;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;

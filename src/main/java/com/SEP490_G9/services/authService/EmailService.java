@@ -1,4 +1,4 @@
-package com.SEP490_G9.services;
+package com.SEP490_G9.services.authService;
 
 
 import com.SEP490_G9.models.EmailResponse;

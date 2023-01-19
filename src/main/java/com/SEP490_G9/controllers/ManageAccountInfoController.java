@@ -9,20 +9,20 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.SEP490_G9.models.User;
-import com.SEP490_G9.services.UserService;
+import com.SEP490_G9.models.DTOS.User;
+import com.SEP490_G9.services.ManageAccountInfoService;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200/")
 @RequestMapping(value = "private/profile")
-public class ProfileController {
+public class ManageAccountInfoController {
 	@Autowired
-	UserService userService;
+	ManageAccountInfoService manageAccountInfoService;
 	
-	@PostMapping(value="getUserInfo")
+	@PostMapping(value="getUserInfoByEmail")
 	public ResponseEntity<?> getUserInfo(@RequestBody String email){
 		System.out.println(email);
-		User user = userService.getUserInfo(email);
+		User user = manageAccountInfoService.getUserInfo(email);
 		System.out.println(SecurityContextHolder.getContext().getAuthentication().getName());
 		return ResponseEntity.ok(user);
 	}

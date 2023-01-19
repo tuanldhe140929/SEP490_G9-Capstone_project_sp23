@@ -1,5 +1,4 @@
-package com.SEP490_G9.models;
-
+package com.SEP490_G9.models.DTOS;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

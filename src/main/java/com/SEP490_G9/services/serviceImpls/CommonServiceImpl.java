@@ -3,19 +3,19 @@ package com.SEP490_G9.services.serviceImpls;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.SEP490_G9.models.User;
+import com.SEP490_G9.models.DTOS.User;
 import com.SEP490_G9.repositories.UserRepository;
-import com.SEP490_G9.services.UserService;
+import com.SEP490_G9.services.CommonService;
 
 @Service
-public class UserServiceImpl implements UserService {
-
+public class CommonServiceImpl implements CommonService {
 	@Autowired
 	UserRepository userRepository;
 	
 	@Override
-	public User getUserInfo(String email) {
-		return userRepository.findByEmail(email);
+	public User getUserInfoByUsername(String username) {
+		User user = userRepository.findByUsername(username);
+		return user;
 	}
 
 }

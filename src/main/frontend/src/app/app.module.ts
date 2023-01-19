@@ -9,6 +9,7 @@ import { AuthInterceptor } from './helpers/auth.interceptor';
 import { AuthModule } from './modules/auth/auth.module';
 import { ManageAccountInfoModule } from './modules/manage-account-info/manage-account-info.module';
 import { ManageProductModule } from './modules/manage-product/manage-product.module';
+import { CommonModule } from './modules/common/common.module';
 
 
 @NgModule({
@@ -19,12 +20,12 @@ import { ManageProductModule } from './modules/manage-product/manage-product.mod
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    
     FormsModule,
     ReactiveFormsModule,
     AuthModule,
     ManageAccountInfoModule,
     ManageProductModule,
+    CommonModule,
   
   ],
   providers: [

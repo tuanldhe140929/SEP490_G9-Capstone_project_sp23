@@ -7,15 +7,16 @@ const baseUrl = "http://localhost:9000/private/"
 @Injectable({
   providedIn: 'root'
 })
-export class UserService {
+export class ManageAccountInfoService {
   
 
   constructor(private http:HttpClient) { }
  
-   	getInfo(email:string): Observable<User> {
+   	getUserInfoByEmail(email:string): Observable<User> {
 		
-		return this.http.post<User>(baseUrl + 'profile/getUserInfo',email);
-	}
+		return this.http.post<User>(baseUrl + 'profile/getUserInfoByEmail',email);
+  }
+
 	
 	
 }

@@ -1,4 +1,4 @@
-package com.SEP490_G9.services.serviceImpls;
+package com.SEP490_G9.services.authService.authServiceImpl;
 
 import java.io.IOException;
 import org.apache.http.client.ClientProtocolException;
@@ -15,16 +15,16 @@ import com.SEP490_G9.helpers.GoogleLogin;
 import com.SEP490_G9.models.AuthRequest;
 import com.SEP490_G9.models.AuthResponse;
 import com.SEP490_G9.models.EmailResponse;
-import com.SEP490_G9.models.RefreshToken;
-import com.SEP490_G9.models.User;
+import com.SEP490_G9.models.DTOS.RefreshToken;
+import com.SEP490_G9.models.DTOS.User;
 import com.SEP490_G9.models.UserDetailsImpl;
 import com.SEP490_G9.repositories.RoleRepository;
 import com.SEP490_G9.repositories.UserRepository;
 import com.SEP490_G9.security.JwtTokenUtil;
 import com.SEP490_G9.security.PasswordGenerator;
-import com.SEP490_G9.services.AuthService;
-import com.SEP490_G9.services.EmailService;
-import com.SEP490_G9.services.RefreshTokenService;
+import com.SEP490_G9.services.authService.AuthService;
+import com.SEP490_G9.services.authService.EmailService;
+import com.SEP490_G9.services.authService.RefreshTokenService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

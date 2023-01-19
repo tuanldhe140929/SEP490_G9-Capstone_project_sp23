@@ -1,18 +1,17 @@
-package com.SEP490_G9.services.serviceImpls;
+package com.SEP490_G9.services.authService.authServiceImpl;
 
 import java.time.Instant;
-import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.SEP490_G9.models.RefreshToken;
-import com.SEP490_G9.models.User;
+import com.SEP490_G9.models.DTOS.RefreshToken;
+import com.SEP490_G9.models.DTOS.User;
 import com.SEP490_G9.repositories.RefreshTokenRepository;
 import com.SEP490_G9.repositories.UserRepository;
-import com.SEP490_G9.services.RefreshTokenService;
+import com.SEP490_G9.services.authService.RefreshTokenService;
 
 import jakarta.transaction.Transactional;
 

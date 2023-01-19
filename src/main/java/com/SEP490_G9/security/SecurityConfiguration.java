@@ -62,7 +62,6 @@ JwtAuthenticationEntryPoint authenEntryPoint;
 		http.authorizeHttpRequests()
 		.requestMatchers("/public/**").permitAll().and()
 		.authorizeHttpRequests().requestMatchers("/home").hasAnyRole("USER")
-		.and().authorizeHttpRequests().requestMatchers("private/profile/**").hasAnyRole("USER")
 		.and().authorizeHttpRequests().requestMatchers("private/**").hasAnyRole("USER")
 		.and().httpBasic().authenticationEntryPoint(authenEntryPoint)
 		.and().authorizeHttpRequests().anyRequest().authenticated()
