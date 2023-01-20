@@ -1,22 +1,27 @@
 <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
-  <input type="email" formControlName="email" placeholder="email">
-  <div class="invalid"
-       *ngIf="Form.email.invalid && (Form.email.dirty || Form.email.touched)">
-    <div *ngIf="Form.email.errors?.['required']">
-      <small>Email is required.</small>
-    </div>
-    <div *ngIf="Form.email.errors?.['email']">
-      <small>Not valid email form</small>
-    </div>
-  </div><br>
+
+  <input type="email" formControlName="email" placeholder="email"><br />
+  <div class="invalid" *ngIf="Form.email.invalid && (Form.email.dirty || Form.email.touched)">
+    <div *ngIf="Form.email.errors?.['required']"><small>Email is required.</small> </div>
+    <div *ngIf="Form.email.errors?.['email']"><small>Not valid email form</small> </div>
+  </div>
+
   <input type="password" formControlName="password" placeholder="password"><br>
-  Remember me?
-  <input type="checkbox" formControlName="rememberMe"><br>
+  <div class="invalid" *ngIf="Form.password.invalid && (Form.password.dirty || Form.password.touched)">
+    <div *ngIf="Form.password.errors?.['required']"><small>Password is required.</small> </div>
+    <div *ngIf="Form.password.errors?.['minlength'] ||Form.password.errors?.['maxlength']">
+      <small>Password is 8 to 30 characters</small>
+    </div>
+  </div>
+ Keep me sign in <input type="checkbox" formControlName="rememberMe"><br>
+
   <input type="submit">
 </form>
 <br>
-<button (click)="loginWithGoogle()">Login with google</button>
-
+<button (click)="loginWithGoogle()">Login with google</button><br/>
+<button (click)="redirectForgotPassword()">Forgot password?</button><br/>
+<button (click)="redirectRegister()">Register</button>
 {{errorMessage}}
 
-<button (click)="forgotPassword()">Forgot password?</button>
+
+

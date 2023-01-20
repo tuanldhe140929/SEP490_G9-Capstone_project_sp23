@@ -4,13 +4,14 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.SEP490_G9.exceptions.CustomException;
 import com.SEP490_G9.models.DTOS.Product;
 import com.SEP490_G9.models.DTOS.User;
 import com.SEP490_G9.models.UserDetailsImpl;
 import com.SEP490_G9.repositories.ProductRepository;
+import com.SEP490_G9.repositories.UserRepository;
 import com.SEP490_G9.services.ManageProductService;
 
 @Service
@@ -18,7 +19,18 @@ public class ManageProductServiceImpl implements ManageProductService {
 
 	@Autowired
 	ProductRepository productRepository;
-	
+
+	@Autowired
+	UserRepository userRepository;
+
+	@Override
+	public User getCurrentUserInfo(String email) {
+		if (userRepository.existsByEmail(email)) {
+			return userRepository.findByEmail(email);
+		}
+		throw new UsernameNotFoundException("Not found user with email: " + email);
+	}
+
 	@Override
 	public Product addProduct(Product product) {
 		Product ret = null;
@@ -26,8 +38,8 @@ public class ManageProductServiceImpl implements ManageProductService {
 		product.setUser(user);
 		try {
 			ret = productRepository.save(product);
-		}catch(Exception e) {
-			throw new CustomException("Them san pham khong thanh cong");
+		} catch (Exception e) {
+			// throw new CustomException("Them san pham khong thanh cong");
 		}
 		return ret;
 	}
@@ -39,8 +51,8 @@ public class ManageProductServiceImpl implements ManageProductService {
 		try {
 			Product found = productRepository.findByUserAndId(user, product.getId());
 			ret = productRepository.save(product);
-		}catch(Exception e) {
-			throw new CustomException("Cap nhat san pham khong thanh cong");
+		} catch (Exception e) {
+			// throw new CustomException("Cap nhat san pham khong thanh cong");
 		}
 		return ret;
 	}
@@ -53,8 +65,8 @@ public class ManageProductServiceImpl implements ManageProductService {
 			Product found = productRepository.getReferenceById(id);
 			ret = productRepository.findByUserAndId(user, id);
 			productRepository.deleteById(id);
-		}catch(Exception e) {
-			throw new CustomException("Xoa san pham khong thanh cong");
+		} catch (Exception e) {
+			// throw new CustomException("Xoa san pham khong thanh cong");
 		}
 		return ret;
 	}

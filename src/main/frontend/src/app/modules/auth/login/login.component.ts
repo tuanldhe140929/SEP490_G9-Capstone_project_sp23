@@ -19,7 +19,7 @@ export class LoginComponent implements OnInit {
   	
 	loginForm = this.formBuilder.group({
 		"email": ['',[Validators.required,Validators.email]],
-		"password": ['',[Validators.required,Validators.minLength(5),Validators.maxLength(30)]],
+		"password": ['',[Validators.required,Validators.minLength(8),Validators.maxLength(30)]],
 		"rememberMe":['']
 	});
 	
@@ -74,7 +74,11 @@ export class LoginComponent implements OnInit {
 		this.router.navigate(['login']);
 	}
 	
-	public forgotPassword(){
+	public redirectForgotPassword(){
 		this.router.navigate(['forgotPassword']);
-	}
+  }
+
+  public redirectRegister() {
+    this.router.navigate(['register']);
+  }
 }

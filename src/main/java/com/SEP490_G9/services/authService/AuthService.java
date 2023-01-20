@@ -19,7 +19,7 @@ public interface AuthService {
 	public AuthResponse loginWithGoogle(final String code, HttpServletRequest request)
 			throws ClientProtocolException, IOException;
 
-	public int register(User user);
+	public boolean register(User user);
 
 	public AuthResponse validate(Cookie refreshTokenCookie);
 

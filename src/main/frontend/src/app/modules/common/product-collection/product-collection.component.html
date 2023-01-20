@@ -1,3 +1,14 @@
 
-<div *ngIf="user!=null"><h1>dasdas{{user.username}}</h1></div>
-<h1>{{message}}</h1>
+<div *ngIf="user!=null; then userExist else userNonExist"></div>
+<div *ngIf="products!=null; then hasProducts else hasNonProducts"></div>
+<ng-template #userExist><h1>{{user.username}}</h1></ng-template>
+<ng-template #userNonExist><h1>{{message}}</h1></ng-template>
+
+<ng-template #hasProducts>
+  <h4><li *ngFor="let product of products; index as i; first as isFirst">
+    {{i+1}}/{{products.length}}. {{product.name}} . {{product.categories[0].name}}
+  </li>
+  </h4>
+</ng-template>
+<ng-template #hasNonProducts><h1>{{message2}}</h1></ng-template>
+

@@ -11,7 +11,6 @@ import com.SEP490_G9.models.DTOS.User;
 import com.SEP490_G9.models.UserDetailsImpl;
 import com.SEP490_G9.repositories.UserRepository;
 
-
 @Service
 public class CustomUserDetailsServiceImpl implements UserDetailsService {
 
@@ -20,12 +19,11 @@ public class CustomUserDetailsServiceImpl implements UserDetailsService {
 
 	@Transactional
 	@Override
-	public UserDetailsImpl loadUserByUsername(String name) throws UsernameNotFoundException, DataAccessException {
-		User domainUser = null;
-
-		domainUser = userRepository.findByEmail(name);
-		
-
+	public UserDetailsImpl loadUserByUsername(String name) throws DataAccessException {
+		User domainUser = userRepository.findByEmail(name);
+		if(domainUser==null) {
+			throw new UsernameNotFoundException("Not found user with email: "+name);
+		}
 		UserDetailsImpl customUserDetail = new UserDetailsImpl();
 		customUserDetail.setUser(domainUser);
 		return customUserDetail;

@@ -7,7 +7,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
-import com.SEP490_G9.exceptions.CustomException;
+import com.SEP490_G9.exceptions.EmailServiceException;
 import com.SEP490_G9.helpers.VerifyLinkGenerator;
 import com.SEP490_G9.models.EmailResponse;
 import com.SEP490_G9.services.authService.EmailService;
@@ -44,13 +44,13 @@ public class EmailServiceImpl implements EmailService {
 			String html = "Click here to verify your email \n" + "<a href='" + verifyLink + "'>Verify link</a>";
 			message.setText(html, "UTF-8", "html");
 		} catch (MessagingException e) {
-			throw new CustomException("Send email failed");
+			throw new EmailServiceException("Send email failed");
 		}
 
 		try {
 			javaMailSender.send(message);
 		} catch (MailException ex) {
-			throw new CustomException("Send email failed");
+			throw new EmailServiceException("Send email failed");
 		}
 		HttpSession session = request.getSession();
 		EmailResponse response = new EmailResponse(toEmail, verifyLink);
@@ -76,14 +76,14 @@ public class EmailServiceImpl implements EmailService {
 			message.setText(html, "UTF-8", "html");
 		} catch (MessagingException e) {
 			System.out.println(e);
-			throw new CustomException("Send email failed");
+			throw new EmailServiceException("Send email failed");
 		}
 
 		try {
 			javaMailSender.send(message);
 		} catch (MailException ex) {
 			System.out.println(ex);
-			throw new CustomException("Send email failed");
+			throw new EmailServiceException("Send email failed");
 		}
 		HttpSession session = request.getSession();
 		EmailResponse response = new EmailResponse(toEmail, captcha);

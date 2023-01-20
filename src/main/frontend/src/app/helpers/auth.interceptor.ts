@@ -22,21 +22,21 @@ export class AuthInterceptor implements HttpInterceptor {
      	let authReq = req;
      	if(this.storage.getToken()!=null){
     	const token = this.storage.getToken();
-    	
       	authReq = req.clone({ headers: req.headers.set(TOKEN_HEADER_KEY, 'Bearer ' + token) });
   }
    		 return next.handle(authReq).pipe(catchError(x => this.handleAuthError(x)));
 }
 
 private handleAuthError(err: HttpErrorResponse): Observable<any> {
-        if (err.status === 401 || err.status === 403) {
-			console.log('sending refresh token request');
+  if (err.status === 401 || err.status === 403) {
+    		this.storage.clear();
 			this.authService.refreshToken().subscribe(
 				response => {
      			this.storage.saveUser(response.body);
      			this.storage.saveToken(response.body.accessToken);
      			window.location.reload;
-      		},error =>{
+        }, error => {
+			console.log(error);
 				  this.router.navigateByUrl(`login`);
 			  });
 			

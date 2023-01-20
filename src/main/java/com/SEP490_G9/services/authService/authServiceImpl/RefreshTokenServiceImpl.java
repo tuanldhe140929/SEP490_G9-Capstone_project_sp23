@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.SEP490_G9.exceptions.RefreshTokenException;
 import com.SEP490_G9.models.DTOS.RefreshToken;
 import com.SEP490_G9.models.DTOS.User;
 import com.SEP490_G9.repositories.RefreshTokenRepository;
@@ -17,7 +18,7 @@ import jakarta.transaction.Transactional;
 
 @Service
 public class RefreshTokenServiceImpl implements RefreshTokenService {
-	@Value("${jwtRefreshExpiration}")
+	@Value("${jwtRefreshExpirationMs}")
 	private Long refreshTokenDurationMs;
 
 	@Autowired
@@ -28,7 +29,12 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
 	@Override
 	public RefreshToken findByToken(String token) {
-		return refreshTokenRepository.findByToken(token);
+		RefreshToken refreshToken = refreshTokenRepository.findByToken(token);
+		if(refreshToken==null) {
+			throw new RefreshTokenException(token,"Not found");
+		}
+		return refreshToken;
+		
 	}
 
 	@Override

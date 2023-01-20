@@ -1,6 +1,16 @@
 {
   "ExpandedNodes": [
-    "\\src\\app\\modules\\common\\product-collection"
+    "",
+    "\\src",
+    "\\src\\app",
+    "\\src\\app\\modules",
+    "\\src\\app\\modules\\auth",
+    "\\src\\app\\modules\\auth\\login",
+    "\\src\\app\\modules\\auth\\login\\forgot-password",
+    "\\src\\app\\modules\\auth\\register",
+    "\\src\\app\\modules\\manage-product",
+    "\\src\\app\\modules\\manage-product\\new-product"
   ],
+  "SelectedNode": "\\src\\app\\modules\\manage-product\\new-product\\new-product.component.ts",
   "PreviewInSolutionExplorer": false
 }

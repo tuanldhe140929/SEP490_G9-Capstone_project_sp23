@@ -13,9 +13,11 @@ export class CommonService {
   constructor(private http: HttpClient) { }
 
   getUserInfoByUsername(username: string): Observable<User> {
-
     return this.http.get<User>(baseUrl + '/getUserInfoByUsername?username='+username);
   }
 
+  getProductsByUsername(username: string): Observable<any> {
+    return this.http.get<any>(baseUrl + '/getProductsByUsername?username=' + username);
+  }
 
 }

@@ -10,7 +10,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.SEP490_G9.exceptions.CustomException;
+import com.SEP490_G9.exceptions.EmailExistException;
+import com.SEP490_G9.exceptions.RefreshTokenException;
+import com.SEP490_G9.exceptions.ResourceNotFoundException;
 import com.SEP490_G9.helpers.GoogleLogin;
 import com.SEP490_G9.models.AuthRequest;
 import com.SEP490_G9.models.AuthResponse;
@@ -54,31 +56,31 @@ public class AuthServiceImpl implements AuthService {
 
 	@Autowired
 	EmailService emailService;
-	
+
 	@Override
-	public int register(User user) {
-		String encodedPassword = new BCryptPasswordEncoder().encode(user.getPassword());
-		user.setPassword(encodedPassword);
-		user.setEnabled(true);
-		user.setVerified(false);
-		user.setRole(roleRepository.getReferenceById((long) 2));
-		try {
-			userRepository.save(user);}
-		catch(Exception e) {
-			throw new CustomException("Can't register new user");
-		}
+	public boolean register(User user) {
 		
-		return 1;
+		if (userRepository.existsByEmail(user.getEmail())) {
+			throw new EmailExistException(user.getEmail());
+		} else {
+			String encodedPassword = new BCryptPasswordEncoder().encode(user.getPassword().trim());
+			user.setPassword(encodedPassword);
+			user.setEnabled(true);
+			user.setVerified(false);
+			user.setRole(roleRepository.getReferenceById((long) 2));
+			userRepository.save(user);
+		}
+		return true;
 	}
 
 	@Override
 	public AuthResponse login(AuthRequest authRequest, HttpServletResponse response) {
-		User user = userRepository.findByEmail(authRequest.getEmail());
 
 		Authentication authentication = authenticationProvider.authenticate(
 				new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 
+		User user = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
 		if (authRequest.isRememberMe()) {
 			RefreshToken refreshToken = refreshTokenService.createRefreshToken(user);
 			Cookie cookie = new Cookie("refreshToken", refreshToken.getToken());
@@ -93,21 +95,20 @@ public class AuthServiceImpl implements AuthService {
 		String jwt = jwtUtil.generateToken(authRequest.getEmail());
 		Object[] authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities().toArray();
 		String role = authorities[0].toString();
-		return new AuthResponse(authRequest.getEmail(), jwt, role);
+		return new AuthResponse(authRequest.getEmail(), jwt, user.getUsername(), role);
 	}
 
 	@Override
 	public AuthResponse loginWithGoogle(final String code, HttpServletRequest request)
 			throws ClientProtocolException, IOException {
 		User googleLoginUser = googleLogin.getUserInfo(code);
-		User foundUser = userRepository.findByEmail(googleLoginUser.getEmail());
-
-		if (foundUser == null) {
+		User foundUser;
+		if(!userRepository.existsByEmail(googleLoginUser.getEmail())) {
 			googleLoginUser.setPassword(passwordGenerator.generatePassword(8).toString());
 			register(googleLoginUser);
-			foundUser = userRepository.findByEmail(googleLoginUser.getEmail());
 		}
-
+		foundUser = userRepository.findByEmail(googleLoginUser.getEmail());
+		
 		UserDetailsImpl userDetails = new UserDetailsImpl();
 		userDetails.setUser(foundUser);
 		UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null,
@@ -116,22 +117,20 @@ public class AuthServiceImpl implements AuthService {
 
 		String jwt = jwtUtil.generateToken(foundUser.getEmail());
 		String role = foundUser.getRole().toString();
-		return new AuthResponse(foundUser.getEmail(), jwt, role);
+		return new AuthResponse(foundUser.getEmail(), jwt, foundUser.getUsername(), role);
 	}
 
 	public AuthResponse refreshToken(String token) {
 		AuthResponse authResponse = new AuthResponse();
 		RefreshToken refreshToken = refreshTokenService.findByToken(token);
-		boolean isExpired = refreshTokenService.verifyExpiration(refreshToken);
-
-		if (isExpired) {
-			throw new CustomException("Refresh token expired");
+		if (refreshTokenService.verifyExpiration(refreshToken)) {
+				throw new RefreshTokenException(token,"Expired");
 		} else {
 			User user = userRepository.findByRefreshToken(refreshTokenService.findByToken(token));
-
 			authResponse.setAccessToken(jwtUtil.generateToken(user.getEmail()));
 			authResponse.setEmail(user.getEmail());
-			authResponse.setRole(user.getRole().toString());
+			authResponse.setUsername(user.getUsername());
+			authResponse.setRole(user.getRole().getName());
 		}
 		return authResponse;
 	}
@@ -148,7 +147,7 @@ public class AuthServiceImpl implements AuthService {
 		String email = SecurityContextHolder.getContext().getAuthentication().getName();
 		EmailResponse response = (EmailResponse) request.getSession().getAttribute(email);
 		boolean ret = false;
-		
+
 		if (response == null) {
 			return ret;
 		} else {
@@ -168,37 +167,39 @@ public class AuthServiceImpl implements AuthService {
 	public EmailResponse sendVerifyEmail(HttpServletRequest request) {
 		String email = SecurityContextHolder.getContext().getAuthentication().getName();
 		User user = userRepository.findByEmail(email);
-		if(user==null) {
-			throw new CustomException("User not logged in");
+		if (user == null) {
+			// throw new CustomException("User not logged in");
 		}
 		return emailService.sendVerifyEmail(email, request);
 	}
 
 	@Override
 	public EmailResponse sendResetPasswordMail(HttpServletRequest request, String email) {
-		 return emailService.sendResetPasswordEmail(email, request);
-		
+
+		return emailService.sendResetPasswordEmail(email, request);
+
 	}
 
 	@Override
-	public boolean confirmRequestResetPassword(HttpServletRequest request, String captcha, String email, String newPassword) {
+	public boolean confirmRequestResetPassword(HttpServletRequest request, String captcha, String email,
+			String newPassword) {
 		boolean ret = false;
 		EmailResponse response = (EmailResponse) request.getSession().getAttribute(email);
-		if(response==null) {
+		if (response == null) {
 			ret = false;
-		}else {
-			if(response.getEmail().equals(email) && response.getVerifyLink().equals(captcha)) {
+		} else {
+			if (response.getEmail().equals(email) && response.getVerifyLink().equals(captcha)) {
 				User user = userRepository.findByEmail(email);
 				user.setPassword(new BCryptPasswordEncoder().encode(newPassword));
 				try {
-					userRepository.save(user);}
-				catch(Exception e) {
-					ret= false;
+					userRepository.save(user);
+				} catch (Exception e) {
+					ret = false;
 					System.out.println(e);
-					throw new CustomException("Can't update password");
+					// throw new CustomException("Can't update password");
 				}
 				ret = true;
-			}else {
+			} else {
 				ret = false;
 			}
 		}

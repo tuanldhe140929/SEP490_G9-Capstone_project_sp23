@@ -1,0 +1,22 @@
+<form [formGroup]="newProductForm" (ngSubmit)="addProduct()">
+
+ <input [(ngModel)]="productName" [ngModelOptions]="{standalone: true}">
+  <p>Your product's url will be: </p>
+ <!--  <p>http://localhost:4200/{{user.username}}/{{productName}}</p> -->
+  <input type="" formControlName="description" placeholder="description" /><br />
+  <label for="classification">What are you uploading</label>
+  <br />
+  <select name="classification" id="classification">
+    <option value="Soundtracks">Soundtracks</option>
+    <option value="Sound effect">Sound effect</option>
+    <option value="Sprites">Sprites</option>
+    <option value="Game Scripts">Game Scripts</option>
+  </select>
+  <br />
+  <label for="pricing">Pricing</label><br />
+  <input type="radio" id="html" name="fav_language" value="HTML">
+  <label for="html">Paid</label><br>
+  <input type="radio" id="css" name="fav_language" value="CSS">
+  <label for="css">No payments</label><br>
+  <input type="submit"/>
+</form>

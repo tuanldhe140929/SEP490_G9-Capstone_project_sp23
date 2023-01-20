@@ -1,6 +1,11 @@
 <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
-	<input type="email" formControlName="email" placeholder="email"><br>
-	<input type="password" formControlName="password" placeholder="password"><br> 
-	<input type="submit">
+  <input type="email" formControlName="email" placeholder="email"><br>
+  <input (change)="onPasswordChange()" type="password" formControlName="password" placeholder="password"><br>
+  <input (change)="onPasswordChange()" type="password" formControlName="confirm_password" placeholder="confirm password"><br>
+  <span *ngIf="confirm_password.hasError('mismatch')">Password do not match.</span><br />
+  <input type="submit">
 </form>
+
 {{message}}
+<button (click)="redirectLogin()">Login</button>
+

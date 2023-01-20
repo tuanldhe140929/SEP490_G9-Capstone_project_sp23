@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.SEP490_G9.exceptions.CustomException;
+import com.SEP490_G9.exceptions.RefreshTokenException;
 import com.SEP490_G9.models.AuthRequest;
 import com.SEP490_G9.models.AuthResponse;
 import com.SEP490_G9.models.EmailResponse;
@@ -44,7 +44,7 @@ public class AuthenticationController {
 	@RequestMapping(value = "register", method = RequestMethod.POST)
 	public ResponseEntity<?> register(@Valid @RequestBody User user) {
 		authService.register(user);
-		return ResponseEntity.ok(new AuthResponse(user.getEmail(), null, null));
+		return ResponseEntity.ok(new AuthResponse(user.getEmail(), null, null, null));
 	}
 
 	@RequestMapping(value = "loginWithGoogle", method = RequestMethod.POST)
@@ -58,48 +58,57 @@ public class AuthenticationController {
 	public ResponseEntity<?> refreshToken(HttpServletRequest request) {
 		AuthResponse auth = null;
 		Cookie refreshTokenCookie = null;
-		if (request.getCookies() !=null) {
+
+		boolean foundRefreshToken = false;
+
+		if (request.getCookies() == null) {
+			throw new RefreshTokenException(null, "Not found");
+		} else {
 			for (Cookie cookie : request.getCookies()) {
 				if (cookie.getName().equals("refreshToken")) {
 					refreshTokenCookie = cookie;
+					foundRefreshToken = true;
+					auth = authService.validate(refreshTokenCookie);
 				}
 			}
-			auth = authService.validate(refreshTokenCookie);
-		}else {
-			throw new CustomException("Not found refresh token");
+			if(!foundRefreshToken) {
+			throw new RefreshTokenException(null, "Not found");
+		}
 		}
 		
+
 		return ResponseEntity.ok(auth);
+
 	}
-	
+
 	@RequestMapping(value = "logout", method = RequestMethod.GET)
-	public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response,HttpSession session) {
-			
-		    Cookie cookie = new Cookie("refreshToken", null); 
-		    cookie.setPath("/");
-		    cookie.setDomain("localhost");
-		    cookie.setHttpOnly(true);
-		    cookie.setSecure(true);
-		    cookie.setMaxAge(0);
-		    response.addCookie(cookie);
-		    session.invalidate();
-		    request.getSession().invalidate();
-		    SecurityContextHolder.getContext().setAuthentication(null);
+	public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
+
+		Cookie cookie = new Cookie("refreshToken", null);
+		cookie.setPath("/");
+		cookie.setDomain("localhost");
+		cookie.setHttpOnly(true);
+		cookie.setSecure(true);
+		cookie.setMaxAge(0);
+		response.addCookie(cookie);
+		session.invalidate();
+		request.getSession().invalidate();
+		SecurityContextHolder.getContext().setAuthentication(null);
 		return ResponseEntity.ok(null);
 	}
-	
+
 	@RequestMapping(value = "forgotAndResetPassword", method = RequestMethod.POST)
 	public ResponseEntity<?> resetPassword(HttpServletRequest request, @RequestParam String email) {
-			EmailResponse response = authService.sendResetPasswordMail(request,email);
-			
+		EmailResponse response = authService.sendResetPasswordMail(request, email);
+
 		return ResponseEntity.ok(response);
 	}
-	
+
 	@RequestMapping(value = "forgotAndResetPasswordConfirm", method = RequestMethod.POST)
 	public ResponseEntity<?> confirmRequestResetPassword(HttpServletRequest request, @RequestParam String captcha,
 			@RequestParam String email, @RequestParam String newPassword) {
 		System.out.println(email + "\n" + captcha);
-			boolean ret = authService.confirmRequestResetPassword(request,captcha,email, newPassword);
+		boolean ret = authService.confirmRequestResetPassword(request, captcha, email, newPassword);
 		return ResponseEntity.ok(ret);
 	}
 }

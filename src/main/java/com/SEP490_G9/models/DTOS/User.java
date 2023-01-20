@@ -17,12 +17,10 @@ public class User implements Serializable {
 	@Column(name = "email", nullable = false, unique = true)
 	@Email(message = "invalid format")
 	@NotBlank(message = "email can't be blank")
-	@Size(min = 5, max = 30)
 	private String email;
 
 	@NotBlank(message = "password can't be blank")
 	@Column(name = "password")
-
 	@Size(min = 8, max = 100)
 	private String password;
 
@@ -50,9 +48,9 @@ public class User implements Serializable {
 			boolean enabled, boolean verified) {
 		super();
 		this.id = id;
-		this.email = email;
-		this.password = password;
-		this.username = username;
+		this.email = email.trim();
+		this.password = password.trim();
+		this.username = username.trim();
 		this.enabled = enabled;
 		this.verified = verified;
 	}
@@ -74,7 +72,7 @@ public class User implements Serializable {
 	}
 
 	public void setEmail(String email) {
-		this.email = email;
+		this.email = email.trim();
 	}
 
 	public String getPassword() {
@@ -82,7 +80,7 @@ public class User implements Serializable {
 	}
 
 	public void setPassword(String password) {
-		this.password = password;
+		this.password = password.trim();
 	}
 
 	public String getUsername() {
@@ -90,7 +88,7 @@ public class User implements Serializable {
 	}
 
 	public void setUsername(String username) {
-		this.username = username;
+		this.username = username.trim();
 	}
 
 	public boolean isEnabled() {

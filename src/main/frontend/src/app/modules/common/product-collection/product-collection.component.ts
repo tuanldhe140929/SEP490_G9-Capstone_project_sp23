@@ -10,8 +10,10 @@ import { CommonService } from '../../../services/common.service';
 })
 export class ProductCollectionComponent implements OnInit {
   user!: User;
+  products: any[] = [];
   message = '';
-  constructor(private commonService:CommonService,
+  message2 = '';
+  constructor(private commonService: CommonService,
     private activatedRoute: ActivatedRoute) { }
 
   ngOnInit(): void {
@@ -19,15 +21,22 @@ export class ProductCollectionComponent implements OnInit {
   }
 
   getUserInfo() {
-     var username = this.activatedRoute.snapshot.paramMap.get('username')?.toString();
+    var username = this.activatedRoute.snapshot.paramMap.get('username')?.toString();
     if (username != null) {
       this.commonService.getUserInfoByUsername(username).subscribe(
         (data) => {
           this.user = data;
+          this.getProductByUser(this.user.username);
         },
         (err) => {
           this.message = "Khong tim thay user nay";
         });
     }
+  }
+
+  getProductByUser(username: string) {
+    this.commonService.getProductsByUsername(username).subscribe(
+      (data) => { this.products = data; },
+      (err) => { this.message2 = "User nay khong co product nao"; });
   }
 }

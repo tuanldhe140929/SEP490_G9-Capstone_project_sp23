@@ -12,26 +12,29 @@ const TOKEN_KEY = 'auth-token';
 export class StorageService {
   constructor() {}
 
+  clear(): void {
+    window.localStorage.clear();
+  }
 
 	signOut(): void {
-    window.sessionStorage.clear();
+    window.localStorage.clear();
   }
 
   public saveToken(token: string): void {
-    window.sessionStorage.removeItem(TOKEN_KEY);
-    window.sessionStorage.setItem(TOKEN_KEY, token);
+    window.localStorage.removeItem(TOKEN_KEY);
+    window.localStorage.setItem(TOKEN_KEY, token);
   }
 
   public getToken(): string | null {
-    return window.sessionStorage.getItem(TOKEN_KEY);
+    return window.localStorage.getItem(TOKEN_KEY);
   }
   public saveUser(authResponse: AuthResponse): void {
-    window.sessionStorage.removeItem(AUTH_RESPONSE_KEY);
-    window.sessionStorage.setItem(AUTH_RESPONSE_KEY, JSON.stringify(authResponse));
+    window.localStorage.removeItem(AUTH_RESPONSE_KEY);
+    window.localStorage.setItem(AUTH_RESPONSE_KEY, JSON.stringify(authResponse));
   }
 
   public getAuthResponse(): any {
-    const authResponseJson = window.sessionStorage.getItem(AUTH_RESPONSE_KEY);
+    const authResponseJson = window.localStorage.getItem(AUTH_RESPONSE_KEY);
     let authResponse:AuthResponse;
     if (authResponseJson) {
        let authResponse:AuthResponse =  JSON.parse(authResponseJson);
@@ -42,7 +45,7 @@ export class StorageService {
   }
 
   public isLoggedIn(): boolean {
-    const user = window.sessionStorage.getItem(AUTH_RESPONSE_KEY);
+    const user = window.localStorage.getItem(AUTH_RESPONSE_KEY);
     if (user) {
       return true;
     }

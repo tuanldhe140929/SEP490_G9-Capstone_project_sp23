@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { ManageAccountInfoRoutingModule } from './manage-account-info-routing.module';
 import { ProfileComponent } from './profile/profile.component';
-import { AuthGuardService } from 'src/app/helpers/AuthGuardService';
+import { AuthGuard } from '../../helpers/auth.guard';
 
 
 @NgModule({
@@ -11,6 +11,6 @@ import { AuthGuardService } from 'src/app/helpers/AuthGuardService';
   imports: [
     ManageAccountInfoRoutingModule
   ],
-  providers:[AuthGuardService]
+  providers: [AuthGuard]
 })
 export class ManageAccountInfoModule { }
