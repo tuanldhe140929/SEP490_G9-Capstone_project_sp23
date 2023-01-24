@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.SEP490_G9.models.DTOS.Product;
-import com.SEP490_G9.models.DTOS.User;
+import com.SEP490_G9.models.Entities.Product;
+import com.SEP490_G9.models.Entities.User;
 import com.SEP490_G9.services.CommonService;
 
 @RestController

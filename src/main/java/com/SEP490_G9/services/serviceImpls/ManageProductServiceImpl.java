@@ -7,8 +7,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.SEP490_G9.models.DTOS.Product;
-import com.SEP490_G9.models.DTOS.User;
+import com.SEP490_G9.models.Entities.Product;
+import com.SEP490_G9.models.Entities.User;
 import com.SEP490_G9.models.UserDetailsImpl;
 import com.SEP490_G9.repositories.ProductRepository;
 import com.SEP490_G9.repositories.UserRepository;
@@ -24,11 +24,9 @@ public class ManageProductServiceImpl implements ManageProductService {
 	UserRepository userRepository;
 
 	@Override
-	public User getCurrentUserInfo(String email) {
-		if (userRepository.existsByEmail(email)) {
-			return userRepository.findByEmail(email);
-		}
-		throw new UsernameNotFoundException("Not found user with email: " + email);
+	public User getCurrentUserInfo() {
+		User user = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
+		return user;
 	}
 
 	@Override

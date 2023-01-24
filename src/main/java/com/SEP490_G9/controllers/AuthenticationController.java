@@ -18,7 +18,7 @@ import com.SEP490_G9.exceptions.RefreshTokenException;
 import com.SEP490_G9.models.AuthRequest;
 import com.SEP490_G9.models.AuthResponse;
 import com.SEP490_G9.models.EmailResponse;
-import com.SEP490_G9.models.DTOS.User;
+import com.SEP490_G9.models.Entities.User;
 import com.SEP490_G9.services.authService.AuthService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -98,15 +98,14 @@ public class AuthenticationController {
 	}
 
 	@RequestMapping(value = "forgotAndResetPassword", method = RequestMethod.POST)
-	public ResponseEntity<?> resetPassword(HttpServletRequest request, @RequestParam String email) {
+	public ResponseEntity<?> resetPassword(HttpServletRequest request, @RequestParam(required=true) String email) {
 		EmailResponse response = authService.sendResetPasswordMail(request, email);
-
 		return ResponseEntity.ok(response);
 	}
 
 	@RequestMapping(value = "forgotAndResetPasswordConfirm", method = RequestMethod.POST)
-	public ResponseEntity<?> confirmRequestResetPassword(HttpServletRequest request, @RequestParam String captcha,
-			@RequestParam String email, @RequestParam String newPassword) {
+	public ResponseEntity<?> confirmRequestResetPassword(HttpServletRequest request, @RequestParam(required=true) String captcha ,
+			@RequestParam(required=true) String email, @RequestParam(required=true) String newPassword) {
 		System.out.println(email + "\n" + captcha);
 		boolean ret = authService.confirmRequestResetPassword(request, captcha, email, newPassword);
 		return ResponseEntity.ok(ret);

@@ -22,31 +22,39 @@ export class AuthInterceptor implements HttpInterceptor {
      	let authReq = req;
      	if(this.storage.getToken()!=null){
     	const token = this.storage.getToken();
-      	authReq = req.clone({ headers: req.headers.set(TOKEN_HEADER_KEY, 'Bearer ' + token) });
-  }
-   		 return next.handle(authReq).pipe(catchError(x => this.handleAuthError(x)));
+          authReq = req.clone({ headers: req.headers.set(TOKEN_HEADER_KEY, 'Bearer ' + token) });
+    }
+    return next.handle(authReq);
+   		 //return next.handle(authReq).pipe(catchError(x => this.handleAuthError(x)));
 }
 
 private handleAuthError(err: HttpErrorResponse): Observable<any> {
   if (err.status === 401 || err.status === 403) {
-    		this.storage.clear();
-			this.authService.refreshToken().subscribe(
-				response => {
-     			this.storage.saveUser(response.body);
-     			this.storage.saveToken(response.body.accessToken);
-     			window.location.reload;
-        }, error => {
-			console.log(error);
-				  this.router.navigateByUrl(`login`);
-			  });
-			
-            return of(err.message); 
-        }
+
+    this.storage.clearStorage();
+    this.authService.refreshToken().subscribe(
+      response => {
+        this.storage.saveUser(response.body);
+        this.storage.saveToken(response.body.accessToken);
+        window.location.reload;
+      }, error => {
+        console.log(error);
+        this.router.navigateByUrl(`login`);
+      });
+
+    return of(err.message);
+  } else if (err.status === 0) {
+    this.router.navigateByUrl('error');
+  }
         return throwError(err);
-    }
+  }
+
+  doNothing() {
+
+  }
+
+  authCheck() {
+  }
 }
-
-
-
 
 

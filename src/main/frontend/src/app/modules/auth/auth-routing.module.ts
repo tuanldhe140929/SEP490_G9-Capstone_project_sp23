@@ -8,19 +8,23 @@ import { RegisterComponent } from './register/register.component';
 const routes: Routes = [
 	{
 		path: 'login',
-		component: LoginComponent
+    component: LoginComponent,
+    title:'Login'
 	},
 	{
 		path: 'forgotPassword',
-		component: ForgotPasswordComponent
+    component: ForgotPasswordComponent,
+    title: 'Reset password'
 	},
 	{
 		path:'register',
-		component: RegisterComponent
+    component: RegisterComponent,
+    title: 'Create new account'
 	},
 	{
 		path:'auth/loginWithGoogle',
-		component: LoginWithGoogleComponent
+    component: LoginWithGoogleComponent,
+    title: 'Google Login'
 	}
 ];
 

@@ -8,8 +8,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.SEP490_G9.exceptions.RefreshTokenException;
-import com.SEP490_G9.models.DTOS.RefreshToken;
-import com.SEP490_G9.models.DTOS.User;
+import com.SEP490_G9.models.Entities.RefreshToken;
+import com.SEP490_G9.models.Entities.User;
 import com.SEP490_G9.repositories.RefreshTokenRepository;
 import com.SEP490_G9.repositories.UserRepository;
 import com.SEP490_G9.services.authService.RefreshTokenService;

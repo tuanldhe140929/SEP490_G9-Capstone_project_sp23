@@ -1,6 +1,7 @@
-package com.SEP490_G9.models.DTOS;
+package com.SEP490_G9.models.Entities;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,6 +24,9 @@ public class Product implements Serializable {
 	@Column(name="name")
 	private String name;
 	
+	@Column(name="url")
+	private String url;
+	
 	@Column(name="description")
 	private String description;
 	
@@ -36,14 +40,10 @@ public class Product implements Serializable {
 	private Date uploadDate;
 	
 	@Column(name="last_update")
-	private Date lastUpdate;
+	private Instant lastUpdate = Instant.now();
 	
-	@Column(name="original_price")
-	private int originalPrice;
-	
-	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "product_category", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
-	private List<Category> categories = new ArrayList<Category>();
+	@Column(name="price")
+	private int price;
 
 	@OneToMany(mappedBy="product")
 	private List<Preview> previews = new ArrayList<Preview>();
@@ -52,10 +52,19 @@ public class Product implements Serializable {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 	
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "product_tag", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "tag_id"))
+	private List<Tag> tags = new ArrayList<Tag>();
+	
+	@ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "type_id", unique = false, nullable = false)
+    private Type type;
+	
+	
 	public Product() {}
 	
-	public Product(Long id, String name, String description,String localPath, String coverImage, Date uploadDate, Date lastUpdate,
-			int originalPrice, List<Category> categories, List<Preview> previews, User user) {
+	public Product(Long id, String name, String description,String localPath, String coverImage, Date uploadDate,
+			int price, List<Tag> tags, List<Preview> previews, User user, Type type, String url) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -63,11 +72,13 @@ public class Product implements Serializable {
 		this.localPath = localPath;
 		this.coverImage = coverImage;
 		this.uploadDate = uploadDate;
-		this.lastUpdate = lastUpdate;
-		this.originalPrice = originalPrice;
-		this.categories = categories;
+		this.lastUpdate = Instant.now();
+		this.price = price;
+		this.tags = tags;
 		this.previews = previews;
 		this.user = user;
+		this.type = type;
+		this.url = url;
 	}
 
 	public Long getId() {
@@ -110,30 +121,38 @@ public class Product implements Serializable {
 		this.uploadDate = uploadDate;
 	}
 
-	public Date getLastUpdate() {
+	public int getPrice() {
+		return price;
+	}
+
+	public void setPrice(int price) {
+		this.price = price;
+	}
+
+	public Instant getLastUpdate() {
 		return lastUpdate;
 	}
 
-	public void setLastUpdate(Date lastUpdate) {
+	public void setLastUpdate(Instant lastUpdate) {
 		this.lastUpdate = lastUpdate;
 	}
 
-	public int getOriginalPrice() {
-		return originalPrice;
+	public List<Tag> getTags() {
+		return tags;
 	}
 
-	public void setOriginalPrice(int originalPrice) {
-		this.originalPrice = originalPrice;
+	public void setTags(List<Tag> tags) {
+		this.tags = tags;
 	}
 
-	public List<Category> getCategories() {
-		return categories;
+	public Type getType() {
+		return type;
 	}
 
-	public void setCategories(List<Category> categories) {
-		this.categories = categories;
+	public void setType(Type type) {
+		this.type = type;
 	}
-	
+
 	public List<Preview> getPreviews() {
 		return previews;
 	}
@@ -161,6 +180,15 @@ public class Product implements Serializable {
 	public void setUser(User user) {
 		this.user = user;
 	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+	
 	
 	
 }

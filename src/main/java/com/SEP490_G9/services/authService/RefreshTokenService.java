@@ -2,8 +2,8 @@ package com.SEP490_G9.services.authService;
 
 import java.util.Optional;
 
-import com.SEP490_G9.models.DTOS.RefreshToken;
-import com.SEP490_G9.models.DTOS.User;
+import com.SEP490_G9.models.Entities.RefreshToken;
+import com.SEP490_G9.models.Entities.User;
 
 public interface RefreshTokenService {
 

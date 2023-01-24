@@ -5,8 +5,8 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.SEP490_G9.models.DTOS.RefreshToken;
-import com.SEP490_G9.models.DTOS.User;
+import com.SEP490_G9.models.Entities.RefreshToken;
+import com.SEP490_G9.models.Entities.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -17,4 +17,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	public User findByRefreshToken(RefreshToken refreshToken);
 	
 	Boolean existsByEmail(String email);
+
+	Boolean existsByUsername(String username);
 }

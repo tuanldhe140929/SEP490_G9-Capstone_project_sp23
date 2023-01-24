@@ -3,7 +3,7 @@ import { AuthRoutingModule } from './auth-routing.module';
 import { LoginComponent } from './login/login.component';
 import { LoginWithGoogleComponent } from './login/login-with-google/login-with-google.component';
 import { RegisterComponent } from './register/register.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ForgotPasswordComponent } from './login/forgot-password/forgot-password.component';
 import { BrowserModule } from '@angular/platform-browser';
 
@@ -19,6 +19,7 @@ import { BrowserModule } from '@angular/platform-browser';
     BrowserModule,
     AuthRoutingModule,
     ReactiveFormsModule,
+    FormsModule
   ]
 })
 export class AuthModule { }

@@ -30,7 +30,7 @@ public class EmailExistException extends RuntimeException {
 		return errorResponse;
 	}
 	public void setErrorResponse() {
-		String message = String.format("Email: %s exist'", this.email);
+		String message = String.format("Email or Username: %s exist'", this.email);
 		List<String> msgs = new ArrayList<String>();
 		msgs.add(message);
 		this.errorResponse = new ErrorResponse(msgs,HttpStatus.CONFLICT);

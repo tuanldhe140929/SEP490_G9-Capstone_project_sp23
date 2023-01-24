@@ -10,7 +10,7 @@ public class AuthRequest implements Serializable  {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@jakarta.validation.constraints.Email(message = "invalid format")
+	@Email(message = "invalid format")
 	@NotBlank(message = "email can't be blank")
 	@Size(min = 5, max = 100)
 	private String email;

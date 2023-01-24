@@ -1,22 +1,129 @@
-<form [formGroup]="newProductForm" (ngSubmit)="addProduct()">
+<div class="container-fluid grad">
+  <div class="row padded" style="width:80%; background:white; margin:auto;">
+    <div class="row" style="border-bottom:0.5px solid grey">
+      <h2>Upload new product</h2>
+    </div>
+    <form [formGroup]="newProductForm" (ngSubmit)="addProduct()">
+      <div class="row">
+        <div class="row columns">
+          <div class="left_col col-8" style="border-right:1px solid black">
+            <div class="input_row">
+              <div><label for="title">Title</label></div>
+              <div><input type="text" formControlName="title" id="title" /></div>
+            </div>
+            <div class="input_row">
+              <div><label for="productUrl">Product URL</label> </div>
+              <div><input id="productUrl" [(ngModel)]="productUrl" [ngModelOptions]="{standalone: true}"></div>
+              <div>
+                <small>Your product's url will be: </small>
+                <h5>http://localhost:4200/{{currentUser.username}}/{{productUrl.trim().toLowerCase()}}</h5>
+              </div>
+            </div>
+            <div class="input_row">
+              <div><label for="description">Description</label></div>
+              <div><input id="description" type="text" formControlName="description" placeholder="Optional" /></div>
+            </div>
+            <div class="input_row classification_picker">
+              <div class="classification_picker_label">
+                <div>
+                  <label for="classification">Classification</label>
+                </div>
+                <div>
+                  <small>What are you uploading</small>
+                </div>
+              </div>
+              <div class="">
+                <select class="classification_picker_body" formControlName="classification" id="classification">
+                  <option value="Soundtracks">Soundtracks</option>
+                  <option value="Sound effect">Sound effect</option>
+                  <option value="Sprites">Sprites</option>
+                  <option value="Game Scripts">Game Scripts</option>
+                </select>
+              </div>
+            </div>
 
- <input [(ngModel)]="productName" [ngModelOptions]="{standalone: true}">
-  <p>Your product's url will be: </p>
- <!--  <p>http://localhost:4200/{{user.username}}/{{productName}}</p> -->
-  <input type="" formControlName="description" placeholder="description" /><br />
-  <label for="classification">What are you uploading</label>
-  <br />
-  <select name="classification" id="classification">
-    <option value="Soundtracks">Soundtracks</option>
-    <option value="Sound effect">Sound effect</option>
-    <option value="Sprites">Sprites</option>
-    <option value="Game Scripts">Game Scripts</option>
-  </select>
-  <br />
-  <label for="pricing">Pricing</label><br />
-  <input type="radio" id="html" name="fav_language" value="HTML">
-  <label for="html">Paid</label><br>
-  <input type="radio" id="css" name="fav_language" value="CSS">
-  <label for="css">No payments</label><br>
-  <input type="submit"/>
-</form>
+            <section class="price_picker">
+              <h2>Pricing</h2>
+              <div class="price_picker_drop">
+                <div class="game_edit_price_picker_widget" (click)="onChoosePayment($event)">
+                  <div class="payment_modes">
+                    <button id="clickThis" type="button" class="payment_mode_paid active">
+                      <span class="icon"></span>
+                      Paid
+                    </button>
+                    <button type="button" class="payment_mode_no_paid">
+                      <span class="icon icon-checkbox-unchecked"></span>
+                      No payment
+                    </button>
+                  </div>
+                  <div class="describe">
+                    <div class="paid">
+                      <div class="input_row">
+                        <div><label>Minimum price<span class="sub"> - Minimum price to get access to download this product</span></label></div>
+                        <div><input id="price" type="text" name="minPrice" placeholder="1.000đ" value="1.000đ"
+                        (keydown)="onPriceChange($event)" formControlName="price"/></div>
+                      </div>
+                    </div>
+                    <div class="no_payment">
+                      <div class="input_row">
+                        <div><label>No payments<span class="sub"> - This product is free to download  </span></label></div> 
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+            <section class="upload_editor">
+              <h2>Uploads</h2>
+              <div class="upload_drop">
+                <div class="game_edit_upload_list_widget">
+                  <div class="file_list has_files">
+                    <div class="uploader">
+                      <div class="upload_tools">
+                        <button class="delete_btn" type="button">Delete file</button>
+                      </div>
+                      <div class="upload_content">
+                        <div class="upload_title">
+                          <strong class="upload_display_name">FILE NAME</strong>
+                        </div>
+                        <div class="meta_data">
+                          <span class="file_size">FILE SIZE</span>
+                          <span class="display_name_wrap">.<a href="#">Change dislay name</a></span>
+                          <span class="move_up_wrap">.<a href="#">Move up</a></span>
+                          <span class="move_down_wrap">.<a href="#">Move down</a></span>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="add_file_btn_outer upload_buttons">
+                <div class="button add_file_btn has_multi_upload">
+                  Upload files
+                </div>
+                <input type="file" multiple style="display:none" />
+              </div>
+              <p class="upload_limit">File size limit: 1GB</p>
+            </section>
+            <input type="submit" />
+          </div>
+          <div class="right_col col-4">
+            <div class="cover_uploader_drop">
+              <div class="upload_container"></div>
+              <div class="upload_instruction"><p>Upload cover image here</p></div>
+            </div>
+            <div class="preview_videos_drop">
+              <div class="upload_container"></div>
+              <div class="upload_instruction"><p>Upload preview videos here</p></div>
+            </div>
+            <div class="preview_pictures_drop">
+              <div class="upload_container"></div>
+              <div class="upload_instruction"><p>Upload preview pictures here</p> </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

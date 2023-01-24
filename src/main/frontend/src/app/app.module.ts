@@ -10,6 +10,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { ManageAccountInfoModule } from './modules/manage-account-info/manage-account-info.module';
 import { ManageProductModule } from './modules/manage-product/manage-product.module';
 import { CommonModule } from './modules/common/common.module';
+import { BasicsModule } from './modules/basics/basics.module';
 
 
 @NgModule({
@@ -26,6 +27,7 @@ import { CommonModule } from './modules/common/common.module';
     ManageAccountInfoModule,
     ManageProductModule,
     CommonModule,
+    BasicsModule,
   
   ],
   providers: [

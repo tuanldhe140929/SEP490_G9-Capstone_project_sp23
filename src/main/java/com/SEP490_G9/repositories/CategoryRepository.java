@@ -1,9 +1,0 @@
-package com.SEP490_G9.repositories;
-
-import org.springframework.data.jpa.repository.JpaRepository;
-
-import com.SEP490_G9.models.DTOS.Category;
-
-public interface CategoryRepository extends JpaRepository<Category,Long> {
-
-}

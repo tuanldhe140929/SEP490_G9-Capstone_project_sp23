@@ -1,4 +1,4 @@
-package com.SEP490_G9.models.DTOS;
+package com.SEP490_G9.models.Entities;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -10,34 +10,33 @@ import jakarta.persistence.*;
 
 @JsonIgnoreProperties(value = { "products" })
 @Entity
-@Table(name="categories")
-public class Category implements Serializable {
+@Table(name="tags")
+public class Tag implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int id;
 	
 	@Column(name="name")
 	private String name;
-	public Category() {
-		// TODO Auto-generated constructor stub
+	public Tag() {
 	}
 	
-	@ManyToMany(mappedBy="categories")
+	@ManyToMany(mappedBy="tags")
     private List<Product> products = new ArrayList<>();
 	
-	public Category(Long id, String name) {
+	public Tag(int id, String name) {
 		super();
 		this.id = id;
 		this.name = name;
 	}
 
-	public Long getId() {
+	public int getId() {
 		return id;
 	}
-	public void setId(Long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 	public String getName() {

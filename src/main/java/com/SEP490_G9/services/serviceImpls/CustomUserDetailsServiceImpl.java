@@ -1,13 +1,13 @@
 package com.SEP490_G9.services.serviceImpls;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.SEP490_G9.models.DTOS.User;
+import com.SEP490_G9.models.Entities.User;
+import com.SEP490_G9.exceptions.AuthRequestException;
 import com.SEP490_G9.models.UserDetailsImpl;
 import com.SEP490_G9.repositories.UserRepository;
 
@@ -19,10 +19,12 @@ public class CustomUserDetailsServiceImpl implements UserDetailsService {
 
 	@Transactional
 	@Override
-	public UserDetailsImpl loadUserByUsername(String name) throws DataAccessException {
-		User domainUser = userRepository.findByEmail(name);
-		if(domainUser==null) {
-			throw new UsernameNotFoundException("Not found user with email: "+name);
+	public UserDetailsImpl loadUserByUsername(String name) throws UsernameNotFoundException {
+		User domainUser = null;
+		if (userRepository.existsByEmail(name)) {
+			domainUser = userRepository.findByEmail(name);
+		} else {
+			throw new AuthRequestException("Email: "+name+" not found.");
 		}
 		UserDetailsImpl customUserDetail = new UserDetailsImpl();
 		customUserDetail.setUser(domainUser);

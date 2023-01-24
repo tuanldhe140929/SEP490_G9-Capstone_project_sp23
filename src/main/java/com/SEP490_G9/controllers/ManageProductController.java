@@ -13,22 +13,30 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.SEP490_G9.models.DTOS.Product;
-import com.SEP490_G9.models.DTOS.User;
+import com.SEP490_G9.models.Entities.Product;
+import com.SEP490_G9.models.Entities.User;
 import com.SEP490_G9.services.ManageProductService;
 
-@RequestMapping(value = "private/productManage")
+@RequestMapping(value = "private/manageProduct")
 @RestController
-public class ProductManageController {
+public class ManageProductController {
 
 	@Autowired
 	ManageProductService manageProductService;
 	
 	
 	@GetMapping(value="getCurrentUserInfo")
-	public ResponseEntity<?> getCurrentUserInfo(@RequestParam String email) {
-		User user = manageProductService.getCurrentUserInfo(email);
-		return ResponseEntity.ok(user);
+	public ResponseEntity<?> getCurrentUserInfo() {
+		User user = manageProductService.getCurrentUserInfo();
+		User user2 = new User();
+		user2.setId(user.getId());
+		user2.setEnabled(user.isEnabled());
+		user2.setVerified(user.isVerified());
+		user2.setEmail(user.getEmail());
+		user2.setPassword(null);
+		user2.setRole(user.getRole());
+		user2.setUsername(user.getUsername());
+		return ResponseEntity.ok(user2);
 	}
 	
 	@GetMapping(value="getProductsByUser")
@@ -41,7 +49,7 @@ public class ProductManageController {
 	public ResponseEntity<?> addProduct(@RequestBody Product product) {
 		Product ret =  manageProductService.addProduct(product);
 		return ResponseEntity.ok(ret);
-	}
+	} 
 
 	@DeleteMapping(value="deleteProduct/{id}")
 	public ResponseEntity<?> deleteProducts(@PathVariable(name="id") Long id) {

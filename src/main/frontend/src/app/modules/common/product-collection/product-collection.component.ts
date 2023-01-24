@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { User } from '../../../interfaces/User';
+import { User } from '../../../DTOS/User';
 import { CommonService } from '../../../services/common.service';
 
 @Component({
@@ -9,7 +9,7 @@ import { CommonService } from '../../../services/common.service';
   styleUrls: ['./product-collection.component.css']
 })
 export class ProductCollectionComponent implements OnInit {
-  user!: User;
+  user: User = new User();
   products: any[] = [];
   message = '';
   message2 = '';

@@ -1,9 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AuthResponse } from '../interfaces/AuthResponse';
-
-
-
-
+import { AuthResponse } from '../DTOS/AuthResponse';
 const AUTH_RESPONSE_KEY = 'auth-user';
 const TOKEN_KEY = 'auth-token';
 @Injectable({
@@ -12,12 +8,12 @@ const TOKEN_KEY = 'auth-token';
 export class StorageService {
   constructor() {}
 
-  clear(): void {
+  clearStorage(): void {
     window.localStorage.clear();
   }
 
 	signOut(): void {
-    window.localStorage.clear();
+    localStorage.clear();
   }
 
   public saveToken(token: string): void {

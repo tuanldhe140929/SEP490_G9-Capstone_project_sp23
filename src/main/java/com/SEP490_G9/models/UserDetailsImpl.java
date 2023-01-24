@@ -8,7 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.SEP490_G9.models.DTOS.User;
+import com.SEP490_G9.models.Entities.User;
 
 public class UserDetailsImpl implements UserDetails {
 

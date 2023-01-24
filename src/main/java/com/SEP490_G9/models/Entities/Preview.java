@@ -1,4 +1,4 @@
-package com.SEP490_G9.models.DTOS;
+package com.SEP490_G9.models.Entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -20,7 +20,6 @@ public class Preview {
 	private Product product;
 	
 	public Preview() {
-		// TODO Auto-generated constructor stub
 	}
 
 	public Preview(Long id, String path) {

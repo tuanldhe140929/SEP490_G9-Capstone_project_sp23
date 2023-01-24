@@ -1,10 +1,13 @@
 package com.SEP490_G9.exceptions;
 
+import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -25,6 +28,7 @@ public class CommonExceptionHandler {
 		for (FieldError error : fieldErrors) {
 			messages.add(error.getField() + " - " + error.getDefaultMessage());
 		}
+		System.out.println("Method argument");
 		return new ErrorResponse(messages,HttpStatus.BAD_REQUEST);
 	}
 	
@@ -36,6 +40,7 @@ public class CommonExceptionHandler {
 				+ Objects.requireNonNull(ex.getRequiredType()).getSimpleName() + "'";
 		List<String> messages = new ArrayList<>(1);
 		messages.add(message);
+		System.out.println("Method argument mismatch");
 		return new ErrorResponse(messages, HttpStatus.BAD_REQUEST);
 	}
 	
@@ -43,6 +48,7 @@ public class CommonExceptionHandler {
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public ErrorResponse resolveException(ResourceNotFoundException exception) {
 		ErrorResponse errorResponse = exception.getErrorResponse();
+		System.out.println("Resource not found");
 		return errorResponse;
 	}
 	
@@ -51,6 +57,7 @@ public class CommonExceptionHandler {
 	public ErrorResponse resolveException(UsernameNotFoundException exception) {
 		List<String> msgs = new ArrayList<>();
 		msgs.add(exception.getMessage());
+		System.out.println("Username not found");
 		return new ErrorResponse(msgs, HttpStatus.BAD_REQUEST);
 	}
 	
@@ -58,6 +65,7 @@ public class CommonExceptionHandler {
 	@ResponseStatus(HttpStatus.CONFLICT)
 	public ErrorResponse resolveException(EmailExistException exception) {
 		ErrorResponse errorResponse = exception.getErrorResponse();
+		System.out.println("Email exist");
 		return errorResponse;
 	}
 	
@@ -65,6 +73,7 @@ public class CommonExceptionHandler {
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public ErrorResponse resolveException(RefreshTokenException exception) {
 		ErrorResponse errorResponse = exception.getErrorResponse();
+		System.out.println("refresh token");
 		return errorResponse;
 	}
 	
@@ -75,6 +84,42 @@ public class CommonExceptionHandler {
 		ErrorResponse errorResponse = exception.getErrorResponse();
 		return errorResponse;
 	}
+	
+	@ExceptionHandler(AuthRequestException.class)
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	public ErrorResponse resolveException(AuthRequestException exception) {
+		System.out.println("auth request");
+		ErrorResponse errorResponse = exception.getErrorResponse();
+		return errorResponse;
+	}
+	
+	@ExceptionHandler(AuthenticationException.class)
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	public ErrorResponse resolveException(AuthenticationException exception) {
+		System.out.println("auth request");
+		List<String> msgs = new ArrayList<>();
+		msgs.add(exception.getMessage());
+		ErrorResponse errorResponse = new ErrorResponse(msgs,HttpStatus.INTERNAL_SERVER_ERROR);
+		return errorResponse;
+	}
+	
+	
+	@ExceptionHandler(UserPrincipalNotFoundException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ErrorResponse resolveException(UserPrincipalNotFoundException exception) {
+		ErrorResponse errorResponse = null;
+		return errorResponse;
+	}
+	
+	@ExceptionHandler(AccessDeniedException.class)
+    public final ErrorResponse handleAccessDeniedException(AccessDeniedException ex) {
+       ErrorResponse errorResponse = new ErrorResponse();
+       List<String> msgs = new ArrayList<>();
+       msgs.add(ex.getMessage());
+       errorResponse.setMessages(msgs);
+       errorResponse.setStatus(HttpStatus.FORBIDDEN);
+       return errorResponse;
+    }
 //	@ExceptionHandler({ CustomException.class })
 //	@ResponseStatus(HttpStatus.BAD_REQUEST)
 //	public ErrorResponse customExceptionHandle(CustomException ex) {

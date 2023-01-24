@@ -1,0 +1,17 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\src",
+    "\\src\\main",
+    "\\src\\main\\frontend",
+    "\\src\\main\\frontend\\src",
+    "\\src\\main\\frontend\\src\\app",
+    "\\src\\main\\frontend\\src\\app\\helpers",
+    "\\src\\main\\frontend\\src\\app\\modules",
+    "\\src\\main\\frontend\\src\\app\\modules\\manage-product",
+    "\\src\\main\\frontend\\src\\app\\modules\\manage-product\\new-product",
+    "\\src\\main\\resources"
+  ],
+  "SelectedNode": "\\src\\main\\resources\\application.properties",
+  "PreviewInSolutionExplorer": false
+}

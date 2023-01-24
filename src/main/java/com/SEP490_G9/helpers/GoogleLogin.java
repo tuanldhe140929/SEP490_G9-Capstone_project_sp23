@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
-import com.SEP490_G9.models.DTOS.User;
+import com.SEP490_G9.models.Entities.User;
 
 @Component
 public class GoogleLogin {

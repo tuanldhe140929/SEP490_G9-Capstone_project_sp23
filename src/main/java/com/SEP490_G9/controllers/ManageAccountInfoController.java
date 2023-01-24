@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.SEP490_G9.models.DTOS.User;
+import com.SEP490_G9.models.Entities.User;
 import com.SEP490_G9.services.ManageAccountInfoService;
 
 @RestController

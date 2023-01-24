@@ -6,6 +6,7 @@ import { NewProductComponent } from './new-product/new-product.component';
 const routes: Routes = [{
   path: 'product/new',
   component: NewProductComponent,
+  title: "Create new product",
   canActivate: [AuthGuard]
 }];
 

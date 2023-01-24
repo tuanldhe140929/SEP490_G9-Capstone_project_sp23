@@ -19,7 +19,8 @@ export class ForgotPasswordComponent implements OnInit {
   	
 	resetPasswordForm = this.formBuilder.group({
 		"captcha":['',[Validators.required]],
-		"newPassword":['',[Validators.required,Validators.minLength(5),Validators.maxLength(30)]]
+    "newPassword": ['', [Validators.required, Validators.minLength(5), Validators.maxLength(30)]],
+    "repeat_password": ['', [Validators.required, Validators.minLength(5), Validators.maxLength(30)]]
 	});
 	
 	get Form1(){

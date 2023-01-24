@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.SEP490_G9.models.DTOS.User;
+import com.SEP490_G9.models.Entities.User;
 import com.SEP490_G9.repositories.UserRepository;
 import com.SEP490_G9.services.ManageAccountInfoService;
 

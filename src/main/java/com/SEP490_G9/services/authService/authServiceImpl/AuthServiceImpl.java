@@ -1,6 +1,8 @@
 package com.SEP490_G9.services.authService.authServiceImpl;
 
 import java.io.IOException;
+import java.nio.file.attribute.UserPrincipalNotFoundException;
+
 import org.apache.http.client.ClientProtocolException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -10,6 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.SEP490_G9.exceptions.AuthRequestException;
 import com.SEP490_G9.exceptions.EmailExistException;
 import com.SEP490_G9.exceptions.RefreshTokenException;
 import com.SEP490_G9.exceptions.ResourceNotFoundException;
@@ -17,8 +20,8 @@ import com.SEP490_G9.helpers.GoogleLogin;
 import com.SEP490_G9.models.AuthRequest;
 import com.SEP490_G9.models.AuthResponse;
 import com.SEP490_G9.models.EmailResponse;
-import com.SEP490_G9.models.DTOS.RefreshToken;
-import com.SEP490_G9.models.DTOS.User;
+import com.SEP490_G9.models.Entities.RefreshToken;
+import com.SEP490_G9.models.Entities.User;
 import com.SEP490_G9.models.UserDetailsImpl;
 import com.SEP490_G9.repositories.RoleRepository;
 import com.SEP490_G9.repositories.UserRepository;
@@ -59,10 +62,15 @@ public class AuthServiceImpl implements AuthService {
 
 	@Override
 	public boolean register(User user) {
-		
+
 		if (userRepository.existsByEmail(user.getEmail())) {
 			throw new EmailExistException(user.getEmail());
-		} else {
+		}
+		if (userRepository.existsByUsername(user.getUsername())) {
+			throw new EmailExistException(user.getUsername());
+		}
+
+		else {
 			String encodedPassword = new BCryptPasswordEncoder().encode(user.getPassword().trim());
 			user.setPassword(encodedPassword);
 			user.setEnabled(true);
@@ -78,8 +86,8 @@ public class AuthServiceImpl implements AuthService {
 
 		Authentication authentication = authenticationProvider.authenticate(
 				new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
-		SecurityContextHolder.getContext().setAuthentication(authentication);
 
+		SecurityContextHolder.getContext().setAuthentication(authentication);
 		User user = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
 		if (authRequest.isRememberMe()) {
 			RefreshToken refreshToken = refreshTokenService.createRefreshToken(user);
@@ -103,12 +111,14 @@ public class AuthServiceImpl implements AuthService {
 			throws ClientProtocolException, IOException {
 		User googleLoginUser = googleLogin.getUserInfo(code);
 		User foundUser;
-		if(!userRepository.existsByEmail(googleLoginUser.getEmail())) {
+		if (!userRepository.existsByEmail(googleLoginUser.getEmail())) {
+			googleLoginUser
+					.setUsername(googleLoginUser.getEmail().substring(0, googleLoginUser.getEmail().indexOf("@")));
 			googleLoginUser.setPassword(passwordGenerator.generatePassword(8).toString());
 			register(googleLoginUser);
 		}
 		foundUser = userRepository.findByEmail(googleLoginUser.getEmail());
-		
+
 		UserDetailsImpl userDetails = new UserDetailsImpl();
 		userDetails.setUser(foundUser);
 		UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null,
@@ -124,7 +134,7 @@ public class AuthServiceImpl implements AuthService {
 		AuthResponse authResponse = new AuthResponse();
 		RefreshToken refreshToken = refreshTokenService.findByToken(token);
 		if (refreshTokenService.verifyExpiration(refreshToken)) {
-				throw new RefreshTokenException(token,"Expired");
+			throw new RefreshTokenException(token, "Expired");
 		} else {
 			User user = userRepository.findByRefreshToken(refreshTokenService.findByToken(token));
 			authResponse.setAccessToken(jwtUtil.generateToken(user.getEmail()));
@@ -147,7 +157,6 @@ public class AuthServiceImpl implements AuthService {
 		String email = SecurityContextHolder.getContext().getAuthentication().getName();
 		EmailResponse response = (EmailResponse) request.getSession().getAttribute(email);
 		boolean ret = false;
-
 		if (response == null) {
 			return ret;
 		} else {
@@ -166,17 +175,22 @@ public class AuthServiceImpl implements AuthService {
 	@Override
 	public EmailResponse sendVerifyEmail(HttpServletRequest request) {
 		String email = SecurityContextHolder.getContext().getAuthentication().getName();
-		User user = userRepository.findByEmail(email);
-		if (user == null) {
-			// throw new CustomException("User not logged in");
+		if(email==null) {
+			throw new AuthRequestException("User not logged in");
 		}
+		User user = userRepository.findByEmail(email);
+		
 		return emailService.sendVerifyEmail(email, request);
 	}
 
 	@Override
 	public EmailResponse sendResetPasswordMail(HttpServletRequest request, String email) {
-
-		return emailService.sendResetPasswordEmail(email, request);
+		if(userRepository.existsByEmail(email)) {
+			return emailService.sendResetPasswordEmail(email, request);
+		}else {
+			throw new ResourceNotFoundException("Email", "email", email);
+		}
+		
 
 	}
 
