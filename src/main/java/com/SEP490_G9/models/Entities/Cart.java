@@ -15,7 +15,7 @@ public class Cart {
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "cart_id")
-    private List<Product> products = new ArrayList<>();
+    
 
     @Column(name = "total_price")
     private double totalPrice;
