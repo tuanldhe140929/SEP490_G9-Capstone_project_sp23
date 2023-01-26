@@ -77,6 +77,7 @@ public class AuthServiceImpl implements AuthService {
 			user.setVerified(false);
 			user.setRole(roleRepository.getReferenceById((long) 2));
 			userRepository.save(user);
+			
 		}
 		return true;
 	}
