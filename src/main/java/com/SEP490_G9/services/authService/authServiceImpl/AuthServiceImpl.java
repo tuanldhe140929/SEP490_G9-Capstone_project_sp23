@@ -127,8 +127,7 @@ public class AuthServiceImpl implements AuthService {
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 
 		String jwt = jwtUtil.generateToken(foundUser.getEmail());
-		String role = foundUser.getRole().toString();
-		return new AuthResponse(foundUser.getEmail(), jwt, foundUser.getUsername(), role);
+		return new AuthResponse(foundUser.getEmail(), jwt, foundUser.getUsername(), foundUser.getRole().getName());
 	}
 
 	public AuthResponse refreshToken(String token) {

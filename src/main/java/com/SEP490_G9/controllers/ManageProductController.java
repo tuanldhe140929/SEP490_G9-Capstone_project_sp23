@@ -24,7 +24,6 @@ public class ManageProductController {
 	@Autowired
 	ManageProductService manageProductService;
 	
-	
 	@GetMapping(value="getCurrentUserInfo")
 	public ResponseEntity<?> getCurrentUserInfo() {
 		User user = manageProductService.getCurrentUserInfo();
