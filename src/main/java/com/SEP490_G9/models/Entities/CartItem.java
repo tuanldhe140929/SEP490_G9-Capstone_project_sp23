@@ -9,35 +9,67 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinColumns;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.Table;
 import com.SEP490_G9.models.Entities.Cart;
+import com.SEP490_G9.models.embeddables.CartItemKey;
 
 @Entity
 @Table(name = "cart_items")
 public class CartItem {
+	
+
+	
 	@EmbeddedId
 	private CartItemKey cartItemKey;
+
+	@MapsId("cartId")
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "cart_id")
+	@JoinColumn(name = "cart_id",referencedColumnName = "id")
 	private Cart cart;
 
+	@MapsId("productId")
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "product_id")
+	@JoinColumn(name = "product_id",referencedColumnName = "id")
 	private Product product;
-	@Embeddable
 	
-	public class CartItemKey {
-		@Column(name= "cart_id" )
-		private Cart cart;
-
-		@Column(name= "product_id" )
-		private Product product;
-	}
-
 	public CartItem() {
 
 	}
+
+	public CartItem(CartItemKey cartItemKey, Cart cart, Product product) {
+		super();
+		this.cartItemKey = cartItemKey;
+		this.cart = cart;
+		this.product = product;
+	}
+
+	public CartItemKey getCartItemKey() {
+		return cartItemKey;
+	}
+
+	public void setCartItemKey(CartItemKey cartItemKey) {
+		this.cartItemKey = cartItemKey;
+	}
+
+	public Cart getCart() {
+		return cart;
+	}
+
+	public void setCart(Cart cart) {
+		this.cart = cart;
+	}
+
+	public Product getProduct() {
+		return product;
+	}
+
+	public void setProduct(Product product) {
+		this.product = product;
+	}
+	
+	
 
 }

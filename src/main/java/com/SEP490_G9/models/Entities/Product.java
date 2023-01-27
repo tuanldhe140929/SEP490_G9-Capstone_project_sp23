@@ -60,6 +60,8 @@ public class Product implements Serializable {
     @JoinColumn(name = "type_id", unique = false, nullable = false)
     private Type type;
 	
+	@OneToMany(mappedBy="product")
+	private List<CartItem> items = new ArrayList<CartItem>();
 	
 	public Product() {}
 	

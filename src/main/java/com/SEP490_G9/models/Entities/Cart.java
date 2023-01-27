@@ -10,32 +10,25 @@ import jakarta.persistence.*;
 public class Cart {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id")
+	@OneToMany(mappedBy="cart")
+	private List<CartItem> items = new ArrayList<CartItem>();
+	
+	@ManyToOne
+	@JoinColumn(name="user_id", nullable=false)
 	private User user;
-
-	@OneToMany(mappedBy = "cart")
-	List<CartItem> items = new ArrayList<>();
-
+	
 	public Cart() {
+		// TODO Auto-generated constructor stub
 	}
 
-	public List<CartItem> getItems() {
-		return items;
-	}
-
-	public void setItems(List<CartItem> items) {
-		this.items = items;
-	}
-
-	public Cart(Long id, User user, List<CartItem> items) {
+	public Cart(Long id, List<CartItem> items, User user) {
 		super();
 		this.id = id;
-		this.user = user;
 		this.items = items;
+		this.user = user;
 	}
 
 	public Long getId() {
@@ -46,6 +39,14 @@ public class Cart {
 		this.id = id;
 	}
 
+	public List<CartItem> getItems() {
+		return items;
+	}
+
+	public void setItems(List<CartItem> items) {
+		this.items = items;
+	}
+
 	public User getUser() {
 		return user;
 	}
@@ -53,11 +54,12 @@ public class Cart {
 	public void setUser(User user) {
 		this.user = user;
 	}
-
-	public Cart(Long id, User user) {
-		super();
-		this.id = id;
-		this.user = user;
+	
+	public void addItem(CartItem newItem) {
+		newItem.setCart(this);
+		this.items.add(newItem);
 	}
+
+
 
 }
