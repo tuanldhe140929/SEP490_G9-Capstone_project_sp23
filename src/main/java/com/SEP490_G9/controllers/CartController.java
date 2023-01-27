@@ -24,10 +24,10 @@ public class CartController {
         return cartService.removeProduct(productId);
     }
 
-    @GetMapping("/{cartId}")
-    public Cart getCart(@PathVariable Long cartId) {
-        return cartService.getCart(cartId);
-    }
+//    @GetMapping("/{cartId}")
+//    public Cart getCart(@PathVariable Long cartId) {
+//        return cartService.getCart(cartId);
+//    }
 
     @GetMapping("/")
     public Cart getCurrentCart() {

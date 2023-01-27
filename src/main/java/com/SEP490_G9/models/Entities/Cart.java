@@ -9,55 +9,55 @@ import jakarta.persistence.*;
 @Table(name = "carts")
 public class Cart {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "cart_id")
-    
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id")
+	private User user;
 
-    @Column(name = "total_price")
-    private double totalPrice;
+	@OneToMany(mappedBy = "cart")
+	List<CartItem> items = new ArrayList<>();
 
-    public Cart() {}
+	public Cart() {
+	}
 
-    public Cart(List<Product> products, double totalPrice) {
-        this.products = products;
-        this.totalPrice = totalPrice;
-    }
+	public List<CartItem> getItems() {
+		return items;
+	}
 
-    public Long getId() {
-        return id;
-    }
+	public void setItems(List<CartItem> items) {
+		this.items = items;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public Cart(Long id, User user, List<CartItem> items) {
+		super();
+		this.id = id;
+		this.user = user;
+		this.items = items;
+	}
 
-    public List<Product> getProducts() {
-        return products;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public void setProducts(List<Product> products) {
-        this.products = products;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public double getTotalPrice() {
-        return totalPrice;
-    }
+	public User getUser() {
+		return user;
+	}
 
-    public void setTotalPrice(double totalPrice) {
-        this.totalPrice = totalPrice;
-    }
+	public void setUser(User user) {
+		this.user = user;
+	}
 
-    public void addProduct(Product product) {
-        this.products.add(product);
-        this.totalPrice += product.getPrice();
-    }
+	public Cart(Long id, User user) {
+		super();
+		this.id = id;
+		this.user = user;
+	}
 
-    public void removeProduct(Product product) {
-        this.products.remove(product);
-        this.totalPrice -= product.getPrice();
-    }
 }
