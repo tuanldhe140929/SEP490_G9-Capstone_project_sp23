@@ -24,12 +24,18 @@ public class ManageAccountInfoServiceImpl implements ManageAccountInfoService {
 	}
 
 	@Override
-	public User changeAccountPassword(String newPassword) {
+	public User changeAccountPassword(String newPassword, String oldPassword) {
 		User user = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
-		String encodedPassword = new BCryptPasswordEncoder().encode(newPassword);
-		user.setPassword(encodedPassword);
-		userRepo.save(user);
-		return user;
+		String encodedOldPassword = new BCryptPasswordEncoder().encode(oldPassword);
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		if(encoder.matches(oldPassword, user.getPassword())) {
+			String encodedPassword = new BCryptPasswordEncoder().encode(newPassword);
+			user.setPassword(encodedPassword);
+			userRepo.save(user);
+			return user;
+		}else {
+			return null;
+		}
 	}
 
 	@Override
