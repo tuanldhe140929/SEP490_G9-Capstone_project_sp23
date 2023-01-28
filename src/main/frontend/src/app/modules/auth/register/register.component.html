@@ -10,7 +10,7 @@
             <div><label for="email">Email</label></div>
             <div><input type="text" formControlName="email" id="email"></div>
             <div class="msg">
-              <div class="invalid" *ngIf="Form.email.invalid && (Form.email.dirty || Form.email.touched)">
+              <div class="invalid" *ngIf="Form.email.invalid && Form.email.touched">
                 <div *ngIf="Form.email.errors?.['required']"><small>Email is required.</small> </div>
                 <div *ngIf="Form.email.errors?.['email']"><small>Not valid email form</small> </div>
               </div>
@@ -18,9 +18,10 @@
           </div>
           <div class="input_row">
             <div><label for="username">Username</label></div>
-            <div><input id="username" [(ngModel)]="username" [ngModelOptions]="{standalone: true}" (change)="onUsernameChange($event)"></div>
+<!--             <div><input id="username" [(ngModel)]="username" formControlName="username" [ngModelOptions]="{standalone: true}" (change)="onUsernameChange($event)" ></div> -->
+            <div><input id="username" [(ngModel)]="username" formControlName="username" (change)="onUsernameChange($event)" ></div>
             <div class="msg">
-              <div class="invalid" *ngIf="Form.username.invalid">
+              <div class="invalid" *ngIf="Form.username.invalid && Form.username.touched">
                 <div *ngIf="Form.username.errors?.['required']"><small>Username is required.</small> </div>
                 <div *ngIf="Form.username.errors?.['minlength']||Form.username.errors?.['maxlength']"><small>Username is between 3 and 10 characters</small> </div>
               </div>
@@ -33,9 +34,9 @@
           </div>
           <div class="input_row">
             <div><label for="password">Password</label></div>
-            <div><input (change)="onPasswordChange()" type="password" formControlName="password" id="password"></div>
+            <div><input (change)="onPasswordMatch()" type="password" formControlName="password" id="password"></div>
             <div class="msg">
-              <div class="invalid" *ngIf="Form.password.invalid && (Form.password.dirty || Form.password.touched)">
+              <div class="invalid" *ngIf="Form.password.invalid && Form.password.touched">
                 <div *ngIf="Form.password.errors?.['required']"><small>Password is required.</small> </div>
                 <div *ngIf="Form.password.errors?.['minlength'] ||Form.password.errors?.['maxlength']">
                   <small>Password is 8 to 30 characters</small>
@@ -45,16 +46,15 @@
             </div>
           <div class="input_row">
             <div><label for="repeatPassword">Repeat password</label></div>
-            <div><input (change)="onPasswordChange()" type="password" formControlName="repeat_password" id="repeatPassword"></div>
+            <div><input (change)="onPasswordMatch()" type="password" formControlName="repeat_password" id="repeatPassword"></div>
             <div class="msg">
-              <div class="invalid" *ngIf="Form.repeat_password.invalid && (Form.repeat_password.dirty || Form.repeat_password.touched)">
-                <div *ngIf="Form.repeat_password.errors?.['required']"><small>Repeat password is required.</small> </div>
-                <small *ngIf="confirm_password.hasError('mismatch')">Password do not match.</small><br />
+              <div class="invalid" *ngIf="!onPasswordMatch()">
+                <small >Passwords do not match.</small><br />
               </div>
 
             </div>
             </div>
-          <button class="submitButton" type="submit" style="margin-right:5px;">Create account</button>
+          <button class="submitButton" type="submit" style="margin-right:5px;" [disabled]="registerForm.invalid||!onPasswordMatch()">Create account</button>
           <small>Already had an account? </small>
           <a routerLink="/login" routerLinkActive="active">Login</a>
         </form>
@@ -65,6 +65,8 @@
   </div>
   </div>
 </div>
+
+{{Form.username.touched}}
 
 
 

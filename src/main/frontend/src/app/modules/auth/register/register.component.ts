@@ -20,12 +20,12 @@ export class RegisterComponent implements OnInit {
     "repeat_password": ['', [Validators.required]]
   });
 
-  onPasswordChange() {
+  onPasswordMatch() {
 
     if (this.confirm_password.value == this.password.value) {
-      this.confirm_password.setErrors(null);
+      return true;
     } else {
-      this.confirm_password.setErrors({ mismatch: true });
+      return false;
     }
   }
 
