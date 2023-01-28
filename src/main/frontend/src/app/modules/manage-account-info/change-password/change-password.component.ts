@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { AppComponent } from 'src/app/app.component';
 import { ManageAccountInfoService } from 'src/app/services/manage-account-info.service';
 
 const changePasswordUrl = "http://localhost:9000/private/profile/changeAccountPassword";
