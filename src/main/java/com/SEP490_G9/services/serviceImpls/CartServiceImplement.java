@@ -1,7 +1,9 @@
 package com.SEP490_G9.services.serviceImpls;
 import java.util.List;
 
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.SEP490_G9.exceptions.ResourceNotFoundException;
@@ -27,7 +29,8 @@ public class CartServiceImplement implements CartService {
 	
 	@Autowired
 	CartRepository cartRepository;
-	
+	 @Autowired
+	    private UserRepository userRepository;
 	@Override
 	public Cart addProduct(Long productId) {
 		CartItem item = new CartItem();
@@ -41,13 +44,29 @@ public class CartServiceImplement implements CartService {
 
 	@Override
 	public Cart removeProduct(Long productId) {
-		// TODO Auto-generated method stub
-		return null;
+	    Cart cart = getCurrentCart();
+	    CartItem itemToRemove = null;
+	    for (CartItem item : cart.getItems()) {
+	        if (item.getProduct().getId() == productId) {
+	            itemToRemove = item;
+	            break;
+	        }
+	    }
+	    if (itemToRemove != null) {
+	        cart.getItems().remove(itemToRemove);
+	        cartItemRepository.delete(itemToRemove);
+	    } else {
+	        throw new ResourceNotFoundException("Product with id " + productId + " not found in cart.", null, itemToRemove);
+	    }
+	    return cart;
 	}
 
 	@Override
 	public Cart getCurrentCart() {
-		return null;
+	    org.springframework.security.core.Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+	    String currentPrincipalName = authentication.getName();
+	    User user = userRepository.findByUsername(currentPrincipalName);
+	    return cartRepository.findByUserId(user.getId());
 	}
 
    

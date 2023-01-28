@@ -7,6 +7,7 @@ import com.SEP490_G9.models.Entities.RefreshToken;
 import com.SEP490_G9.models.Entities.User;
 
 @Repository
+
 public interface UserRepository extends JpaRepository<User, Long> {
 	public User findByUsername(String username);
 	
