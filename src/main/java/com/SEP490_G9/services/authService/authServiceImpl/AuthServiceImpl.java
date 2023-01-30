@@ -5,6 +5,7 @@ import java.nio.file.attribute.UserPrincipalNotFoundException;
 
 import org.apache.http.client.ClientProtocolException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -36,6 +37,10 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @Service
 public class AuthServiceImpl implements AuthService {
+
+	@Value("${jwtRefreshExpirationMs}")
+	private int REFRESH_TOKEN_VALIDITY;
+
 	@Autowired
 	AuthenticationProvider authenticationProvider;
 
@@ -77,7 +82,7 @@ public class AuthServiceImpl implements AuthService {
 			user.setVerified(false);
 			user.setRole(roleRepository.getReferenceById((long) 2));
 			userRepository.save(user);
-			
+
 		}
 		return true;
 	}
@@ -86,14 +91,22 @@ public class AuthServiceImpl implements AuthService {
 	public AuthResponse login(AuthRequest authRequest, HttpServletResponse response) {
 
 		Authentication authentication = authenticationProvider.authenticate(
-				new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
+				new UsernamePasswordAuthenticationToken(authRequest.getEmail().trim(), authRequest.getPassword()));
 
+		if (authentication == null) {
+			String trimedPassword = authRequest.getPassword().trim();
+			authentication = authenticationProvider
+					.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getEmail().trim(), trimedPassword));
+		}
+		System.out.println(authRequest.isRememberMe());
+		System.out.println(authRequest.getEmail());
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		User user = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
 		if (authRequest.isRememberMe()) {
+			System.out.println("rememberMe");
 			RefreshToken refreshToken = refreshTokenService.createRefreshToken(user);
 			Cookie cookie = new Cookie("refreshToken", refreshToken.getToken());
-			cookie.setMaxAge(120000);
+			cookie.setMaxAge(REFRESH_TOKEN_VALIDITY);
 			cookie.setDomain("localhost");
 			cookie.setPath("/");
 			cookie.setHttpOnly(true);
@@ -112,6 +125,7 @@ public class AuthServiceImpl implements AuthService {
 			throws ClientProtocolException, IOException {
 		User googleLoginUser = googleLogin.getUserInfo(code);
 		User foundUser;
+
 		if (!userRepository.existsByEmail(googleLoginUser.getEmail())) {
 			googleLoginUser
 					.setUsername(googleLoginUser.getEmail().substring(0, googleLoginUser.getEmail().indexOf("@")));
@@ -175,22 +189,21 @@ public class AuthServiceImpl implements AuthService {
 	@Override
 	public EmailResponse sendVerifyEmail(HttpServletRequest request) {
 		String email = SecurityContextHolder.getContext().getAuthentication().getName();
-		if(email==null) {
+		if (email == null) {
 			throw new AuthRequestException("User not logged in");
 		}
 		User user = userRepository.findByEmail(email);
-		
+
 		return emailService.sendVerifyEmail(email, request);
 	}
 
 	@Override
 	public EmailResponse sendResetPasswordMail(HttpServletRequest request, String email) {
-		if(userRepository.existsByEmail(email)) {
+		if (userRepository.existsByEmail(email)) {
 			return emailService.sendResetPasswordEmail(email, request);
-		}else {
+		} else {
 			throw new ResourceNotFoundException("Email", "email", email);
 		}
-		
 
 	}
 

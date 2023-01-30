@@ -15,10 +15,17 @@ export class RegisterComponent implements OnInit {
 
   registerForm = this.formBuilder.group({
     "email": ['', [Validators.required, Validators.email]],
-    "username": ['', [Validators.required, Validators.minLength(3), Validators.maxLength(10)]],
+    "username": ['', [Validators.required, Validators.minLength(3), Validators.maxLength(10),
+    					this.noWhitespaceValidator]],
     "password": ['', [Validators.required, Validators.minLength(5), Validators.maxLength(30)]],
     "repeat_password": ['', [Validators.required]]
   });
+  
+public noWhitespaceValidator(control: FormControl) {
+    const isWhitespace = (control.value || '').trim().includes(' ');
+    const isValid = !isWhitespace;
+    return isValid ? null : { 'whitespace': true };
+}
 
   onPasswordMatch() {
 
@@ -45,6 +52,10 @@ export class RegisterComponent implements OnInit {
   }
 
   public onUsernameChange($event: any) {
+	  if($event.keyCode===32){
+		  $event.preventDefault();
+	  }
+	  this.username = this.username.toLowerCase();
     this.registerForm.controls.username.setValue(this.username);
   }
 
@@ -56,7 +67,6 @@ export class RegisterComponent implements OnInit {
 
   public onRegister() {
     this.registerForm.controls.username.setValue(this.username);
-    console.log(this.registerForm.invalid);
     if (this.registerForm.valid) {
       
       this.authService.register(this.registerForm.value).subscribe(

@@ -18,12 +18,12 @@
           </div>
           <div class="input_row">
             <div><label for="username">Username</label></div>
-<!--             <div><input id="username" [(ngModel)]="username" formControlName="username" [ngModelOptions]="{standalone: true}" (change)="onUsernameChange($event)" ></div> -->
-            <div><input id="username" [(ngModel)]="username" formControlName="username" (change)="onUsernameChange($event)" ></div>
+            <div><input id="username" [(ngModel)]="username" [ngModelOptions]="{standalone: true}" (keydown)="onUsernameChange($event)"></div>
             <div class="msg">
               <div class="invalid" *ngIf="Form.username.invalid && Form.username.touched">
                 <div *ngIf="Form.username.errors?.['required']"><small>Username is required.</small> </div>
                 <div *ngIf="Form.username.errors?.['minlength']||Form.username.errors?.['maxlength']"><small>Username is between 3 and 10 characters</small> </div>
+                <div *ngIf="Form.username.errors?.['whitespace'] && !Form.username.errors?.['required'] && !(Form.username.errors?.['minlength']||Form.username.errors?.['maxlength'])"><small>Username must not contains spaces</small></div>
               </div>
             </div>
           </div>

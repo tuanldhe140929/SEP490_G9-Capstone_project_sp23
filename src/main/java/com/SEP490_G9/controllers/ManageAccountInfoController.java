@@ -40,7 +40,7 @@ public class ManageAccountInfoController {
 		return ResponseEntity.ok(user);
 	}
 	@PostMapping(value = "changeAccountName")
-	public ResponseEntity<?> changeAccountName(@Valid @RequestParam(name = "newName", required = true) @Size(min = 3, max = 10) String newName){
+	public ResponseEntity<?> changeAccountName(@Valid @RequestParam(name = "newName", required = true) @Size(min = 3, max = 30) String newName){
 		User user;
 		user = manageAccountInfoService.changeAccountName(newName);
 		return ResponseEntity.ok(user);

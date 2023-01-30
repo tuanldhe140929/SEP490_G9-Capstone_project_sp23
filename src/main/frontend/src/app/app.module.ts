@@ -11,7 +11,7 @@ import { ManageAccountInfoModule } from './modules/manage-account-info/manage-ac
 import { ManageProductModule } from './modules/manage-product/manage-product.module';
 import { CommonModule } from './modules/common/common.module';
 import { BasicsModule } from './modules/basics/basics.module';
-
+import {MatIconModule} from '@angular/material/icon';	
 
 @NgModule({
   declarations: [
@@ -28,6 +28,8 @@ import { BasicsModule } from './modules/basics/basics.module';
     ManageProductModule,
     CommonModule,
     BasicsModule,
+    MatIconModule
+    
   
   ],
   providers: [

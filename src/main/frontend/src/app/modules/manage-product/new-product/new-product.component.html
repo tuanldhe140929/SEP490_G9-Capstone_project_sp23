@@ -4,7 +4,7 @@
       <h2>Upload new product</h2>
     </div>
     <form [formGroup]="newProductForm" (ngSubmit)="addProduct()">
-      <div class="row">
+      <div class="row" style="margin-top:3%;">
         <div class="row columns">
           <div class="left_col col-8" style="border-right:1px solid black">
             <div class="input_row">
@@ -41,7 +41,6 @@
                 </select>
               </div>
             </div>
-
             <section class="price_picker">
               <h2>Pricing</h2>
               <div class="price_picker_drop">
@@ -60,13 +59,15 @@
                     <div class="paid">
                       <div class="input_row">
                         <div><label>Minimum price<span class="sub"> - Minimum price to get access to download this product</span></label></div>
-                        <div><input id="price" type="text" name="minPrice" placeholder="1.000đ" value="1.000đ"
-                        (keydown)="onPriceChange($event)" formControlName="price"/></div>
+                        <div>
+                          <input id="price" type="text" name="minPrice" placeholder="1.000đ" value="1.000đ"
+                                 (keydown)="onPriceChange($event)" formControlName="price" />
+                        </div>
                       </div>
                     </div>
                     <div class="no_payment">
                       <div class="input_row">
-                        <div><label>No payments<span class="sub"> - This product is free to download  </span></label></div> 
+                        <div><label>No payments<span class="sub"> - This product is free to download  </span></label></div>
                       </div>
                     </div>
                   </div>
@@ -93,16 +94,20 @@
                           <span class="move_down_wrap">.<a href="#">Move down</a></span>
                         </div>
                       </div>
-
                     </div>
                   </div>
                 </div>
               </div>
+              <div class="progress">
+                <mat-progress-bar class="progress-bar" mode="determinate" [value]="uploadProgress" *ngIf="uploadProgress"> </mat-progress-bar>
+                <mat-icon class="cancel-upload" (click)="cancelUpload()" *ngIf="uploadProgress">delete_forever</mat-icon>
+              </div>
+              {{fileName || "No file uploaded yet."}}
               <div class="add_file_btn_outer upload_buttons">
-                <div class="button add_file_btn has_multi_upload">
+                <div class="button add_file_btn has_multi_upload" (click)="fileUpload.click()">
                   Upload files
                 </div>
-                <input type="file" multiple style="display:none" />
+                <input type="file" class="file-input" (change)="onFileSelected($event)" #fileUpload>
               </div>
               <p class="upload_limit">File size limit: 1GB</p>
             </section>
@@ -110,9 +115,19 @@
           </div>
           <div class="right_col col-4">
             <div class="cover_uploader_drop">
-              <div class="upload_container"></div>
+              <div class="upload_container" id="cover_img_div">
+         		<div class="widget">
+         			<div class="add_file_btn_outer upload_buttons no_upload" id="upload_button">
+         			
+               	 		<div class="button add_file_btn has_multi_upload" (click)="fileUpload.click()">
+                 			 Upload Image
+                		</div>
+                		<input type="file" class="file-input" (change)="onFileSelected($event)" #fileUpload>
+              		</div>
+          		</div>
+              </div>
               <div class="upload_instruction"><p>Upload cover image here</p></div>
-            </div>
+          </div>
             <div class="preview_videos_drop">
               <div class="upload_container"></div>
               <div class="upload_instruction"><p>Upload preview videos here</p></div>
@@ -124,6 +139,7 @@
           </div>
         </div>
       </div>
+      
     </form>
   </div>
 </div>
