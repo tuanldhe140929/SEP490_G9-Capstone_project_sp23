@@ -74,8 +74,12 @@ public class AuthServiceImpl implements AuthService {
 		if (userRepository.existsByUsername(user.getUsername())) {
 			throw new EmailExistException(user.getUsername());
 		}
-
-		else {
+		
+		user.setUsername(user.getUsername().trim());
+		if(user.getUsername().contains(" ")) {
+			throw new AuthRequestException("username can not contains spaces");
+		}
+		
 			String encodedPassword = new BCryptPasswordEncoder().encode(user.getPassword().trim());
 			user.setPassword(encodedPassword);
 			user.setEnabled(true);
@@ -83,7 +87,7 @@ public class AuthServiceImpl implements AuthService {
 			user.setRole(roleRepository.getReferenceById((long) 2));
 			userRepository.save(user);
 
-		}
+		
 		return true;
 	}
 

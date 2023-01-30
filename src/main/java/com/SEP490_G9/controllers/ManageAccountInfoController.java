@@ -34,16 +34,17 @@ public class ManageAccountInfoController {
 
 	}
 	@PostMapping(value = "changeAccountPassword")
-	public ResponseEntity<?> changeAccountPassword(@Valid @RequestParam(name = "newPassword", required = true)  @Size(min = 8, max = 30) String newPassword){
-		User user;
-		user = manageAccountInfoService.changeAccountPassword(newPassword);
-		return ResponseEntity.ok(user);
+	public ResponseEntity<?> changeAccountPassword(@Valid @RequestParam(name = "newPassword", required = true)  @Size(min = 8, max = 30) String newPassword,
+			@RequestParam(name = "oldPassword", required = true)  @Size(min = 8, max = 30) String oldPassword){
+		
+		boolean ret  = manageAccountInfoService.changeAccountPassword(newPassword,oldPassword);
+		return ResponseEntity.ok(ret);
 	}
 	@PostMapping(value = "changeAccountName")
 	public ResponseEntity<?> changeAccountName(@Valid @RequestParam(name = "newName", required = true) @Size(min = 3, max = 30) String newName){
-		User user;
-		user = manageAccountInfoService.changeAccountName(newName);
-		return ResponseEntity.ok(user);
+		
+		boolean ret = manageAccountInfoService.changeAccountName(newName);
+		return ResponseEntity.ok(ret);
 	}
 
 }

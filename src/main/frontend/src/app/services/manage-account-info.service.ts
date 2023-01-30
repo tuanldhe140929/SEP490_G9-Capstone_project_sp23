@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { EMPTY, map, Observable } from 'rxjs';
 import { User } from '../DTOS/User';
 
-const baseUrl = "http://localhost:9000/private/"
+const baseUrl = "http://localhost:9000/private/profile"
 @Injectable({
   providedIn: 'root'
 })
@@ -14,9 +14,18 @@ export class ManageAccountInfoService {
  
    	getUserInfoByEmail(email:string): Observable<User> {
 		
-		return this.http.post<User>(baseUrl + 'profile/getUserInfoByEmail',email);
+		return this.http.post<User>(baseUrl + '/getUserInfoByEmail',email);
+		
   }
-
-	
-	
+  
+  	onChangePassword(data:any){
+		
+			return this.http.post<any>(baseUrl+'/changeAccountPassword',null,{
+				params:{
+					"oldPassword":data.oldpass,
+					"newPassword":data.newpass
+				}
+			});
+		}
+		
 }
