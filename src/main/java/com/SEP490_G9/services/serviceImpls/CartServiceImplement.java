@@ -1,9 +1,11 @@
 package com.SEP490_G9.services.serviceImpls;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.SEP490_G9.exceptions.ResourceNotFoundException;
+import com.SEP490_G9.models.UserDetailsImpl;
 import com.SEP490_G9.models.Entities.Cart;
 import com.SEP490_G9.models.Entities.CartItem;
 
@@ -34,7 +36,7 @@ public class CartServiceImplement implements CartService {
 		item.setProduct(product);
 		Cart cart = getCurrentCart();
 		cart.addItem(item);
-		
+		cartItemRepository.saveAll(cart.getItems());
 		return cart;
 	}
 
@@ -59,10 +61,16 @@ public class CartServiceImplement implements CartService {
 
 	@Override
 	public Cart getCurrentCart() {
-	    org.springframework.security.core.Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-	    String currentPrincipalName = authentication.getName();
-	    User user = userRepository.findByUsername(currentPrincipalName);
-	    return cartRepository.findByUserId(user.getId());
+		//chua co cart thi tao moi
+		//co roi thi check bang transaction xem co cart id chua -> co roi -> thanh toan roi -> phai tao cart moi
+		User user = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
+		 return cartRepository.findByUserId(user.getId());
+	}
+
+	@Override
+	public Cart getCart(Long cartId) {
+		Cart cart = cartRepository.getReferenceById(cartId);
+		return cart;
 	}
 
    

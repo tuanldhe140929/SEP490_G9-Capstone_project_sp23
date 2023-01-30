@@ -58,7 +58,7 @@ JwtAuthenticationEntryPoint authenEntryPoint;
 		}).and().csrf().disable();
 		
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-		
+	
 		http.authorizeHttpRequests()
 		.requestMatchers("/public/**").permitAll().and()
 		.authorizeHttpRequests().requestMatchers("/home").hasAnyRole("USER")

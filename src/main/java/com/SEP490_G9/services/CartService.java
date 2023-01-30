@@ -9,4 +9,5 @@ public interface CartService {
 	public Cart addProduct(Long productId);
     public Cart removeProduct(Long productId);
     public Cart getCurrentCart();
+	public Cart getCart(Long cartId);
 }

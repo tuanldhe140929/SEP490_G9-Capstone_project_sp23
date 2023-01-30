@@ -1,11 +1,12 @@
 package com.SEP490_G9.controllers;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.SEP490_G9.models.Entities.Cart;
 import com.SEP490_G9.services.CartService;
 
 @RestController
-@RequestMapping("/api/cart")
+@RequestMapping("private/api/cart")
 public class CartController {
 
     private final CartService cartService;
@@ -15,22 +16,26 @@ public class CartController {
     }
 
     @PostMapping("/add/{productId}")
-    public Cart addProduct(@PathVariable Long productId) {
-        return cartService.addProduct(productId);
+    public ResponseEntity<?> addProduct(@PathVariable Long productId) {
+         Cart cart = cartService.addProduct(productId);
+        return ResponseEntity.ok(cart);
     }
 
     @DeleteMapping("/remove/{productId}")
-    public Cart removeProduct(@PathVariable Long productId) {
-        return cartService.removeProduct(productId);
+    public ResponseEntity<?> removeProduct(@PathVariable Long productId) {
+    	Cart cart = cartService.removeProduct(productId);
+    	return ResponseEntity.ok(cart);
     }
 
     @GetMapping("/{cartId}")
-    public Cart getCart(@PathVariable Long cartId) {
-        return ((CartController) cartService).getCart(cartId);
+    public ResponseEntity<?> getCart(@PathVariable Long cartId) {
+        Cart cart =  cartService.getCart(cartId);
+        return ResponseEntity.ok(cart);
     }
 
     @GetMapping("/")
-    public Cart getCurrentCart() {
-        return cartService.getCurrentCart();
+    public ResponseEntity<?> getCurrentCart() {
+        Cart cart = cartService.getCurrentCart();
+        return ResponseEntity.ok(cart);
     }
 }
