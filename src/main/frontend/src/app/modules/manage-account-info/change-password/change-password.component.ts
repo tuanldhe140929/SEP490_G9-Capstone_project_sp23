@@ -19,22 +19,22 @@ export class ChangePasswordComponent {
 	}
 	
 	get Form(){
-		return this.ChangePasswordForm.controls;
+		return this.changePasswordForm.controls;
 	}
 	
 	get oldpassword(){
-		return this.ChangePasswordForm.controls.oldpass;
+		return this.changePasswordForm.controls.oldpass;
 	}
 	
 	get newpassword(){
-		return this.ChangePasswordForm.controls.newpass;
+		return this.changePasswordForm.controls.newpass;
 	}
 	
 	get renewpassword(){
-		return this.ChangePasswordForm.controls.renewpass;
+		return this.changePasswordForm.controls.renewpass;
 	}
 	
-	public ChangePasswordForm = this.formBuilder.group({
+	public changePasswordForm = this.formBuilder.group({
 		"oldpass": ['',[Validators.required, Validators.minLength(8), Validators.maxLength(30)]],
 		"newpass": ['',[Validators.required, Validators.minLength(8), Validators.maxLength(30)]],
 		"renewpass": ['',[Validators.required, Validators.minLength(8), Validators.maxLength(30)]]
@@ -49,7 +49,7 @@ export class ChangePasswordComponent {
 	}
 	
 	onChangePassword(){
-		this.manageAccountInfoService.onChangePassword(this.ChangePasswordForm.value).subscribe(
+		this.manageAccountInfoService.onChangePassword(this.changePasswordForm.value).subscribe(
 			data => {
 				console.log(data)
 			},

@@ -40,8 +40,8 @@ export class AuthService {
     return this.http.post<AuthResponse>(baseUrl + "/register", body, httpOptions);
   }
 
-  loginWithGoogle(body: any): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(baseUrl + "/loginWithGoogle", body, httpOptions);
+  loginWithGoogle(body: any): Observable<any> {
+    return this.http.post<any>(baseUrl + "/loginWithGoogle", body, httpOptions);
   }
 
   logout() {

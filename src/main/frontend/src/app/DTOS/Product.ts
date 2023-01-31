@@ -9,7 +9,8 @@ export class Product {
   uploadedDate: Date | undefined;
   lastUpdated: Date | undefined;
   price: number;
-  user: User;
+  coverImage:string;
+  user: User;	
   tags: string[];
   type: string;
 
@@ -22,6 +23,7 @@ export class Product {
     this.user = new User();
     this.type = "";
     this.tags = [];
+    this.coverImage = "";
 
 }
 }
