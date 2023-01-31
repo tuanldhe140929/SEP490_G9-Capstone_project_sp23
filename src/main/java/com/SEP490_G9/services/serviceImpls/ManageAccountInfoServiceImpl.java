@@ -35,7 +35,6 @@ public class ManageAccountInfoServiceImpl implements ManageAccountInfoService {
 		}else {
 			return false;
 		}	
-		
 		return true;
 	}
 

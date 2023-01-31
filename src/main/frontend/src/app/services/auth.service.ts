@@ -36,8 +36,6 @@ export class AuthService {
     return this.http.post<any>(baseUrl + '/login', body, httpOptions);
   }
 
-
-
   register(body: any): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(baseUrl + "/register", body, httpOptions);
   }
