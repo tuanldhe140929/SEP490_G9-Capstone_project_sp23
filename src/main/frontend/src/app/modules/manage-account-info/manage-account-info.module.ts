@@ -5,11 +5,13 @@ import { AuthGuard } from '../../helpers/auth.guard';
 import { ChangePasswordComponent } from './change-password/change-password.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
+import { ChangeNameComponent } from './change-name/change-name.component';
 
 @NgModule({
   declarations: [
     ProfileComponent,
-    ChangePasswordComponent
+    ChangePasswordComponent,
+    ChangeNameComponent
   ],
   imports: [
 	BrowserModule,

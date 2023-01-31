@@ -4,6 +4,7 @@ import { EMPTY, map, Observable } from 'rxjs';
 import { User } from '../DTOS/User';
 
 const changePasswordUrl = "http://localhost:9000/private/profile/changeAccountPassword";
+const ChangeNameUrl ="http://localhost:9000/private/profile/changeAccountName";
 const baseUrl = "http://localhost:9000/private/"
 @Injectable({
   providedIn: 'root'
@@ -24,5 +25,12 @@ export class ManageAccountInfoService {
       }
     )
 	
+}
+public onChangeName(data: any){
+  return this.httpClient.post<any>(ChangeNameUrl, null, {
+    params: {
+      newName: data.newname
+    }
+  })
 }
 }
