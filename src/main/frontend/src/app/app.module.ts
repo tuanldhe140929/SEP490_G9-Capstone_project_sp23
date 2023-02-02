@@ -7,7 +7,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthInterceptor } from './helpers/auth.interceptor';
 import { AuthModule } from './modules/auth/auth.module';
-import { ManageAccountInfoModule } from './modules/manage-account-info/manage-account-info.module';
 import { ManageProductModule } from './modules/manage-product/manage-product.module';
 import { CommonModule } from './modules/common/common.module';
 import { BasicsModule } from './modules/basics/basics.module';
@@ -24,7 +23,6 @@ import {MatIconModule} from '@angular/material/icon';
     FormsModule,
     ReactiveFormsModule,
     AuthModule,
-    ManageAccountInfoModule,
     ManageProductModule,
     CommonModule,
     BasicsModule,

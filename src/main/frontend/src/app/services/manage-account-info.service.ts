@@ -16,11 +16,11 @@ export class ManageAccountInfoService {
   constructor(private httpClient :HttpClient) { }
  
    	getUserInfoByEmail(email:string): Observable<User>{
-		return this.http.post<User>(baseUrl + '/getUserInfoByEmail',email);
+		return this.httpClient.post<User>(baseUrl + '/getUserInfoByEmail',email);
   }
   
   	onChangePassword(data:any){
-			return this.http.post<any>(baseUrl+'/changeAccountPassword',null,{
+			return this.httpClient.post<any>(baseUrl+'/changeAccountPassword',null,{
 				params:{
 					"oldPassword":data.oldpass,
 					"newPassword":data.newpass
