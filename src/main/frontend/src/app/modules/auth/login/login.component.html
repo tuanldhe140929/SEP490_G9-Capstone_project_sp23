@@ -30,14 +30,14 @@
         <div class="subrow">
           <div class="rememberMe" style="height:20px; align-items:center;">
             <label class="" for="rememberMe">Keep me sign in</label>
-            <input class="" type="checkbox" id="rememberMe">
+            <input class="" type="checkbox" id="rememberMe" formControlName="rememberMe">
           </div>
           <div class="forgotPassword">
             <a routerLink="/forgotPassword" routerLinkActive="active">Forgot password?</a>
           </div>
         </div>
         <div class="submit_row">
-          <button class="submitbutton" type="submit">Login</button>
+          <button class="submitbutton" type="submit" [disabled]="loginForm.invalid">Login</button>
         </div>
         <div class="additional">
           <button class="googlebutton" style="background-color: #ffffff;" (click)="loginWithGoogle()" type="button">

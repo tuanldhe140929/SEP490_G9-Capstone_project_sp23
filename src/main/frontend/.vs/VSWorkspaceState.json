@@ -5,11 +5,12 @@
     "\\src",
     "\\src\\app",
     "\\src\\app\\modules",
-    "\\src\\app\\modules\\auth",
-    "\\src\\app\\modules\\auth\\login",
+    "\\src\\app\\modules\\manage-account-info",
+    "\\src\\app\\modules\\manage-account-info\\profile",
     "\\src\\app\\modules\\manage-product",
-    "\\src\\app\\modules\\manage-product\\new-product"
+    "\\src\\app\\modules\\manage-product\\new-product",
+    "\\src\\app\\services"
   ],
-  "SelectedNode": "\\src\\app\\modules\\auth\\login\\login.component.css",
+  "SelectedNode": "\\src\\app\\modules\\manage-product\\new-product\\new-product.component.css",
   "PreviewInSolutionExplorer": false
 }

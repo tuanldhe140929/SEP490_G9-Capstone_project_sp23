@@ -35,6 +35,8 @@ public class TestDataInit implements ApplicationRunner {
 	
 	@Autowired
 	private UserRepository userRepository;
+
+
 //	@Autowired
 //	private PreviewRepository previewRepository;
 	
@@ -46,10 +48,16 @@ public class TestDataInit implements ApplicationRunner {
 		roleRepository.save(new Role((long) 3,"ROLE_INSPECTOR"));
 		
 		User user = new User();
+
 		user.setRole(roleRepository.getReferenceById((long)2));
 		user.setUsername("abcd");
 		user.setEmail("toanpk@gmail.com");
 		user.setPassword(new BCryptPasswordEncoder().encode("12345678"));
+
+		user.setEmail("namdinh@gmail.com");
+		user.setPassword(new BCryptPasswordEncoder().encode("admin1234"));
+		user.setUsername("namdinh");
+		user.setRole(roleRepository.getReferenceById((long)2));
 		userRepository.save(user);
 		
 		tagRepository.save(new Tag(1,"2D"));
@@ -73,8 +81,15 @@ public class TestDataInit implements ApplicationRunner {
 		typeRepository.save(new Type(13,"Others"));
 		
 		Product product = new Product();
+
 		product.setUser(userRepository.getReferenceById((long)1));
 		product.setType(typeRepository.getReferenceById(1));
 		productRepository.save(product);
+
+		product.setUser(user);
+		product.setName("TEST PRODUCT");
+		productRepository.save(product);
+		
+
 	}
 }

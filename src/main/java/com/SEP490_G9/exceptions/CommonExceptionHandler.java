@@ -16,10 +16,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import jakarta.validation.ConstraintViolationException;
 
 @RestControllerAdvice
 public class CommonExceptionHandler {
-	
+
 	@ExceptionHandler({ MethodArgumentNotValidException.class })
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public ErrorResponse resolveException(MethodArgumentNotValidException ex) {
@@ -29,10 +30,9 @@ public class CommonExceptionHandler {
 			messages.add(error.getField() + " - " + error.getDefaultMessage());
 		}
 		System.out.println("Method argument");
-		return new ErrorResponse(messages,HttpStatus.BAD_REQUEST);
+		return new ErrorResponse(messages, HttpStatus.BAD_REQUEST);
 	}
-	
-	
+
 	@ExceptionHandler({ MethodArgumentTypeMismatchException.class })
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public ErrorResponse resolveException(MethodArgumentTypeMismatchException ex) {
@@ -43,7 +43,7 @@ public class CommonExceptionHandler {
 		System.out.println("Method argument mismatch");
 		return new ErrorResponse(messages, HttpStatus.BAD_REQUEST);
 	}
-	
+
 	@ExceptionHandler(ResourceNotFoundException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public ErrorResponse resolveException(ResourceNotFoundException exception) {
@@ -51,7 +51,7 @@ public class CommonExceptionHandler {
 		System.out.println("Resource not found");
 		return errorResponse;
 	}
-	
+
 	@ExceptionHandler(UsernameNotFoundException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public ErrorResponse resolveException(UsernameNotFoundException exception) {
@@ -60,7 +60,7 @@ public class CommonExceptionHandler {
 		System.out.println("Username not found");
 		return new ErrorResponse(msgs, HttpStatus.BAD_REQUEST);
 	}
-	
+
 	@ExceptionHandler(EmailExistException.class)
 	@ResponseStatus(HttpStatus.CONFLICT)
 	public ErrorResponse resolveException(EmailExistException exception) {
@@ -68,7 +68,7 @@ public class CommonExceptionHandler {
 		System.out.println("Email exist");
 		return errorResponse;
 	}
-	
+
 	@ExceptionHandler(RefreshTokenException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public ErrorResponse resolveException(RefreshTokenException exception) {
@@ -76,15 +76,14 @@ public class CommonExceptionHandler {
 		System.out.println("refresh token");
 		return errorResponse;
 	}
-	
-	
+
 	@ExceptionHandler(EmailServiceException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public ErrorResponse resolveException(EmailServiceException exception) {
 		ErrorResponse errorResponse = exception.getErrorResponse();
 		return errorResponse;
 	}
-	
+
 	@ExceptionHandler(AuthRequestException.class)
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	public ErrorResponse resolveException(AuthRequestException exception) {
@@ -92,34 +91,45 @@ public class CommonExceptionHandler {
 		ErrorResponse errorResponse = exception.getErrorResponse();
 		return errorResponse;
 	}
-	
+
 	@ExceptionHandler(AuthenticationException.class)
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	public ErrorResponse resolveException(AuthenticationException exception) {
 		System.out.println("auth request");
 		List<String> msgs = new ArrayList<>();
 		msgs.add(exception.getMessage());
-		ErrorResponse errorResponse = new ErrorResponse(msgs,HttpStatus.INTERNAL_SERVER_ERROR);
+		ErrorResponse errorResponse = new ErrorResponse(msgs, HttpStatus.INTERNAL_SERVER_ERROR);
 		return errorResponse;
 	}
-	
-	
+
 	@ExceptionHandler(UserPrincipalNotFoundException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public ErrorResponse resolveException(UserPrincipalNotFoundException exception) {
 		ErrorResponse errorResponse = null;
 		return errorResponse;
 	}
-	
+
 	@ExceptionHandler(AccessDeniedException.class)
-    public final ErrorResponse handleAccessDeniedException(AccessDeniedException ex) {
-       ErrorResponse errorResponse = new ErrorResponse();
-       List<String> msgs = new ArrayList<>();
-       msgs.add(ex.getMessage());
-       errorResponse.setMessages(msgs);
-       errorResponse.setStatus(HttpStatus.FORBIDDEN);
-       return errorResponse;
-    }
+	public final ErrorResponse handleAccessDeniedException(AccessDeniedException ex) {
+		ErrorResponse errorResponse = new ErrorResponse();
+		List<String> msgs = new ArrayList<>();
+		msgs.add(ex.getMessage());
+		errorResponse.setMessages(msgs);
+		errorResponse.setStatus(HttpStatus.FORBIDDEN);
+		return errorResponse;
+	}
+
+	@ExceptionHandler(ConstraintViolationException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public final ErrorResponse handleAccessDeniedException(ConstraintViolationException ex) {
+		ErrorResponse errorResponse = new ErrorResponse();
+		List<String> msgs = new ArrayList<>();
+		msgs.add(ex.getMessage());
+		errorResponse.setMessages(msgs);
+		errorResponse.setStatus(HttpStatus.FORBIDDEN);
+		return errorResponse;
+	}
+	
 //	@ExceptionHandler({ CustomException.class })
 //	@ResponseStatus(HttpStatus.BAD_REQUEST)
 //	public ErrorResponse customExceptionHandle(CustomException ex) {

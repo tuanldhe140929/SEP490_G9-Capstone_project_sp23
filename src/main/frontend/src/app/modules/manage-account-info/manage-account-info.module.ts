@@ -3,13 +3,23 @@ import { ManageAccountInfoRoutingModule } from './manage-account-info-routing.mo
 import { ProfileComponent } from './profile/profile.component';
 import { AuthGuard } from '../../helpers/auth.guard';
 
+import { ChangePasswordComponent } from './change-password/change-password.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BrowserModule } from '@angular/platform-browser';
+import { ChangeNameComponent } from './change-name/change-name.component';
 
 @NgModule({
   declarations: [
-    ProfileComponent
+    ProfileComponent,
+    ChangePasswordComponent,
+    ChangeNameComponent
   ],
   imports: [
-    ManageAccountInfoRoutingModule
+	  BrowserModule,
+    ManageAccountInfoRoutingModule,
+    FormsModule,
+    ReactiveFormsModule,
+    CommonModule
   ],
   providers: [AuthGuard]
 })

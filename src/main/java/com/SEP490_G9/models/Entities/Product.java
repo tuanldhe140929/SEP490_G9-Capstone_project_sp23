@@ -14,7 +14,6 @@ import jakarta.persistence.*;
 @Entity
 @Table(name="products")
 public class Product implements Serializable {
-
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -37,13 +36,16 @@ public class Product implements Serializable {
 	private String coverImage;
 	
 	@Column(name="upload_date")
-	private Date uploadDate;
+	private Date uploadDate = new Date();
 	
 	@Column(name="last_update")
-	private Instant lastUpdate = Instant.now();
+	private Date lastUpdate = new Date();
+	
+	@Column(name="draft")
+	private boolean draft = true;
 	
 	@Column(name="price")
-	private int price;
+	private int price = 0;
 
 	@OneToMany(mappedBy="product")
 	private List<Preview> previews = new ArrayList<Preview>();
@@ -57,7 +59,7 @@ public class Product implements Serializable {
 	private List<Tag> tags = new ArrayList<Tag>();
 	
 	@ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "type_id", unique = false, nullable = false)
+    @JoinColumn(name = "type_id", unique = false)
     private Type type;
 	
 	@OneToMany(mappedBy="product")
@@ -65,8 +67,14 @@ public class Product implements Serializable {
 	
 	public Product() {}
 	
+	public Product(User user) {
+		this.user=user;
+		this.uploadDate = new Date();
+		this.draft = true;
+	}
+	
 	public Product(Long id, String name, String description,String localPath, String coverImage, Date uploadDate,
-			int price, List<Tag> tags, List<Preview> previews, User user, Type type, String url) {
+			int price, List<Tag> tags, List<Preview> previews, User user, Type type, String url,boolean draft, Date lastUpdate) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -74,13 +82,14 @@ public class Product implements Serializable {
 		this.localPath = localPath;
 		this.coverImage = coverImage;
 		this.uploadDate = uploadDate;
-		this.lastUpdate = Instant.now();
+		this.lastUpdate = lastUpdate;
 		this.price = price;
 		this.tags = tags;
 		this.previews = previews;
 		this.user = user;
 		this.type = type;
 		this.url = url;
+		this.draft = draft;
 	}
 
 	public Long getId() {
@@ -95,56 +104,63 @@ public class Product implements Serializable {
 		return name;
 	}
 
-	public void setName(String name) {
+	public Product setName(String name) {
 		this.name = name;
+		return this;
 	}
 
 	public String getDescription() {
 		return description;
 	}
 
-	public void setDescription(String description) {
+	public Product setDescription(String description) {
 		this.description = description;
+		return this;
 	}
 
 	public String getCoverImage() {
 		return coverImage;
 	}
 
-	public void setCoverImage(String coverImage) {
+	public Product setCoverImage(String coverImage) {
 		this.coverImage = coverImage;
+		return this;
 	}
 
 	public Date getUploadDate() {
 		return uploadDate;
 	}
 
-	public void setUploadDate(Date uploadDate) {
+	public Product setUploadDate(Date uploadDate) {
 		this.uploadDate = uploadDate;
+		return this;
 	}
 
 	public int getPrice() {
 		return price;
 	}
 
-	public void setPrice(int price) {
+	public Product setPrice(int price) {
 		this.price = price;
+		return this;
 	}
 
-	public Instant getLastUpdate() {
+	public Date getLastUpdate() {
 		return lastUpdate;
 	}
 
-	public void setLastUpdate(Instant lastUpdate) {
+	public Product setLastUpdate(Date lastUpdate) {
 		this.lastUpdate = lastUpdate;
+return this;
 	}
 
 	public List<Tag> getTags() {
 		return tags;
 	}
 
-	public void setTags(List<Tag> tags) {
+	public Product setTags(List<Tag> tags) {
 		this.tags = tags;
+		return this;
 	}
 
 	public Type getType() {
@@ -159,8 +175,9 @@ public class Product implements Serializable {
 		return previews;
 	}
 
-	public void setPreviews(List<Preview> previews) {
+	public Product setPreviews(List<Preview> previews) {
 		this.previews = previews;
+		return this;
 	}
 
 	public static long getSerialversionuid() {
@@ -171,24 +188,36 @@ public class Product implements Serializable {
 		return localPath;
 	}
 
-	public void setLocalPath(String localPath) {
+	public Product setLocalPath(String localPath) {
 		this.localPath = localPath;
+		return this;
 	}
 
 	public User getUser() {
 		return user;
 	}
 
-	public void setUser(User user) {
+	public Product setUser(User user) {
 		this.user = user;
+		return this;
 	}
 
 	public String getUrl() {
 		return url;
 	}
 
-	public void setUrl(String url) {
+	public Product setUrl(String url) {
 		this.url = url;
+		return this;
+	}
+
+	public boolean isDraft() {
+		return draft;
+	}
+
+	public Product setDraft(boolean draft) {
+		this.draft = draft;
+		return this;
 	}
 	
 	

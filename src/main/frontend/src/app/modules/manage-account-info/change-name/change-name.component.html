@@ -1,0 +1,17 @@
+<form [formGroup]="ChangeNameForm" (submit) ="onChangeName()">
+    <div>
+        <label>Old name</label>
+        <input readonly type="text" [value]="authResponse.username" >
+    </div>
+    <div>
+        <label> New name</label>
+        <input type="text" formControlName="newname">
+        <div *ngIf="Form.newname.touched && Form.newname.invalid">
+            <div *ngIf="Form.newname.errors?.['required']">New name is required</div>
+            <div *ngIf="Form.newname.errors?.['minlength']||Form.newname.errors?.['maxlength']">New name is 3 to 30</div>
+        </div>
+    </div>
+    <div>
+        <button type="submit" [disabled]="ChangeNameForm.invalid">Change Name</button>
+    </div>
+</form>

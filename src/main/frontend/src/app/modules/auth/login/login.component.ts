@@ -39,7 +39,9 @@ export class LoginComponent implements OnInit {
   public onLogin() {
 
     if (this.loginForm.valid) {
-
+    if(this.loginForm.controls.email.value!=null){
+		 this.loginForm.controls.email.setValue(this.loginForm.controls.email.value.trim());
+	}
       this.authService.login(this.loginForm.value).subscribe(
 
         response => {

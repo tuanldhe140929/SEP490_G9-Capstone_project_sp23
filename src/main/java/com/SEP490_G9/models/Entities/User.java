@@ -28,7 +28,7 @@ public class User implements Serializable {
 
 	@NotBlank(message = "username can't be blank")
 	@Column(name = "username", nullable = true, unique = true)
-	@Size(min = 3, max = 10)
+	@Size(min = 3, max = 30)
 	private String username;
 	@Column(name = "enabled")
 	private boolean enabled = true;

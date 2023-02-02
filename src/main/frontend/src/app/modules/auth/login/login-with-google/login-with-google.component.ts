@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
+import { StorageService } from 'src/app/services/storage.service';
 
 @Component({
   selector: 'app-login-with-google',
@@ -10,17 +11,21 @@ import { AuthService } from 'src/app/services/auth.service';
 export class LoginWithGoogleComponent implements OnInit {
 	
 	
-	constructor(private route: ActivatedRoute, private authService: AuthService, private router: Router) {}
+	constructor(private storageService:StorageService,private route: ActivatedRoute, private authService: AuthService, private router: Router) {}
 
 	ngOnInit(): void {
 		var code = this.route.snapshot.queryParamMap.get('code');
 		if (code != null) {
 			this.authService.loginWithGoogle(code).subscribe(
-				(data) => {
-					console.log(data);
+				(response) => {
 					this.router.navigate(['login']);
+					AuthService.isLoggedIn = true;
+          			this.authService.authResponse = response.body;
+          			this.storageService.saveUser(response.body);
+          			this.storageService.saveToken(response.body.accessToken);
 				}
 				,error => {
+					console.log(error);
 				}
 			);
 		}
