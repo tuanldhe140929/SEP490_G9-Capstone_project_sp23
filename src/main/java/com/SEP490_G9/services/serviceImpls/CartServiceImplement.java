@@ -61,7 +61,7 @@ public class CartServiceImplement implements CartService {
 
 	@Override
 	public Cart getCurrentCart() {
-		//chua co cart thi tao moi
+		//chua co cart thi tao moi(Done)
 		//co roi thi check bang transaction xem co cart id chua -> co roi -> thanh toan roi -> phai tao cart moi
 		User user = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
 		 return cartRepository.findByUserId(user.getId());
@@ -72,6 +72,11 @@ public class CartServiceImplement implements CartService {
 		Cart cart = cartRepository.getReferenceById(cartId);
 		return cart;
 	}
+	public Cart createCart() {
+        Cart cart = new Cart();
+        cartRepository.save(cart);
+        return cart;
+    }
 
    
 }

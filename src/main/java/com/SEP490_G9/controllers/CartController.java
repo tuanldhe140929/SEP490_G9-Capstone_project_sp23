@@ -14,6 +14,11 @@ public class CartController {
     public CartController(CartService cartService) {
         this.cartService = cartService;
     }
+    @PostMapping("/")
+    public ResponseEntity<?> createCart() {
+        Cart cart = cartService.createCart();
+        return ResponseEntity.ok(cart);
+    }
 
     @PostMapping("/add/{productId}")
     public ResponseEntity<?> addProduct(@PathVariable Long productId) {

@@ -59,7 +59,9 @@ public class Cart {
 		newItem.setCart(this);
 		this.items.add(newItem);
 	}
-
+	public Cart createCart() {
+		return new Cart();
+    }
 
 
 }
