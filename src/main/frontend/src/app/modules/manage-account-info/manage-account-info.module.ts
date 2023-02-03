@@ -21,6 +21,7 @@ import { CommonModule } from '@angular/common';
     ManageAccountInfoRoutingModule,
     FormsModule,
     ReactiveFormsModule,
+    CommonModule
   ],
   providers: [AuthGuard]
 })

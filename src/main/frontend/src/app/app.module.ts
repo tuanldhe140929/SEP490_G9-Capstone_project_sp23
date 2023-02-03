@@ -8,6 +8,7 @@ import { AppComponent } from './app.component';
 import { AuthInterceptor } from './helpers/auth.interceptor';
 import { AuthModule } from './modules/auth/auth.module';
 import { ManageProductModule } from './modules/manage-product/manage-product.module';
+import { ManageAccountInfoModule } from './modules/manage-account-info/manage-account-info.module';
 import { CommonModule } from './modules/common/common.module';
 import { BasicsModule } from './modules/basics/basics.module';
 import {MatIconModule} from '@angular/material/icon';	
@@ -25,10 +26,11 @@ import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
     ReactiveFormsModule,
     AuthModule,
     ManageProductModule,
+    ManageAccountInfoModule,
     CommonModule,
     BasicsModule,
     MatIconModule,
-    CKEditorModule
+    CKEditorModule,
   ],
   providers: [
 	      {  
