@@ -14,11 +14,7 @@ public class CartController {
     public CartController(CartService cartService) {
         this.cartService = cartService;
     }
-    @PostMapping("/")
-    public ResponseEntity<?> createCart() {
-        Cart cart = cartService.createCart();
-        return ResponseEntity.ok(cart);
-    }
+    
 
     @PostMapping("/add/{productId}")
     public ResponseEntity<?> addProduct(@PathVariable Long productId) {
@@ -38,9 +34,9 @@ public class CartController {
         return ResponseEntity.ok(cart);
     }
 
-    @GetMapping("/")
-    public ResponseEntity<?> getCurrentCart() {
-        Cart cart = cartService.getCurrentCart();
+    @PostMapping("/")
+    public ResponseEntity<?> createCart(@RequestParam(value = "cartId", required = false) Long cartId) {
+        Cart cart = cartService.createCart(cartId);
         return ResponseEntity.ok(cart);
     }
 }
