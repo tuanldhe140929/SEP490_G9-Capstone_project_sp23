@@ -48,12 +48,13 @@ public class TestDataInit implements ApplicationRunner {
 		roleRepository.save(new Role((long) 3,"ROLE_INSPECTOR"));
 		
 		User user = new User();
-
+		user.setId((long)2);
 		user.setRole(roleRepository.getReferenceById((long)2));
 		user.setUsername("abcd");
 		user.setEmail("toanpk@gmail.com");
 		user.setPassword(new BCryptPasswordEncoder().encode("12345678"));
 
+		user.setId((long)1);
 		user.setEmail("namdinh@gmail.com");
 		user.setPassword(new BCryptPasswordEncoder().encode("admin1234"));
 		user.setUsername("namdinh");
@@ -81,7 +82,7 @@ public class TestDataInit implements ApplicationRunner {
 		typeRepository.save(new Type(13,"Others"));
 		
 		Product product = new Product();
-
+		product.setId((long)1);
 		product.setUser(userRepository.getReferenceById((long)1));
 		product.setType(typeRepository.getReferenceById(1));
 		productRepository.save(product);

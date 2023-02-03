@@ -14,6 +14,7 @@ import com.SEP490_G9.models.Entities.CartItem;
 import com.SEP490_G9.models.Entities.Product;
 import com.SEP490_G9.models.Entities.Transaction;
 import com.SEP490_G9.models.Entities.User;
+import com.SEP490_G9.models.Entities.DTOS.CartDTO;
 import com.SEP490_G9.repositories.CartItemRepository;
 import com.SEP490_G9.repositories.CartRepository;
 import com.SEP490_G9.repositories.ProductRepository;
@@ -36,14 +37,15 @@ public class CartServiceImplement implements CartService {
 	 @Autowired
 	  TransactionRepository transactionRepository;
 	@Override
-	public Cart addProduct(Long productId) {
-		CartItem item = new CartItem();
+	public CartDTO addProduct(Long productId) {
+	
 		Product product = productRepository.getReferenceById(productId);
-		item.setProduct(product);
 		Cart cart = getCurrentCart();
+		CartItem item = new CartItem(cart,product);
+		cartItemRepository.save(item);
 		cart.addItem(item);
-		cartItemRepository.saveAll(cart.getItems());
-		return cart;
+		CartDTO cartDTO = new CartDTO();
+		return cartDTO;
 	}
 
 	@Override
@@ -70,7 +72,16 @@ public class CartServiceImplement implements CartService {
 		
 		//co roi thi check bang transaction xem co cart id chua -> co roi -> thanh toan roi -> phai tao cart moi
 		User user = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
-		 return cartRepository.findByUserId(user.getId());
+		Cart cart = cartRepository.findByUserId(user.getId());
+		Cart retCart = null;
+		if(cart ==null) {
+			retCart = cartRepository.save(new Cart(user));
+			
+		}else {
+			retCart = checkTransactionAndReturnCart(cart,user);
+		}
+		return retCart;
+		 
 	}
 
 	@Override
@@ -78,16 +89,14 @@ public class CartServiceImplement implements CartService {
 		Cart cart = cartRepository.getReferenceById(cartId);
 		return cart;
 	}
-	public Cart createCart(Long cartId) {
-	    List<Transaction> transactions = transactionRepository.findByCartId(cartId);
-	    if (transactions.isEmpty()) {
-	        Cart cart = new Cart();
-	        cartRepository.save(cart);
+	
+	private Cart checkTransactionAndReturnCart(Cart cart,User user) {
+	    Transaction transactions = transactionRepository.findByCartId(cart.getId());
+	    if (transactions==null) {
 	        return cart;
 	    } else {
-	        Cart cart = new Cart();
-	        cartRepository.save(cart);
-	        return cart;
+	    	Cart newCart = cartRepository.save(new Cart(user));
+	    	return newCart;
 	    }
 	}
    

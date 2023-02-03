@@ -9,5 +9,5 @@ import com.SEP490_G9.models.Entities.Transaction;
 
 @Repository
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
-    List<Transaction> findByCartId(Long cartId);
+    Transaction findByCartId(Long cartId);
 }

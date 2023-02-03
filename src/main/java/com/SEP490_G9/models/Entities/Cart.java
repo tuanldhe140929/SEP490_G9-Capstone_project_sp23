@@ -5,6 +5,7 @@ import java.util.List;
 
 import jakarta.persistence.*;
 
+
 @Entity
 @Table(name = "carts")
 public class Cart {
@@ -13,7 +14,7 @@ public class Cart {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@OneToMany(mappedBy="cart")
+	@OneToMany(mappedBy="cart", fetch = FetchType.EAGER)
 	private List<CartItem> items = new ArrayList<CartItem>();
 	
 	@ManyToOne
@@ -22,6 +23,9 @@ public class Cart {
 	
 	public Cart() {
 		// TODO Auto-generated constructor stub
+	}
+	public Cart(User user) {
+		this.user= user;
 	}
 
 	public Cart(Long id, List<CartItem> items, User user) {
@@ -56,7 +60,6 @@ public class Cart {
 	}
 	
 	public void addItem(CartItem newItem) {
-		newItem.setCart(this);
 		this.items.add(newItem);
 	}
 	public Cart createCart() {
