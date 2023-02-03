@@ -6,7 +6,8 @@ import { ErrorComponent } from './modules/basics/error/error.component';
 const routes: Routes = [
   {
     path: 'error',
-    component: ErrorComponent
+    component: ErrorComponent,
+    title:'Error'
   }
 ];
 

@@ -11,6 +11,7 @@ import { ManageProductModule } from './modules/manage-product/manage-product.mod
 import { CommonModule } from './modules/common/common.module';
 import { BasicsModule } from './modules/basics/basics.module';
 import {MatIconModule} from '@angular/material/icon';	
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 
 @NgModule({
   declarations: [
@@ -26,9 +27,8 @@ import {MatIconModule} from '@angular/material/icon';
     ManageProductModule,
     CommonModule,
     BasicsModule,
-    MatIconModule
-    
-  
+    MatIconModule,
+    CKEditorModule
   ],
   providers: [
 	      {  

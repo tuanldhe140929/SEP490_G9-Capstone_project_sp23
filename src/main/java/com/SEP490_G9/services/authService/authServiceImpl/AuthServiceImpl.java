@@ -14,7 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.SEP490_G9.exceptions.AuthRequestException;
-import com.SEP490_G9.exceptions.EmailExistException;
+import com.SEP490_G9.exceptions.DuplicateFieldException;
 import com.SEP490_G9.exceptions.RefreshTokenException;
 import com.SEP490_G9.exceptions.ResourceNotFoundException;
 import com.SEP490_G9.helpers.GoogleLogin;
@@ -69,25 +69,24 @@ public class AuthServiceImpl implements AuthService {
 	public boolean register(User user) {
 
 		if (userRepository.existsByEmail(user.getEmail())) {
-			throw new EmailExistException(user.getEmail());
+			throw new DuplicateFieldException("email", user.getEmail());
 		}
 		if (userRepository.existsByUsername(user.getUsername())) {
-			throw new EmailExistException(user.getUsername());
+			throw new DuplicateFieldException("username", user.getUsername());
 		}
-		
+
 		user.setUsername(user.getUsername().trim());
-		if(user.getUsername().contains(" ")) {
+		if (user.getUsername().contains(" ")) {
 			throw new AuthRequestException("username can not contains spaces");
 		}
-		
-			String encodedPassword = new BCryptPasswordEncoder().encode(user.getPassword().trim());
-			user.setPassword(encodedPassword);
-			user.setEnabled(true);
-			user.setVerified(false);
-			user.setRole(roleRepository.getReferenceById((long) 2));
-			userRepository.save(user);
 
-		
+		String encodedPassword = new BCryptPasswordEncoder().encode(user.getPassword().trim());
+		user.setPassword(encodedPassword);
+		user.setEnabled(true);
+		user.setVerified(false);
+		user.setRole(roleRepository.getReferenceById((long) 2));
+		userRepository.save(user);
+
 		return true;
 	}
 
@@ -99,8 +98,8 @@ public class AuthServiceImpl implements AuthService {
 
 		if (authentication == null) {
 			String trimedPassword = authRequest.getPassword().trim();
-			authentication = authenticationProvider
-					.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getEmail().trim(), trimedPassword));
+			authentication = authenticationProvider.authenticate(
+					new UsernamePasswordAuthenticationToken(authRequest.getEmail().trim(), trimedPassword));
 		}
 		System.out.println(authRequest.isRememberMe());
 		System.out.println(authRequest.getEmail());

@@ -29,11 +29,14 @@ public class Product implements Serializable {
 	@Column(name="description")
 	private String description;
 	
-	@Column(name="localPath")
-	private String localPath;
-	
 	@Column(name="cover_image")
 	private String coverImage;
+	
+	@Column(name="details")
+	private String details;
+	
+	@Column(name="instruction")
+	private String instructionSource;
 	
 	@Column(name="upload_date")
 	private Date uploadDate = new Date();
@@ -62,6 +65,9 @@ public class Product implements Serializable {
     @JoinColumn(name = "type_id", unique = false)
     private Type type;
 	
+	@OneToMany(mappedBy="product",fetch = FetchType.EAGER)
+	private List<ProductFile> files = new ArrayList<ProductFile>();
+	
 	
 	public Product() {}
 	
@@ -71,23 +77,38 @@ public class Product implements Serializable {
 		this.draft = true;
 	}
 	
-	public Product(Long id, String name, String description,String localPath, String coverImage, Date uploadDate,
-			int price, List<Tag> tags, List<Preview> previews, User user, Type type, String url,boolean draft, Date lastUpdate) {
+
+
+
+
+	public Product(Long id, String name, String url, String description, String coverImage, String details,
+			String instructionSource, Date uploadDate, Date lastUpdate, boolean draft, int price, List<Preview> previews,
+			User user, List<Tag> tags, Type type, List<ProductFile> files) {
 		super();
 		this.id = id;
 		this.name = name;
+		this.url = url;
 		this.description = description;
-		this.localPath = localPath;
 		this.coverImage = coverImage;
+		this.details = details;
+		this.instructionSource = instructionSource;
 		this.uploadDate = uploadDate;
 		this.lastUpdate = lastUpdate;
+		this.draft = draft;
 		this.price = price;
-		this.tags = tags;
 		this.previews = previews;
 		this.user = user;
+		this.tags = tags;
 		this.type = type;
-		this.url = url;
-		this.draft = draft;
+		this.files = files;
+	}
+
+	public List<ProductFile> getFiles() {
+		return files;
+	}
+
+	public void setFiles(List<ProductFile> files) {
+		this.files = files;
 	}
 
 	public Long getId() {
@@ -182,15 +203,6 @@ return this;
 		return serialVersionUID;
 	}
 
-	public String getLocalPath() {
-		return localPath;
-	}
-
-	public Product setLocalPath(String localPath) {
-		this.localPath = localPath;
-		return this;
-	}
-
 	public User getUser() {
 		return user;
 	}
@@ -216,6 +228,22 @@ return this;
 	public Product setDraft(boolean draft) {
 		this.draft = draft;
 		return this;
+	}
+
+	public String getDetails() {
+		return details;
+	}
+
+	public void setDetails(String details) {
+		this.details = details;
+	}
+
+	public String getInstructionSource() {
+		return instructionSource;
+	}
+
+	public void setInstructionSource(String instructionSource) {
+		this.instructionSource = instructionSource;
 	}
 	
 	
