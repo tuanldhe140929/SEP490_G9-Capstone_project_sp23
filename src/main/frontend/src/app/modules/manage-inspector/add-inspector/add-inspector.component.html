@@ -5,25 +5,25 @@
       <div class="row title"><h2>Create an Inspector</h2></div>
       <div class="row cols">
         <div class="left_col col-6">
-          <form>
+          <form [formGroup]="addInspectorForm" (submit)="onAddInspector()">
             <div class="input_row">
-              <div><label for="email">Email</label></div>
-              <div><input type="text"></div>
+              <div><label for="email" >Email</label></div>
+              <div><input type="text" formControlName="email"></div>
               
             </div>
             <div class="input_row">
-              <div><label for="username">Username</label></div>
-              <div><input id="username"></div>
+              <div><label for="username" >Username</label></div>
+              <div><input id="username" formControlName="username"></div>
               
             </div>
             <div class="input_row">
-              <div><label for="password">Password</label></div>
-              <div><input type="password"></div>
+              <div><label for="password" >Password</label></div>
+              <div><input type="password" formControlName="password"></div>
               
               </div>
             <div class="input_row">
-              <div><label for="repeatPassword">Repeat password</label></div>
-              <div><input type="password"></div>
+              <div><label for="repeatPassword" >Repeat password</label></div>
+              <div><input type="password" formControlName="repassword"></div>
               </div>
             <button class="submitButton" type="submit" style="margin-right:5px;">Create inspector</button>
           </form>

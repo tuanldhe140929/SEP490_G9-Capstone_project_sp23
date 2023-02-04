@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ManageInspectorService } from 'src/app/services/manage-inspector.service';
 
 const allInspectorsUrl = "http://localhost:9000/public/manageInspector/allInspectors"
 const enableUrl = "http://localhost:9000/public/manageInspector/activateInspector"
@@ -11,19 +12,23 @@ const disableUrl = "http://localhost:9000/public/manageInspector/deactivateInspe
   styleUrls: ['./all-inspectors.component.css']
 })
 export class AllInspectorsComponent implements OnInit{
-  constructor(private httpClient: HttpClient, private router: Router){}
+  constructor(private httpClient: HttpClient, private router: Router, private manageInspectorService: ManageInspectorService){}
 
   inspectorList: any;
 
   ngOnInit(): void {
-    this.httpClient.get<any>(allInspectorsUrl).subscribe(
+    this.getAllInspectors();
+  }
+
+  public getAllInspectors(): void{
+    this.manageInspectorService.getAllInspectors().subscribe(
       response => {
         this.inspectorList = response;
       }
     )
   }
 
-  onEnable(id: number){ 
+  public onEnable(id: number){ 
     this.httpClient.put<any>(enableUrl+'?inspectorId='+id,null).subscribe(
       response => {
         console.log(response)
@@ -32,7 +37,7 @@ export class AllInspectorsComponent implements OnInit{
 
     }
   
-    onDisable(id: number){ 
+   public onDisable(id: number){ 
       this.httpClient.put<any>(disableUrl+'?inspectorId='+id,null).subscribe(
         response => {
           console.log(response)
