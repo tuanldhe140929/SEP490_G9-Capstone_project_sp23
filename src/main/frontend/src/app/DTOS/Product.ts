@@ -16,9 +16,13 @@ export class Product {
   coverImage: string;
   details: string;
   files: ProductFile[];
-  user: User;	
+  user: User;
+  previewVideo: string;
+  previewPictures: string[];
   tags: Tag[];
   type: Type;
+  instruction: string;
+  draft: boolean;
 
   constructor(){
     this.id = -1;
@@ -30,7 +34,11 @@ export class Product {
     this.type = new Type();
     this.files = [];
     this.tags = [];
+    this.previewVideo = '';
+    this.previewPictures = [];
     this.coverImage = "";
     this.details = "";
+    this.draft = true;
+    this.instruction = "";
 }
 }

@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.SEP490_G9.models.DTOS.ProductDTO;
 import com.SEP490_G9.models.Entities.Product;
 import com.SEP490_G9.models.Entities.Tag;
 import com.SEP490_G9.models.Entities.Type;
@@ -75,7 +76,7 @@ public class ManageProductController {
 
 	@PostMapping(value = "updateProduct")
 	public ResponseEntity<?> updateProduct(@RequestBody Product product, @RequestParam(name="instruction") String instructionDetails) throws IOException {
-		Product ret = manageProductService.updateProduct(product,instructionDetails);
+		ProductDTO ret = manageProductService.updateProduct(product,instructionDetails);
 		return ResponseEntity.ok(ret);
 	}
 
@@ -106,11 +107,18 @@ public class ManageProductController {
 		return ResponseEntity.ok().contentType(MediaType.valueOf(mimeType)).body(image);
 	}
 	
+	@PostMapping(value = "uploadPreviewVideo")
+	public ResponseEntity<?> uploadPreviewVideo(@RequestParam(name = "productId") Long productId,
+			@RequestParam(name = "coverImage") MultipartFile coverImage) throws IOException {
+		Product product = manageProductService.uploadCoverImage(coverImage, productId);
+		return ResponseEntity.ok(product);
+	}
+	
 	@GetMapping("getProductByIdAndUser")
-	public ResponseEntity<?> getProductByIdAndUser(@RequestParam(name = "productId") Long productId){
-		Product product = null;
-		product = manageProductService.getProductByIdAndUser(productId);
-		return ResponseEntity.ok(product);		
+	public ResponseEntity<?> getProductByIdAndUser(@RequestParam(name = "productId") Long productId) throws IOException{
+		ProductDTO productDTO = null;
+		productDTO = manageProductService.getProductDTOByIdAndUser(productId);
+		return ResponseEntity.ok(productDTO);		
 	}
 
 	@GetMapping("getTypeList")

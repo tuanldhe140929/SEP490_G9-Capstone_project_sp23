@@ -43,10 +43,12 @@ public class User implements Serializable {
 	private Role role;
 
 	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+	
     @PrimaryKeyJoinColumn
     private RefreshToken refreshToken;
 	
-	
+//	@OneToOne(cascade = CascadeType.ALL)
+//	private Cart cart;
 	public User() {
 	}
 

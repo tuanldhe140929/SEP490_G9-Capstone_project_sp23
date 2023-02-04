@@ -47,7 +47,6 @@ public class TestDataInit implements ApplicationRunner {
 		roleRepository.save(new Role((long) 1, "ROLE_ADMIN"));
 		roleRepository.save(new Role((long) 2, "ROLE_USER"));
 		roleRepository.save(new Role((long) 3, "ROLE_INSPECTOR"));
-
 		User user = new User();
 		user.setId((long)1);
 		user.setEmail("namdinh@gmail.com");
@@ -56,6 +55,13 @@ public class TestDataInit implements ApplicationRunner {
 		user.setRole(roleRepository.getReferenceById((long) 2));
 		userRepository.save(user);
 
+		user.setId((long) 2);
+		user.setRole(roleRepository.getReferenceById((long) 2));
+		user.setUsername("abcd");
+		user.setEmail("toanpk@gmail.com");
+		user.setPassword(new BCryptPasswordEncoder().encode("12345678"));
+		userRepository.save(user);
+    
 		tagRepository.save(new Tag(1, "2D"));
 		tagRepository.save(new Tag(2, "3D"));
 		tagRepository.save(new Tag(3, "adventure"));

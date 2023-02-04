@@ -12,9 +12,12 @@ public class Preview {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@Column(name = "path")
-	private String path;
+	@Column(name = "source")
+	private String source;
 
+	@Column(name = "type")
+	private String type;
+	
 	@ManyToOne
 	@JoinColumn(name="product_id", nullable=false)
 	private Product product;
@@ -22,10 +25,11 @@ public class Preview {
 	public Preview() {
 	}
 
-	public Preview(Long id, String path) {
+	public Preview(Long id, String source, String type) {
 		super();
 		this.id = id;
-		this.path = path;
+		this.source = source;
+		this.type= type;
 	}
 
 	public Long getId() {
@@ -36,12 +40,20 @@ public class Preview {
 		this.id = id;
 	}
 
-	public String getPath() {
-		return path;
+	public String getSource() {
+		return source;
 	}
 
-	public void setPath(String path) {
-		this.path = path;
+	public void setSource(String path) {
+		this.source = path;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 }
