@@ -58,4 +58,10 @@ export class ManageProductService {
       }
     });
   }
+
+  uploadPreviewVideo(data: any): Observable<Product> {
+    return this.httpClient.post<Product>(baseUrl + '/uploadPreviewVideo', data, {
+      reportProgress: true,
+    });
+  }
 }

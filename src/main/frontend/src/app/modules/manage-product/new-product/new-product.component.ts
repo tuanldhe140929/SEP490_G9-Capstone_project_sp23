@@ -1,5 +1,5 @@
 import { HttpClient, HttpEventType } from '@angular/common/http';
-import { Component, ElementRef, Input, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { finalize, Subscription } from 'rxjs';
@@ -14,15 +14,16 @@ import { DecimalPipe } from '@angular/common';
 import { Tag } from '../../../DTOS/Tag';
 import { ProductFile } from 'src/app/DTOS/ProductFile';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 
-export const CONSTANTS = {
-  'MSG100': 'Tên sản phẩm không được để trống',
-  'MSG101': 'Đường dẫn sản phẩm không được để trống',
-  'MSG102': 'Phân loại sản phẩm không được để trống',
-  'MSG103': 'Giá sản phẩm không được để trống',
-  'MSG104': 'Không có tệp nào để download',
-}
+
+const MSG100 = 'Tên sản phẩm không được để trống';
+const MSG101 = 'Đường dẫn sản phẩm không được để trống';
+const MSG102 = 'Phân loại sản phẩm không được để trống';
+const MSG103 = 'Giá sản phẩm không được để trống';
+const MSG104 = 'Không có tệp nào để download';
+
 
 const baseUrl = "http://localhost:9000/private/manageProduct";
 const price = new Intl.NumberFormat('vi-VN',
@@ -36,7 +37,9 @@ const price = new Intl.NumberFormat('vi-VN',
   styleUrls: ['./new-product.component.css']
 })
 export class NewProductComponent implements OnInit {
-  readonly CONSTANTS = CONSTANTS;
+
+  @ViewChild('content', { static: false }) private content: any;
+
 
   constructor(private ElByClassName: ElementRef,
     private storageService: StorageService,
@@ -44,7 +47,8 @@ export class NewProductComponent implements OnInit {
     private manageProductService: ManageProductService,
     private activatedRoute: ActivatedRoute,
     private decimalPipe: DecimalPipe,
-    private router: Router) { }
+    private router: Router,
+    private modalService: NgbModal) { }
 
   uploadProgress: number = 0;
 
@@ -59,6 +63,8 @@ export class NewProductComponent implements OnInit {
   price = '';
   instruction = "";
   productDetails = '';
+  draft = false;
+
 
   public detailsEditor = ClassicEditor;
   newProductForm = this.formBuilder.group({
@@ -69,6 +75,7 @@ export class NewProductComponent implements OnInit {
     "description": [''],
     "type": [this.product.type],
     "tags": [this.product.tags],
+    "draft": [true, Validators.required],
     price: new FormControl('', [Validators.required, Validators.min(1000), Validators.max(10000000)])
   });
 
@@ -162,11 +169,20 @@ export class NewProductComponent implements OnInit {
       this.manageProductService.getProductByIdAndUser(+productId).subscribe(
         (data) => {
           this.product = data;
+          console.log(data);
           if (this.product.coverImage != "" && this.product.coverImage != null) {
             this.loadCoverImage();
           }
           this.getTagList();
-          this.productDetails = this.product.details;     
+          //this.InstructionDetails.value = this.product.instruction;
+          this.productDetails = this.product.details;
+          this.draft = this.product.draft;
+          if (this.draft) {
+            this.Draft.checked = true;
+          } else {
+            this.Publish.checked = true;
+          }
+          this.InstructionDetails.value = this.product.instruction;
         },
         (error) => {
           this.router.navigate(['error']);
@@ -255,6 +271,47 @@ export class NewProductComponent implements OnInit {
     }
   }
 
+  loadPreviewVideo() {
+
+  }
+
+  onPreviewVideoUpload($event: any) {
+    const file: File = $event.target.files[0];
+
+    if (file) {
+      //this.fileName = file.name;
+      const formData = new FormData();
+      formData.set("enctype", "multipart/form-data");
+      formData.append("previewVideo", file);
+      formData.append("productId", this.product.id.toString());
+
+      const upload$ = this.manageProductService.uploadPreviewVideo(formData).subscribe(
+        (data) => {
+          this.uploadProgress = 0;
+          this.loadPreviewVideo();
+        },
+        (error) => {
+          console.log(error);
+        }
+      )
+    }
+  }
+
+  onPreviewPicturesUpload($event: any) {
+
+  }
+  onDraftSelect($event: any) {
+    if ($event.target.value == 'true') {
+      this.draft = true;
+      this.Draft.checked = true;
+      this.Publish.checked = false;
+    } else {
+      this.draft = false;
+      this.Draft.checked = false;
+      this.Publish.checked = true;
+    }
+  }
+
   onTagSelect($event: any) {
     if ($event.target.value != 0) {
       for (let i = 0; i < this.tagList.length; i++) {
@@ -281,7 +338,7 @@ export class NewProductComponent implements OnInit {
   isTypeSelected(typeId: number): any {
     if (this.product.type != null) {
       if (typeId === this.product.type.id) {
-        this.TypeList.selectedIndex = typeId - 1;
+        this.TypeList.selectedIndex = typeId;
         return "";
       }
     }
@@ -302,7 +359,7 @@ export class NewProductComponent implements OnInit {
     const keyCode = $event.keyCode;
     console.log(keyCode);
     const notAllowedKey = [32, 192, 189, 191, 16];
-    if (notAllowedKey.includes(keyCode) || ($event.shiftKey === true && keyCode >= 48 && keyCode <= 57) || ($event.ctrlKey === true && keyCode==86)) {
+    if (notAllowedKey.includes(keyCode) || ($event.shiftKey === true && keyCode >= 48 && keyCode <= 57) || ($event.ctrlKey === true && keyCode == 86)) {
       $event.preventDefault();
     }
   }
@@ -353,7 +410,7 @@ export class NewProductComponent implements OnInit {
         }
       }
       if (clickedElement.className == "payment_mode_no_paid active") {
-       // this.newProductForm.value.priceUnformated = '0';
+        // this.newProductForm.value.priceUnformated = '0';
         if (paid != null) {
           paid.setAttribute("style", "display:none; ");
         }
@@ -364,22 +421,52 @@ export class NewProductComponent implements OnInit {
     }
   }
 
+  errors: string[] = [];
+
+  dismissError() {
+    this.errors = [];
+    this.modalService.dismissAll();
+  }
   saveProduct() {
-    this.newProductForm.controls.id.setValue(this.product.id);
-    this.newProductForm.controls.tags.setValue(this.product.tags);
-    this.newProductForm.controls.type.setValue(this.product.type);
-    this.newProductForm.controls.url.setValue(this.productUrl);
-    this.newProductForm.controls.details.setValue(this.productDetails);
-    console.log(this.newProductForm);
-    this.manageProductService.updateProduct(this.newProductForm.value, this.InstructionDetails.value).subscribe(
-      (data) => {
-        this.product = data;
-        console.log(data);
-      },
-      (error) => {
-        console.log(error);
-      }
-    )
+    this.newProductForm.markAllAsTouched;
+    this.newProductForm.markAsDirty;
+
+    if (this.ProductName.value == null || this.ProductName.value.trim() == '') {
+      this.errors.push(MSG100);
+    }
+    if (this.ProductUrl.value == null || this.ProductUrl.value.trim() == '') {
+      this.errors.push(MSG101);
+    }
+    if (this.product.type.id == -1 || this.product.type.id == 0) {
+      this.errors.push(MSG102);
+    }
+    if (this.newProductForm.value.price == null) {
+      this.errors.push(MSG103);
+    }
+    if (this.product.files.length == 0) {
+      this.errors.push(MSG104);
+    }
+
+    if (this.errors.length == 0) {
+
+      this.newProductForm.controls.id.setValue(this.product.id);
+      this.newProductForm.controls.name.setValue(this.product.name);
+      this.newProductForm.controls.tags.setValue(this.product.tags);
+      this.newProductForm.controls.type.setValue(this.product.type);
+      this.newProductForm.controls.url.setValue(this.product.url);
+      this.newProductForm.controls.details.setValue(this.productDetails);
+      this.newProductForm.controls.draft.setValue(this.draft);
+      this.newProductForm.controls.description.setValue(this.product.description);
+      this.manageProductService.updateProduct(this.newProductForm.value, this.InstructionDetails.value).subscribe(
+        (data) => {
+          this.product = data;
+          console.log(data);
+        },
+        (error) => {
+          console.log(error);
+        }
+      )
+    } else { this.openVerticallyCentered(); }
   }
 
   get DefaultTagSelectOption() {
@@ -396,6 +483,13 @@ export class NewProductComponent implements OnInit {
 
   get UploadBtn() {
     return document.getElementsByClassName('upload_buttons').item(0);
+  }
+  get ProductUrl() {
+    return document.getElementById('productUrl') as HTMLInputElement;
+  }
+
+  get ProductName() {
+    return document.getElementById('product_name') as HTMLInputElement;
   }
 
   get coverImg() {
@@ -416,5 +510,16 @@ export class NewProductComponent implements OnInit {
 
   get InstructionDetails() {
     return document.getElementById('instruction_details') as HTMLTextAreaElement;
+  }
+
+  openVerticallyCentered() {
+    this.modalService.open(this.content, { centered: true });
+  }
+
+  get Draft() {
+    return document.getElementById('draft') as HTMLInputElement;
+  }
+  get Publish() {
+    return document.getElementById('publish') as HTMLInputElement;
   }
 }

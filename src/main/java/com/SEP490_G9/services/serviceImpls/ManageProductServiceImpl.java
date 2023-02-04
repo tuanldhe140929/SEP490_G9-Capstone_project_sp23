@@ -3,8 +3,11 @@ package com.SEP490_G9.services.serviceImpls;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Date;
 import java.util.List;
+import java.util.Scanner;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,6 +25,8 @@ import com.SEP490_G9.exceptions.DuplicateFieldException;
 import com.SEP490_G9.exceptions.ResourceNotFoundException;
 import com.SEP490_G9.helpers.StorageProperties;
 import com.SEP490_G9.models.UserDetailsImpl;
+import com.SEP490_G9.models.DTOS.ProductDTO;
+import com.SEP490_G9.repositories.PreviewRepository;
 import com.SEP490_G9.repositories.ProductFileRepository;
 import com.SEP490_G9.repositories.ProductRepository;
 import com.SEP490_G9.repositories.TagRepository;
@@ -61,6 +66,9 @@ public class ManageProductServiceImpl implements ManageProductService {
 	
 	@Autowired 
 	ProductFileRepository productFileRepository;
+	
+	@Autowired
+	PreviewRepository previewRepository;
 
 	@Override
 	public User getCurrentUserInfo() {
@@ -81,10 +89,27 @@ public class ManageProductServiceImpl implements ManageProductService {
 	}
 
 	@Override
-	public Product getProductByIdAndUser(Long productId) {
+	public ProductDTO getProductDTOByIdAndUser(Long productId) throws IOException {
 		User user = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
 		Product product = productRepository.findByUserAndId(user, productId);
-		System.out.println(productId+" "+user.getId());
+		
+		if (product == null) {
+			throw new ResourceNotFoundException("product id:" + productId, "user id", user.getId());
+		}
+		ProductDTO productDTO = new ProductDTO(product,previewRepository);
+		File file = new File(storageProperties.getLocation()+product.getInstructionSource());
+		if(file.exists()) {
+			String instruction = new String(Files.readAllBytes(Paths.get(file.getAbsolutePath())));
+			productDTO.setInstruction(instruction);
+	    }
+		return productDTO;
+	}
+	
+	
+	private Product getProductByIdAndUser(Long productId) {
+		User user = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
+		Product product = productRepository.findByUserAndId(user, productId);
+
 		if (product == null) {
 			throw new ResourceNotFoundException("product id:" + productId, "user id", user.getId());
 		}
@@ -120,10 +145,10 @@ public class ManageProductServiceImpl implements ManageProductService {
 	}
 
 	@Override
-	public Product updateProduct(Product product,String instruction) throws IOException {
+	public ProductDTO updateProduct(Product product,String instruction) throws IOException {
 		
 		
-		Product ret = null;
+		ProductDTO ret = null;
 		try {
 
 			Product found = getProductByIdAndUser(product.getId());
@@ -133,7 +158,7 @@ public class ManageProductServiceImpl implements ManageProductService {
 			fos.write(instruction.getBytes());
 			fos.flush();
 			fos.close();
-			
+			found.setDraft(product.isDraft());
 			found.setName(product.getName());
 			found.setDetails(product.getDetails());
 			found.setPrice(product.getPrice());
@@ -143,7 +168,8 @@ public class ManageProductServiceImpl implements ManageProductService {
 			found.setUrl(product.getUrl());
 			found.setLastUpdate(new Date());
 			found.setInstructionSource(instructionFileDir);
-			ret = productRepository.save(found);
+			productRepository.save(found);
+			ret = new ProductDTO(found,previewRepository);
 		} catch (Exception e) {
 			System.out.println(e);
 		}
