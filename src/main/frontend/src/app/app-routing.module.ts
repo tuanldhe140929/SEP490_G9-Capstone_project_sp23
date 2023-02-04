@@ -8,7 +8,7 @@ const routes: Routes = [
     path: 'error',
     component: ErrorComponent,
     title:'Error'
-  }
+  },
 ];
 
 @NgModule({

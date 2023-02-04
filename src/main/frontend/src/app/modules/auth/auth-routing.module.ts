@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { HomeComponent } from '../common/home/home.component';
 import { ForgotPasswordComponent } from './login/forgot-password/forgot-password.component';
 import { LoginWithGoogleComponent } from './login/login-with-google/login-with-google.component';
 import { LoginComponent } from './login/login.component';
@@ -25,6 +26,11 @@ const routes: Routes = [
 		path:'auth/loginWithGoogle',
     component: LoginWithGoogleComponent,
     title: 'Google Login'
+	},
+	{
+		path: 'home',
+		component: HomeComponent,
+		title: 'Home Page'
 	}
 ];
 

@@ -13,6 +13,7 @@ import { CommonModule } from './modules/common/common.module';
 import { BasicsModule } from './modules/basics/basics.module';
 import {MatIconModule} from '@angular/material/icon';	
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
+import { ManageInspectorModule } from './modules/manage-inspector/manage-inspector.module';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
     AuthModule,
     ManageProductModule,
     ManageAccountInfoModule,
+    ManageInspectorModule,
     CommonModule,
     BasicsModule,
     MatIconModule,
