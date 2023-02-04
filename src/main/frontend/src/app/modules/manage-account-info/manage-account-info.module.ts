@@ -18,8 +18,7 @@ import { ChangeNameComponent } from './change-name/change-name.component';
 	  BrowserModule,
     ManageAccountInfoRoutingModule,
     FormsModule,
-    ReactiveFormsModule,
-    CommonModule
+    ReactiveFormsModule
   ],
   providers: [AuthGuard]
 })
