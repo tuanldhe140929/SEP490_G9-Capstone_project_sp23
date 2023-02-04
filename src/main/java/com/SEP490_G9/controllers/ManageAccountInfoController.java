@@ -31,8 +31,8 @@ public class ManageAccountInfoController {
 		User user;
 		user = manageAccountInfoService.getAccountInfo();
 		return ResponseEntity.ok(user);
-
 	}
+	
 	@PostMapping(value = "changeAccountPassword")
 	public ResponseEntity<?> changeAccountPassword(@Valid @RequestParam(name = "newPassword", required = true)  @Size(min = 8, max = 30) String newPassword,
 		@Valid @RequestParam(name = "oldPassword", required = true)  @Size(min = 8, max = 30) String oldPassword){

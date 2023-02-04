@@ -58,10 +58,11 @@ JwtAuthenticationEntryPoint authenEntryPoint;
 		}).and().csrf().disable();
 		
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-		
+	
 		http.authorizeHttpRequests()
 		.requestMatchers("/public/**").permitAll().and()
 		.authorizeHttpRequests().requestMatchers("/home").hasAnyRole("USER")
+		//.and().authorizeHttpRequests().requestMatchers("/private/api/cart").hasAnyRole("USER")
 		.and().authorizeHttpRequests().requestMatchers("/private/**").hasAnyRole("USER")
 		.and().httpBasic().authenticationEntryPoint(authenEntryPoint)
 		.and().authorizeHttpRequests().anyRequest().authenticated()

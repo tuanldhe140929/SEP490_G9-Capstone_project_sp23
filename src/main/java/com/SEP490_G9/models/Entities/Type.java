@@ -23,6 +23,10 @@ public class Type {
 
 	public Type() {
 	}
+	
+	public Type(int id) {
+		this.id = id;
+	}
 
 	public Type(int id, String name) {
 		super();

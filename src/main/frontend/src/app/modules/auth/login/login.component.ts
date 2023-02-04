@@ -49,6 +49,7 @@ export class LoginComponent implements OnInit {
           this.authService.authResponse = response.body;
           this.storageService.saveUser(response.body);
           this.storageService.saveToken(response.body.accessToken);
+          this.router.navigate(['home']);
         },
         err => {
           if (err.status === 500) {

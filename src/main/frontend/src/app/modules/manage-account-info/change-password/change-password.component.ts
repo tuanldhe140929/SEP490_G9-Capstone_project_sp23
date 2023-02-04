@@ -51,10 +51,10 @@ export class ChangePasswordComponent {
 	onChangePassword(){
 		this.manageAccountInfoService.onChangePassword(this.changePasswordForm.value).subscribe(
 			data => {
-				console.log(data)
+        console.log(data);
 			},
 			error =>{
-				console.log(error)
+        console.log(error);
 			}
 		)
 	}
