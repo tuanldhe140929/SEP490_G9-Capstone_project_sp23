@@ -70,7 +70,6 @@ public class Product implements Serializable {
 	private List<ProductFile> files = new ArrayList<ProductFile>();
 	
 
-	
 	public Product() {}
 	
 	public Product(User user) {
