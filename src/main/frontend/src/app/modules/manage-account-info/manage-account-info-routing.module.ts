@@ -4,7 +4,6 @@ import { AuthService } from 'src/app/services/auth.service';
 import { AuthGuard } from '../../helpers/auth.guard';
 import { ChangePasswordComponent } from './change-password/change-password.component';
 import { ProfileComponent } from './profile/profile.component';
-import { ChangePasswordComponent } from './change-password/change-password.component';
 import { ChangeNameComponent } from './change-name/change-name.component';
 import { BrowserModule } from '@angular/platform-browser';
 

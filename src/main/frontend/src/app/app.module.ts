@@ -11,7 +11,8 @@ import { ManageAccountInfoModule } from './modules/manage-account-info/manage-ac
 import { ManageProductModule } from './modules/manage-product/manage-product.module';
 import { CommonModule } from './modules/common/common.module';
 import { BasicsModule } from './modules/basics/basics.module';
-import {MatIconModule} from '@angular/material/icon';	
+import {MatIconModule} from '@angular/material/icon';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';	
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import {MatIconModule} from '@angular/material/icon';
     ManageProductModule,
     CommonModule,
     BasicsModule,
-    MatIconModule
+    MatIconModule,
+    BrowserAnimationsModule
     
   
   ],

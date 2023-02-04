@@ -5,7 +5,7 @@ export class User{
 	enabled:boolean;
 	verifed:boolean;
   role: string;
-
+  image: string;
   constructor() {
     this.id = -1;
     this.email = "";
@@ -13,5 +13,6 @@ export class User{
     this.enabled = false;
     this.verifed = false;
     this.role = "";
+    this.image ="";
   }
 } 
