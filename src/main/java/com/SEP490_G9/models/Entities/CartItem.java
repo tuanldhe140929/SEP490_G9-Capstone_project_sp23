@@ -13,16 +13,13 @@ import java.io.Serializable;
 import com.SEP490_G9.models.embeddables.CartItemKey;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-@JsonIgnoreProperties(value={})
+@JsonIgnoreProperties(value={"cart"})
 @Entity
 @Table(name = "cart_items")
 public class CartItem implements Serializable {
 	
 
-	
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 
 	@EmbeddedId

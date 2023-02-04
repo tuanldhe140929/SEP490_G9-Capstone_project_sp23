@@ -8,7 +8,8 @@ import com.SEP490_G9.models.Entities.DTOS.CartDTO;
 @Service
 public interface CartService {
 	public CartDTO addProduct(Long productId);
-    public Cart removeProduct(Long productId);
-    public Cart getCurrentCart();
+    public CartDTO removeProduct(Long productId);
+    public CartDTO getCurrentCartDTO();
+    
 	public Cart getCart(Long cartId);
 }

@@ -25,14 +25,14 @@ public class CartController {
 
     @DeleteMapping("/remove/{productId}")
     public ResponseEntity<?> removeProduct(@PathVariable(name="productId") Long productId) {
-    	Cart cart = cartService.removeProduct(productId);
+    	CartDTO cart = cartService.removeProduct(productId);
     	return ResponseEntity.ok(cart);
     }
 
     
-    @GetMapping("/getCurrentCart")
+    @GetMapping("/getCurrentCartDTO")
     public ResponseEntity<?> getCart() {
-        Cart cart = cartService.getCurrentCart();
+        CartDTO cart = cartService.getCurrentCartDTO();
         return ResponseEntity.ok(cart);
     }	
     
