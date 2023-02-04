@@ -23,7 +23,7 @@ public class ViolationType {
 	@Column(name = "name", unique = true, nullable = false, insertable = true, updatable = false)
 	private String name;
 
-	@OneToMany(mappedBy="violation_type")
+	@OneToMany(mappedBy="violation_types")
     private List<Report> reports;
 
 	public ViolationType() {

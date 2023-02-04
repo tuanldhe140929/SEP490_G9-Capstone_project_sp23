@@ -24,7 +24,7 @@ import com.SEP490_G9.models.Entities.User;
 import com.SEP490_G9.services.FileStorageService;
 import com.SEP490_G9.services.ManageProductService;
 
-@RequestMapping(value = "private/manageProduct")
+@RequestMapping(value = "private/report")
 @RestController
 public class ReportController {
 
@@ -52,12 +52,6 @@ public class ReportController {
 	public ResponseEntity<?> getProductsByUser() {
 		List<Product> products = manageProductService.getProductsByUser();
 		return ResponseEntity.ok(products);
-	}
-
-	@PostMapping(value = "newProductRequest")
-	public ResponseEntity<?> newProductRequest() {
-		Product ret = manageProductService.newProduct();
-		return ResponseEntity.ok(ret);
 	}
 
 	@PostMapping(value = "addProduct")
