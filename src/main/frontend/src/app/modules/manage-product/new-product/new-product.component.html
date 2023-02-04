@@ -1,19 +1,19 @@
 <div class="container-fluid grad">
   <div class="row padded" style="width:80%; background:white; margin:auto;">
-    <div class="row" style="border-bottom:0.5px solid grey; margin:auto;" >
+    <div class="row" style="border-bottom:0.5px solid grey; margin:auto;">
       <h2>Upload new product</h2>
     </div>
-    <form [formGroup]="newProductForm" (ngSubmit)="saveProduct()">
+    <form (ngSubmit)="saveProduct()">
       <div class="row" style="margin-top:3%;">
         <div class="row columns">
           <div class="left_col col-8" style="border-right:1px solid black">
             <div class="input_row">
-              <div><label for="title">Title</label></div>
-              <div><input type="text" formControlName="name" id="title" value="{{product.name}}"/></div>
+              <div><label for="product_name">Title</label></div>
+              <div><input type="text" [(ngModel)]="product.name" id="product_name" name="product_name"/></div>
             </div>
             <div class="input_row url">
               <div><label for="productUrl">Product URL</label> </div>
-              <div><input id="productUrl" [(ngModel)]="productUrl" [ngModelOptions]="{standalone: true}" (keydown)="onUrlInput($event)" oninput="this.value = this.value.toLowerCase()" autocomplete="off" value="{{product.url}}"></div>
+              <div><input id="productUrl" [(ngModel)]="product.url" [ngModelOptions]="{standalone: true}" (keydown)="onUrlInput($event)" oninput="this.value = this.value.toLowerCase()" autocomplete="off" value="{{product.url}}"></div>
               <div>
                 <small>Your product's url will be: </small>
                 <h5>http://localhost:4200/{{authResponse.username}}/{{productUrl.trim().toLowerCase()}}</h5>
@@ -21,7 +21,7 @@
             </div>
             <div class="input_row description">
               <div><label for="description">Description</label>&#45;<small>Short description for your product</small> </div>
-              <div><input id="description" type="text" formControlName="description" placeholder="Optional" value="{{product.description}}"/></div>
+              <div><input id="description" type="text"  placeholder="Optional" [(ngModel)]="product.description" name="description"/></div>
             </div>
             <div class="input_row classification_picker">
               <div class="classification_picker_label">
@@ -33,7 +33,8 @@
                 </div>
               </div>
               <div class="">
-                <select class="classification_picker_body" formControlName="type" id="type_list" name="type" (change)="onSelectType($event)">
+                <select class="classification_picker_body" id="type_list" name="type" [(ngModel)]="product.type">
+                <option value="0" selected>Select product type</option>
                   <option *ngFor="let type of typeList; index as i;" value="{{type.id}}"
                           [attr.selected]="isTypeSelected(type.id)">
                     {{type.name}}
@@ -49,14 +50,14 @@
               <div class="selectize_group">
                 <div class="selectize-control tag_input multi plugin-remove_button">
                   <div class="selectize-input items not-full has-options">
-                 
-                    <select id="tag_input input_row" (change)="onTagSelect($event)" style="padding: 8px; appearance: none;" >
+
+                    <select id="tag_input input_row" (change)="onTagSelect($event)" style="padding: 8px; appearance: none;">
                       <option *ngFor="let tag of tagList; index as i;" value="{{tag.id}}">{{tag.name}}</option>
                       <option id="default_tag" value="0" selected>Select one or multiple tags</option>
                     </select>
-      
+
                   </div>
-                  
+
                   <div class="selectize-dropdown multi tag_input plugin-remove_button">
                     <div class="selectize-dropdown-content">
                       <div class="option"></div>
@@ -65,11 +66,11 @@
                 </div>
               </div>
               <div class="selected_tags" style="display:flex;">
-                <div class="selected_tag" *ngFor="let tag of product.tags" (click) = "onRemoveSelectedTag(tag.id)">
-                	<div class="tag_name"><p style=" user-select: none;">{{tag.name}}</p></div>
-                	<div class="remove_tag_button" ></div>
+                <div class="selected_tag" *ngFor="let tag of product.tags" (click)="onRemoveSelectedTag(tag.id)">
+                  <div class="tag_name"><p style=" user-select: none;">{{tag.name}}</p></div>
+                  <div class="remove_tag_button"></div>
                 </div>
-                
+
               </div>
             </div>
             <section class="price_picker">
@@ -91,7 +92,7 @@
                       <div class="input_row">
                         <div><label>Minimum price<span class="sub"> - Minimum price to get access to download this product</span></label></div>
                         <div>
-                          <input id="price" type="text" name="minPrice" placeholder="1.000đ" value="1.000" (keydown)="onPriceChange($event)" formControlName="priceUnformated" />
+                          <input id="price" type="text" name="minPrice" placeholder="1.000đ" value="1.000" (keydown)="onPriceChange($event)" />
                         </div>
                       </div>
                     </div>
@@ -106,7 +107,7 @@
             </section>
             <section class="upload_editor">
               <h2>Uploads</h2>
-              <div class="upload_drop" >
+              <div class="upload_drop">
                 <div class="game_edit_upload_list_widget">
                   <div class="file_list has_files">
                     <div class="uploader" *ngFor="let file of product.files;index as i" style="margin-bottom:12px;">
@@ -119,24 +120,24 @@
                         </div>
                         <div class="meta_data">
                           <span class="file_size">{{formatFileSize(file.size)}}&#183;</span>
-                          <span class="move_up_wrap" (click) = "moveFileUp(file)"><span>Move up</span>&#183;</span>
-                          <span class="move_down_wrap" (click) = "moveFileDown(file)"><span>Move down</span></span>
+                          <span class="move_up_wrap" (click)="moveFileUp(file)"><span>Move up</span>&#183;</span>
+                          <span class="move_down_wrap" (click)="moveFileDown(file)"><span>Move down</span></span>
                         </div>
                         <div class="progress">
-                			<mat-progress-bar class="progress-bar" mode="determinate" [value]="uploadProgress" *ngIf="uploadProgress"> </mat-progress-bar>
-              			</div>
+                          <mat-progress-bar class="progress-bar" mode="determinate" [value]="uploadProgress" *ngIf="uploadProgress"> </mat-progress-bar>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-              
-              
+
+
               <div class="add_file_btn_outer upload_buttons">
                 <div class="button add_file_btn has_multi_upload" (click)="fileUpload.click()">
                   Upload files
                 </div>
-                <input type="file" class="file-input" (change)="onFileUpload($event)" multiple="multiple" #fileUpload >
+                <input type="file" class="file-input" (change)="onFileUpload($event)" multiple="multiple" #fileUpload>
               </div>
               <p class="upload_limit">File size limit: 1GB</p>
             </section>
@@ -144,7 +145,7 @@
             <div class="input_row">
               <div class="details_text_area_label">
                 <div><label for="tag_input">Description</label>&#45;<small>This is the content of your product detail page</small></div>
-                <ckeditor [editor]="detailsEditor" [(ngModel)]="productDetails" [ngModelOptions]="{standalone: true}" ></ckeditor>
+                <ckeditor [editor]="detailsEditor" [(ngModel)]="productDetails" [ngModelOptions]="{standalone: true}"></ckeditor>
               </div>
             </div>
             <div class="input_row">
@@ -153,15 +154,26 @@
               </div>
               <textarea id="instruction_details" style="min-height:200px;width:100%;resize:none"></textarea>
             </div>
+            <div class="draft_picker" style="font-weight:600">
+              <div class="draft_picker_label">
+                <div><label for="draft_pick">Publicity</label></div>
+              </div>
+              <div class="draft_pick">
+                <input id="draft" value="true" type="radio" (click)="onDraftSelect($event)"/>
+                <label for="draft">Draft</label>&#45;<small>You can edit this product and publish it later</small>
+              </div>
+              <div>
+                <input id="publish" value="false" type="radio" (click)="onDraftSelect($event)"/>
+                <label for="publish">Publish</label>&#45;<small>This product is publish, others can see it</small>
+              </div>
+            </div>
             <input type="submit" />
           </div>
           <div class="right_col col-4">
             <div class="cover_uploader_drop">
               <div class="upload_container" id="cover_img_div">
-
                 <div class="widget">
                   <div class="add_file_btn_outer upload_buttons no_upload" id="upload_button">
-
                     <div class="button add_file_btn has_multi_upload" (click)="coverImageUpload.click()">
                       Upload Image
                     </div>
@@ -169,22 +181,50 @@
                   </div>
                 </div>
               </div>
-              <div class="upload_instruction"><p>Upload cover image here</p></div>
+              <div class="upload_coverImage_label"><p>Upload cover image here</p></div>
             </div>
             <div class="preview_videos_drop">
-              <div class="upload_container"></div>
-              <div class="upload_instruction"><p>Upload preview videos here</p></div>
+              <div class="upload_container">
+                <div class="widget">
+                  <div class="add_file_btn_outer upload_buttons no_upload" id="upload_button">
+                    <div class="button add_file_btn has_multi_upload" (click)="previewVideoUpload.click()">
+                      Upload Video
+                    </div>
+                    <input type="file" class="file-input" (change)="onPreviewVideoUpload($event)" multiple="multiple" #previewVideoUpload>
+                  </div>
+                </div>
+              </div>
+              <div class="upload_preview_video_label"><p>Upload preview videos here</p></div>
             </div>
             <div class="preview_pictures_drop">
-              <div class="upload_container"></div>
-              <div class="upload_instruction"><p>Upload preview pictures here</p> </div>
+              <div class="upload_container">
+                <div class="widget">
+                  <div class="add_file_btn_outer upload_buttons no_upload" id="upload_button">
+                    <div class="button add_file_btn has_multi_upload" (click)="previewPicturesUpload.click()">
+                      Upload Images
+                    </div>
+                    <input type="file" class="file-input" (change)="onPreviewPicturesUpload($event)" #previewPicturesUpload>
+                  </div>
+                </div>
+              </div>
+              <div class="upload_preview_pictures_label"><p>Upload preview pictures here</p> </div>
             </div>
           </div>
         </div>
       </div>
-
     </form>
   </div>
 </div>
 <div id="editor"></div>
 
+
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" style="color:red">Lỗi</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="dismissError()"></button>
+  </div>
+  <div class="modal-body">
+    <small style="color:red;" *ngFor="let error of errors">{{error}}<br /></small>
+  </div>
+</ng-template>

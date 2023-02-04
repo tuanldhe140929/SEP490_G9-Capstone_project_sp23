@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.SEP490_G9.models.DTOS.ProductDTO;
 import com.SEP490_G9.models.Entities.Product;
 import com.SEP490_G9.models.Entities.Tag;
 import com.SEP490_G9.models.Entities.Type;
@@ -17,7 +18,7 @@ public interface ManageProductService {
 	
 	public Product addProduct(Product product);
 	
-	public Product updateProduct(Product product,String instruction) throws IOException;
+	public ProductDTO updateProduct(Product product,String instruction) throws IOException;
 	
 	public Product deleteProduct(Long id);
 	
@@ -29,7 +30,7 @@ public interface ManageProductService {
 
 	public Product createNewProduct();
 
-	public Product getProductByIdAndUser(Long productId);
+	public ProductDTO getProductDTOByIdAndUser(Long productId) throws IOException;
 
 	public List<Type> getTypeList();
 
@@ -38,4 +39,5 @@ public interface ManageProductService {
 	public Product uploadProductFile(Long productId, MultipartFile productFile) throws IOException;
 	
 	public Product deleteProductFile(Long productId, Long fileId) throws IOException;
+
 }

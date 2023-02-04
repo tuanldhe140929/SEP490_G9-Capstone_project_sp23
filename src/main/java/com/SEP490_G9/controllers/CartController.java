@@ -7,7 +7,7 @@ import com.SEP490_G9.models.Entities.DTOS.CartDTO;
 import com.SEP490_G9.services.CartService;
 
 @RestController
-@RequestMapping("private/api/cart")
+@RequestMapping("private/cart")
 public class CartController {
 
     private final CartService cartService;
