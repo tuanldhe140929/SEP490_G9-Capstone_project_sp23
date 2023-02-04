@@ -16,10 +16,14 @@ import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { ManageAccountInfoModule } from './modules/manage-account-info/manage-account-info.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ManageInspectorModule } from './modules/manage-inspector/manage-inspector.module';
+import { HeaderComponent } from './header/header.component';
+import { FooterComponent } from './footer/footer.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    HeaderComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule,
