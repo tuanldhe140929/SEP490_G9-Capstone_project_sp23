@@ -68,7 +68,6 @@ public class Product implements Serializable {
 	@OneToMany(mappedBy="product",fetch = FetchType.EAGER)
 	private List<ProductFile> files = new ArrayList<ProductFile>();
 	
-	
 	public Product() {}
 	
 	public Product(User user) {
