@@ -7,6 +7,8 @@ import { ChangePasswordComponent } from './change-password/change-password.compo
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { ChangeNameComponent } from './change-name/change-name.component';
+import { CommonModule } from '@angular/common';
+
 
 @NgModule({
   declarations: [

@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.SEP490_G9.models.Entities.Product;
+import com.SEP490_G9.models.Entities.Tag;
+import com.SEP490_G9.models.Entities.Type;
 import com.SEP490_G9.models.Entities.User;
 import com.SEP490_G9.services.FileStorageService;
 import com.SEP490_G9.services.ManageProductService;
@@ -59,12 +61,6 @@ public class ManageProductController {
 		return ResponseEntity.ok(products);
 	}
 
-	@PostMapping(value = "newProductRequest")
-	public ResponseEntity<?> newProductRequest() {
-		Product ret = manageProductService.newProduct();
-		return ResponseEntity.ok(ret);
-	}
-
 	@PostMapping(value = "addProduct")
 	public ResponseEntity<?> addProduct(@RequestBody Product product) {
 		Product ret = manageProductService.addProduct(product);
@@ -78,8 +74,8 @@ public class ManageProductController {
 	}
 
 	@PostMapping(value = "updateProduct")
-	public ResponseEntity<?> updateProduct(@RequestBody Product product) {
-		Product ret = manageProductService.updateProduct(product);
+	public ResponseEntity<?> updateProduct(@RequestBody Product product, @RequestParam(name="instruction") String instructionDetails) throws IOException {
+		Product ret = manageProductService.updateProduct(product,instructionDetails);
 		return ResponseEntity.ok(ret);
 	}
 
@@ -97,7 +93,7 @@ public class ManageProductController {
 	}
 
 	@GetMapping("serveCoverImage")
-	public ResponseEntity<byte[]> serveCoverImage(@RequestParam(name = "productId") long productId) {
+	public ResponseEntity<byte[]> serveCoverImage(@RequestParam(name = "productId") Long productId) {
 		File file = manageProductService.getCoverImage(productId);
 		String mimeType = URLConnection.guessContentTypeFromName(file.getName());
 		byte[] image = new byte[0];
@@ -109,5 +105,38 @@ public class ManageProductController {
 
 		return ResponseEntity.ok().contentType(MediaType.valueOf(mimeType)).body(image);
 	}
+	
+	@GetMapping("getProductByIdAndUser")
+	public ResponseEntity<?> getProductByIdAndUser(@RequestParam(name = "productId") Long productId){
+		Product product = null;
+		product = manageProductService.getProductByIdAndUser(productId);
+		return ResponseEntity.ok(product);		
+	}
 
+	@GetMapping("getTypeList")
+	public ResponseEntity<?> getTypeList(){
+		List<Type> typeList = manageProductService.getTypeList();
+		return ResponseEntity.ok(typeList);		
+	}
+	
+	@GetMapping("getTagList")
+	public ResponseEntity<?> getTagList(){
+		List<Tag> tagList = manageProductService.getTagList();
+		return ResponseEntity.ok(tagList);		
+	}
+	
+	@PostMapping("uploadProductFile")
+	public ResponseEntity<?> uploadProductFiles(@RequestParam(name = "productId", required=true) Long productId,
+			@RequestParam(name = "productFile", required=true) MultipartFile productFile) throws IOException{
+		Product product = manageProductService.uploadProductFile(productId,productFile);
+		return ResponseEntity.ok(product);
+	}
+	
+	@PostMapping("deleteProductFile")
+	public ResponseEntity<?> deleteProductFile(@RequestParam(name = "productId", required=true) Long productId,
+			@RequestParam(name = "fileId", required=true) Long fileId) throws IOException{
+		Product product = manageProductService.deleteProductFile(productId, fileId);
+		return ResponseEntity.ok(product);
+	}
+	
 }
