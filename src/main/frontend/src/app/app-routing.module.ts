@@ -2,11 +2,13 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ErrorComponent } from './modules/basics/error/error.component';
 
+
 const routes: Routes = [
   {
     path: 'error',
-    component: ErrorComponent
-  }
+    component: ErrorComponent,
+    title:'Error'
+  },
 ];
 
 @NgModule({

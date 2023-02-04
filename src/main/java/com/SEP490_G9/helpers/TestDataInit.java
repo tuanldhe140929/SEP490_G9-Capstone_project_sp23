@@ -1,5 +1,8 @@
 package com.SEP490_G9.helpers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -44,20 +47,18 @@ public class TestDataInit implements ApplicationRunner {
 		roleRepository.save(new Role((long) 1, "ROLE_ADMIN"));
 		roleRepository.save(new Role((long) 2, "ROLE_USER"));
 		roleRepository.save(new Role((long) 3, "ROLE_INSPECTOR"));
+
+
 		User user = new User();
-		user.setId((long) 1);
+		user.setId((long)1);
+
 		user.setEmail("namdinh@gmail.com");
 		user.setPassword(new BCryptPasswordEncoder().encode("admin1234"));
 		user.setUsername("namdinh");
 		user.setRole(roleRepository.getReferenceById((long) 2));
 		userRepository.save(user);
 
-		user.setId((long) 2);
-		user.setRole(roleRepository.getReferenceById((long) 2));
-		user.setUsername("abcd");
-		user.setEmail("toanpk@gmail.com");
-		user.setPassword(new BCryptPasswordEncoder().encode("12345678"));
-		userRepository.save(user);
+
 
 		tagRepository.save(new Tag(1, "2D"));
 		tagRepository.save(new Tag(2, "3D"));
@@ -80,13 +81,16 @@ public class TestDataInit implements ApplicationRunner {
 		typeRepository.save(new Type(13, "Others"));
 
 		Product product = new Product();
-		product.setId((long) 1);
-		product.setUser(userRepository.getReferenceById((long) 1));
-		product.setType(typeRepository.getReferenceById(1));
-		productRepository.save(product);
 
-		product.setUser(user);
+		product.setId((long)1);
+		product.setUser(userRepository.getReferenceById((long) 1));
+
 		product.setName("TEST PRODUCT");
+		product.setType(typeRepository.getReferenceById(7));
+		List<Tag> tags = new ArrayList<>();
+		tags.add(tagRepository.getReferenceById(1));
+		tags.add(tagRepository.getReferenceById(2));
+		product.setTags(tags);
 		productRepository.save(product);
 
 	}

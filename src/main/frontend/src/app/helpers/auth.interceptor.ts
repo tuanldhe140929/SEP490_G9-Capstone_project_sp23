@@ -35,7 +35,7 @@ private handleAuthError(err: HttpErrorResponse): Observable<any> {
       response => {
         this.storage.saveUser(response.body);
         this.storage.saveToken(response.body.accessToken);
-        window.location.reload;
+        location.reload();
       }, error => {
         console.log(error);
         this.router.navigateByUrl(`login`);

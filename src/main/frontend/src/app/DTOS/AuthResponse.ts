@@ -1,8 +1,8 @@
 export class AuthResponse {
   email: string;
   accessToken: string;
+  username: string;
   role: string;
-  username: String;
   constructor() {
     this.email = "";
     this.accessToken = "";

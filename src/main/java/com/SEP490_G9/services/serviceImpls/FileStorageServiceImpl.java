@@ -37,7 +37,6 @@ public class FileStorageServiceImpl implements FileStorageService {
 	
 
 
-	
 	private final Path rootLocation;
 
 	@Autowired

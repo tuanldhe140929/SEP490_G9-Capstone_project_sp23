@@ -1,4 +1,12 @@
-<form [formGroup]="ChangeNameForm" (submit) ="onChangeName()">
+
+
+<div class="container-fluid grad">
+  <div class="row">
+  <div class="row padded">
+    <div class="row title"><h2>Change your name</h2></div>
+    <div class="row cols">
+      <div class="left_col col-6">
+        <form [formGroup]="ChangeNameForm" (submit) ="onChangeName()">
     <div>
         <label>Old name</label>
         <input readonly type="text" [value]="authResponse.username" >
@@ -15,3 +23,16 @@
         <button type="submit" [disabled]="ChangeNameForm.invalid">Change Name</button>
     </div>
 </form>
+      </div>
+      <div class="right_col col-6">
+      	<ul>
+      		<li>Password must be <b>from 8 to 30</b> characters.</li>
+      		<li>Use your new password for next time logging in.</li>
+      		<li>Please <b>DO NOT</b> tell anyone your password.</li>
+      	</ul>
+      </div>
+    </div>
+  
+  </div>
+  </div>
+</div>
