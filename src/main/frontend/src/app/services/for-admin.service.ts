@@ -1,7 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { User } from '../DTOS/User';
 
 const allInspectorsUrl = "http://localhost:9000/public/manageInspector/allInspectors"
 const addInspectorUrl = "http://localhost:9000/public/manageInspector/addInspector";
@@ -12,10 +11,11 @@ const httpOptions: Object = {
   observe: 'response',
   withCredentials: true
 };
+
 @Injectable({
   providedIn: 'root'
 })
-export class ManageInspectorService {
+export class ForAdminService {
 
   constructor(private httpClient: HttpClient) { }
 

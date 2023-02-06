@@ -11,13 +11,14 @@ import { ManageProductModule } from './modules/manage-product/manage-product.mod
 import { CommonModule } from './modules/common/common.module';
 import { BasicsModule } from './modules/basics/basics.module';
 import {MatIconModule} from '@angular/material/icon';	
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { ManageAccountInfoModule } from './modules/manage-account-info/manage-account-info.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { ManageInspectorModule } from './modules/manage-inspector/manage-inspector.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ForUsersModule } from './modules/for-users/for-users.module';
-
+import { ForAdminModule } from './modules/for-admin/for-admin.module';
 
 @NgModule({
   declarations: [
@@ -32,10 +33,12 @@ import { ForUsersModule } from './modules/for-users/for-users.module';
     AuthModule,
     ManageProductModule,
     ManageAccountInfoModule,
-    ManageInspectorModule,
     ForUsersModule,
+    ForAdminModule,
     BasicsModule,
     MatIconModule,
+    MatButtonModule,
+    MatDialogModule,
     CKEditorModule,
     NgbModule,
     BrowserAnimationsModule,
