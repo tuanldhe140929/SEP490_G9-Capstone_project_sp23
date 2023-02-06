@@ -9,19 +9,11 @@
           <div class="left_col col-8" style="border-right:1px solid black">
             <div class="input_row">
               <div><label for="product_name">Title</label></div>
-              <div><input type="text" [(ngModel)]="product.name" id="product_name" name="product_name"/></div>
-            </div>
-            <div class="input_row url">
-              <div><label for="productUrl">Product URL</label> </div>
-              <div><input id="productUrl" [(ngModel)]="product.url" [ngModelOptions]="{standalone: true}" (keydown)="onUrlInput($event)" oninput="this.value = this.value.toLowerCase()" autocomplete="off" value="{{product.url}}"></div>
-              <div>
-                <small>Your product's url will be: </small>
-                <h5>http://localhost:4200/{{authResponse.username}}/{{productUrl.trim().toLowerCase()}}</h5>
-              </div>
+              <div><input type="text" [(ngModel)]="product.name" id="product_name" name="product_name" /></div>
             </div>
             <div class="input_row description">
               <div><label for="description">Description</label>&#45;<small>Short description for your product</small> </div>
-              <div><input id="description" type="text"  placeholder="Optional" [(ngModel)]="product.description" name="description"/></div>
+              <div><input id="description" type="text" placeholder="Optional" [(ngModel)]="product.description" name="description" /></div>
             </div>
             <div class="input_row classification_picker">
               <div class="classification_picker_label">
@@ -34,7 +26,7 @@
               </div>
               <div class="">
                 <select class="classification_picker_body" id="type_list" name="type" [(ngModel)]="product.type">
-                <option value="0" selected>Select product type</option>
+                  <option value="0" selected>Select product type</option>
                   <option *ngFor="let type of typeList; index as i;" value="{{type.id}}"
                           [attr.selected]="isTypeSelected(type.id)">
                     {{type.name}}
@@ -152,62 +144,91 @@
               <div class="instruction_text_area_label">
                 <div><label for="tag_input">Download and install instruction</label>&#45;<small>Content of a text file come along with this product</small></div>
               </div>
-              <textarea id="instruction_details" style="min-height:200px;width:100%;resize:none"></textarea>
+              <textarea id="instruction_details" [value]="product.instruction" style="min-height:200px;width:100%;resize:none"></textarea>
             </div>
             <div class="draft_picker" style="font-weight:600">
               <div class="draft_picker_label">
                 <div><label for="draft_pick">Publicity</label></div>
               </div>
               <div class="draft_pick">
-                <input id="draft" value="true" type="radio" (click)="onDraftSelect($event)"/>
+                <input id="draft" value="true" type="radio" (click)="onDraftSelect($event)" />
                 <label for="draft">Draft</label>&#45;<small>You can edit this product and publish it later</small>
               </div>
               <div>
-                <input id="publish" value="false" type="radio" (click)="onDraftSelect($event)"/>
+                <input id="publish" value="false" type="radio" (click)="onDraftSelect($event)" />
                 <label for="publish">Publish</label>&#45;<small>This product is publish, others can see it</small>
               </div>
             </div>
             <input type="submit" />
           </div>
           <div class="right_col col-4">
-            <div class="cover_uploader_drop">
+            <div class="cover_uploader drop" id="cover_img_container">
               <div class="upload_container" id="cover_img_div">
                 <div class="widget">
                   <div class="add_file_btn_outer upload_buttons no_upload" id="upload_button">
                     <div class="button add_file_btn has_multi_upload" (click)="coverImageUpload.click()">
-                      Upload Image
+                      Tải lên
                     </div>
                     <input type="file" class="file-input" (change)="onCoverImageUpload($event)" #coverImageUpload>
                   </div>
                 </div>
               </div>
-              <div class="upload_coverImage_label"><p>Upload cover image here</p></div>
+              <div class="upload_coverImage_label"><label for="cover_img_container">Tải lên ảnh bìa sản phẩm. <br /><small>Định dạng: .png, .jpeg hoặc .webp. Kích cỡ khuyến nghị : 630x500</small></label></div>
             </div>
-            <div class="preview_videos_drop">
+            <div class="preview_pictures drop" id="preview_video_container">
               <div class="upload_container">
-                <div class="widget">
-                  <div class="add_file_btn_outer upload_buttons no_upload" id="upload_button">
-                    <div class="button add_file_btn has_multi_upload" (click)="previewVideoUpload.click()">
-                      Upload Video
+                <div *ngIf="product.previewVideo==null||product.previewVideo.id==-1;then noPreviewVideo else hasPreviewVideo"></div>
+                <ng-template #hasPreviewVideo>
+                  <vg-player style="position: relative;">
+                    <video [vgMedia]="$any(media)" #media id="preview_video" preload="auto" controls>
+                      <source src="{{getPreviewVideoSource()}}" type="video/mp4">
+                    </video>
+                    <div class="widget_video" style="position: absolute">
+                      <button class="delete_btn2" type="button" (click)="removePreviewVideo()">Gỡ</button>
                     </div>
-                    <input type="file" class="file-input" (change)="onPreviewVideoUpload($event)" multiple="multiple" #previewVideoUpload>
+                  </vg-player>
+                </ng-template>
+                <ng-template #noPreviewVideo>
+                  <div class="widget">
+                    <div class="add_file_btn_outer upload_buttons no_upload" id="upload_button">
+                      <div class="button add_file_btn has_multi_upload" (click)="previewVideoUpload.click()">
+                        Tải lên
+                      </div>
+                      <input type="file" class="file-input" (change)="onPreviewVideoUpload($event)" #previewVideoUpload>
+                    </div>
                   </div>
-                </div>
+                </ng-template>
               </div>
-              <div class="upload_preview_video_label"><p>Upload preview videos here</p></div>
+              <div class="upload_preview_pictures_label"><label for="preview_video_container">Tải lên video xem trước<br /><small>Định dạng: .mp4, .mkv, .mov, kích thước tối đa: 1GB</small></label> </div>
             </div>
-            <div class="preview_pictures_drop">
-              <div class="upload_container">
-                <div class="widget">
-                  <div class="add_file_btn_outer upload_buttons no_upload" id="upload_button">
-                    <div class="button add_file_btn has_multi_upload" (click)="previewPicturesUpload.click()">
-                      Upload Images
+            <div class="preview_pictures drop" id="preview_pictures_container">
+              <div class="upload_container" style="position:relative; background-color:white;">
+                <div *ngIf="product.previewPictures.length!=0;then hasPreviewPictures else noPreviewPictures"></div>
+                <ng-template #noPreviewPictures>
+                  <div class="widget">
+                    <div class="add_file_btn_outer upload_buttons no_upload" id="upload_button">
+                      <div class="button add_file_btn has_multi_upload" (click)="previewPicturesUpload.click()">
+                        Tải lên
+                      </div>
                     </div>
-                    <input type="file" class="file-input" (change)="onPreviewPicturesUpload($event)" #previewPicturesUpload>
                   </div>
-                </div>
+                </ng-template>
+                <ng-template #hasPreviewPictures>
+                  <div class="mySlides" *ngFor="let pic of product.previewPictures; index as i" style="position: relative; width: 100%; height: 70%; background-color: black;">
+                    <div class="widget_pictures" style="position: absolute">
+                      <button class="delete_btn2" type="button" (click)="removePreviewPicture(pic)">Gỡ</button>
+                    </div>  
+                    <img src="{{getPreviewPictureSource(pic)}}" style="height: 100%; width: auto; display: inherit; margin-left: auto; margin-right: auto;">
+                  </div>
+                  <div class="row" style="width: 100%; height: 30%; margin-left: auto; margin-right: auto;">
+                    <div class="column cursor" *ngFor="let pic of product.previewPictures; index as i" (click)="onChooseImage(i)" style="{{percent}}">
+                      <img class="picker" src="{{getPreviewPictureSource(pic)}}" style="display:block;" >
+                    </div>
+                  </div>
+                </ng-template>
+
               </div>
-              <div class="upload_preview_pictures_label"><p>Upload preview pictures here</p> </div>
+              <div class="upload_preview_pictures_label"><label for="preview_pictures_container">Tải lên một hoặc nhiều ảnh xem trước</label></div>
             </div>
           </div>
         </div>
@@ -215,6 +236,7 @@
     </form>
   </div>
 </div>
+<input type="file" class="file-input" (change)="onPreviewPicturesUpload($event)" multiple="multiple" #previewPicturesUpload>
 <div id="editor"></div>
 
 
@@ -226,5 +248,16 @@
   </div>
   <div class="modal-body">
     <small style="color:red;" *ngFor="let error of errors">{{error}}<br /></small>
+  </div>
+</ng-template>
+
+
+<ng-template #notAcceptFormatModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" style="color:red">Lỗi</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="dismissError()"></button>
+  </div>
+  <div class="modal-body">
+    <small style="color:red;">{{fileFormatError}}<br /></small>
   </div>
 </ng-template>

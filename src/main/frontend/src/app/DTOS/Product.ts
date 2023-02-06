@@ -1,5 +1,6 @@
 
 
+import { Preview } from "./Preview";
 import { ProductFile } from "./ProductFile";
 import { Tag } from "./Tag";
 import { Type } from "./Type";
@@ -17,8 +18,8 @@ export class Product {
   details: string;
   files: ProductFile[];
   user: User;
-  previewVideo: string;
-  previewPictures: string[];
+  previewVideo: Preview;
+  previewPictures: Preview[];
   tags: Tag[];
   type: Type;
   instruction: string;
@@ -34,11 +35,12 @@ export class Product {
     this.type = new Type();
     this.files = [];
     this.tags = [];
-    this.previewVideo = '';
+    this.previewVideo = new Preview;
     this.previewPictures = [];
     this.coverImage = "";
     this.details = "";
     this.draft = true;
     this.instruction = "";
+
 }
 }
