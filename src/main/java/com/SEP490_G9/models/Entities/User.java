@@ -47,15 +47,19 @@ public class User implements Serializable {
     @PrimaryKeyJoinColumn
     private RefreshToken refreshToken;
 	
+
+	private String image;
 //	@OneToOne(cascade = CascadeType.ALL)
 //	private Cart cart;
+
 	public User() {
 	}
 
-	public User(Long id,
-			@Email(message = "invalid format") @NotBlank(message = "email can't be blank") @Size(min = 5, max = 30) String email,
-			@NotBlank(message = "password can't be blank") @Size(min = 8, max = 100) String password, String username,
-			boolean enabled, boolean verified,Date joinedDate) {
+	
+	public User(Long id, @Email(message = "invalid format") @NotBlank(message = "email can't be blank") String email,
+			@NotBlank(message = "password can't be blank") @Size(min = 8, max = 100) String password,
+			@NotBlank(message = "username can't be blank") @Size(min = 3, max = 30) String username, boolean enabled,
+			boolean verified, Date joinedDate, Role role, RefreshToken refreshToken, String image) {
 		super();
 		this.id = id;
 		this.email = email;
@@ -64,7 +68,21 @@ public class User implements Serializable {
 		this.enabled = enabled;
 		this.verified = verified;
 		this.joinedDate = joinedDate;
+		this.role = role;
+		this.refreshToken = refreshToken;
+		this.image = image;
 	}
+
+
+	public String getImage() {
+		return image;
+	}
+
+
+	public void setImage(String image) {
+		this.image = image;
+	}
+
 
 	public User(String email) {
 		this.email = email;

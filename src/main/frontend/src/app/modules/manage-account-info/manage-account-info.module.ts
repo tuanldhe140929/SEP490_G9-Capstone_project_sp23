@@ -1,3 +1,4 @@
+import { CommonModule } from './../common/common.module';
 import { NgModule } from '@angular/core';
 import { ManageAccountInfoRoutingModule } from './manage-account-info-routing.module';
 import { ProfileComponent } from './profile/profile.component';
