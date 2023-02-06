@@ -1,3 +1,4 @@
+import { FormBuilder } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -15,8 +16,12 @@ import { ManageAccountInfoService } from '../../../services/manage-account-info.
 })
 export class ProfileComponent implements OnInit {
 
-  constructor(private manageAccountInfoService: ManageAccountInfoService, private storageService: StorageService, private authService: AuthService, private router: Router) { }
-	
-	ngOnInit(): void {
-	}
+  constructor(private manageAccountInfoService: ManageAccountInfoService,
+    private storageService: StorageService,
+     private authService: AuthService, 
+     private router: Router,
+     private fb: FormBuilder) { }
+
+  ngOnInit(): void {
+  }
 }

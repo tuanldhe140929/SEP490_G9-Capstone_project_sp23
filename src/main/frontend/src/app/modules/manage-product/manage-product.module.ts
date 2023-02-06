@@ -12,7 +12,10 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete'
 import { MatFormFieldModule } from '@angular/material/form-field';
 
 import { CKEditorModule} from '@ckeditor/ckeditor5-angular';
-
+import { VgCoreModule } from '@videogular/ngx-videogular/core';
+import { VgControlsModule } from '@videogular/ngx-videogular/controls';
+import { VgOverlayPlayModule } from '@videogular/ngx-videogular/overlay-play';
+import { VgBufferingModule } from '@videogular/ngx-videogular/buffering';
 
     
 @NgModule({
@@ -30,7 +33,11 @@ import { CKEditorModule} from '@ckeditor/ckeditor5-angular';
     MatProgressBarModule,
     MatAutocompleteModule,
     MatFormFieldModule,
-    CKEditorModule
+    CKEditorModule,
+    VgCoreModule,
+    VgControlsModule,
+    VgOverlayPlayModule,
+    VgBufferingModule
   ],
   providers: [AuthGuard, DecimalPipe],
 

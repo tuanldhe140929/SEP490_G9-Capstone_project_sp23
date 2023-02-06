@@ -25,6 +25,7 @@
               "src/assets"
             ],
             "styles": [
+              "src/custom-theme.scss",
               "@angular/material/prebuilt-themes/purple-green.css",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/styles.css"

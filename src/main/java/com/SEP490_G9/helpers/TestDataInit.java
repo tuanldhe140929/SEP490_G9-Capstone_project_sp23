@@ -1,6 +1,7 @@
 package com.SEP490_G9.helpers;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,6 +88,7 @@ public class TestDataInit implements ApplicationRunner {
 		product.setUser(userRepository.getReferenceById((long) 1));
 		product.setName("TEST PRODUCT");
 		product.setType(typeRepository.getReferenceById(7));
+		product.setUploadDate(new Date());
 		List<Tag> tags = new ArrayList<>();
 		tags.add(tagRepository.getReferenceById(1));
 		tags.add(tagRepository.getReferenceById(2));
