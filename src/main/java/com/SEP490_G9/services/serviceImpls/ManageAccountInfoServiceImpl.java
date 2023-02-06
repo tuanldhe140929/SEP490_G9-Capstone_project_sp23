@@ -39,11 +39,11 @@ public class ManageAccountInfoServiceImpl implements ManageAccountInfoService {
 	}
 
 	@Override
-	public boolean changeAccountName(String newName) {
+	public User changeAccountName(String newName) {
 		User user = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
 		user.setUsername(newName);
 		userRepo.save(user);
-		return true;
+		return user;
 	}
 
 }

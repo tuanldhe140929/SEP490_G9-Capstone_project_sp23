@@ -9,6 +9,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { ChangeNameComponent } from './change-name/change-name.component';
 
+
 @NgModule({
   declarations: [
     ProfileComponent,
@@ -19,8 +20,7 @@ import { ChangeNameComponent } from './change-name/change-name.component';
 	  BrowserModule,
     ManageAccountInfoRoutingModule,
     FormsModule,
-    ReactiveFormsModule,
-    CommonModule
+    ReactiveFormsModule
   ],
   providers: [AuthGuard]
 })

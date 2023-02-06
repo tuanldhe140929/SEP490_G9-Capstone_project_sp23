@@ -16,13 +16,13 @@ const routes: Routes = [
 	{
 		path: 'changepassword',
 		component: ChangePasswordComponent,
-    
+		canActivate: [AuthGuard]
 	},
 	{
 		path: 'changename',
 		component: ChangeNameComponent,
-    canActivate: [AuthGuard]
-	}
+		canActivate: [AuthGuard]
+	},
 ];
 
 

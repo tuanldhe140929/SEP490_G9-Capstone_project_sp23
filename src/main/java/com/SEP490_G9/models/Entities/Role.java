@@ -1,4 +1,5 @@
 package com.SEP490_G9.models.Entities;
+import java.io.Serializable;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -8,7 +9,11 @@ import jakarta.persistence.*;
 @JsonIgnoreProperties(value = { "user" })
 @Entity
 @Table(name = "role")
-public class Role {
+public class Role implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;

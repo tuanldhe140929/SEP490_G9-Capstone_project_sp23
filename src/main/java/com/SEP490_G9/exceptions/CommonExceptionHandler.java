@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Objects;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -57,15 +58,13 @@ public class CommonExceptionHandler {
 	public ErrorResponse resolveException(UsernameNotFoundException exception) {
 		List<String> msgs = new ArrayList<>();
 		msgs.add(exception.getMessage());
-		System.out.println("Username not found");
 		return new ErrorResponse(msgs, HttpStatus.BAD_REQUEST);
 	}
 
-	@ExceptionHandler(EmailExistException.class)
+	@ExceptionHandler(DuplicateFieldException.class)
 	@ResponseStatus(HttpStatus.CONFLICT)
-	public ErrorResponse resolveException(EmailExistException exception) {
+	public ErrorResponse resolveException(DuplicateFieldException exception) {
 		ErrorResponse errorResponse = exception.getErrorResponse();
-		System.out.println("Email exist");
 		return errorResponse;
 	}
 
@@ -73,7 +72,6 @@ public class CommonExceptionHandler {
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public ErrorResponse resolveException(RefreshTokenException exception) {
 		ErrorResponse errorResponse = exception.getErrorResponse();
-		System.out.println("refresh token");
 		return errorResponse;
 	}
 
@@ -95,7 +93,6 @@ public class CommonExceptionHandler {
 	@ExceptionHandler(AuthenticationException.class)
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	public ErrorResponse resolveException(AuthenticationException exception) {
-		System.out.println("auth request");
 		List<String> msgs = new ArrayList<>();
 		msgs.add(exception.getMessage());
 		ErrorResponse errorResponse = new ErrorResponse(msgs, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -130,6 +127,16 @@ public class CommonExceptionHandler {
 		return errorResponse;
 	}
 	
+	@ExceptionHandler(HttpMessageNotReadableException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public final ErrorResponse handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
+		ErrorResponse errorResponse = new ErrorResponse();
+		List<String> msgs = new ArrayList<>();
+		msgs.add(ex.getMessage());
+		errorResponse.setMessages(msgs);
+		errorResponse.setStatus(HttpStatus.BAD_REQUEST);
+		return errorResponse;
+	}
 //	@ExceptionHandler({ CustomException.class })
 //	@ResponseStatus(HttpStatus.BAD_REQUEST)
 //	public ErrorResponse customExceptionHandle(CustomException ex) {

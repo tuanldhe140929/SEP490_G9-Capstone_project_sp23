@@ -7,12 +7,17 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthInterceptor } from './helpers/auth.interceptor';
 import { AuthModule } from './modules/auth/auth.module';
-import { ManageAccountInfoModule } from './modules/manage-account-info/manage-account-info.module';
 import { ManageProductModule } from './modules/manage-product/manage-product.module';
 import { CommonModule } from './modules/common/common.module';
 import { BasicsModule } from './modules/basics/basics.module';
-import {MatIconModule} from '@angular/material/icon';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';	
+import {MatIconModule} from '@angular/material/icon';	
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
+import { ManageAccountInfoModule } from './modules/manage-account-info/manage-account-info.module';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ManageInspectorModule } from './modules/manage-inspector/manage-inspector.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ForUsersModule } from './modules/for-users/for-users.module';
+
 
 @NgModule({
   declarations: [
@@ -25,14 +30,16 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     FormsModule,
     ReactiveFormsModule,
     AuthModule,
-    ManageAccountInfoModule,
     ManageProductModule,
-    CommonModule,
+    ManageAccountInfoModule,
+    ManageInspectorModule,
+    ForUsersModule,
     BasicsModule,
     MatIconModule,
-    BrowserAnimationsModule
-    
-  
+    CKEditorModule,
+    NgbModule,
+    BrowserAnimationsModule,
+    CommonModule,
   ],
   providers: [
 	      {  
