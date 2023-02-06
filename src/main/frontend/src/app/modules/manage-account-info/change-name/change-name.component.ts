@@ -43,6 +43,7 @@ export class ChangeNameComponent implements OnInit {
         this.authResponse.username = data.username;
         this.storageService.saveUser(this.authResponse);
         console.log(data)
+        
       },
       error =>{
         console.log(error)
