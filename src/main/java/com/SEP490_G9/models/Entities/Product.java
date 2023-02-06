@@ -9,6 +9,8 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 @JsonIgnoreProperties(value= {"user"})
 @Entity
@@ -20,13 +22,10 @@ public class Product implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
-	@Column(name="name")
+	@Column(name="name",length = 30)
 	private String name;
 	
-	@Column(name="url")
-	private String url;
-	
-	@Column(name="description")
+	@Column(name="description", length = 100)
 	private String description;
 	
 	@Column(name="cover_image")
@@ -39,10 +38,10 @@ public class Product implements Serializable {
 	private String instructionSource;
 	
 	@Column(name="upload_date")
-	private Date uploadDate = new Date();
+	private Date uploadDate; 
 	
 	@Column(name="last_update")
-	private Date lastUpdate = new Date();
+	private Date lastUpdate;
 	
 	@Column(name="draft")
 	private boolean draft = true;
@@ -50,6 +49,9 @@ public class Product implements Serializable {
 	@Column(name="price")
 	private int price = 0;
 
+	@Column(name="active")
+	private boolean active = true;
+	
 	@OneToMany(mappedBy="product")
 	private List<Preview> previews = new ArrayList<Preview>();
 	
@@ -75,18 +77,13 @@ public class Product implements Serializable {
 		this.uploadDate = new Date();
 		this.draft = true;
 	}
-	
 
-
-
-
-	public Product(Long id, String name, String url, String description, String coverImage, String details,
-			String instructionSource, Date uploadDate, Date lastUpdate, boolean draft, int price, List<Preview> previews,
-			User user, List<Tag> tags, Type type, List<ProductFile> files) {
+	public Product(Long id, String name, String description, String coverImage, String details,
+			String instructionSource, Date uploadDate, Date lastUpdate, boolean draft, int price, boolean active,
+			List<Preview> previews, User user, List<Tag> tags, Type type, List<ProductFile> files) {
 		super();
 		this.id = id;
 		this.name = name;
-		this.url = url;
 		this.description = description;
 		this.coverImage = coverImage;
 		this.details = details;
@@ -95,6 +92,7 @@ public class Product implements Serializable {
 		this.lastUpdate = lastUpdate;
 		this.draft = draft;
 		this.price = price;
+		this.active = active;
 		this.previews = previews;
 		this.user = user;
 		this.tags = tags;
@@ -211,15 +209,6 @@ return this;
 		return this;
 	}
 
-	public String getUrl() {
-		return url;
-	}
-
-	public Product setUrl(String url) {
-		this.url = url;
-		return this;
-	}
-
 	public boolean isDraft() {
 		return draft;
 	}
@@ -243,6 +232,14 @@ return this;
 
 	public void setInstructionSource(String instructionSource) {
 		this.instructionSource = instructionSource;
+	}
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 	
 	

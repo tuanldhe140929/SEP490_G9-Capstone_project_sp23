@@ -42,9 +42,7 @@ public class User implements Serializable {
 	@JoinColumn(name = "role_id", unique = false, nullable = false)
 	private Role role;
 
-	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-	
-    @PrimaryKeyJoinColumn
+	@OneToOne(mappedBy = "user",fetch = FetchType.EAGER)
     private RefreshToken refreshToken;
 	
 
@@ -55,7 +53,6 @@ public class User implements Serializable {
 	public User() {
 	}
 
-	
 	public User(Long id, @Email(message = "invalid format") @NotBlank(message = "email can't be blank") String email,
 			@NotBlank(message = "password can't be blank") @Size(min = 8, max = 100) String password,
 			@NotBlank(message = "username can't be blank") @Size(min = 3, max = 30) String username, boolean enabled,
@@ -73,16 +70,13 @@ public class User implements Serializable {
 		this.image = image;
 	}
 
-
 	public String getImage() {
 		return image;
 	}
 
-
 	public void setImage(String image) {
 		this.image = image;
 	}
-
 
 	public User(String email) {
 		this.email = email;

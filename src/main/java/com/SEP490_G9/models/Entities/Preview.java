@@ -56,4 +56,12 @@ public class Preview {
 		this.type = type;
 	}
 
+	public Product getProduct() {
+		return product;
+	}
+
+	public void setProduct(Product product) {
+		this.product = product;
+	}
+
 }

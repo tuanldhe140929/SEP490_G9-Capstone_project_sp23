@@ -2,8 +2,11 @@ package com.SEP490_G9.models.Entities;
 
 import java.time.Instant;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.*;
 
+@JsonIgnoreProperties(value="user")
 @Entity
 @Table(name="refresh_token")
 public class RefreshToken {
