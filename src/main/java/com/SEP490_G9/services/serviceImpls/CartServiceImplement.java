@@ -2,6 +2,7 @@ package com.SEP490_G9.services.serviceImpls;
 
 import java.util.List;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -9,13 +10,14 @@ import org.springframework.stereotype.Service;
 
 import com.SEP490_G9.exceptions.ResourceNotFoundException;
 import com.SEP490_G9.models.UserDetailsImpl;
+import com.SEP490_G9.models.DTOS.CartDTO;
 import com.SEP490_G9.models.Entities.Cart;
 import com.SEP490_G9.models.Entities.CartItem;
 
 import com.SEP490_G9.models.Entities.Product;
 import com.SEP490_G9.models.Entities.Transaction;
 import com.SEP490_G9.models.Entities.User;
-import com.SEP490_G9.models.Entities.DTOS.CartDTO;
+
 import com.SEP490_G9.repositories.CartItemRepository;
 import com.SEP490_G9.repositories.CartRepository;
 import com.SEP490_G9.repositories.ProductRepository;
@@ -37,6 +39,7 @@ public class CartServiceImplement implements CartService {
 	private UserRepository userRepository;
 	@Autowired
 	TransactionRepository transactionRepository;
+	
 
 	@Override
 	public CartDTO addProduct(Long productId) {
@@ -109,6 +112,16 @@ public class CartServiceImplement implements CartService {
 			Cart newCart = cartRepository.save(new Cart(user));
 			return newCart;
 		}
+	}
+
+	@Override
+	//ấn vô nut check out thì cartitem trong cart sẽ được save cùng vs user và totalprice
+	public CartDTO checkOut(Long cartId) {
+		User user = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
+		CartDTO cartDTO= getCurrentCartDTO();
+		Cart cart = cartRepository.findByUserId(user.getId());
+		
+		return null;
 	}
 
 }

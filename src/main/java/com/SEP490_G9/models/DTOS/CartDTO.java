@@ -1,4 +1,4 @@
-package com.SEP490_G9.models.Entities.DTOS;
+package com.SEP490_G9.models.DTOS;
 
 import java.util.List;
 
