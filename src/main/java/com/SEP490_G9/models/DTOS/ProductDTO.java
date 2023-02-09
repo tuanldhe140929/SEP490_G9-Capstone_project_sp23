@@ -23,7 +23,6 @@ public class ProductDTO {
 	
 	private String name;
 	
-	private String url;
 	
 	private String description;
 	
@@ -41,9 +40,9 @@ public class ProductDTO {
 	
 	private int price = 0;
 
-	private String previewVideo;
+	private Preview previewVideo;
 	
-	private List<String> previewPictures;
+	private List<Preview> previewPictures;
 	
     private User user;
 	
@@ -61,7 +60,6 @@ public class ProductDTO {
 		super();
 		this.id = product.getId();
 		this.name = product.getName();
-		this.url = product.getUrl();
 		this.description = product.getDescription();
 		this.coverImage = product.getCoverImage();
 		this.details = product.getDetails();
@@ -71,30 +69,24 @@ public class ProductDTO {
 		this.draft = product.isDraft();
 		this.price = product.getPrice();
 		this.previewVideo = getPreviewVideoSource(product,previewRepository);
-		this.previewPictures = getPreviewPicturesSource(product,previewRepository);;
+		this.previewPictures = getPreviewPicturesSource(product,previewRepository);
 		this.user = product.getUser();
 		this.tags = product.getTags();
 		this.type = product.getType();
 		this.files = product.getFiles();
 	}
 
-	private List<String> getPreviewPicturesSource(Product product, PreviewRepository previewRepository) {
-		List<Preview> previews = previewRepository.findByProductAndType(product,"picture");
-		List<String> ret = new ArrayList<>();
-		for(Preview preview:previews) {
-			ret.add(preview.getSource());
-		}
-		return ret;
+	private List<Preview> getPreviewPicturesSource(Product product, PreviewRepository previewRepository) {
+		List<Preview> previewPictures = previewRepository.findByProductAndType(product,"picture");
+		return previewPictures;
 	}
 
-	private String getPreviewVideoSource(Product product, PreviewRepository previewRepository) {
-		List<Preview> previews = previewRepository.findByProductAndType(product,"video");
-		String ret ="";
-		if(previews.size()>0) {
-			ret = previews.get(0).getSource();
+	private Preview getPreviewVideoSource(Product product, PreviewRepository previewRepository) {
+		List<Preview> previewVideo = previewRepository.findByProductAndType(product,"video");
+		if(!previewVideo.isEmpty()) {
+			return previewVideo.get(0);
 		}
-		
-		return ret;
+		return null;
 	}
 
 
@@ -112,14 +104,6 @@ public class ProductDTO {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public String getUrl() {
-		return url;
-	}
-
-	public void setUrl(String url) {
-		this.url = url;
 	}
 
 	public String getDescription() {
@@ -186,19 +170,19 @@ public class ProductDTO {
 		this.price = price;
 	}
 
-	public String getPreviewVideo() {
+	public Preview getPreviewVideo() {
 		return previewVideo;
 	}
 
-	public void setPreviewVideo(String previewVideo) {
+	public void setPreviewVideo(Preview previewVideo) {
 		this.previewVideo = previewVideo;
 	}
 
-	public List<String> getPreviewPictures() {
+	public List<Preview> getPreviewPictures() {
 		return previewPictures;
 	}
 
-	public void setPreviewPictures(List<String> previewPictures) {
+	public void setPreviewPictures(List<Preview> previewPictures) {
 		this.previewPictures = previewPictures;
 	}
 

@@ -1,0 +1,46 @@
+<mat-toolbar>
+    <mat-toolbar-row>
+        <mat-icon (click)="sidebar.toggle()">menu</mat-icon>
+        <span>
+            Admin Screen
+        </span>
+    </mat-toolbar-row>
+</mat-toolbar>
+<mat-sidenav-container>
+    <mat-sidenav #sidebar mode="side" opened="true">
+        <ul>
+            <li>
+                <a [routerLink]="['/adminDashboard']">Dashboard</a>
+            </li>
+            <li>
+                <a [routerLink]="['/inspectorList']">Inspectors</a>
+            </li>
+        </ul>
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <div class="content" >
+            <h1>Inspector Management</h1>
+            <br>
+            <button mat-dialog-actions class="btn btn-primary" (click)="openDialog()">Add an Inspector</button>
+            <br>
+            <table class="table">
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Activated</th>
+                    <th scope="col">Action</th>
+                </tr>
+                <tr *ngFor="let inspector of inspectorList">
+                    <th>{{inspector.username}}</th>
+                    <th>{{inspector.email}}</th>
+                    <th>{{inspector.enabled}}</th>
+                    <th>
+                        <div *ngIf="inspector.enabled"><button class="btn btn-danger">Deactivate</button></div>
+                        <div *ngIf="!inspector.enabled"><button class="btn btn-success">Activate</button></div>
+                    </th>
+                </tr>
+            </table>
+        </div>
+    </mat-sidenav-content>
+</mat-sidenav-container>
+

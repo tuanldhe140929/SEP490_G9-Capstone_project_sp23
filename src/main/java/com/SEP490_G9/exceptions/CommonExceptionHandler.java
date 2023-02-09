@@ -1,5 +1,7 @@
 package com.SEP490_G9.exceptions;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,6 +9,7 @@ import java.util.Objects;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -135,6 +138,37 @@ public class CommonExceptionHandler {
 		msgs.add(ex.getMessage());
 		errorResponse.setMessages(msgs);
 		errorResponse.setStatus(HttpStatus.BAD_REQUEST);
+		return errorResponse;
+	}
+	
+	@ExceptionHandler(HttpMessageNotWritableException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public final ErrorResponse handleHttpMessageNotReadableException(HttpMessageNotWritableException ex) {
+		ErrorResponse errorResponse = new ErrorResponse();
+		List<String> msgs = new ArrayList<>();
+		msgs.add(ex.getMessage());
+		errorResponse.setMessages(msgs);
+		errorResponse.setStatus(HttpStatus.BAD_REQUEST);
+		return errorResponse;
+	}
+	@ExceptionHandler(FileNotFoundException.class)
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	public final ErrorResponse handleHttpMessageNotReadableException(FileNotFoundException ex) {
+		ErrorResponse errorResponse = new ErrorResponse();
+		List<String> msgs = new ArrayList<>();
+		msgs.add(ex.getMessage());
+		errorResponse.setMessages(msgs);
+		errorResponse.setStatus(HttpStatus.NOT_FOUND);
+		return errorResponse;
+	}
+	@ExceptionHandler(IOException.class)
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	public final ErrorResponse handleHttpMessageNotReadableException(IOException ex) {
+		ErrorResponse errorResponse = new ErrorResponse();
+		List<String> msgs = new ArrayList<>();
+		msgs.add(ex.getMessage());
+		errorResponse.setMessages(msgs);
+		errorResponse.setStatus(HttpStatus.INTERNAL_SERVER_ERROR);
 		return errorResponse;
 	}
 //	@ExceptionHandler({ CustomException.class })

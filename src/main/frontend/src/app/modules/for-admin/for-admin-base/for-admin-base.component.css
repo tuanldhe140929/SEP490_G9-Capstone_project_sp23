@@ -1,0 +1,15 @@
+mat-sidenav-container{
+    height: 100%;
+}
+mat-sidenav{
+    height: 100%;
+    background-color: #031530;
+    width: 250px;
+}
+mat-sidenav-content{
+    background-color: white;
+    color: black;
+}
+mat-toolbar{
+    background-color: #031530;
+}

@@ -101,12 +101,11 @@ public class AuthServiceImpl implements AuthService {
 			authentication = authenticationProvider.authenticate(
 					new UsernamePasswordAuthenticationToken(authRequest.getEmail().trim(), trimedPassword));
 		}
-		System.out.println(authRequest.isRememberMe());
-		System.out.println(authRequest.getEmail());
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		User user = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
+	
 		if (authRequest.isRememberMe()) {
-			System.out.println("rememberMe");
+		
 			RefreshToken refreshToken = refreshTokenService.createRefreshToken(user);
 			Cookie cookie = new Cookie("refreshToken", refreshToken.getToken());
 			cookie.setMaxAge(REFRESH_TOKEN_VALIDITY);

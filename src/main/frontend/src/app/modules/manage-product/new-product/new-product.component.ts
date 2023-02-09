@@ -1,5 +1,5 @@
 import { HttpClient, HttpEventType } from '@angular/common/http';
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnInit, Renderer2, TemplateRef, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { finalize, Subscription } from 'rxjs';
@@ -15,6 +15,7 @@ import { Tag } from '../../../DTOS/Tag';
 import { ProductFile } from 'src/app/DTOS/ProductFile';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Preview } from '../../../DTOS/Preview';
 
 
 
@@ -23,9 +24,11 @@ const MSG101 = 'Đường dẫn sản phẩm không được để trống';
 const MSG102 = 'Phân loại sản phẩm không được để trống';
 const MSG103 = 'Giá sản phẩm không được để trống';
 const MSG104 = 'Không có tệp nào để download';
-
-
+const MSG105 = 'Định dạng này không được hỗ trợ';
+const IMAGE_EXTENSIONS = ['image/png', 'image/jpeg', 'image/svg+xml'];
+const VIDEO_EXTENSIONS = ['video/mp4', 'video/x-matroska', 'video/quicktime'];
 const baseUrl = "http://localhost:9000/private/manageProduct";
+
 const price = new Intl.NumberFormat('vi-VN',
   {
     style: 'currency', currency: 'VND',
@@ -36,10 +39,14 @@ const price = new Intl.NumberFormat('vi-VN',
   templateUrl: './new-product.component.html',
   styleUrls: ['./new-product.component.css']
 })
-export class NewProductComponent implements OnInit {
+export class NewProductComponent implements OnInit, AfterViewInit {
 
   @ViewChild('content', { static: false }) private content: any;
 
+  @ViewChild('notAcceptFormatModal', { static: false }) private notAcceptFormatModal: any;
+
+  @ViewChild("hasPreviewPictures", { read: TemplateRef })
+  tpl: TemplateRef<any> | undefined;
 
   constructor(private ElByClassName: ElementRef,
     private storageService: StorageService,
@@ -48,7 +55,8 @@ export class NewProductComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private decimalPipe: DecimalPipe,
     private router: Router,
-    private modalService: NgbModal) { }
+    private modalService: NgbModal,
+    private renderer: Renderer2) { }
 
   uploadProgress: number = 0;
 
@@ -63,7 +71,7 @@ export class NewProductComponent implements OnInit {
   price = '';
   instruction = "";
   productDetails = '';
-  draft = false;
+  draft = true;
 
 
   public detailsEditor = ClassicEditor;
@@ -168,13 +176,10 @@ export class NewProductComponent implements OnInit {
     if (productId) {
       this.manageProductService.getProductByIdAndUser(+productId).subscribe(
         (data) => {
+
           this.product = data;
-          console.log(data);
-          if (this.product.coverImage != "" && this.product.coverImage != null) {
-            this.loadCoverImage();
-          }
+          console.log(this.product);
           this.getTagList();
-          //this.InstructionDetails.value = this.product.instruction;
           this.productDetails = this.product.details;
           this.draft = this.product.draft;
           if (this.draft) {
@@ -183,14 +188,25 @@ export class NewProductComponent implements OnInit {
             this.Publish.checked = true;
           }
           this.InstructionDetails.value = this.product.instruction;
+          for (let i = 0; i < this.Columns.length; i++) {
+            this.Columns[i].setAttribute('style', 'width: ' + 100 / this.Columns.length + '; height: 100 %;background - color: black; opacity: 0.6;');
+          }
+          this.percent = 'width:'+100 / this.product.previewPictures.length + '%;';
         },
+
         (error) => {
           this.router.navigate(['error']);
         }
       );
     }
   }
+  ngAfterViewInit():void {
+  
+         
+          
+  }
 
+  percent = 'width:100%;';
   getTypeList(): void {
     this.manageProductService.getTypeList().subscribe(
       (data: Type[]) => {
@@ -227,79 +243,159 @@ export class NewProductComponent implements OnInit {
       img.id = "cover_img";
       this.coverImgContainer?.appendChild(img);
     }
-    this.manageProductService.getCoverImage(this.product.id).subscribe(
-      (data) => {
-        if (this.coverImg) {
-          this.coverImg.setAttribute('src', URL.createObjectURL(data));
-          if (this.coverImg != null) {
-            this.coverImg.style.width = "100%";
-            this.coverImg.style.height = "300px";
-            this.coverImg.style.padding = "0";
-            this.coverImg.style.margin = "0";
-          }
-        }
-        if (this.UploadBtn) {
-          this.UploadBtn.className = this.UploadBtn.className.substring(0, this.UploadBtn.className.length - 9);
-          this.UploadBtn.className = this.UploadBtn.className.concat(' has_upload');
-        }
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
+    if (this.coverImg != null) {
+      this.coverImg.setAttribute('src', 'http://localhost:9000/public/serveMedia/serveCoverImage?productId=' + this.product.id);
+      this.coverImg.style.width = "100%";
+      this.coverImg.style.height = "300px";
+      this.coverImg.style.padding = "0";
+      this.coverImg.style.margin = "0";
+    }
+
+    if (this.UploadBtn) {
+      this.UploadBtn.className = this.UploadBtn.className.substring(0, this.UploadBtn.className.length - 9);
+      this.UploadBtn.className = this.UploadBtn.className.concat(' has_upload');
+    }
+
   }
 
+  checkFileType(fileType: string, acceptType: string[]): boolean {
+    return acceptType.includes(fileType);
+  }
+
+  fileFormatError = MSG105;
   onCoverImageUpload($event: any) {
     const file: File = $event.target.files[0];
 
     if (file) {
-      //this.fileName = file.name;
-      const formData = new FormData();
-      formData.set("enctype", "multipart/form-data");
-      formData.append("coverImage", file);
-      formData.append("productId", this.product.id.toString());
+      console.log(file.type);
+      if (!this.checkFileType(file.type, IMAGE_EXTENSIONS)) {
+        this.openFormatErrorModal();
+      } else {
+        //this.fileName = file.name;
+        const formData = new FormData();
+        formData.set("enctype", "multipart/form-data");
+        formData.append("coverImage", file);
+        formData.append("productId", this.product.id.toString());
 
-      const upload$ = this.manageProductService.uploadCoverImage(formData).subscribe(
-        (data) => {
-          this.uploadProgress = 0;
-          this.loadCoverImage();
-        },
-        (error) => {
-          console.log(error);
-        }
-      )
+        const upload$ = this.manageProductService.uploadCoverImage(formData).subscribe(
+          (data: string) => {
+            this.product.coverImage = data;
+            console.log(this.product);
+            this.loadCoverImage();
+          },
+          (error: any) => {
+            console.log(error);
+          }
+        )
+      }
     }
   }
 
-  loadPreviewVideo() {
-
+  getPreviewVideoSource(): string {
+    console.log(this.product.previewVideo);
+    if (this.product.previewVideo.id != -1 && this.product.previewVideo != null) {
+      return "http://localhost:9000/public/serveMedia/servePreviewVideo/" + this.product.previewVideo.id;
+    }
+    return "";
   }
 
   onPreviewVideoUpload($event: any) {
     const file: File = $event.target.files[0];
-
+    var acceptType = ['video/mp4', 'video/x-matroska', 'video/quicktime'];
     if (file) {
-      //this.fileName = file.name;
-      const formData = new FormData();
-      formData.set("enctype", "multipart/form-data");
-      formData.append("previewVideo", file);
-      formData.append("productId", this.product.id.toString());
+      console.log(file.type);
+      if (!this.checkFileType(file.type, acceptType)) {
+        this.openFormatErrorModal();
+      } else {
+        //this.fileName = file.name;
+        const formData = new FormData();
+        formData.set("enctype", "multipart/form-data");
+        formData.append("previewVideo", file);
+        formData.append("productId", this.product.id.toString());
 
-      const upload$ = this.manageProductService.uploadPreviewVideo(formData).subscribe(
-        (data) => {
-          this.uploadProgress = 0;
-          this.loadPreviewVideo();
-        },
-        (error) => {
-          console.log(error);
-        }
-      )
+        const upload$ = this.manageProductService.uploadPreviewVideo(formData).subscribe(
+          (data) => {
+            this.product.previewVideo = data;
+          },
+          (error) => {
+            console.log(error);
+          }
+        )
+      }
     }
   }
 
+  removePreviewVideo() {
+    this.manageProductService.removePreviewVideo(this.product.id).subscribe(
+      (data) => {
+        this.product.previewVideo = new Preview;
+        console.log(data);
+      },
+      (error) => {
+        console.log(error);
+      }
+    )
+  }
+
   onPreviewPicturesUpload($event: any) {
+    const files: File[] = $event.target.files;
+    if (files) {
+      var valid = true;
+      for (let i = 0; i < files.length; i++) {
+        if (!this.checkFileType(files[i].type, IMAGE_EXTENSIONS)) {
+          valid = false;
+        }
+      }
+      if (!valid) {
+        this.openFormatErrorModal();
+      } else {
+        for (let i = 0; i < files.length; i++) {
+          const formData = new FormData();
+          formData.set("enctype", "multipart/form-data");
+          formData.append("previewPicture", files[i]);
+          formData.append("productId", this.product.id.toString());
+
+          const upload$ = this.manageProductService.uploadPreviewPicture(formData).subscribe(
+            (data) => {
+              this.product.previewPictures = data;
+              this.percent = 'width:' + 100 / this.product.previewPictures.length + '%;';
+            },
+            (error) => {
+              console.log(error);
+            }
+          )
+        }
+      }
+    }
+  }
+
+  getPreviewPictureSource(preview: Preview): string {
+    return "http://localhost:9000/public/serveMedia/servePreviewPicture/" + preview.id;
+  }
+
+  onChooseImage(index: number) {
+    for (let i = 0; i < this.Slides.length; i++) {
+      this.Slides[i].setAttribute('style', this.Slides[i].getAttribute('style') + ' display: none;');
+
+      this.Columns[i].className = this.Columns[i].className.replace(" active", "");
+      
+    }
+    this.Slides[index].setAttribute('style', this.Slides[index].getAttribute('style') + ' display: block;');
+    this.Columns[index].className += " active";
 
   }
+
+  removePreviewPicture(preview: Preview) {
+    this.manageProductService.removePreviewPicture(preview.id).subscribe(
+      (data) => {
+        this.product.previewPictures = data;
+        this.percent = 'width:' + 100 / this.product.previewPictures.length + '%;';
+
+      },
+      (error) => {
+      })
+  }
+
   onDraftSelect($event: any) {
     if ($event.target.value == 'true') {
       this.draft = true;
@@ -434,9 +530,7 @@ export class NewProductComponent implements OnInit {
     if (this.ProductName.value == null || this.ProductName.value.trim() == '') {
       this.errors.push(MSG100);
     }
-    if (this.ProductUrl.value == null || this.ProductUrl.value.trim() == '') {
-      this.errors.push(MSG101);
-    }
+
     if (this.product.type.id == -1 || this.product.type.id == 0) {
       this.errors.push(MSG102);
     }
@@ -453,7 +547,6 @@ export class NewProductComponent implements OnInit {
       this.newProductForm.controls.name.setValue(this.product.name);
       this.newProductForm.controls.tags.setValue(this.product.tags);
       this.newProductForm.controls.type.setValue(this.product.type);
-      this.newProductForm.controls.url.setValue(this.product.url);
       this.newProductForm.controls.details.setValue(this.productDetails);
       this.newProductForm.controls.draft.setValue(this.draft);
       this.newProductForm.controls.description.setValue(this.product.description);
@@ -516,10 +609,25 @@ export class NewProductComponent implements OnInit {
     this.modalService.open(this.content, { centered: true });
   }
 
+  openFormatErrorModal() {
+    this.modalService.open(this.notAcceptFormatModal, { centered: true });
+  }
+
   get Draft() {
     return document.getElementById('draft') as HTMLInputElement;
   }
   get Publish() {
     return document.getElementById('publish') as HTMLInputElement;
+  }
+
+  get PreviewVideo() {
+    return document.getElementById('preview_video') as HTMLVideoElement;
+  }
+
+  get Slides() {
+    return document.querySelectorAll('.mySlides');
+  }
+  get Columns() {
+    return document.querySelectorAll('.column');
   }
 }

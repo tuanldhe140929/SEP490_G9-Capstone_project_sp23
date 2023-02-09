@@ -5,8 +5,9 @@ import { Product } from '../DTOS/Product';
 import { User } from '../DTOS/User';
 import { Type } from '../DTOS/Type';
 import { Tag } from '../DTOS/Tag';
+import { Preview } from '../DTOS/Preview';
 const baseUrl = 'http://localhost:9000/private/manageProduct';
-
+const serveMediaUrl = "http://localhost:9000/public/serveMedia";
 @Injectable({
   providedIn: 'root'
 })
@@ -27,9 +28,9 @@ export class ManageProductService {
     return this.httpClient.get<User>(baseUrl + '/getCurrentUserInfo?email=' + email);
   }
 
-  uploadCoverImage(data: any): Observable<Product> {
-    return this.httpClient.post<Product>(baseUrl + '/uploadCoverImage', data, {
-      reportProgress: true,
+  uploadCoverImage(data: any): any {
+    return this.httpClient.post(baseUrl + '/uploadCoverImage', data, {
+      responseType: 'text',
     });
   }
   
@@ -46,7 +47,7 @@ export class ManageProductService {
   }
   
   getCoverImage(productId: number): Observable<Blob> {
-    return this.httpClient.get(baseUrl + "/serveCoverImage?productId=" + productId, {
+    return this.httpClient.get(serveMediaUrl + "/serveCoverImage?productId=" + productId, {
       responseType: 'blob'
     });
   }
@@ -59,9 +60,35 @@ export class ManageProductService {
     });
   }
 
-  uploadPreviewVideo(data: any): Observable<Product> {
-    return this.httpClient.post<Product>(baseUrl + '/uploadPreviewVideo', data, {
-      reportProgress: true,
+  getPreviewVideo(previewId: number): any {
+    return this.httpClient.get(serveMediaUrl + "/servePreviewVideo/" + previewId, {
+      headers: { 'Range': 'bytes=0-500' }
     });
+  }
+
+  uploadPreviewVideo(data: any): Observable<Preview> {
+    return this.httpClient.post<Preview>(baseUrl + '/uploadPreviewVideo', data, {
+      reportProgress: true
+    });
+  }
+
+  uploadPreviewPicture(data: any): Observable<Preview[]> {
+    return this.httpClient.post<Preview[]>(baseUrl + '/uploadPreviewPicture', data);
+  }
+
+  removePreviewVideo(productId: number) {
+    return this.httpClient.delete(baseUrl + "/removePreviewVideo", {
+      params: {
+        productId: productId
+      }
+    });
+  }
+
+  removePreviewPicture(previewId: number): Observable<Preview[]> {
+    return this.httpClient.delete<Preview[]>(baseUrl + "/removePreviewPicture", {
+      params: {
+        previewId: previewId
+      }
+    })
   }
 }

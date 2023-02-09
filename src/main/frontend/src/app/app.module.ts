@@ -10,20 +10,19 @@ import { AuthModule } from './modules/auth/auth.module';
 import { ManageProductModule } from './modules/manage-product/manage-product.module';
 import { CommonModule } from './modules/common/common.module';
 import { BasicsModule } from './modules/basics/basics.module';
-
-import {MatIconModule} from '@angular/material/icon';
+import {MatIconModule} from '@angular/material/icon';	
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { ManageAccountInfoModule } from './modules/manage-account-info/manage-account-info.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { ManageInspectorModule } from './modules/manage-inspector/manage-inspector.module';
-import { HeaderComponent } from './header/header.component';
-import { FooterComponent } from './footer/footer.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ForUsersModule } from './modules/for-users/for-users.module';
+import { ForAdminModule } from './modules/for-admin/for-admin.module';
 
 @NgModule({
   declarations: [
     AppComponent,
-    HeaderComponent,
-    FooterComponent
   ],
   imports: [
     BrowserModule,
@@ -34,20 +33,24 @@ import { FooterComponent } from './footer/footer.component';
     AuthModule,
     ManageProductModule,
     ManageAccountInfoModule,
-    CommonModule,
+    ForUsersModule,
+    ForAdminModule,
     BasicsModule,
     MatIconModule,
+    MatButtonModule,
+    MatDialogModule,
     CKEditorModule,
-    ManageInspectorModule,
-    NgbModule
+    NgbModule,
+    BrowserAnimationsModule,
+    CommonModule,
   ],
   providers: [
-	      {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AuthInterceptor,
-      multi: true
-    }
-  ],
+	      {  
+      provide: HTTP_INTERCEPTORS,  
+      useClass: AuthInterceptor,  
+      multi: true  
+    }  
+  ],  
   bootstrap: [AppComponent]
 })
 export class AppModule { }
