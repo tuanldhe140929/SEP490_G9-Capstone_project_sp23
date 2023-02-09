@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.SEP490_G9.services.ManageAccountInfoService;
 import com.SEP490_G9.services.ManageProductService;
 import com.SEP490_G9.services.serviceImpls.ServeMediaService;
 
@@ -24,6 +25,9 @@ import com.SEP490_G9.services.serviceImpls.ServeMediaService;
 public class ServeMediaController {
 	@Autowired
 	ManageProductService manageProductService;
+	
+	@Autowired
+	ManageAccountInfoService manageAccountInfoService;
 
 	@GetMapping("serveCoverImage")
 	public ResponseEntity<byte[]> serveCoverImage(@RequestParam(name = "productId") Long productId) {
@@ -57,6 +61,20 @@ public class ServeMediaController {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		return ResponseEntity.ok().contentType(MediaType.valueOf(mimeType)).body(image);
+	}
+	
+	@GetMapping("serveProfileImage")
+	public ResponseEntity<byte[]> serveProfileImage(@RequestParam(name = "userId") Long userId) {
+		File file = manageAccountInfoService.serveProfileImage(userId);
+		String mimeType = URLConnection.guessContentTypeFromName(file.getName());
+		byte[] image = new byte[0];
+		try {
+			image = FileUtils.readFileToByteArray(file);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 		return ResponseEntity.ok().contentType(MediaType.valueOf(mimeType)).body(image);
 	}
 }

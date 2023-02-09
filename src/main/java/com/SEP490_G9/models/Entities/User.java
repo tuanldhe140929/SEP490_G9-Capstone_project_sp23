@@ -45,7 +45,7 @@ public class User implements Serializable {
 	@OneToOne(mappedBy = "user",fetch = FetchType.EAGER)
     private RefreshToken refreshToken;
 	
-
+	@Column(name="image")
 	private String image;
 //	@OneToOne(cascade = CascadeType.ALL)
 //	private Cart cart;

@@ -54,6 +54,7 @@ public class TestDataInit implements ApplicationRunner {
 		user.setPassword(new BCryptPasswordEncoder().encode("admin1234"));
 		user.setUsername("namdinh");
 		user.setRole(roleRepository.getReferenceById((long) 2));
+		user.setJoinedDate(new Date());
 		userRepository.save(user);
 
 		user.setId((long) 2);
