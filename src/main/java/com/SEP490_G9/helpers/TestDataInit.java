@@ -85,6 +85,7 @@ public class TestDataInit implements ApplicationRunner {
 
 		Product product = new Product();
 		product.setId((long)1);
+		product.setActive(true);
 		product.setUser(userRepository.getReferenceById((long) 1));
 		product.setName("TEST PRODUCT");
 		product.setType(typeRepository.getReferenceById(7));

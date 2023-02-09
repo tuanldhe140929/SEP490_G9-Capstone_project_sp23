@@ -1,5 +1,6 @@
 package com.SEP490_G9.services.serviceImpls;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -69,6 +70,30 @@ public class ManageInspectorServiceImpl implements ManageInspectorService{
 		return true;
 	}
 
+	@Override
+	public boolean deleteInspector(Long id) {
+		userRepo.deleteById(id);
+		return true;
+	}
+
+	@Override
+	public boolean updateInspector(User inspector) {
+		User existingInspector = userRepo.findById(inspector.getId()).orElse(null);
+		if (userRepo.existsByEmail(inspector.getEmail())) {
+			throw new DuplicateFieldException("email", inspector.getEmail());
+		}
+		if (userRepo.existsByUsername(inspector.getUsername())) {
+			throw new DuplicateFieldException("username", inspector.getUsername());
+		}
+		existingInspector.setEmail(inspector.getEmail());
+		existingInspector.setUsername(inspector.getUsername());
+		existingInspector.setPassword(inspector.getPassword());
+		userRepo.save(existingInspector);
+		return true;
+	}
+
+
+	
 	
 
 }

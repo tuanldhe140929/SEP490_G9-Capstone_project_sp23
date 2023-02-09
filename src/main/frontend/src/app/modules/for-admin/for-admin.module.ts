@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
+import { MatListModule } from '@angular/material/list';
 import { FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 import { ForAdminRoutingModule } from './for-admin-routing.module';
@@ -13,13 +14,17 @@ import { InspectorListComponent } from './inspector-list/inspector-list.componen
 import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
 import { ForAdminBaseComponent } from './for-admin-base/for-admin-base.component';
 import { AddInspectorComponent } from './add-inspector/add-inspector.component';
+import { UpdateInspectorComponent } from './update-inspector/update-inspector.component';
+import { DeleteInspectorComponent } from './delete-inspector/delete-inspector.component';
 
 @NgModule({
   declarations: [
     InspectorListComponent,
     AdminDashboardComponent,
     ForAdminBaseComponent,
-    AddInspectorComponent
+    AddInspectorComponent,
+    UpdateInspectorComponent,
+    DeleteInspectorComponent
   ],
   imports: [
     CommonModule,
@@ -30,8 +35,9 @@ import { AddInspectorComponent } from './add-inspector/add-inspector.component';
     MatTableModule,
     MatDialogModule,
     MatButtonModule,
+    MatListModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ]
 })
 export class ForAdminModule { }

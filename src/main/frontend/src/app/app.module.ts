@@ -19,6 +19,11 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ForUsersModule } from './modules/for-users/for-users.module';
 import { ForAdminModule } from './modules/for-admin/for-admin.module';
+import { ToastrModule } from 'ngx-toastr';
+import { timeout } from 'rxjs';
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
+import { Ng2OrderModule } from 'ng2-order-pipe';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 @NgModule({
   declarations: [
@@ -43,6 +48,16 @@ import { ForAdminModule } from './modules/for-admin/for-admin.module';
     NgbModule,
     BrowserAnimationsModule,
     CommonModule,
+    Ng2OrderModule,
+    Ng2SearchPipeModule,
+    NgxPaginationModule,
+    ToastrModule.forRoot(
+      {
+        timeOut: 2000,
+        progressBar: true
+      }
+    ),
+    
   ],
   providers: [
 	      {  

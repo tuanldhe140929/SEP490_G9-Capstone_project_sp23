@@ -2,6 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit} from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { ForAdminService } from 'src/app/services/for-admin.service';
 
 @Component({
@@ -10,7 +13,7 @@ import { ForAdminService } from 'src/app/services/for-admin.service';
   styleUrls: ['./add-inspector.component.css']
 })
 export class AddInspectorComponent implements OnInit{
-  constructor(private formBuilder: FormBuilder, private httpClient: HttpClient, private forAdminService: ForAdminService){}
+  constructor(private formBuilder: FormBuilder, private httpClient: HttpClient, private forAdminService: ForAdminService, private toastr: ToastrService, private router: Router){}
 
   ngOnInit(): void {
     
@@ -51,13 +54,15 @@ export class AddInspectorComponent implements OnInit{
 
   data: any;
 
+
   public onAddInspector() {
     if (this.addInspectorForm.valid) {
       this.forAdminService.addInspector(this.addInspectorForm.value).subscribe(
         data => {
-          console.log(data)
+          console.log(data);
+          this.router.navigate(['/inspectorList']);
+          this.toastr.success('Inspector added successfully!');
         },
-
       );
     }
   }

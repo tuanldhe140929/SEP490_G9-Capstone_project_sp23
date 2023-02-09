@@ -13,4 +13,8 @@ public interface ManageInspectorService {
 	
 	public boolean deactivateInspector(Long id);
 	
+	public boolean deleteInspector(Long id);
+	
+	public boolean updateInspector(User inspector);
+	
 }
