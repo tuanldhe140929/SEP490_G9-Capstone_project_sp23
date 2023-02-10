@@ -2,7 +2,7 @@
   <div class="row padded">
     <div class="loginForm">
       <div class="formTitle">
-        <span>Login</span>
+        <span>Đăng nhập</span>
       </div>
       <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
         <div class="input_row">
@@ -10,44 +10,44 @@
           <div><input type="email" formControlName="email" id="email"></div>
           <div class="msg">
             <div class="invalid" *ngIf="Form.email.invalid && (Form.email.dirty || Form.email.touched)">
-              <div *ngIf="Form.email.errors?.['required']"><small>Email is required.</small> </div>
-              <div *ngIf="Form.email.errors?.['email']"><small>Not valid email form</small> </div>
+              <div *ngIf="Form.email.errors?.['required']"><small>Vui lòng nhập email</small> </div>
+              <div *ngIf="Form.email.errors?.['email']"><small>Email không hợp lệ</small> </div>
             </div>
           </div>
         </div>
         <div class="input_row">
-          <div><label for="password">Password</label></div>
+          <div><label for="password">Mật khẩu</label></div>
           <div><input type="password" formControlName="password" id="password"></div>
           <div class="msg">
             <div class="invalid" *ngIf="Form.password.invalid && (Form.password.dirty || Form.password.touched)">
-              <div *ngIf="Form.password.errors?.['required']"><small>Password is required.</small> </div>
+              <div *ngIf="Form.password.errors?.['required']"><small>Vui lòng nhập mật khẩu</small> </div>
               <div *ngIf="Form.password.errors?.['minlength'] ||Form.password.errors?.['maxlength']">
-                <small>Password is 8 to 30 characters</small>
+                <small>Mật khẩu phải từ 8 đến 30 ký tự</small>
               </div>
             </div>
           </div>
         </div>
         <div class="subrow">
           <div class="rememberMe" style="height:20px; align-items:center;">
-            <label class="" for="rememberMe">Keep me sign in</label>
+            <label class="" for="rememberMe">Ghi nhớ tôi</label>
             <input class="" type="checkbox" id="rememberMe" formControlName="rememberMe">
           </div>
           <div class="forgotPassword">
-            <a routerLink="/forgotPassword" routerLinkActive="active">Forgot password?</a>
+            <a routerLink="/forgotPassword" routerLinkActive="active">Quên mật khẩu?</a>
           </div>
         </div>
         <div class="submit_row">
-          <button class="submitbutton" type="submit" [disabled]="loginForm.invalid">Login</button>
+          <button class="submitbutton" type="submit" [disabled]="loginForm.invalid">Đăng nhập</button>
         </div>
         <div class="additional">
           <button class="googlebutton" style="background-color: #ffffff;" (click)="loginWithGoogle()" type="button">
             <img src="https://img.icons8.com/color/16/000000/google-logo.png" style="height:20px;width:auto;">
-            <span style="font-weight: 600; color: #787878; letter-spacing: 2px; margin-left:5px;">Login with Google</span>
+            <span style="font-weight: 600; color: #787878; letter-spacing: 2px; margin-left:5px;">Đăng nhập với Google</span>
           </button>
         </div>
         <div style="text-align:end;">
-          <span>Do not have an account?   </span>
-          <a routerLink="/register" routerLinkActive="active">Register</a>
+          <span>Bạn không có tài khoản?   </span>
+          <a routerLink="/register" routerLinkActive="active">Đăng ký</a>
         </div>
         <div><small style="color:red;">{{errorMessage}}</small></div>
       </form>

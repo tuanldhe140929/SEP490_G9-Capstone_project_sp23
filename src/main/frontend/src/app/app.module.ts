@@ -21,9 +21,8 @@ import { ForUsersModule } from './modules/for-users/for-users.module';
 import { ForAdminModule } from './modules/for-admin/for-admin.module';
 import { ToastrModule } from 'ngx-toastr';
 import { timeout } from 'rxjs';
-import { Ng2SearchPipeModule } from 'ng2-search-filter';
-import { Ng2OrderModule } from 'ng2-order-pipe';
-import { NgxPaginationModule } from 'ngx-pagination';
+import { MatSortModule } from '@angular/material/sort';
+import { DataTablesModule } from 'angular-datatables'
 
 @NgModule({
   declarations: [
@@ -48,9 +47,8 @@ import { NgxPaginationModule } from 'ngx-pagination';
     NgbModule,
     BrowserAnimationsModule,
     CommonModule,
-    Ng2OrderModule,
-    Ng2SearchPipeModule,
-    NgxPaginationModule,
+    MatSortModule,
+    DataTablesModule,
     ToastrModule.forRoot(
       {
         timeOut: 2000,

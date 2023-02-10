@@ -8,9 +8,10 @@ import { ToastrService } from 'ngx-toastr';
 import { UpdateInspectorComponent } from '../update-inspector/update-inspector.component';
 import { FormBuilder, Validators } from '@angular/forms';
 import { User } from 'src/app/DTOS/User';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatTableDataSource} from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
+import { MatTableDataSourcePaginator } from '@angular/material/table';
 import { Observable } from 'rxjs';
-
 
 @Component({
   selector: 'app-inspector-list',
@@ -137,27 +138,6 @@ export class InspectorListComponent implements OnInit{
     this.dialog.open(AddInspectorComponent, {width: '70%'});
   }
 
-  onUpdate(){
-   
-  }
-
-  onDelete(){
-
-  }
-
-  Search(){
-      this.inspectorList = this.inspectorList.filter(res =>{
-        return res.username.toLocaleLowerCase().match(this.username.toLocaleLowerCase());
-      })
-      this.ngOnInit
-  }
-
-  key: string = 'id';
-  reverse:boolean = false;
-  sort(key: string){
-    this.key = key;
-    this.reverse = !this.reverse;
-  }
-
 }
+
 

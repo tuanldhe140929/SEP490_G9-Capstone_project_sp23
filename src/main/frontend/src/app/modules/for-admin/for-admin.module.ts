@@ -8,6 +8,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
 import { FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { DataTablesModule } from 'angular-datatables';
 
 import { ForAdminRoutingModule } from './for-admin-routing.module';
 import { InspectorListComponent } from './inspector-list/inspector-list.component';
@@ -38,6 +39,7 @@ import { DeleteInspectorComponent } from './delete-inspector/delete-inspector.co
     MatListModule,
     FormsModule,
     ReactiveFormsModule,
+    DataTablesModule
   ]
 })
 export class ForAdminModule { }

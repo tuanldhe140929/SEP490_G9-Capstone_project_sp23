@@ -24,23 +24,7 @@
                 <b>Không có kiểm duyệt viên trong hệ thống</b>
             </div>
             <div *ngIf="inspectorList.length > 0">
-                <!-- <table class="table">
-                    <tr>
-                        <th scope="col">Name</th>
-                        <th scope="col">Email</th>
-                        <th scope="col">Action</th>
-                    </tr>
-                    <tr *ngFor="let inspector of inspectorList">
-                        <th>{{inspector.username}}</th>
-                        <th>{{inspector.email}}</th>
-                        <th>
-                            <div>
-                            <button class="btn btn-danger" (click)="onOpenModal(inspector, 'delete')">Delete</button></div>
-                        </th>
-                    </tr>
-                </table>  -->
-                
-                <table id="dtBasicExample" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
+                <table datatable class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
                     <thead>
                       <tr>
                         <th class="th-sm">Tên
@@ -62,6 +46,8 @@
                       </tr>
                     </tbody>
                   </table>
+
+                
             </div>
         </div>
     </mat-sidenav-content>
@@ -182,5 +168,7 @@
        </div>
     </div>
   </div>
+
+
   
 
