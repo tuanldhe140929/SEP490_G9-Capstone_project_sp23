@@ -4,6 +4,7 @@ import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.compo
 import { ForAdminBaseComponent } from './for-admin-base/for-admin-base.component';
 import { InspectorListComponent } from './inspector-list/inspector-list.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { AuthGuard } from 'src/app/helpers/auth.guard';
 
 const routes: Routes = [
   {
@@ -16,7 +17,8 @@ const routes: Routes = [
   },
   {
     path: 'inspectorList',
-    component: InspectorListComponent
+    component: InspectorListComponent,
+    canActivate: [AuthGuard]
   }
 ];
 

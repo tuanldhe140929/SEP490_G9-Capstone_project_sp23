@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.SEP490_G9.models.Entities.User;
 import com.SEP490_G9.services.ManageInspectorService;
 
-@RequestMapping("public/manageInspector")
+@RequestMapping("private/manageInspector")
 @RestController
 public class ManageInspectorController {
 	

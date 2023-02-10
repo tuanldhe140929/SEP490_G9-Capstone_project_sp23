@@ -25,19 +25,19 @@ export class ForAdminService {
   constructor(private httpClient: HttpClient) { }
 
   getAllInspectors(): Observable<User[]>{
-    return this.httpClient.get<User[]>(`${this.apiServerUrl}/public/manageInspector/allInspectors`);
+    return this.httpClient.get<User[]>(`${this.apiServerUrl}/private/manageInspector/allInspectors`);
   }
 
   addInspector(body: any): Observable<any> {
-    return this.httpClient.post<any>(`${this.apiServerUrl}/public/manageInspector/addInspector`, body, httpOptions);
+    return this.httpClient.post<any>(`${this.apiServerUrl}/private/manageInspector/addInspector`, body, httpOptions);
   }
 
   updateInspector(body: any): Observable<any>{
-    return this.httpClient.put<any>(`${this.apiServerUrl}/public/manageInspector/updateInspector`, body);
+    return this.httpClient.put<any>(`${this.apiServerUrl}/private/manageInspector/updateInspector`, body);
   }
 
   deleteInspector(id: number| undefined): Observable<any>{
-    return this.httpClient.delete<any>(`${this.apiServerUrl}/public/manageInspector/deleteInspector/${id}`)
+    return this.httpClient.delete<any>(`${this.apiServerUrl}/private/manageInspector/deleteInspector/${id}`)
   }
 
   activateInspector(): Observable<any>{
