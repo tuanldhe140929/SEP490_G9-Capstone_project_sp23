@@ -2,7 +2,6 @@ package com.SEP490_G9.services.serviceImpls;
 
 import java.util.List;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -39,7 +38,6 @@ public class CartServiceImplement implements CartService {
 	private UserRepository userRepository;
 	@Autowired
 	TransactionRepository transactionRepository;
-	
 
 	@Override
 	public CartDTO addProduct(Long productId) {
@@ -75,12 +73,10 @@ public class CartServiceImplement implements CartService {
 		return cartDto;
 	}
 
-	
 	private Cart getCurrentCart() {
 
-		
 		User user = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
-		Cart cart = cartRepository.findByUserId(user.getId());
+		Cart cart =cartRepository.findCurrentCart(user.getId());
 		Cart retCart = null;
 		if (cart == null) {
 			retCart = cartRepository.save(new Cart(user));
@@ -91,12 +87,14 @@ public class CartServiceImplement implements CartService {
 		return retCart;
 
 	}
+
 	@Override
 	public CartDTO getCurrentCartDTO() {
 		Cart cart = getCurrentCart();
 		CartDTO cartDTO = new CartDTO(cart);
 		return cartDTO;
 	}
+	
 
 	@Override
 	public Cart getCart(Long cartId) {
@@ -112,16 +110,49 @@ public class CartServiceImplement implements CartService {
 			Cart newCart = cartRepository.save(new Cart(user));
 			return newCart;
 		}
+
 	}
 
 	@Override
-	//ấn vô nut check out thì cartitem trong cart sẽ được save cùng vs user và totalprice
-	public CartDTO checkOut(Long cartId) {
-		User user = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
-		CartDTO cartDTO= getCurrentCartDTO();
-		Cart cart = cartRepository.findByUserId(user.getId());
-		
-		return null;
+	public CartDTO checkOut(Cart cart, User user) {
+	    // Validate that the user exists
+	    user = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
+	    if(user == null) {
+	        // Error: User not found
+	        return null;
+	    }
+
+	    // Validate that the cart is not empty
+	    cart = getCurrentCart();
+	    if(cart == null) {
+	        // Error: Cart is empty
+	        return null;
+	    }
+
+	    
+
+	    // Create a new transaction
+	    Transaction transaction = new Transaction();
+
+	    // Set the transaction details
+	    
+
+	    // Save the transaction
+	    transactionRepository.save(transaction);
+
+	    // Clear the cart
+	     cart = new Cart();
+
+	    // Return the transaction details
+	    CartDTO cartDto = new CartDTO();
+	    //....
+	    return cartDto;
 	}
 
-}
+    
+        
+    
+		
+	
+	}
+	

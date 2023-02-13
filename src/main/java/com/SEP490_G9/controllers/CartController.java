@@ -37,7 +37,7 @@ public class CartController {
         return ResponseEntity.ok(cart);
     }	
     
-    @GetMapping("/")
+    @GetMapping("/checkOut")
     public ResponseEntity<?> checkOut() {
         CartDTO cart = cartService.getCurrentCartDTO();
         return ResponseEntity.ok(cart);

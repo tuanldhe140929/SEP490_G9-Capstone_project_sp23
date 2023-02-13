@@ -1,9 +1,10 @@
 package com.SEP490_G9.models.DTOS;
 
 import com.SEP490_G9.models.Entities.Cart;
+
 import com.SEP490_G9.models.Entities.CartItem;
 
-import com.SEP490_G9.models.embeddables.CartItemKey;
+
 
 public class CartItemDTO {
 	
