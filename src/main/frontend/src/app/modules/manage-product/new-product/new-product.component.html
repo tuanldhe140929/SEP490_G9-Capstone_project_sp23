@@ -1,5 +1,5 @@
 <div class="container-fluid grad">
-  <div class="row padded" style="width:80%; background:white; margin:auto;">
+  <div class="row padded" style="width:80%; background:white; margin:auto;margin-bottom:5%;">
     <div class="row" style="border-bottom:0.5px solid grey; margin:auto;">
       <h2>Upload new product</h2>
     </div>
@@ -42,14 +42,11 @@
               <div class="selectize_group">
                 <div class="selectize-control tag_input multi plugin-remove_button">
                   <div class="selectize-input items not-full has-options">
-
                     <select id="tag_input input_row" (change)="onTagSelect($event)" style="padding: 8px; appearance: none;">
                       <option *ngFor="let tag of tagList; index as i;" value="{{tag.id}}">{{tag.name}}</option>
                       <option id="default_tag" value="0" selected>Select one or multiple tags</option>
                     </select>
-
                   </div>
-
                   <div class="selectize-dropdown multi tag_input plugin-remove_button">
                     <div class="selectize-dropdown-content">
                       <div class="option"></div>
@@ -202,7 +199,7 @@
               <div class="upload_preview_pictures_label"><label for="preview_video_container">Tải lên video xem trước<br /><small>Định dạng: .mp4, .mkv, .mov, kích thước tối đa: 1GB</small></label> </div>
             </div>
             <div class="preview_pictures drop" id="preview_pictures_container">
-              <div class="upload_container" style="position:relative; background-color:white;">
+              <div class="upload_container" style="position:relative; background-color:white;max-height:500px;">
                 <div *ngIf="product.previewPictures.length!=0;then hasPreviewPictures else noPreviewPictures"></div>
                 <ng-template #noPreviewPictures>
                   <div class="widget">
@@ -214,13 +211,15 @@
                   </div>
                 </ng-template>
                 <ng-template #hasPreviewPictures>
-                  <div class="mySlides" *ngFor="let pic of product.previewPictures; index as i" style="position: relative; width: 100%; height: 70%; background-color: black;">
-                    <div class="widget_pictures" style="position: absolute">
-                      <button class="delete_btn2" type="button" (click)="removePreviewPicture(pic)">Gỡ</button>
+                  <div class="mySlides" *ngFor="let pic of product.previewPictures; index as i" style="position: relative; width: 100%; height: 205px; background-color: #373030;">
+                    <div class="widget_pictures" style="position: absolute;width:100%;">
+                      <button class="delete_btn2" type="button" (click)="removePreviewPicture(pic)" id="remove_picture_btn">Gỡ</button>
+                      <button class="upload_btn2" type="button" (click)="previewPicturesUpload.click()">Tải lên</button>
                     </div>  
                     <img src="{{getPreviewPictureSource(pic)}}" style="height: 100%; width: auto; display: inherit; margin-left: auto; margin-right: auto;">
                   </div>
-                  <div class="row" style="width: 100%; height: 30%; margin-left: auto; margin-right: auto;">
+                  <div class="row" style="width: 100%; height: 5px; background-color: #434343; margin: auto;"> </div>
+                  <div class="row" style="width: 100%; height: 30%; margin-left: auto; margin-right: auto; overflow: auto;">
                     <div class="column cursor" *ngFor="let pic of product.previewPictures; index as i" (click)="onChooseImage(i)" style="{{percent}}">
                       <img class="picker" src="{{getPreviewPictureSource(pic)}}" style="display:block;" >
                     </div>

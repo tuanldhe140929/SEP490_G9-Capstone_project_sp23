@@ -35,17 +35,17 @@ public class User implements Serializable {
 	@Column(name = "verified")
 	private boolean verified = false;
 
-	@Column(name="joined_date")
+	@Column(name = "joined_date")
 	private Date joinedDate = new Date();
-	
+
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "role_id", unique = false, nullable = false)
 	private Role role;
 
-	@OneToOne(mappedBy = "user",fetch = FetchType.EAGER)
-    private RefreshToken refreshToken;
-	
+	@OneToOne(mappedBy = "user", fetch = FetchType.EAGER)
+	private RefreshToken refreshToken;
 
+	@Column(name = "image")
 	private String image;
 //	@OneToOne(cascade = CascadeType.ALL)
 //	private Cart cart;
@@ -133,7 +133,6 @@ public class User implements Serializable {
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
-	
 
 	public Date getJoinedDate() {
 		return joinedDate;

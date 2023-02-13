@@ -4,9 +4,9 @@ import java.io.IOException;
 
 import org.apache.http.client.ClientProtocolException;
 
-import com.SEP490_G9.models.AuthRequest;
-import com.SEP490_G9.models.AuthResponse;
-import com.SEP490_G9.models.EmailResponse;
+import com.SEP490_G9.models.DTOS.AuthRequest;
+import com.SEP490_G9.models.DTOS.AuthResponse;
+import com.SEP490_G9.models.DTOS.EmailResponse;
 import com.SEP490_G9.models.Entities.User;
 
 import jakarta.servlet.http.Cookie;

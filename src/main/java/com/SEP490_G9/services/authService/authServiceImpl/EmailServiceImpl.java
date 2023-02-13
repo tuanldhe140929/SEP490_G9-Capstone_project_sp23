@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.SEP490_G9.exceptions.EmailServiceException;
 import com.SEP490_G9.helpers.VerifyLinkGenerator;
-import com.SEP490_G9.models.EmailResponse;
+import com.SEP490_G9.models.DTOS.EmailResponse;
 import com.SEP490_G9.services.authService.EmailService;
 
 import jakarta.mail.MessagingException;

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.SEP490_G9.models.EmailResponse;
+import com.SEP490_G9.models.DTOS.EmailResponse;
 import com.SEP490_G9.services.authService.AuthService;
 
 import jakarta.servlet.http.HttpServletRequest;

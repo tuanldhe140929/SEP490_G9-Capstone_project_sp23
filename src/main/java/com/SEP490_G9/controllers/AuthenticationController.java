@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.SEP490_G9.exceptions.RefreshTokenException;
-import com.SEP490_G9.models.AuthRequest;
-import com.SEP490_G9.models.AuthResponse;
-import com.SEP490_G9.models.EmailResponse;
+import com.SEP490_G9.models.DTOS.AuthRequest;
+import com.SEP490_G9.models.DTOS.AuthResponse;
+import com.SEP490_G9.models.DTOS.EmailResponse;
 import com.SEP490_G9.models.Entities.User;
 import com.SEP490_G9.services.authService.AuthService;
 import jakarta.servlet.http.Cookie;

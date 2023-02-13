@@ -38,7 +38,7 @@ public class CartItem implements Serializable {
 	public CartItem() {
 
 	}
-
+	
 	public CartItem(Cart cart, Product product) {
 		super();
 		//this.cartItemKey = new CartItemKey(cart.getId(),product.getId());

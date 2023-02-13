@@ -77,12 +77,22 @@ public class ManageProductController {
 		return ResponseEntity.ok(product);
 	}
 	
+	
+	
+	
+	
+	
 	@PostMapping(value = "uploadCoverImage")
 	public ResponseEntity<?> uploadCoverImage(@RequestParam(name = "productId") Long productId,
 			@RequestParam(name = "coverImage") MultipartFile coverImage) throws IOException {
 		String src = manageProductService.uploadCoverImage(coverImage, productId);
 		return ResponseEntity.ok(src);
 	}
+	
+	
+	
+	
+	
 	
 	@PostMapping(value = "uploadPreviewVideo")
 	public ResponseEntity<?> uploadPreviewVideo(@RequestParam(name = "productId") Long productId,

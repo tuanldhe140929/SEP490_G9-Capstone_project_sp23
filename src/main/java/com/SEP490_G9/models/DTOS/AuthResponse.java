@@ -1,4 +1,4 @@
-package com.SEP490_G9.models;
+package com.SEP490_G9.models.DTOS;
 
 import java.io.Serializable;
 import java.util.List;

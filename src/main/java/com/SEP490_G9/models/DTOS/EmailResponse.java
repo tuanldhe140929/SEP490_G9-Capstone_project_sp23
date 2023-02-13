@@ -1,4 +1,4 @@
-package com.SEP490_G9.models;
+package com.SEP490_G9.models.DTOS;
 
 public class EmailResponse {
 	private String email;
