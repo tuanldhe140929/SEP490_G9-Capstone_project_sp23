@@ -7,6 +7,7 @@ import { User } from '../DTOS/User';
 
 const baseUrl = "http://localhost:9000/public/auth";
 
+
 const httpOptions: Object = {
   headers: new HttpHeaders({
     "Content-Type": "application/json"
@@ -18,6 +19,20 @@ const httpOptions: Object = {
   providedIn: 'root'
 })
 export class AuthService {
+  sendVerifyEmail(email: string) {
+      return this.http.get(baseUrl+'/sendVerifyEmail',{
+		  params:{
+			  email:email
+		  }
+	  });
+  }
+  verifyEmail(verifyLink: string | null,email:string) {
+      return this.http.get(baseUrl+'/verifyEmail/'+verifyLink,{
+		  params:{
+			  email:email
+		  }
+	  });
+  }
 
   static isLoggedIn: boolean;
 
@@ -36,8 +51,13 @@ export class AuthService {
     return this.http.post<any>(baseUrl + '/login', body, httpOptions);
   }
 
-  register(body: any): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(baseUrl + "/register", body, httpOptions);
+  register(body: any): Observable<string> {
+    return this.http.post<string>(baseUrl + "/register", body, {
+		headers: new HttpHeaders({
+    "Content-Type": "text"
+  }),
+  withCredentials: true
+	});
   }
 
   loginWithGoogle(body: any): Observable<any> {
@@ -45,7 +65,7 @@ export class AuthService {
   }
 
   logout() {
-    sessionStorage.clear();
+    localStorage.clear();
     return this.http.get<any>(baseUrl + '/logout', httpOptions);
   }
   refreshToken() {

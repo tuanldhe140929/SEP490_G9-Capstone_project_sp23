@@ -1,0 +1,25 @@
+<mat-toolbar>
+    <mat-toolbar-row>
+        <mat-icon (click)="sidebar.toggle()">menu</mat-icon>
+        <span>
+            Admin Screen
+        </span>
+    </mat-toolbar-row>
+</mat-toolbar>
+<mat-sidenav-container>
+    <mat-sidenav #sidebar mode="side" opened="true">
+        <ul>
+            <li>
+                <a [routerLink]="['/adminDashboard']">Dashboard</a>
+            </li>
+            <li>
+                <a [routerLink]="['/inspectorList']">Inspectors</a>
+            </li>
+        </ul>
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <div>
+            for dashboard
+        </div>
+    </mat-sidenav-content>
+</mat-sidenav-container>

@@ -207,6 +207,7 @@ public class ManageProductServiceImpl implements ManageProductService {
 
 		if (!checkFileType(coverImage, IMAGE_EXTENSIONS)) {
 			throw new FileFormatNotAccept(coverImage.getContentType() + " file not accept");
+
 		} else {
 			Product product = getProductByIdAndUser(productId);
 			String coverImageLocation = getCoverImageLocation(product);
@@ -290,7 +291,7 @@ public class ManageProductServiceImpl implements ManageProductService {
 		productFileRepository.deleteById(fileId);
 		File fileDir = new File(storageProperties.getLocation() + productFile.getSource());
 		fileDir.delete();
-		ProductDTO dto = new ProductDTO(product,previewRepository);
+		ProductDTO dto = new ProductDTO(product, previewRepository);
 		return dto;
 	}
 
@@ -378,10 +379,10 @@ public class ManageProductServiceImpl implements ManageProductService {
 	@Override
 	public File servePreviewImage(Long previewId) {
 		Preview preview = previewRepository.getReferenceById(previewId);
-		if(preview==null) {
+		if (preview == null) {
 			throw new ResourceNotFoundException("Preview", "previewId", previewId);
 		}
-		return serveMediaService.serveImage(storageProperties.getLocation()+preview.getSource());
+		return serveMediaService.serveImage(storageProperties.getLocation() + preview.getSource());
 	}
 
 	@Override
@@ -389,7 +390,7 @@ public class ManageProductServiceImpl implements ManageProductService {
 		Preview preview = previewRepository.getReferenceById(previewId);
 		previewRepository.delete(preview);
 		List<Preview> previews = previewRepository.findByProductAndType(preview.getProduct(), "picture");
-		
+
 		return previews;
 	}
 

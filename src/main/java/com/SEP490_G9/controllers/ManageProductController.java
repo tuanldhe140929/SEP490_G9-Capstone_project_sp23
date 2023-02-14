@@ -40,7 +40,6 @@ public class ManageProductController {
 		User user2 = new User();
 		user2.setId(user.getId());
 		user2.setEnabled(user.isEnabled());
-		user2.setVerified(user.isVerified());
 		user2.setEmail(user.getEmail());
 		user2.setPassword(null);
 		user2.setUsername(user.getUsername());
@@ -77,12 +76,22 @@ public class ManageProductController {
 		return ResponseEntity.ok(product);
 	}
 	
+	
+	
+	
+	
+	
 	@PostMapping(value = "uploadCoverImage")
 	public ResponseEntity<?> uploadCoverImage(@RequestParam(name = "productId") Long productId,
 			@RequestParam(name = "coverImage") MultipartFile coverImage) throws IOException {
 		String src = manageProductService.uploadCoverImage(coverImage, productId);
 		return ResponseEntity.ok(src);
 	}
+	
+	
+	
+	
+	
 	
 	@PostMapping(value = "uploadPreviewVideo")
 	public ResponseEntity<?> uploadPreviewVideo(@RequestParam(name = "productId") Long productId,

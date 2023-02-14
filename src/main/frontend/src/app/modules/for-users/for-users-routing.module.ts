@@ -16,8 +16,9 @@ const routes: Routes = [
   component: ShoppingComponent
 },
 {
-  path: 'productDetails',
-  component: ProductDetailsComponent
+  path: ':username/:productName',
+  component: ProductDetailsComponent,
+  title:'Chi tiết sản phẩm'
 },
 {
   path: 'cart',

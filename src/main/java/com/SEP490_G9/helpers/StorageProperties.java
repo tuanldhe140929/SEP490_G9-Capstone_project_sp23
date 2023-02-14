@@ -12,6 +12,8 @@ public class StorageProperties {
 	 */
 	private String location = "D:\\New folder (2)\\";
 
+	
+
 	public String getLocation() {
 		return location;
 	}

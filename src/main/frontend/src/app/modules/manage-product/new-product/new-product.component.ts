@@ -39,7 +39,7 @@ const price = new Intl.NumberFormat('vi-VN',
   templateUrl: './new-product.component.html',
   styleUrls: ['./new-product.component.css']
 })
-export class NewProductComponent implements OnInit, AfterViewInit {
+export class NewProductComponent implements OnInit {
 
   @ViewChild('content', { static: false }) private content: any;
 
@@ -60,7 +60,6 @@ export class NewProductComponent implements OnInit, AfterViewInit {
 
   uploadProgress: number = 0;
 
-  authResponse: AuthResponse = new AuthResponse();
   product: Product = new Product;
   typeList: Type[] = [];
   tagList: Tag[] = [];
@@ -88,7 +87,6 @@ export class NewProductComponent implements OnInit, AfterViewInit {
   });
 
   ngOnInit(): void {
-    this.authResponse = this.storageService.getAuthResponse();
     this.getCurrentProduct();
     this.getTypeList();
     this.newProductForm.valueChanges.subscribe((form) => {
@@ -191,7 +189,13 @@ export class NewProductComponent implements OnInit, AfterViewInit {
           for (let i = 0; i < this.Columns.length; i++) {
             this.Columns[i].setAttribute('style', 'width: ' + 100 / this.Columns.length + '; height: 100 %;background - color: black; opacity: 0.6;');
           }
-          this.percent = 'width:'+100 / this.product.previewPictures.length + '%;';
+          if (this.product.coverImage != '' && this.product.coverImage!=null) {
+            this.loadCoverImage();
+          }
+          this.percent = 'width:' + 100 / this.product.previewPictures.length + '%;';
+          if (this.product.previewPictures.length != 0) {
+
+          }
         },
 
         (error) => {
@@ -200,12 +204,6 @@ export class NewProductComponent implements OnInit, AfterViewInit {
       );
     }
   }
-  ngAfterViewInit():void {
-  
-         
-          
-  }
-
   percent = 'width:100%;';
   getTypeList(): void {
     this.manageProductService.getTypeList().subscribe(
@@ -246,7 +244,7 @@ export class NewProductComponent implements OnInit, AfterViewInit {
     if (this.coverImg != null) {
       this.coverImg.setAttribute('src', 'http://localhost:9000/public/serveMedia/serveCoverImage?productId=' + this.product.id);
       this.coverImg.style.width = "100%";
-      this.coverImg.style.height = "300px";
+      this.coverImg.style.height = "100%";
       this.coverImg.style.padding = "0";
       this.coverImg.style.margin = "0";
     }
@@ -301,10 +299,9 @@ export class NewProductComponent implements OnInit, AfterViewInit {
 
   onPreviewVideoUpload($event: any) {
     const file: File = $event.target.files[0];
-    var acceptType = ['video/mp4', 'video/x-matroska', 'video/quicktime'];
     if (file) {
       console.log(file.type);
-      if (!this.checkFileType(file.type, acceptType)) {
+      if (!this.checkFileType(file.type, VIDEO_EXTENSIONS)) {
         this.openFormatErrorModal();
       } else {
         //this.fileName = file.name;
@@ -353,7 +350,7 @@ export class NewProductComponent implements OnInit, AfterViewInit {
           const formData = new FormData();
           formData.set("enctype", "multipart/form-data");
           formData.append("previewPicture", files[i]);
-          formData.append("productId", this.product.id.toString());
+            formData.append("productId", this.product.id.toString());
 
           const upload$ = this.manageProductService.uploadPreviewPicture(formData).subscribe(
             (data) => {
@@ -386,11 +383,16 @@ export class NewProductComponent implements OnInit, AfterViewInit {
   }
 
   removePreviewPicture(preview: Preview) {
+    if (this.RemovePreviewPictureBtn) {
+      this.RemovePreviewPictureBtn.disabled = true;
+    }
     this.manageProductService.removePreviewPicture(preview.id).subscribe(
       (data) => {
         this.product.previewPictures = data;
         this.percent = 'width:' + 100 / this.product.previewPictures.length + '%;';
-
+        if (this.RemovePreviewPictureBtn) {
+          this.RemovePreviewPictureBtn.disabled = false;
+        }
       },
       (error) => {
       })
@@ -523,6 +525,7 @@ export class NewProductComponent implements OnInit, AfterViewInit {
     this.errors = [];
     this.modalService.dismissAll();
   }
+
   saveProduct() {
     this.newProductForm.markAllAsTouched;
     this.newProductForm.markAsDirty;
@@ -629,5 +632,9 @@ export class NewProductComponent implements OnInit, AfterViewInit {
   }
   get Columns() {
     return document.querySelectorAll('.column');
+  }
+
+  get RemovePreviewPictureBtn() {
+    return document.getElementById('remove_picture_btn') as HTMLButtonElement;
   }
 }

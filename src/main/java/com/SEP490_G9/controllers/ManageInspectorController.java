@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.SEP490_G9.models.Entities.User;
 import com.SEP490_G9.services.ManageInspectorService;
 
-@RequestMapping("public/manageInspector")
+@RequestMapping("private/manageInspector")
 @RestController
 public class ManageInspectorController {
 	
@@ -44,5 +46,17 @@ public class ManageInspectorController {
 	public ResponseEntity<?> deactivateInspector(@RequestParam(name = "inspectorId") Long id){
 		boolean canDeactivate = manageInspectorService.deactivateInspector(id);
 		return ResponseEntity.ok(canDeactivate);
+	}
+	
+	@DeleteMapping("deleteInspector/{id}")
+	public ResponseEntity<?> deleteInspector(@PathVariable("id") Long id){
+		boolean canDelete = manageInspectorService.deleteInspector(id);
+		return ResponseEntity.ok(canDelete);
+	}
+	
+	@PutMapping("updateInspector")
+	public ResponseEntity<?> updateInspector(@RequestBody User inspector){
+		boolean canUpdate = manageInspectorService.updateInspector(inspector);
+		return ResponseEntity.ok(canUpdate);
 	}
 }

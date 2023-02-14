@@ -2,7 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AuthResponse } from 'src/app/DTOS/AuthResponse';
 import { AuthService } from 'src/app/services/auth.service';
+import { StorageService } from 'src/app/services/storage.service';
 
 @Component({
   selector: 'app-register',
@@ -61,7 +63,7 @@ public noWhitespaceValidator(control: FormControl) {
 
 
   constructor(private http: HttpClient, private formBuilder: FormBuilder, private authService: AuthService,
-    private router: Router) { }
+    private router: Router,private storageService:StorageService) { }
 
   ngOnInit(): void { }
 
@@ -71,8 +73,10 @@ public noWhitespaceValidator(control: FormControl) {
       
       this.authService.register(this.registerForm.value).subscribe(
         data => {
-          console.log(data)
-          this.message = "Dang ki thanh cong";
+          console.log(data);
+          this.message = "Dang ki thanh cong, Kiem tra email de xac thuc";
+          this.storageService.saveRegisteredEmail(data);
+         // this.sendVerifyEmail(data.email);
         },
         error => {
           if (error.status === 409) {
@@ -85,5 +89,16 @@ public noWhitespaceValidator(control: FormControl) {
         }
       );
     }
+  }
+  
+  public sendVerifyEmail(email:string){
+	  this.authService.sendVerifyEmail(email).subscribe(
+		  (data)=>{
+			  console.log(data);
+		  },
+		  (error)=>{
+			  console.log(error);
+		  }
+	  )
   }
 }

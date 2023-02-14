@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.SEP490_G9.models.DTOS.ProductDTO;
 import com.SEP490_G9.models.Entities.Product;
 import com.SEP490_G9.models.Entities.User;
 import com.SEP490_G9.services.CommonService;
@@ -16,6 +17,18 @@ public class CommonController {
 	@Autowired
 	CommonService commonService;
 	
+	@GetMapping(value="getCurrentLogedInUser")
+	public ResponseEntity<?> getCurrentLogedInUser() {
+		User user = commonService.getCurrentLogedInUser();
+		return ResponseEntity.ok(user);
+	}
+	
+	@GetMapping(value="getProductByNameAndUserId")
+	public ResponseEntity<?> getProductByNameAndUserId(@RequestParam(name="productName",required=true) String productName,@RequestParam(name="userId",required=true) Long userId) {
+		ProductDTO product = commonService.getProductByNameAndUserId(productName,userId);
+		return ResponseEntity.ok(product);
+	}
+	
 	@GetMapping(value="getUserInfoByUsername")
 	public ResponseEntity<?> getUserInfoByUsername(@RequestParam String username) {
 		User user = commonService.getUserInfoByUsername(username);
@@ -24,7 +37,7 @@ public class CommonController {
 	
 	@GetMapping(value="getProductsByUsername")
 	public ResponseEntity<?> getProductsByUsername(@RequestParam String username) {
-		List<Product> products = commonService.getProductsByUsername(username);
+		List<ProductDTO> products = commonService.getProductsByUsername(username);
 		return ResponseEntity.ok(products);
 	}
 }
