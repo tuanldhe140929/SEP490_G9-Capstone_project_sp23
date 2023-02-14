@@ -16,12 +16,14 @@ import { VgCoreModule } from '@videogular/ngx-videogular/core';
 import { VgControlsModule } from '@videogular/ngx-videogular/controls';
 import { VgOverlayPlayModule } from '@videogular/ngx-videogular/overlay-play';
 import { VgBufferingModule } from '@videogular/ngx-videogular/buffering';
+import { ProductCollectionComponent } from './product-collection/product-collection.component';
 
     
 @NgModule({
   declarations: [
 
-    NewProductComponent
+    NewProductComponent,
+      ProductCollectionComponent
   ],
   imports: [
 	BrowserModule,

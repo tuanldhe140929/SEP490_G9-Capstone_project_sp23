@@ -30,7 +30,6 @@ import { ForUsersModule } from './modules/for-users/for-users.module';
     FormsModule,
     ReactiveFormsModule,
     AuthModule,
-    ManageProductModule,
     ManageAccountInfoModule,
     ManageInspectorModule,
     ForUsersModule,
@@ -40,6 +39,7 @@ import { ForUsersModule } from './modules/for-users/for-users.module';
     NgbModule,
     BrowserAnimationsModule,
     CommonModule,
+    ManageProductModule,
   ],
   providers: [
 	      {  

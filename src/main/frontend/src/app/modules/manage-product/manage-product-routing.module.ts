@@ -1,3 +1,4 @@
+import { ProductCollectionComponent } from './product-collection/product-collection.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '../../helpers/auth.guard';
@@ -9,7 +10,13 @@ const routes: Routes = [{
   component: NewProductComponent,
   title: "Create new product",
   canActivate: [AuthGuard]
-}];
+},
+{
+  path: ':userName',
+  component: ProductCollectionComponent,
+  title: "User product collection",
+}
+];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
