@@ -2,108 +2,81 @@ package com.SEP490_G9.models.Entities;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
+
+import com.SEP490_G9.helpers.Constant;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
+
 @Entity
 @Table(name = "users")
-public class User implements Serializable {
+@Inheritance(strategy = InheritanceType.JOINED)
+@PrimaryKeyJoinColumn(name="account_id")
+public class User extends Account implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id;
-
-	@Column(name = "email", nullable = false, unique = true)
-	@Email(message = "invalid format")
-	@NotBlank(message = "email can't be blank")
-	private String email;
-
-	@NotBlank(message = "password can't be blank")
-	@Column(name = "password")
-	@Size(min = 8, max = 100)
-	private String password;
-
 	@NotBlank(message = "username can't be blank")
-	@Column(name = "username", nullable = true, unique = true)
+	@Column(name = "username", nullable = false, unique = true)
 	@Size(min = 3, max = 30)
 	private String username;
-	@Column(name = "enabled")
-	private boolean enabled = true;
-	@Column(name = "verified")
-	private boolean verified = false;
+	
+	@Column(name="first_name" )
+	private String firstName;
+	
+	@Column(name="last_name")
+	private String lastName;
+	
+	@Column(name = "avatar")
+	private String avatar;
+	
+	@Column(name = "email_verified")
+	private boolean emailVerified = false;
 
-	@Column(name = "joined_date")
-	private Date joinedDate = new Date();
+	@Column(name = "created_date")
+	private Date userCreatedDate;
 
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "role_id", unique = false, nullable = false)
-	private Role role;
-
-	@OneToOne(mappedBy = "user", fetch = FetchType.EAGER)
-	private RefreshToken refreshToken;
-
-	@Column(name = "image")
-	private String image;
-//	@OneToOne(cascade = CascadeType.ALL)
-//	private Cart cart;
+	@Column(name="last_modified")
+	private Date userLastModified;
+	
+	@OneToOne(cascade = CascadeType.ALL)
+	private Cart cart;
 
 	public User() {
 	}
+	
+	public User(Account account) {
+		
+	}
 
+	public User(@NotBlank(message = "username can't be blank") @Size(min = 3, max = 30) String username,
+			String firstName, String lastName, String avatar, boolean emailVerified, Date userCreatedDate,
+			Date userLastModified) {
+		super();
+		this.username = username;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.avatar = avatar;
+		this.emailVerified = emailVerified;
+		this.userCreatedDate = userCreatedDate;
+		this.userLastModified = userLastModified;
+	}
+	
 	public User(Long id, @Email(message = "invalid format") @NotBlank(message = "email can't be blank") String email,
 			@NotBlank(message = "password can't be blank") @Size(min = 8, max = 100) String password,
-			@NotBlank(message = "username can't be blank") @Size(min = 3, max = 30) String username, boolean enabled,
-			boolean verified, Date joinedDate, Role role, RefreshToken refreshToken, String image) {
-		super();
-		this.id = id;
-		this.email = email;
-		this.password = password;
-		this.username = username;
-		this.enabled = enabled;
-		this.verified = verified;
-		this.joinedDate = joinedDate;
-		this.role = role;
-		this.refreshToken = refreshToken;
-		this.image = image;
-	}
-
-	public String getImage() {
-		return image;
-	}
-
-	public void setImage(String image) {
-		this.image = image;
+			Date accountCreatedDate, Date accountLastModifed, boolean enabled, List<Role> roles,
+			RefreshToken refreshToken) {
+		super(id, email, password, accountCreatedDate, accountLastModifed, enabled, roles, refreshToken);
+		this.username = email.substring(0, email.indexOf("@"));
+		this.emailVerified = true;
+		this.userCreatedDate = new Date();
+		this.userLastModified = new Date();
 	}
 
 	public User(String email) {
-		this.email = email;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
+		setEmail(email);
 	}
 
 	public String getUsername() {
@@ -114,48 +87,56 @@ public class User implements Serializable {
 		this.username = username;
 	}
 
-	public boolean isEnabled() {
-		return enabled;
+	public String getFirstName() {
+		return firstName;
 	}
 
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
 	}
 
-	public boolean isVerified() {
-		return verified;
+	public String getLastName() {
+		return lastName;
 	}
 
-	public void setVerified(boolean verified) {
-		this.verified = verified;
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public String getAvatar() {
+		return avatar;
+	}
+
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
+	}
+
+	public boolean isEmailVerified() {
+		return emailVerified;
+	}
+
+	public void setEmailVerified(boolean emailVerified) {
+		this.emailVerified = emailVerified;
+	}
+
+	public Date getUserCreatedDate() {
+		return userCreatedDate;
+	}
+
+	public void setUserCreatedDate(Date createdDate) {
+		this.userCreatedDate = createdDate;
+	}
+
+	public Date getUserLastModified() {
+		return userLastModified;
+	}
+
+	public void setUserLastModified(Date userLastModified) {
+		this.userLastModified = userLastModified;
 	}
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
-	}
-
-	public Date getJoinedDate() {
-		return joinedDate;
-	}
-
-	public void setJoinedDate(Date joinedDate) {
-		this.joinedDate = joinedDate;
-	}
-
-	public RefreshToken getRefreshToken() {
-		return refreshToken;
-	}
-
-	public void setRefreshToken(RefreshToken refreshToken) {
-		this.refreshToken = refreshToken;
-	}
-
-	public Role getRole() {
-		return role;
-	}
-
-	public void setRole(Role role) {
-		this.role = role;
 	}
 
 }

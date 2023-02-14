@@ -6,7 +6,7 @@ import com.SEP490_G9.models.DTOS.EmailResponse;
 import jakarta.servlet.http.HttpServletRequest;
 
 public interface EmailService {
-	EmailResponse sendVerifyEmail(String toEmail, HttpServletRequest request);
+	EmailResponse sendVerifyEmail(String toEmail);
 	
-	EmailResponse sendResetPasswordEmail(String toEmail, HttpServletRequest request);
+	EmailResponse sendRecoveryPasswordToEmail(String toEmail);
 }

@@ -30,7 +30,7 @@ public class Report {
 	
 	@MapsId("userId")
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "user_id",referencedColumnName = "id")
+	@JoinColumn(name = "account_id",referencedColumnName = "account_id")
 	private User user;
 
 	@MapsId("productId")

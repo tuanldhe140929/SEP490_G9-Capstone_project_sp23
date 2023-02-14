@@ -40,10 +40,8 @@ public class ReportController {
 		User user2 = new User();
 		user2.setId(user.getId());
 		user2.setEnabled(user.isEnabled());
-		user2.setVerified(user.isVerified());
 		user2.setEmail(user.getEmail());
 		user2.setPassword(null);
-		user2.setRole(user.getRole());
 		user2.setUsername(user.getUsername());
 		return ResponseEntity.ok(user2);
 	}

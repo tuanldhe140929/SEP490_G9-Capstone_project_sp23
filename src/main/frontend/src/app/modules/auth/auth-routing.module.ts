@@ -4,6 +4,7 @@ import { ForgotPasswordComponent } from './login/forgot-password/forgot-password
 import { LoginWithGoogleComponent } from './login/login-with-google/login-with-google.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
+import { VerifyEmailComponent } from './verify-email/verify-email.component';
 
 const routes: Routes = [
 	{
@@ -25,6 +26,11 @@ const routes: Routes = [
 		path:'auth/loginWithGoogle',
     component: LoginWithGoogleComponent,
     title: 'Google Login'
+	},
+	{
+		path:'auth/verifyEmail/:verifyLink',
+		component:VerifyEmailComponent,
+		title:'Verify Email'
 	}
 ];
 

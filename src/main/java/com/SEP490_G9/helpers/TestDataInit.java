@@ -13,16 +13,21 @@ import org.springframework.stereotype.Component;
 import com.SEP490_G9.models.Entities.Tag;
 import com.SEP490_G9.models.Entities.Type;
 import com.SEP490_G9.models.Entities.User;
+import com.SEP490_G9.models.Entities.Account;
 import com.SEP490_G9.models.Entities.Product;
+import com.SEP490_G9.models.Entities.RefreshToken;
 import com.SEP490_G9.models.Entities.Role;
 import com.SEP490_G9.repositories.TagRepository;
 import com.SEP490_G9.repositories.TypeRepository;
 import com.SEP490_G9.repositories.UserRepository;
+import com.SEP490_G9.repositories.AccountRepository;
 import com.SEP490_G9.repositories.ProductRepository;
 import com.SEP490_G9.repositories.RoleRepository;
 
 @Component
 public class TestDataInit implements ApplicationRunner {
+	@Autowired
+	private AccountRepository accountRepository;
 
 	@Autowired
 	private RoleRepository roleRepository;
@@ -45,24 +50,72 @@ public class TestDataInit implements ApplicationRunner {
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
 
-		roleRepository.save(new Role((long) 1, "ROLE_ADMIN"));
-		roleRepository.save(new Role((long) 2, "ROLE_USER"));
-		roleRepository.save(new Role((long) 3, "ROLE_INSPECTOR"));
+		roleRepository.save(new Role(Constant.ADMIN_ROLE_ID, "ROLE_ADMIN"));
+		roleRepository.save(new Role(Constant.STAFF_ROLE_ID, "ROLE_STAFF"));
+		roleRepository.save(new Role(Constant.USER_ROLE_ID, "ROLE_USER"));
+		roleRepository.save(new Role(Constant.SELLER_ROLE_ID, "ROLE_SELLER"));
+
+		List<Role> userRoles = new ArrayList<>();
+		userRoles.add(roleRepository.getReferenceById(Constant.USER_ROLE_ID));
+
+		List<Role> staffRoles = new ArrayList<>();
+		staffRoles.add(roleRepository.getReferenceById(Constant.STAFF_ROLE_ID));
+
+		List<Role> adminRoles = new ArrayList<>();
+		adminRoles.add(roleRepository.getReferenceById(Constant.ADMIN_ROLE_ID));
+
+		List<Role> sellerRoles = new ArrayList<>();
+		sellerRoles.add(roleRepository.getReferenceById(Constant.USER_ROLE_ID));
+		sellerRoles.add(roleRepository.getReferenceById(Constant.SELLER_ROLE_ID));
+
+//		Account userAccount = new Account();
+//		userAccount.setId((long) 1);
+//		userAccount.setEmail("user1@gmail.com");
+//		userAccount.setPassword(new BCryptPasswordEncoder().encode("user1234"));
+//		userAccount.setRoles(userRoles);
+//		userAccount.setAccountCreatedDate(new Date());
+//		userAccount.setAccountLastModifed(null);
+//		accountRepository.save(userAccount);
+
 		User user = new User();
-		user.setId((long)1);
-		user.setEmail("namdinh@gmail.com");
-		user.setPassword(new BCryptPasswordEncoder().encode("admin1234"));
-		user.setUsername("namdinh");
-		user.setRole(roleRepository.getReferenceById((long) 2));
+		user.setId((long) 1);
+		user.setEmail("user1@gmail.com");
+		user.setPassword(new BCryptPasswordEncoder().encode("user1234"));
+		user.setUsername("user1");
+		user.setRoles(userRoles);
+		user.setUserCreatedDate(new Date());
+		user.setAccountCreatedDate(new Date());
+		user.setFirstName("John");
+		user.setLastName("Doe");
 		userRepository.save(user);
 
+//		userAccount.setId((long) 2);
+//		userAccount.setEmail("user2@gmail.com");
+//		userAccount.setRoles(userRoles);
+//		accountRepository.save(userAccount);
 		user.setId((long) 2);
-		user.setRole(roleRepository.getReferenceById((long) 2));
-		user.setUsername("abcd");
-		user.setEmail("toanpk@gmail.com");
-		user.setPassword(new BCryptPasswordEncoder().encode("12345678"));
+		user.setEmail("user2@gmail.com");
+		user.setUsername("user2");
 		userRepository.save(user);
-    
+
+		Account staffAccount = new Account();
+		staffAccount.setId((long) 3);
+		staffAccount.setEmail("staff1@gmail.com");
+		staffAccount.setPassword(new BCryptPasswordEncoder().encode("staff1234"));
+		staffAccount.setRoles(staffRoles);
+		staffAccount.setAccountCreatedDate(new Date());
+		staffAccount.setAccountLastModifed(null);
+		accountRepository.save(staffAccount);
+
+		Account adminAccount = new Account();
+		adminAccount.setId((long) 4);
+		adminAccount.setEmail("admin@gmail.com");
+		adminAccount.setPassword(new BCryptPasswordEncoder().encode("admin1234"));
+		adminAccount.setRoles(adminRoles);
+		adminAccount.setAccountCreatedDate(new Date());
+		adminAccount.setAccountLastModifed(null);
+		accountRepository.save(adminAccount);
+
 		tagRepository.save(new Tag(1, "2D"));
 		tagRepository.save(new Tag(2, "3D"));
 		tagRepository.save(new Tag(3, "adventure"));
@@ -83,18 +136,18 @@ public class TestDataInit implements ApplicationRunner {
 		typeRepository.save(new Type(12, "Lore"));
 		typeRepository.save(new Type(13, "Others"));
 
-		Product product = new Product();
-		product.setId((long)1);
-		product.setActive(true);
-		product.setUser(userRepository.getReferenceById((long) 1));
-		product.setName("TEST PRODUCT");
-		product.setType(typeRepository.getReferenceById(7));
-		product.setUploadDate(new Date());
-		List<Tag> tags = new ArrayList<>();
-		tags.add(tagRepository.getReferenceById(1));
-		tags.add(tagRepository.getReferenceById(2));
-		product.setTags(tags);
-		productRepository.save(product);
+//		Product product = new Product();
+//		product.setId((long) 1);
+//		product.setActive(true);
+//		product.setUser(userRepository.getReferenceById((long) 1));
+//		product.setName("TEST PRODUCT");
+//		product.setType(typeRepository.getReferenceById(7));
+//		product.setUploadDate(new Date());
+//		List<Tag> tags = new ArrayList<>();
+//		tags.add(tagRepository.getReferenceById(1));
+//		tags.add(tagRepository.getReferenceById(2));
+//		product.setTags(tags);
+//		productRepository.save(product);
 
 	}
 }

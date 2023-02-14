@@ -3,21 +3,23 @@ package com.SEP490_G9.models.DTOS;
 import java.io.Serializable;
 import java.util.List;
 
+import com.SEP490_G9.models.Entities.Account;
+
 public class AuthResponse implements Serializable {
-	
+
 	private static final long serialVersionUID = 1L;
 	private String email;
 	private String accessToken;
-	private String username;
-	private String role;
- public AuthResponse() {
-	// TODO Auto-generated constructor stub
-}
-	public AuthResponse(String email, String accessToken,String username, String role) {
+	private List<String> roles;
+
+	public AuthResponse() {
+		// TODO Auto-generated constructor stub
+	}
+
+	public AuthResponse(String email, String accessToken, List<String> roles) {
 		this.email = email;
 		this.accessToken = accessToken;
-		this.username = username;
-		this.role = role;
+		this.roles = roles;
 
 	}
 
@@ -25,6 +27,7 @@ public class AuthResponse implements Serializable {
 		this.email = email;
 		this.accessToken = accessToken;
 	}
+
 
 	public String getEmail() {
 		return email;
@@ -41,23 +44,17 @@ public class AuthResponse implements Serializable {
 	public void setAccessToken(String accessToken) {
 		this.accessToken = accessToken;
 	}
-	public String getRole() {
-		return role;
+
+	public List<String> getRoles() {
+		return roles;
 	}
-	public void setRole(String role) {
-		this.role = role;
+
+	public void setRoles(List<String> roles) {
+		this.roles = roles;
 	}
+
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
-	public String getUsername() {
-		return username;
-	}
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-
-
 
 }

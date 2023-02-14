@@ -4,6 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.SEP490_G9.models.Entities.Role;
 
-public interface RoleRepository extends JpaRepository<Role,Long>  {
+public interface RoleRepository extends JpaRepository<Role, Integer> {
 
 }

@@ -6,10 +6,15 @@ import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.SEP490_G9.exceptions.EmailServiceException;
 import com.SEP490_G9.helpers.VerifyLinkGenerator;
 import com.SEP490_G9.models.DTOS.EmailResponse;
+import com.SEP490_G9.models.Entities.Account;
+import com.SEP490_G9.repositories.AccountRepository;
+import com.SEP490_G9.repositories.RefreshTokenRepository;
 import com.SEP490_G9.services.authService.EmailService;
 
 import jakarta.mail.MessagingException;
@@ -27,21 +32,26 @@ public class EmailServiceImpl implements EmailService {
 	private VerifyLinkGenerator verifyLinkGenerator;
 	@Value("${spring.mail.username}")
 	private String sender;
-
+	@Autowired
+	AccountRepository accountRepository;
+	@Autowired
+	private RefreshTokenRepository refreshTokenRepository;
 
 	@Override
-	public EmailResponse sendVerifyEmail(String toEmail, HttpServletRequest request) {
+	public EmailResponse sendVerifyEmail(String toEmail) {
 		MimeMessage message = javaMailSender.createMimeMessage();
 		MimeMessageHelper helper;
-		String verifyLink = verifyLinkGenerator.generate().toString();
+		Account account = accountRepository.findByEmail(toEmail);
+		String verifyLink = refreshTokenRepository.findByAccount(account).getToken();
 		
 		try {
 			helper = new MimeMessageHelper(message, true);
 			helper.setFrom(sender);
 			helper.setTo(toEmail);
-			
+
 			message.setSubject("DPM System mail verify");
-			String html = "Click here to verify your email \n" + "<a href='" + verifyLink + "'>Verify link</a>";
+			String html = "Click here to verify your email \n" + "<a href='http:localhost:4200/auth/verifyEmail/"
+					+ verifyLink + "'>Verify link</a>";
 			message.setText(html, "UTF-8", "html");
 		} catch (MessagingException e) {
 			throw new EmailServiceException("Send email failed");
@@ -52,27 +62,24 @@ public class EmailServiceImpl implements EmailService {
 		} catch (MailException ex) {
 			throw new EmailServiceException("Send email failed");
 		}
-		HttpSession session = request.getSession();
+
 		EmailResponse response = new EmailResponse(toEmail, verifyLink);
-		session.setMaxInactiveInterval(60);
-		session.setAttribute(toEmail, response);
 		return response;
 	}
 
-
 	@Override
-	public EmailResponse sendResetPasswordEmail(String toEmail, HttpServletRequest request) {
+	public EmailResponse sendRecoveryPasswordToEmail(String toEmail) {
 		MimeMessage message = javaMailSender.createMimeMessage();
 		MimeMessageHelper helper;
 		String captcha = verifyLinkGenerator.generate().toString();
-		
+
 		try {
 			helper = new MimeMessageHelper(message, true);
 			helper.setFrom(sender);
 			helper.setTo(toEmail);
-			
+
 			message.setSubject("DPM System mail reset password");
-			String html = "Enter your captcha:\n" +   captcha ;
+			String html = "Enter your captcha:\n" + captcha;
 			message.setText(html, "UTF-8", "html");
 		} catch (MessagingException e) {
 			System.out.println(e);
@@ -85,10 +92,7 @@ public class EmailServiceImpl implements EmailService {
 			System.out.println(ex);
 			throw new EmailServiceException("Send email failed");
 		}
-		HttpSession session = request.getSession();
 		EmailResponse response = new EmailResponse(toEmail, captcha);
-		session.setMaxInactiveInterval(60);
-		session.setAttribute(toEmail, response);
 		return response;
 	}
 

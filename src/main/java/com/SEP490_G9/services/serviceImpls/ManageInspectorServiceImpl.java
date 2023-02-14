@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.SEP490_G9.exceptions.AuthRequestException;
 import com.SEP490_G9.exceptions.DuplicateFieldException;
+import com.SEP490_G9.helpers.Constant;
 import com.SEP490_G9.models.Entities.Role;
 import com.SEP490_G9.models.Entities.User;
 import com.SEP490_G9.repositories.RoleRepository;
@@ -20,14 +21,14 @@ import com.SEP490_G9.services.ManageInspectorService;
 public class ManageInspectorServiceImpl implements ManageInspectorService{
 
 	@Autowired
-	UserRepository userRepo;
+	UserRepository accountRepo;
 	
 	@Autowired
 	RoleRepository roleRepo;
 	
 	@Override
 	public List<User> getAllInspectors() {
-		List<User> inspectorList = userRepo.findByRole(new Role((long)3,"ROLE_INSPECTOR"));
+		List<User> inspectorList = accountRepo.findByRolesIn(new Role(Constant.STAFF_ROLE_ID,"ROLE_STAFF"));
 		return inspectorList;
 	}
 

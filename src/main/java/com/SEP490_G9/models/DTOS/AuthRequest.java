@@ -19,17 +19,15 @@ public class AuthRequest implements Serializable  {
 	@Size(min = 8, max = 100)
 	private String password;
 	
-	private boolean rememberMe;
 
 	public AuthRequest() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public AuthRequest(String email, String password, boolean rememberMe) {
+	public AuthRequest(String email, String password) {
 		super();
 		this.email = email;
 		this.password = password;
-		this.rememberMe = rememberMe;
 	}
 
 	public AuthRequest(String email) {
@@ -52,14 +50,5 @@ public class AuthRequest implements Serializable  {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
-	public boolean isRememberMe() {
-		return rememberMe;
-	}
-
-	public void setRememberMe(boolean rememberMe) {
-		this.rememberMe = rememberMe;
-	}
-
 	
 }
