@@ -64,10 +64,6 @@
 .invalid {
   color: red;
 }
-.submitButton:active {
-  box-shadow: 0 1px #666;
-  transform: translateY(1px);
-}
 
 .submitButton {
     margin-top:10px;

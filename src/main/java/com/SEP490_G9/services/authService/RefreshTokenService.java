@@ -8,7 +8,7 @@ import com.SEP490_G9.models.Entities.User;
 
 public interface RefreshTokenService {
 
-	RefreshToken createRefreshToken(Account account);
+	RefreshToken createRefreshToken(Account user);
 
 	boolean verifyExpiration(RefreshToken token);
 

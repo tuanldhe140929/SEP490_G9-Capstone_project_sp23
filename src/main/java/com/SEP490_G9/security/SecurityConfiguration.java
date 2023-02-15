@@ -51,7 +51,7 @@ JwtAuthenticationEntryPoint authenEntryPoint;
 			return configuration;
 		}).and().csrf().disable();
 		
-		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED);
 	
 		http.authorizeHttpRequests()
 		.requestMatchers("/public/**").permitAll().and()

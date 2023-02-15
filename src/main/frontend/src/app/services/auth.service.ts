@@ -20,18 +20,18 @@ const httpOptions: Object = {
 })
 export class AuthService {
   sendVerifyEmail(email: string) {
-    return this.http.get(baseUrl + '/sendVerifyEmail', {
-      params: {
-        email: email
-      }
-    });
+      return this.http.get(baseUrl+'/sendVerifyEmail',{
+		  params:{
+			  email:email
+		  }
+	  });
   }
-  verifyEmail(verifyLink: string | null, email: string) {
-    return this.http.get(baseUrl + '/verifyEmail/' + verifyLink, {
-      params: {
-        email: email
-      }
-    });
+  verifyEmail(verifyLink: string | null,email:string) {
+      return this.http.get(baseUrl+'/verifyEmail/'+verifyLink,{
+		  params:{
+			  email:email
+		  }
+	  });
   }
 
   static isLoggedIn: boolean;
@@ -51,8 +51,13 @@ export class AuthService {
     return this.http.post<any>(baseUrl + '/login', body, httpOptions);
   }
 
-  register(body: any): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(baseUrl + "/register", body);
+  register(body: any): Observable<string> {
+    return this.http.post<string>(baseUrl + "/register", body, {
+		headers: new HttpHeaders({
+    "Content-Type": "text"
+  }),
+  withCredentials: true
+	});
   }
 
   loginWithGoogle(body: any): Observable<any> {
@@ -68,9 +73,15 @@ export class AuthService {
   }
 
   resetPasswordRequest(email: String) {
-    return this.http.post<any>(baseUrl + '/resetPassword?email=' + email.toString(), {});
+    return this.http.post<any>(baseUrl + '/forgotAndResetPassword?email=' + email.toString(), {});
   }
 
+  resetPassword(body: any, email: String) {
+    console.log(body.captcha);
+    return this.http.post<any>(baseUrl + '/forgotAndResetPasswordConfirm?email=' + email.toString() + "&captcha="
+      + body.captcha + "&newPassword=" + body.newPassword, {
+    });
+  }
 
 
 }

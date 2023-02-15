@@ -42,7 +42,7 @@ public class EmailServiceImpl implements EmailService {
 		MimeMessageHelper helper;
 		Account account = accountRepository.findByEmail(toEmail);
 		String verifyLink = refreshTokenRepository.findByAccount(account).getToken();
-		
+
 		try {
 			helper = new MimeMessageHelper(message, true);
 			helper.setFrom(sender);
@@ -61,20 +61,22 @@ public class EmailServiceImpl implements EmailService {
 		} catch (MailException ex) {
 			throw new EmailServiceException("Send email failed");
 		}
+
 		return true;
 	}
 
 	@Override
-	public boolean sendRecoveryPasswordToEmail(String toEmail,String password) {
+	public boolean sendRecoveryPasswordToEmail(String toEmail, String newPassword) {
 		MimeMessage message = javaMailSender.createMimeMessage();
 		MimeMessageHelper helper;
+
 		try {
 			helper = new MimeMessageHelper(message, true);
 			helper.setFrom(sender);
 			helper.setTo(toEmail);
 
 			message.setSubject("DPM System mail reset password");
-			String html = "Your new password is:\n <strong>" + password+"</strong>";
+			String html = "Your new Password is \n" + "<strong>" + newPassword + "</strong>";
 			message.setText(html, "UTF-8", "html");
 		} catch (MessagingException e) {
 			System.out.println(e);

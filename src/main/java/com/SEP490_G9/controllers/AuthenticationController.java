@@ -49,7 +49,7 @@ public class AuthenticationController {
 	@RequestMapping(value = "register", method = RequestMethod.POST)
 	public ResponseEntity<?> register(@Valid @RequestBody User user, HttpServletRequest request) {
 		authService.register(user);
-		return ResponseEntity.ok(new AuthResponse(user.getEmail(),null,null));
+		return ResponseEntity.ok(new AuthResponse(user.getEmail(), null, null));
 	}
 
 	@RequestMapping(value = "loginWithGoogle", method = RequestMethod.POST)
@@ -103,7 +103,7 @@ public class AuthenticationController {
 
 	@RequestMapping(value = "resetPassword", method = RequestMethod.POST)
 	public ResponseEntity<?> resetPassword(HttpServletRequest request, @RequestParam(required = true) String email) {
-		boolean ret = authService.resetPassword(email);
+		boolean ret = authService.sendRecoveryPasswordToEmail(email);
 		return ResponseEntity.ok(ret);
 	}
 

@@ -29,6 +29,6 @@ public interface AuthService {
 
 	public boolean sendVerifyEmail(String email);
 
-	public boolean resetPassword(String email);
+	public boolean sendRecoveryPasswordToEmail(String email);
 
 }
