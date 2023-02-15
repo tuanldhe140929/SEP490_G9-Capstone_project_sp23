@@ -49,7 +49,7 @@ public class CommonExceptionHandler {
 	}
 
 	@ExceptionHandler(ResourceNotFoundException.class)
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ResponseStatus(HttpStatus.NOT_FOUND)
 	public ErrorResponse resolveException(ResourceNotFoundException exception) {
 		ErrorResponse errorResponse = exception.getErrorResponse();
 		System.out.println("Resource not found");

@@ -45,7 +45,7 @@ public class DuplicateFieldException extends RuntimeException {
 		return errorResponse;
 	}
 	public void setErrorResponse() {
-		String message = String.format("Field: %s with value: %s exist'", this.fieldName,this.fieldValue);
+		String message = String.format("Field: %s with value: %s exist", this.fieldName,this.fieldValue);
 		List<String> msgs = new ArrayList<String>();
 		msgs.add(message);
 		this.errorResponse = new ErrorResponse(msgs,HttpStatus.CONFLICT);

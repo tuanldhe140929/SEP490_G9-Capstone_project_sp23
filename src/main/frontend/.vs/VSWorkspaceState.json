@@ -5,10 +5,13 @@
     "\\src\\app",
     "\\src\\app\\DTOS",
     "\\src\\app\\modules",
-    "\\src\\app\\modules\\basics",
+    "\\src\\app\\modules\\auth",
+    "\\src\\app\\modules\\auth\\login",
+    "\\src\\app\\modules\\auth\\login\\forgot-password",
     "\\src\\app\\modules\\manage-product",
     "\\src\\app\\modules\\manage-product\\new-product",
     "\\src\\app\\services"
   ],
+  "SelectedNode": "\\src\\app\\modules\\auth\\login\\forgot-password\\forgot-password.component.html",
   "PreviewInSolutionExplorer": false
 }
