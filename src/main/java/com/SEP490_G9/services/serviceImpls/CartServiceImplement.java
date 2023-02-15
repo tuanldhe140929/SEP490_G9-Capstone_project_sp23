@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.SEP490_G9.exceptions.ResourceNotFoundException;
 import com.SEP490_G9.models.UserDetailsImpl;
+import com.SEP490_G9.models.Entities.Account;
 import com.SEP490_G9.models.Entities.Cart;
 import com.SEP490_G9.models.Entities.CartItem;
 
@@ -76,7 +77,7 @@ public class CartServiceImplement implements CartService {
 	private Cart getCurrentCart() {
 
 		
-		User user = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
+		Account user = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getAccount();
 		Cart cart = cartRepository.findByUserId(user.getId());
 		Cart retCart = null;
 		if (cart == null) {

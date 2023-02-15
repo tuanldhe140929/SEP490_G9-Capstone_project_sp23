@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.SEP490_G9.exceptions.ResourceNotFoundException;
 import com.SEP490_G9.models.UserDetailsImpl;
 import com.SEP490_G9.models.DTOS.ProductDTO;
+import com.SEP490_G9.models.Entities.Account;
 import com.SEP490_G9.models.Entities.Product;
 import com.SEP490_G9.models.Entities.User;
 import com.SEP490_G9.repositories.PreviewRepository;
@@ -64,8 +65,8 @@ public class CommonServiceImpl implements CommonService {
 	}
 
 	@Override
-	public User getCurrentLogedInUser() {
-		User user = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
+	public Account getCurrentLogedInUser() {
+		Account user = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getAccount();
 		return user;
 	}
 
