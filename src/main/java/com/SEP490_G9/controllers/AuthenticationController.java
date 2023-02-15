@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 //import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -15,11 +16,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.SEP490_G9.exceptions.RefreshTokenException;
-import com.SEP490_G9.models.AuthRequest;
-import com.SEP490_G9.models.AuthResponse;
-import com.SEP490_G9.models.EmailResponse;
+import com.SEP490_G9.models.DTOS.AuthRequest;
+import com.SEP490_G9.models.DTOS.AuthResponse;
+import com.SEP490_G9.models.DTOS.EmailResponse;
 import com.SEP490_G9.models.Entities.User;
 import com.SEP490_G9.services.authService.AuthService;
+import com.SEP490_G9.services.authService.EmailService;
+
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -35,6 +38,9 @@ public class AuthenticationController {
 	@Autowired
 	AuthService authService;
 
+	@Autowired
+	EmailService emailService;
+
 	@RequestMapping(value = "login", method = RequestMethod.POST)
 	public ResponseEntity<?> login(@Valid @RequestBody AuthRequest authRequest, HttpServletResponse response) {
 		AuthResponse authResponse = authService.login(authRequest, response);
@@ -42,15 +48,15 @@ public class AuthenticationController {
 	}
 
 	@RequestMapping(value = "register", method = RequestMethod.POST)
-	public ResponseEntity<?> register(@Valid @RequestBody User user) {
+	public ResponseEntity<?> register(@Valid @RequestBody User user, HttpServletRequest request) {
 		authService.register(user);
-		return ResponseEntity.ok(new AuthResponse(user.getEmail(), null, null, null));
+		return ResponseEntity.ok(new AuthResponse(user.getEmail(), null, null));
 	}
 
 	@RequestMapping(value = "loginWithGoogle", method = RequestMethod.POST)
-	public ResponseEntity<?> loginWithGoogle(@RequestBody final String code, HttpServletRequest request)
-			throws ClientProtocolException, IOException {
-		AuthResponse authResponse = authService.loginWithGoogle(code, request);
+	public ResponseEntity<?> loginWithGoogle(@RequestBody final String code,
+			HttpServletResponse response) throws ClientProtocolException, IOException {
+		AuthResponse authResponse = authService.loginWithGoogle(code, response);
 		return ResponseEntity.ok(authResponse);
 	}
 
@@ -71,11 +77,10 @@ public class AuthenticationController {
 					auth = authService.validate(refreshTokenCookie);
 				}
 			}
-			if(!foundRefreshToken) {
-			throw new RefreshTokenException(null, "Not found");
+			if (!foundRefreshToken) {
+				throw new RefreshTokenException(null, "Not found");
+			}
 		}
-		}
-		
 
 		return ResponseEntity.ok(auth);
 
@@ -97,17 +102,31 @@ public class AuthenticationController {
 		return ResponseEntity.ok(null);
 	}
 
-	@RequestMapping(value = "forgotAndResetPassword", method = RequestMethod.POST)
-	public ResponseEntity<?> resetPassword(HttpServletRequest request, @RequestParam(required=true) String email) {
-		EmailResponse response = authService.sendResetPasswordMail(request, email);
+	@RequestMapping(value = "resetPassword", method = RequestMethod.POST)
+	public ResponseEntity<?> resetPassword(HttpServletRequest request, @RequestParam(required = true) String email) {
+		EmailResponse response = authService.sendRecoveryPasswordToEmail(email);
 		return ResponseEntity.ok(response);
 	}
 
-	@RequestMapping(value = "forgotAndResetPasswordConfirm", method = RequestMethod.POST)
-	public ResponseEntity<?> confirmRequestResetPassword(HttpServletRequest request, @RequestParam(required=true) String captcha ,
-			@RequestParam(required=true) String email, @RequestParam(required=true) String newPassword) {
-		System.out.println(email + "\n" + captcha);
-		boolean ret = authService.confirmRequestResetPassword(request, captcha, email, newPassword);
-		return ResponseEntity.ok(ret);
+//	@RequestMapping(value = "forgotAndResetPasswordConfirm", method = RequestMethod.POST)
+//	public ResponseEntity<?> confirmRequestResetPassword(HttpServletRequest request,
+//			@RequestParam(required = true) String captcha, @RequestParam(required = true) String email,
+//			@RequestParam(required = true) String newPassword) {
+//		System.out.println(email + "\n" + captcha);
+//		boolean ret = authService.confirmRequestResetPassword(request, captcha, email, newPassword);
+//		return ResponseEntity.ok(ret);
+//	}
+	
+	@RequestMapping(value="sendVerifyEmail",method = RequestMethod.GET)
+	public ResponseEntity<?> sendVerifyEmail(@RequestParam(name="email") String email){
+		emailService.sendVerifyEmail(email);
+		return ResponseEntity.ok(true);
+	}
+
+	@RequestMapping(value = "verifyEmail/{verifyLink}", method = RequestMethod.GET)
+	public ResponseEntity<?> verifyEmail(@PathVariable(name = "verifyLink", required = true) String verifyLink,
+			@RequestParam(name = "email") String email) {
+		boolean verified = authService.verifyEmail(verifyLink, email);
+		return ResponseEntity.ok(verified);
 	}
 }

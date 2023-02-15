@@ -2,7 +2,7 @@
   <div class="row">
   
   <div class="row padded">
-    <div class="row title"><h2>Create a new account</h2></div>
+    <div class="row title"><h2>Tạo tài khoản</h2></div>
     <div class="row cols">
       <div class="left_col col-6">
         <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
@@ -11,55 +11,55 @@
             <div><input type="text" formControlName="email" id="email"></div>
             <div class="msg">
               <div class="invalid" *ngIf="Form.email.invalid && Form.email.touched">
-                <div *ngIf="Form.email.errors?.['required']"><small>Email is required.</small> </div>
-                <div *ngIf="Form.email.errors?.['email']"><small>Not valid email form</small> </div>
+                <div *ngIf="Form.email.errors?.['required']"><small>Vui lòng nhập email</small> </div>
+                <div *ngIf="Form.email.errors?.['email']"><small>Email không hợp lệ</small> </div>
               </div>
             </div>
           </div>
           <div class="input_row">
-            <div><label for="username">Username</label></div>
+            <div><label for="username">Tên người dùng</label></div>
             <div><input id="username" [(ngModel)]="username" [ngModelOptions]="{standalone: true}" (keydown)="onUsernameChange($event)"></div>
             <div class="msg">
               <div class="invalid" *ngIf="Form.username.invalid && Form.username.touched">
-                <div *ngIf="Form.username.errors?.['required']"><small>Username is required.</small> </div>
-                <div *ngIf="Form.username.errors?.['minlength']||Form.username.errors?.['maxlength']"><small>Username is between 3 and 10 characters</small> </div>
+                <div *ngIf="Form.username.errors?.['required']"><small>Vui lòng nhập tên người dùng</small> </div>
+                <div *ngIf="Form.username.errors?.['minlength']||Form.username.errors?.['maxlength']"><small>Tên người dùng phải từ 8 đến 30 ký tự</small> </div>
                 <div *ngIf="Form.username.errors?.['whitespace'] && !Form.username.errors?.['required'] && !(Form.username.errors?.['minlength']||Form.username.errors?.['maxlength'])"><small>Username must not contains spaces</small></div>
               </div>
             </div>
           </div>
           <div class="display_row">
-            <div style="text-align:center"><label for="profileUrl" style="font-weight:600;font-size:14px; text-align:center;">Your profile page will be</label></div>
+            <div style="text-align:center"><label for="profileUrl" style="font-weight:600;font-size:14px; text-align:center;">Trang cá nhân của bạn sẽ là:</label></div>
             <div style="background-color: #fafafa; text-align:center;"><p id="profileUrl">http://localhost:4200/{{username}}</p></div>
             <div class="msg"></div>
           </div>
           <div class="input_row">
-            <div><label for="password">Password</label></div>
+            <div><label for="password">Mật khẩu</label></div>
             <div><input (change)="onPasswordMatch()" type="password" formControlName="password" id="password"></div>
             <div class="msg">
               <div class="invalid" *ngIf="Form.password.invalid && Form.password.touched">
-                <div *ngIf="Form.password.errors?.['required']"><small>Password is required.</small> </div>
+                <div *ngIf="Form.password.errors?.['required']"><small>Vui lòng nhập mật khẩu</small> </div>
                 <div *ngIf="Form.password.errors?.['minlength'] ||Form.password.errors?.['maxlength']">
-                  <small>Password is 8 to 30 characters</small>
+                  <small>Mật khẩu phải từ 8 đến 30 ký tự</small>
                 </div>
               </div>
             </div>
             </div>
           <div class="input_row">
-            <div><label for="repeatPassword">Repeat password</label></div>
+            <div><label for="repeatPassword">Nhập lại mật khẩu</label></div>
             <div><input (change)="onPasswordMatch()" type="password" formControlName="repeat_password" id="repeatPassword"></div>
             <div class="msg">
               <div class="invalid" *ngIf="!onPasswordMatch()">
-                <small >Passwords do not match.</small><br />
+                <small >Mật khẩu không khớp</small><br />
               </div>
 
             </div>
             </div>
-          <button class="submitButton" type="submit" style="margin-right:5px;" [disabled]="registerForm.invalid||!onPasswordMatch()">Create account</button>
-          <small>Already had an account? </small>
-          <a routerLink="/login" routerLinkActive="active">Login</a>
+          <button class="submitButton" type="submit" style="margin-right:5px;" [disabled]="registerForm.invalid||!onPasswordMatch()">Tạo tài khoản</button>
+          <small>Đã có tài khoản? </small>
+          <a routerLink="/login" routerLinkActive="active">Đăng nhập</a>
         </form>
       </div>
-      <div class="right_col col-6">Details</div>
+      <div class="right_col col-6">Chi tiết</div>
     </div>
    
   </div>

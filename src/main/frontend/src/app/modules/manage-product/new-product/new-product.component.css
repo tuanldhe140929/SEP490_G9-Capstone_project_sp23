@@ -144,7 +144,7 @@ section {
 .upload_container {
   width: 100%;
   height: 300px;
-  border: 2px dashed #434343;
+  border:4px dashed #434343;
   position: relative;
 }
 
@@ -182,11 +182,13 @@ section {
   box-shadow: inset 0 0 1px rgb(255 255 255/ 70%);
   border-radius: 1px;
   cursor: pointer;
-  margin: 10px;
+  margin:10px;
+  
 }
 
   .selected_tag:hover {
     background-color: #ff113a;
+    
   }
 
 .remove_tag_button {
@@ -250,8 +252,22 @@ section {
   font-size: 14px;
   transition: all 0.15s;
 }
+.upload_btn2 {
+    right:0;
+  opacity: 0.9;
+  border: none;
+  border-left: 1px solid #dadada;
+  border-bottom: 1px solid #dadada;
+  box-shadow: inset 0 0 1px #dadada;
+  background-color: rgb(255 255 255/ 0%);
+  position: absolute;
+  color: #FF2449;
+  text-decoration: underline;
+  font-size: 14px;
+  transition: all 0.15s;
+}
 
-  .delete_btn2:hover, .delete_btn3:hover {
+  .delete_btn2:hover, .delete_btn3:hover,.upload_btn2:hover {
     opacity: 1;
     background-color: #FF2449;
     color: white;
@@ -287,6 +303,13 @@ section {
   unicode-bidi: isolate;
 }
 
+.upload_container2 {
+  width: 100%;
+  min-height: 300px;
+  border: 5px dashed #434343;
+  position: relative;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -309,6 +332,8 @@ section {
 
 /* Six columns side by side */
 .column {
+  max-width:33%;
+  min-width:33%;
   height:100%;
   background-color: black;
   opacity: 0.6;
@@ -319,10 +344,11 @@ section {
   height: 100%;
   margin-left:auto;
   margin-right:auto;
+  margin-top:auto;
 }
 
-  .active,
-  .column:hover {
-    opacity: 1;
-    background-color:red;
-  }
+.active,
+.column:hover {
+  opacity: 1;
+  background-color: black;;
+}

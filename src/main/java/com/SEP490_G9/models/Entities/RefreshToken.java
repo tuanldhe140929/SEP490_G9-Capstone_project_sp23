@@ -6,30 +6,31 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.*;
 
-@JsonIgnoreProperties(value="user")
+@JsonIgnoreProperties(value = "user")
 @Entity
-@Table(name="refresh_token")
+@Table(name = "refresh_token")
 public class RefreshToken {
-	  @Id
-	  @GeneratedValue(strategy = GenerationType.AUTO)
-	  private long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private long id;
 
-	  @OneToOne
-	  @JoinColumn(name = "user_id", referencedColumnName = "id", unique = true, nullable = false)
-	  private User user;
+	@OneToOne
+	@JoinColumn(name = "account_id", referencedColumnName = "id", unique = true, nullable = false)
+	private Account account;
 
-	  @Column(nullable = false, unique = true)
-	  private String token;
+	@Column(nullable = false, unique = true)
+	private String token;
 
-	  @Column(nullable = false)
-	  private Instant expiryDate;
-	  
-	  public RefreshToken() {}
+	@Column(nullable = false)
+	private Instant expiryDate;
 
-	public RefreshToken(long id, User user, String token, Instant expiryDate) {
+	public RefreshToken() {
+	}
+
+	public RefreshToken(long id, Account account, String token, Instant expiryDate) {
 		super();
 		this.id = id;
-		this.user = user;
+		this.account = account;
 		this.token = token;
 		this.expiryDate = expiryDate;
 	}
@@ -42,12 +43,12 @@ public class RefreshToken {
 		this.id = id;
 	}
 
-	public User getUser() {
-		return user;
+	public Account getAccount() {
+		return account;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setAccount(Account account) {
+		this.account = account;
 	}
 
 	public String getToken() {
@@ -65,7 +66,5 @@ public class RefreshToken {
 	public void setExpiryDate(Instant expiryDate) {
 		this.expiryDate = expiryDate;
 	}
-	  
-	  
-	  
+
 }

@@ -103,9 +103,13 @@ public class CommonExceptionHandler {
 	}
 
 	@ExceptionHandler(UserPrincipalNotFoundException.class)
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	public ErrorResponse resolveException(UserPrincipalNotFoundException exception) {
-		ErrorResponse errorResponse = null;
+	@ResponseStatus(HttpStatus.FORBIDDEN)
+	public ErrorResponse resolveException(UserPrincipalNotFoundException ex) {
+		ErrorResponse errorResponse = new ErrorResponse();
+		List<String> msgs = new ArrayList<>();
+		msgs.add(ex.getMessage());
+		errorResponse.setMessages(msgs);
+		errorResponse.setStatus(HttpStatus.FORBIDDEN);
 		return errorResponse;
 	}
 
@@ -120,7 +124,7 @@ public class CommonExceptionHandler {
 	}
 
 	@ExceptionHandler(ConstraintViolationException.class)
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ResponseStatus(HttpStatus.FORBIDDEN)
 	public final ErrorResponse handleAccessDeniedException(ConstraintViolationException ex) {
 		ErrorResponse errorResponse = new ErrorResponse();
 		List<String> msgs = new ArrayList<>();

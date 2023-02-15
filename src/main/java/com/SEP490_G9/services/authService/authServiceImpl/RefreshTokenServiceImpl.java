@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.SEP490_G9.exceptions.RefreshTokenException;
+import com.SEP490_G9.models.Entities.Account;
 import com.SEP490_G9.models.Entities.RefreshToken;
 import com.SEP490_G9.models.Entities.User;
 import com.SEP490_G9.repositories.RefreshTokenRepository;
@@ -38,13 +39,13 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 	}
 
 	@Override
-	public RefreshToken createRefreshToken(User user) {
+	public RefreshToken createRefreshToken(Account account) {
 		RefreshToken refreshToken;
-		refreshToken = refreshTokenRepository.findByUser(user);
+		refreshToken = refreshTokenRepository.findByAccount(account);
 		if(refreshToken == null) {
 			refreshToken = new RefreshToken();
 		}
-		refreshToken.setUser(user);
+		refreshToken.setAccount(account);
 		refreshToken.setExpiryDate(Instant.now().plusMillis(refreshTokenDurationMs));
 		refreshToken.setToken(UUID.randomUUID().toString());
 		refreshToken = refreshTokenRepository.save(refreshToken);
@@ -64,7 +65,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
 	@Override
 	@Transactional
-	public int deleteByUserId(Long userId) {
-		return refreshTokenRepository.deleteByUser(userRepository.findById(userId).get());
+	public int deleteByAccountId(Long accoutId) {
+		return refreshTokenRepository.deleteByAccount(userRepository.findById(accoutId).get());
 	}
 }

@@ -6,6 +6,7 @@ import { RegisterComponent } from './register/register.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ForgotPasswordComponent } from './login/forgot-password/forgot-password.component';
 import { BrowserModule } from '@angular/platform-browser';
+import { VerifyEmailComponent } from './verify-email/verify-email.component';
 
 
 @NgModule({
@@ -13,7 +14,8 @@ import { BrowserModule } from '@angular/platform-browser';
     RegisterComponent,
     LoginComponent,
     LoginWithGoogleComponent,
-    ForgotPasswordComponent
+    ForgotPasswordComponent,
+    VerifyEmailComponent
   ],
   imports: [
     BrowserModule,

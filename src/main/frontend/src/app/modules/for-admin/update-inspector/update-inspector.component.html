@@ -1,0 +1,42 @@
+<!-- <div mat-dialog-content class="content">
+    <h1>Update inspector</h1>
+    <form class="addInspectorForm" [formGroup]="addInspectorForm" (submit)="onAddInspector()">
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="text" class="form-control" id="email" formControlName="email">
+            <div class="err" *ngIf="form.email.invalid && form.email.touched">
+                <small *ngIf="form.email.errors?.['required']">Please add an email</small>
+                <small *ngIf="form.email.errors?.['email']">Must be in email form</small>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" class="form-control" id="username" formControlName="username">
+            <div class="err" *ngIf="form.username.invalid && form.username.touched" style="white-space: pre-wrap;">
+                <small *ngIf="form.username.errors?.['required']">Please add a name</small>
+                <small *ngIf="form.username.errors?.['minlength']||form.username.errors?.['maxlength']">Username must be from 4 to 10 characters</small>
+                <small *ngIf="form.username.errors?.['pattern']">Alphanumeric and Underscore only</small>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" class="form-control" id="password" formControlName="password" (change)="onPasswordMatch()">
+            <div class="err" *ngIf="form.password.invalid && form.password.touched">
+                <small *ngIf="form.password.errors?.['required']">Please add a password</small>
+                <small *ngIf="form.password.errors?.['minlength']||form.password.errors?.['maxlength']">Password must be from 8 to 30 characters</small>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="repassword">Confirm Password</label>
+            <input type="password" class="form-control" id="repassword" formControlName="repassword" (change)="onPasswordMatch()">
+            <div class="err" *ngIf="form.repassword.touched&&!onPasswordMatch()">
+                <small>Passwords do not match</small>
+            </div>
+        </div>
+        <br>
+        <div class="form-group">
+            <button class="btn btn-warning" mat-dialog-close="true">Cancel</button>
+            <button class="btn btn-primary submit-btn" type="submit" mat-dialog-close="true" [disabled]="addInspectorForm.invalid||!onPasswordMatch()">Submit</button>
+        </div>
+    </form>
+</div> -->

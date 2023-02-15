@@ -1,5 +1,6 @@
 package com.SEP490_G9.services.serviceImpls;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.SEP490_G9.exceptions.AuthRequestException;
 import com.SEP490_G9.exceptions.DuplicateFieldException;
+import com.SEP490_G9.helpers.Constant;
 import com.SEP490_G9.models.Entities.Role;
 import com.SEP490_G9.models.Entities.User;
 import com.SEP490_G9.repositories.RoleRepository;
@@ -19,14 +21,14 @@ import com.SEP490_G9.services.ManageInspectorService;
 public class ManageInspectorServiceImpl implements ManageInspectorService{
 
 	@Autowired
-	UserRepository userRepo;
+	UserRepository accountRepo;
 	
 	@Autowired
 	RoleRepository roleRepo;
 	
 	@Override
 	public List<User> getAllInspectors() {
-		List<User> inspectorList = userRepo.findByRole(new Role((long)3,"ROLE_INSPECTOR"));
+		List<User> inspectorList = accountRepo.findByRolesIn(new Role(Constant.STAFF_ROLE_ID,"ROLE_STAFF"));
 		return inspectorList;
 	}
 
@@ -69,6 +71,30 @@ public class ManageInspectorServiceImpl implements ManageInspectorService{
 		return true;
 	}
 
+	@Override
+	public boolean deleteInspector(Long id) {
+		userRepo.deleteById(id);
+		return true;
+	}
+
+	@Override
+	public boolean updateInspector(User inspector) {
+		User existingInspector = userRepo.findById(inspector.getId()).orElse(null);
+		if (userRepo.existsByEmail(inspector.getEmail())) {
+			throw new DuplicateFieldException("email", inspector.getEmail());
+		}
+		if (userRepo.existsByUsername(inspector.getUsername())) {
+			throw new DuplicateFieldException("username", inspector.getUsername());
+		}
+		existingInspector.setEmail(inspector.getEmail());
+		existingInspector.setUsername(inspector.getUsername());
+		existingInspector.setPassword(inspector.getPassword());
+		userRepo.save(existingInspector);
+		return true;
+	}
+
+
+	
 	
 
 }

@@ -45,12 +45,14 @@ export class LoginComponent implements OnInit {
       this.authService.login(this.loginForm.value).subscribe(
 
         response => {
+			console.log(response.body);
           AuthService.isLoggedIn = true;
           this.authService.authResponse = response.body;
           this.storageService.saveUser(response.body);
           this.storageService.saveToken(response.body.accessToken);
         },
         err => {
+			console.log(err);
           if (err.status === 500) {
             this.storageService.clearStorage();
             this.errorMessage = 'Sai email hoặc mật khẩu';
