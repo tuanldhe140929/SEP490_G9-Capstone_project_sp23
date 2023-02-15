@@ -6,9 +6,9 @@ import org.springframework.data.jpa.repository.Query;
 import com.SEP490_G9.models.Entities.Cart;
 
 public interface CartRepository extends JpaRepository<Cart, Long> {
-	public Cart findByUserId(Long userId);
+//	public Cart findByUserId(Long userId);
 
-	@Query(value="Select top 1 * from carts where user_id=:userId ORDER BY cart_id DESC",nativeQuery = true)
-	public Cart findCurrentCart(Long userId);
+	@Query(value="Select top 1 * from carts where account_id=:accountId ORDER BY cart_id DESC",nativeQuery = true)
+	public Cart findCurrentCart(Long accountID);
 
 }
