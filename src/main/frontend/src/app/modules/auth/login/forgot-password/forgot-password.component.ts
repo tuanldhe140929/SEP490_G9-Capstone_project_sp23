@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
+import { ErrorResponse } from '../../../../DTOS/ErrorResponse';
 
 @Component({
   selector: 'app-forgot-password',
@@ -10,49 +11,51 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./forgot-password.component.css']
 })
 export class ForgotPasswordComponent implements OnInit {
- 	errorMessage = '';
-  	email:String | undefined;
-  	
-  	resetPasswordRequestForm = this.formBuilder.group({
-		"email":['',[Validators.required,Validators.email]],
-	});
-  	
-	resetPasswordForm = this.formBuilder.group({
-		"captcha":['',[Validators.required]],
-    "newPassword": ['', [Validators.required, Validators.minLength(5), Validators.maxLength(30)]],
-    "repeat_password": ['', [Validators.required, Validators.minLength(5), Validators.maxLength(30)]]
-	});
-	
-	get Form1(){
-		return this.resetPasswordRequestForm.controls;
-	}
-	
-	get Form(){
-		return this.resetPasswordForm.controls;
-	}
-	constructor(private http:HttpClient, private formBuilder:FormBuilder, private authService:AuthService,  private router:Router){
-		
-	}
-	
-    ngOnInit(): void {
-       
+  constructor(private http: HttpClient, private formBuilder: FormBuilder, private authService: AuthService, private router: Router) {
+
+  }
+  msg = '';
+  email: String | undefined;
+
+  resetPasswordRequestForm = this.formBuilder.group({
+    "email": ['', [Validators.required, Validators.email]],
+  });
+
+  ngOnInit(): void {
+
+  }
+
+  onResetPasswordRequest() {
+    if (this.resetPasswordRequestForm.valid) {
+      if (this.resetPasswordRequestForm.value.email != null) {
+        this.email = this.resetPasswordRequestForm.value.email.toString();
+        this.authService.resetPasswordRequest(this.resetPasswordRequestForm.value.email.toString()).subscribe(
+          (data) => {
+            this.msg = "Đổi mật khẩu thành công, hãy kiểm tra hòm thư";
+          },
+          (error) => {
+            let errorResponse: ErrorResponse = error.error;
+            switch (errorResponse.status) {
+              case 404:
+                this.msg = "Không tìm thấy email";
+                break;
+              case 400:
+                this.msg = "Không thể gửi email tới hòm thư";
+                break;
+              default:
+                this.msg = "Có lỗi xảy ra";
+            }
+          });
+      }
     }
-    
-    onResetPassword(){
-		if(this.resetPasswordForm.valid && this.email!=null){
-			this.authService.resetPassword(this.resetPasswordForm.value, this.email).subscribe();
-		}
-		
-	}
-	 onResetPasswordRequest(){
-		if(this.resetPasswordRequestForm.valid){
-			if(this.resetPasswordRequestForm.value.email!=null){
-			this.email = this.resetPasswordRequestForm.value.email.toString();
-			this.authService.resetPasswordRequest(this.resetPasswordRequestForm.value.email.toString()).subscribe();
-			}
-			
-		}
-		
-	}
-    
+  }
+
+  public redirectLogin() {
+    this.router.navigate(['login']);
+  }
+
+  get Form1() {
+    return this.resetPasswordRequestForm.controls;
+  }
+
 }

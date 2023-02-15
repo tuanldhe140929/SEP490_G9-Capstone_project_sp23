@@ -11,7 +11,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.SEP490_G9.exceptions.EmailServiceException;
 import com.SEP490_G9.helpers.VerifyLinkGenerator;
-import com.SEP490_G9.models.DTOS.EmailResponse;
 import com.SEP490_G9.models.Entities.Account;
 import com.SEP490_G9.repositories.AccountRepository;
 import com.SEP490_G9.repositories.RefreshTokenRepository;
@@ -38,7 +37,7 @@ public class EmailServiceImpl implements EmailService {
 	private RefreshTokenRepository refreshTokenRepository;
 
 	@Override
-	public EmailResponse sendVerifyEmail(String toEmail) {
+	public boolean sendVerifyEmail(String toEmail) {
 		MimeMessage message = javaMailSender.createMimeMessage();
 		MimeMessageHelper helper;
 		Account account = accountRepository.findByEmail(toEmail);
@@ -62,24 +61,20 @@ public class EmailServiceImpl implements EmailService {
 		} catch (MailException ex) {
 			throw new EmailServiceException("Send email failed");
 		}
-
-		EmailResponse response = new EmailResponse(toEmail, verifyLink);
-		return response;
+		return true;
 	}
 
 	@Override
-	public EmailResponse sendRecoveryPasswordToEmail(String toEmail) {
+	public boolean sendRecoveryPasswordToEmail(String toEmail,String password) {
 		MimeMessage message = javaMailSender.createMimeMessage();
 		MimeMessageHelper helper;
-		String captcha = verifyLinkGenerator.generate().toString();
-
 		try {
 			helper = new MimeMessageHelper(message, true);
 			helper.setFrom(sender);
 			helper.setTo(toEmail);
 
 			message.setSubject("DPM System mail reset password");
-			String html = "Enter your captcha:\n" + captcha;
+			String html = "Your new password is:\n <strong>" + password+"</strong>";
 			message.setText(html, "UTF-8", "html");
 		} catch (MessagingException e) {
 			System.out.println(e);
@@ -92,8 +87,7 @@ public class EmailServiceImpl implements EmailService {
 			System.out.println(ex);
 			throw new EmailServiceException("Send email failed");
 		}
-		EmailResponse response = new EmailResponse(toEmail, captcha);
-		return response;
+		return true;
 	}
 
 }

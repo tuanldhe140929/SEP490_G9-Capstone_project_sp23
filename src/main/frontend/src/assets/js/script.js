@@ -30,7 +30,3 @@ document.querySelectorAll('.dropdown-menu').forEach(function(element){
 });
 // end querySelectorAll
 
-$(document).ready(function () {
-  $('#dtBasicExample').DataTable();
-  $('.dataTables_length').addClass('bs-select');
-});
