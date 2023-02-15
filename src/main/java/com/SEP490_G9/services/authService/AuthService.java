@@ -6,7 +6,6 @@ import org.apache.http.client.ClientProtocolException;
 
 import com.SEP490_G9.models.DTOS.AuthRequest;
 import com.SEP490_G9.models.DTOS.AuthResponse;
-import com.SEP490_G9.models.DTOS.EmailResponse;
 import com.SEP490_G9.models.Entities.User;
 
 import jakarta.servlet.http.Cookie;
@@ -28,8 +27,8 @@ public interface AuthService {
 	// public boolean verifyEmail(String verifyLink, String email,
 	// HttpServletRequest request);
 
-	public EmailResponse sendVerifyEmail(String email);
+	public boolean sendVerifyEmail(String email);
 
-	public EmailResponse sendRecoveryPasswordToEmail(String email);
+	public boolean sendRecoveryPasswordToEmail(String email);
 
 }

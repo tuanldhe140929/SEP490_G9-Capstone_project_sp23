@@ -83,8 +83,12 @@ public class CartServiceImplement implements CartService {
 
 	private Cart getCurrentCart() {
 
+
 		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getAccount();
 		Cart cart =cartRepository.findCurrentCart(account.getId());
+
+
+
 		Cart retCart = null;
 		if (cart == null) {
 			retCart = cartRepository.save(new Cart(account));

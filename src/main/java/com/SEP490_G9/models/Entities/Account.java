@@ -10,7 +10,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-@JsonIgnoreProperties(value= {"seller","refreshToken"})
+@JsonIgnoreProperties(value= {"refreshToken"})
 @Table(name = "accounts")
 @Inheritance(strategy = InheritanceType.JOINED)
 @Entity

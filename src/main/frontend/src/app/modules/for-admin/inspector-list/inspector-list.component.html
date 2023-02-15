@@ -10,18 +10,18 @@
     <mat-sidenav #sidebar mode="side" opened="true">
         <mat-list>
             <mat-list-item class="notChosenItem"><a [routerLink]="['/adminDashboard']">Dashboard</a></mat-list-item>
-            <mat-list-item class="chosenItem"><a [routerLink]="['/inspectorList']">Kiểm duyệt viên</a></mat-list-item>
+            <mat-list-item class="chosenItem"><a [routerLink]="['/inspectorList']">Nhân viên</a></mat-list-item>
         </mat-list>
     </mat-sidenav> 
     <mat-sidenav-content>
         <div class="content" id="main-container">
-            <h1>Danh sách kiểm duyệt viên</h1>
+            <h1>Danh sách nhân viên</h1>
             <br>
-            <button mat-dialog-actions class="btn btn-primary" (click)="onOpenModal(null, 'add')">Thêm kiểm duyệt viên</button>
+            <button mat-dialog-actions class="btn btn-primary" (click)="onOpenModal(null, 'add')">Thêm nhân viên</button>
             <br>
             <br>
             <div *ngIf="inspectorList.length == 0">
-                <b>Không có kiểm duyệt viên trong hệ thống</b>
+                <b>Không có nhân viên trong hệ thống</b>
             </div>
             <div *ngIf="inspectorList.length > 0">
                 <table datatable class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
@@ -42,7 +42,7 @@
                       <tr *ngFor="let inspector of inspectorList">
                         <td>{{inspector.username}}</td>
                         <td>{{inspector.email}}</td>
-                        <td><div><button class="btn btn-danger" (click)="onOpenModal(inspector, 'delete')">Xóa</button></div></td>
+                        <td><div><button class="btn btn-danger" (click)="onOpenModal(inspector, 'delete')">Vô hiệu hóa</button></div></td>
                       </tr>
                     </tbody>
                   </table>
@@ -58,7 +58,7 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
          <div class="modal-header">
-            <h5 class="modal-title" id="addInspectorModalLabel">Thêm kiểm duyệt viên</h5>
+            <h5 class="modal-title" id="addInspectorModalLabel">Thêm nhân viên</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
             </button>
@@ -78,7 +78,7 @@
                     <input type="text" class="form-control" id="username" formControlName="username">
                     <div class="err" *ngIf="addform.username.invalid && addform.username.touched" style="white-space: pre-wrap;">
                         <small *ngIf="addform.username.errors?.['required']">Vui lòng điền tên</small>
-                        <small *ngIf="addform.username.errors?.['minlength']||addform.username.errors?.['maxlength']">Tên kiểm duyệt viên phải từ 4 đến 10 ký tự</small>
+                        <small *ngIf="addform.username.errors?.['minlength']||addform.username.errors?.['maxlength']">Tên người dùng phải từ 4 đến 10 ký tự</small>
                         <small *ngIf="addform.username.errors?.['pattern']">Chỉ bao gồm chữ số và dấu gạch dưới</small>
                     </div>
                 </div>
@@ -153,13 +153,13 @@
     <div class="modal-dialog" role="document">
        <div class="modal-content">
           <div class="modal-header">
-             <h5 class="modal-title" id="deleteModelLabel">Xóa kiểm duyệt viên</h5>
+             <h5 class="modal-title" id="deleteModelLabel">Cập nhật tình trạng nhân viên</h5>
              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
              <span aria-hidden="true">&times;</span>
              </button>
           </div>
           <div class="modal-body">
-             <p>Bạn có muốn xóa kiểm duyệt viên <b>{{editInspector?.username}}</b>?</p>
+             <p>Bạn có muốn vô hiệu hóa nhân viên <b>{{editInspector?.username}}</b>?</p>
              <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Không</button>
                 <button (click)="onDeleteInspector(editInspector?.id)" class="btn btn-danger" data-dismiss="modal">Có</button>
@@ -168,7 +168,6 @@
        </div>
     </div>
   </div>
-
 
   
 

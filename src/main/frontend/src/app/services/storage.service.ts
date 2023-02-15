@@ -38,12 +38,11 @@ export class StorageService {
 
   public getAuthResponse(): any {
     const authResponseJson = window.localStorage.getItem(AUTH_RESPONSE_KEY);
-    let authResponse:AuthResponse;
     if (authResponseJson) {
        let authResponse:AuthResponse =  JSON.parse(authResponseJson);
        return authResponse;
     }
-    return "";
+    return null;
     
   }
 

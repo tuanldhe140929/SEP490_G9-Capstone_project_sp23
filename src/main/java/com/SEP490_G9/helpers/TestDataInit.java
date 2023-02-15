@@ -98,6 +98,7 @@ public class TestDataInit implements ApplicationRunner {
 		user.setId((long) 2);
 		user.setEmail("user2@gmail.com");
 		user.setUsername("user2");
+		user.setRoles(sellerRoles);
 		userRepository.save(user);
 
 
