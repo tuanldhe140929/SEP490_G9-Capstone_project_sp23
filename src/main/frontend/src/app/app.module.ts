@@ -35,7 +35,6 @@ import { DataTablesModule } from 'angular-datatables'
     FormsModule,
     ReactiveFormsModule,
     AuthModule,
-    ManageProductModule,
     ManageAccountInfoModule,
     ForUsersModule,
     ForAdminModule,
@@ -47,6 +46,9 @@ import { DataTablesModule } from 'angular-datatables'
     NgbModule,
     BrowserAnimationsModule,
     CommonModule,
+<<<<<<< HEAD
+    ManageProductModule,
+=======
     MatSortModule,
     DataTablesModule,
     ToastrModule.forRoot(
@@ -56,6 +58,7 @@ import { DataTablesModule } from 'angular-datatables'
       }
     ),
     
+>>>>>>> main
   ],
   providers: [
 	      {  

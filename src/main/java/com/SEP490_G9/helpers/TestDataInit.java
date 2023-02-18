@@ -79,6 +79,7 @@ public class TestDataInit implements ApplicationRunner {
 //		accountRepository.save(userAccount);
 
 		User user = new User();
+
 		user.setId((long) 1);
 		user.setEmail("user1@gmail.com");
 		user.setPassword(new BCryptPasswordEncoder().encode("user1234"));
