@@ -1,9 +1,10 @@
 package com.SEP490_G9.controllers;
 import org.springframework.http.ResponseEntity;
+
 import org.springframework.web.bind.annotation.*;
 
 import com.SEP490_G9.models.Entities.Cart;
-import com.SEP490_G9.models.Entities.DTOS.CartDTO;
+import com.SEP490_G9.models.DTOS.CartDTO;
 import com.SEP490_G9.services.CartService;
 
 @RestController
@@ -36,5 +37,14 @@ public class CartController {
         return ResponseEntity.ok(cart);
     }	
     
-    //Check out api
+    @GetMapping("/checkOut")
+    public ResponseEntity<?> checkOut() {
+        CartDTO cart = cartService.getCurrentCartDTO();
+        return ResponseEntity.ok(cart);
+    }	
+    @DeleteMapping("/removeAll/{productId}")
+    public ResponseEntity<?> removeAllProduct(@PathVariable(name="productId") Long productId) {
+    	CartDTO cart = cartService.removeAllProduct(productId);
+    	return ResponseEntity.ok(cart);
+    }
 }

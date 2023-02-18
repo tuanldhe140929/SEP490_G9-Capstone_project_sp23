@@ -92,4 +92,11 @@ export class ManageProductService {
       }
     })
   }
+  getCurrentOwnerInfo(username: string): Observable<User>{
+    return this.httpClient.get<User>(baseUrl+"/getCurrentOwnerInfo",{
+      params:{
+        username: username
+      }
+    })
+  }
 }
