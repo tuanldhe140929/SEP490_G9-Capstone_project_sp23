@@ -10,7 +10,7 @@ public class StorageProperties {
 	/**
 	 * Folder location for storing files
 	 */
-	private String location = "C:\\Users\\ADMN\\eclipse-workspace\\SEP490_G9_Datas\\";
+	private String location = "C:\\Users\\ADMN\\";
 
 	public String getLocation() {
 		return location;

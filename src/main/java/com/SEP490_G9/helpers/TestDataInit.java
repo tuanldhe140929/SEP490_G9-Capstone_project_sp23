@@ -142,18 +142,8 @@ public class TestDataInit implements ApplicationRunner {
 		typeRepository.save(new Type(13, "Others"));
 
 
-//		Product product = new Product();
-//		product.setId((long) 1);
-//		product.setActive(true);
-//		product.setUser(userRepository.getReferenceById((long) 1));
-//		product.setName("TEST PRODUCT");
-//		product.setType(typeRepository.getReferenceById(7));
-//		product.setUploadDate(new Date());
-//		List<Tag> tags = new ArrayList<>();
-//		tags.add(tagRepository.getReferenceById(1));
-//		tags.add(tagRepository.getReferenceById(2));
-//		product.setTags(tags);
-//		productRepository.save(product);
+		
+
 
 
 	}
