@@ -11,11 +11,12 @@ public class ReportItemKey {
 		this.userId = uderId;
 		this.productId = productId;
 	}
-	public Long getUderId() {
+
+	public Long getUserId() {
 		return userId;
 	}
-	public void setUderId(Long uderId) {
-		this.userId = uderId;
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}
 	public Long getProductId() {
 		return productId;

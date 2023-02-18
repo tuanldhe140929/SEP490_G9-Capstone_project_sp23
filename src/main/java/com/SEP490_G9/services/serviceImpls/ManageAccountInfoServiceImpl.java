@@ -15,6 +15,7 @@ import com.SEP490_G9.exceptions.ResourceNotFoundException;
 import com.SEP490_G9.helpers.StorageProperties;
 import com.SEP490_G9.models.UserDetailsImpl;
 import com.SEP490_G9.models.Entities.Product;
+import com.SEP490_G9.models.Entities.Account;
 import com.SEP490_G9.models.Entities.User;
 import com.SEP490_G9.repositories.UserRepository;
 import com.SEP490_G9.services.FileStorageService;
@@ -36,16 +37,16 @@ public class ManageAccountInfoServiceImpl implements ManageAccountInfoService {
 	ServeMediaService serveMediaService;
 	
 	@Override
-	public User getAccountInfo() {
-		User user = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
-		return user;
+	public Account getAccountInfo() {
+		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getAccount();
+		return account;
 	}
 
 	@Override
 	public boolean changeAccountPassword(String newPassword,String oldPassword) {
-		User user = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
+		Account account= ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getAccount();
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-		if(encoder.matches(oldPassword, user.getPassword())) {
+		if(encoder.matches(oldPassword, account.getPassword())) {
 
 			String encodedPassword = encoder.encode(newPassword);
 			user.setPassword(encodedPassword);

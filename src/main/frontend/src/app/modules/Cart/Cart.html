@@ -1,0 +1,52 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <style>
+      .product-block {
+        display: flex;
+        justify-content: space-between;
+        padding: 20px;
+      }
+      .product-block img {
+        width: 150px;
+        height: 150px;
+      }
+      .total-price-block {
+        display: flex;
+        justify-content: space-between;
+        padding: 20px;
+        background-color: lightgray;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col-8 product-block">
+          <div>
+            <h3>Product Name</h3>
+            <img src="product_image.jpg" alt="Product Image">
+          </div>
+          <div>
+            <h3>$100</h3>
+          </div>
+        </div>
+        <div class="col-4 total-price-block">
+          <div>
+            <h3>Total Price</h3>
+          </div>
+          <div>
+            <h3>$100</h3>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 text-right">
+          <button type="button" class="btn btn-primary">Check Out</button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
