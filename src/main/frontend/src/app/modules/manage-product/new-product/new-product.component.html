@@ -8,6 +8,10 @@
         <div class="row columns">
           <div class="left_col col-8" style="border-right:1px solid black">
             <div class="input_row">
+              <div><label for="product_version">Version</label></div>
+              <div><input type="text" value="{{product.version}}" id="product_version" name="product_version" readonly/></div>
+            </div>
+            <div class="input_row">
               <div><label for="product_name">Title</label></div>
               <div><input type="text" [(ngModel)]="product.name" id="product_name" name="product_name" /></div>
             </div>
@@ -18,19 +22,19 @@
             <div class="input_row classification_picker">
               <div class="classification_picker_label">
                 <div>
-                  <label for="type_list">Type</label>
+                  <label for="type_list">Category</label>
                 </div>
                 <div>
                   <small>What are you uploading</small>
                 </div>
               </div>
               <div class="">
-                <select class="classification_picker_body" id="type_list" name="type" [(ngModel)]="product.type">
-                  <option value="0" selected>Select product type</option>
-                  <option *ngFor="let type of typeList; index as i;" value="{{type.id}}"
-                          [attr.selected]="isTypeSelected(type.id)">
-                    {{type.name}}
-                  </option>
+                <select class="classification_picker_body" id="type_list" name="type" [(ngModel)]="productCate">
+                  <option value="0" selected>Select product category</option>
+                  <option *ngFor="let category of typeList; index as i;" value="{{category.id}}"
+                          [attr.selected]="isTypeSelected(category.id)">
+                    {{category.name}}
+                  </option>s
                 </select>
               </div>
             </div>
@@ -177,7 +181,7 @@
                 <div *ngIf="product.previewVideo==null||product.previewVideo.id==-1;then noPreviewVideo else hasPreviewVideo"></div>
                 <ng-template #hasPreviewVideo>
                   <vg-player style="position: relative;">
-                    <video [vgMedia]="$any(media)" #media id="preview_video" preload="auto" controls>
+                    <video [vgMedia]="$any(media)" #media id="preview_video" preload="auto" controls style="width: 100%;">
                       <source src="{{getPreviewVideoSource()}}" type="video/mp4">
                     </video>
                     <div class="widget_video" style="position: absolute">

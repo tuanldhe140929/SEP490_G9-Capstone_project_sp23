@@ -30,7 +30,7 @@ public class CartDTO {
 		this.account = cart.getAccount();
 		this.items = cart.getItems();
 		for (CartItem item : cart.getItems()) {
-	       this.totalPrice += item.getProduct().getPrice();
+	       this.totalPrice += item.getProductDetails().getPrice();
 	    }
 	    
 

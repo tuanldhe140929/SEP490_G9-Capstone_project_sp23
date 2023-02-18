@@ -27,6 +27,7 @@ public class User extends Account implements Serializable{
 	@Column(name="first_name" )
 	private String firstName;
 	
+
 	@Column(name="last_name")
 	private String lastName;
 	
@@ -44,9 +45,6 @@ public class User extends Account implements Serializable{
 	
 	@OneToOne(cascade = CascadeType.ALL)
 	private Cart cart;
-	
-	@OneToMany(mappedBy="user",fetch = FetchType.EAGER)
-	private List<Product> products = new ArrayList<>();
 	
 	public User() {
 	}

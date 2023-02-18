@@ -10,30 +10,31 @@ import jakarta.persistence.*;
 
 @JsonIgnoreProperties(value = { "productDetails" })
 @Entity
-@Table(name="tags")
-public class Tag implements Serializable {
-
-	private static final long serialVersionUID = 1L;
-
+@Table(name = "categories")
+public class Category implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	
-	@Column(name="name")
+
+	@Column(name = "name")
 	private String name;
-	
-	@ManyToMany(mappedBy="tags")
-    private List<ProductDetails> productDetails = new ArrayList<>();
-	
-	public Tag() {
+
+	@OneToMany(mappedBy="category")
+	private List<ProductDetails> productDetails = new ArrayList<>();
+
+	public Category() {
+		// TODO Auto-generated constructor stub
 	}
-	
-	public Tag(int id, String name) {
-		super();
+	public Category(int id, String name) {
 		this.id = id;
 		this.name = name;
 	}
 
+	public Category(int id, String name, List<Product> products) {
+		super();
+		this.id = id;
+		this.name = name;
+	}
 	public int getId() {
 		return id;
 	}

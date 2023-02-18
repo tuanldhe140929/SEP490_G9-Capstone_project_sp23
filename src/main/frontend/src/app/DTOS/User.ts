@@ -6,7 +6,9 @@ export class User{
 	verifed:boolean;
   role: string;
   image: string;
+  joinedDate: Date;
   constructor() {
+    this.joinedDate = new Date;
     this.id = -1;
     this.email = "";
     this.username = "";

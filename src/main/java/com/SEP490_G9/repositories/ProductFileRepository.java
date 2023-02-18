@@ -6,11 +6,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.SEP490_G9.models.Entities.Product;
+import com.SEP490_G9.models.Entities.ProductDetails;
 import com.SEP490_G9.models.Entities.ProductFile;
 
 @Repository
 public interface ProductFileRepository extends JpaRepository<ProductFile, Long> {
 	Boolean existsByName(String name);
 	
-	List<ProductFile> findByProduct(Product product);
+	List<ProductFile> findByProductDetails(ProductDetails productDetails);
+
+	boolean existsByNameAndProductDetails(String name,ProductDetails productDetails);
 }

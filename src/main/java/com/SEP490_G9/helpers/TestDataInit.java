@@ -11,18 +11,20 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import com.SEP490_G9.models.Entities.Tag;
-import com.SEP490_G9.models.Entities.Type;
+import com.SEP490_G9.models.Entities.Category;
 import com.SEP490_G9.models.Entities.User;
 import com.SEP490_G9.models.Entities.Account;
 import com.SEP490_G9.models.Entities.Product;
 import com.SEP490_G9.models.Entities.RefreshToken;
 import com.SEP490_G9.models.Entities.Role;
+import com.SEP490_G9.models.Entities.Seller;
 import com.SEP490_G9.repositories.TagRepository;
-import com.SEP490_G9.repositories.TypeRepository;
+import com.SEP490_G9.repositories.CategoryRepository;
 import com.SEP490_G9.repositories.UserRepository;
 import com.SEP490_G9.repositories.AccountRepository;
 import com.SEP490_G9.repositories.ProductRepository;
 import com.SEP490_G9.repositories.RoleRepository;
+import com.SEP490_G9.repositories.SellerRepository;
 
 @Component
 public class TestDataInit implements ApplicationRunner {
@@ -36,7 +38,7 @@ public class TestDataInit implements ApplicationRunner {
 	private TagRepository tagRepository;
 
 	@Autowired
-	private TypeRepository typeRepository;
+	private CategoryRepository categoryRepository;
 
 	@Autowired
 	private ProductRepository productRepository;
@@ -44,6 +46,9 @@ public class TestDataInit implements ApplicationRunner {
 	@Autowired
 	private UserRepository userRepository;
 
+	@Autowired
+	private SellerRepository sellerRepository;
+	
 //	@Autowired
 //	private PreviewRepository previewRepository;
 
@@ -79,6 +84,7 @@ public class TestDataInit implements ApplicationRunner {
 //		accountRepository.save(userAccount);
 
 		User user = new User();
+
 		user.setId((long) 1);
 		user.setEmail("user1@gmail.com");
 		user.setPassword(new BCryptPasswordEncoder().encode("user1234"));
@@ -95,12 +101,18 @@ public class TestDataInit implements ApplicationRunner {
 //		userAccount.setRoles(userRoles);
 //		accountRepository.save(userAccount);
 
-		user.setId((long) 2);
-		user.setEmail("user2@gmail.com");
-		user.setUsername("user2");
-		user.setRoles(sellerRoles);
-		userRepository.save(user);
-
+		Seller seller = new Seller();
+		seller.setId((long) 2);
+		seller.setEmail("seller1@gmail.com");
+		seller.setPassword(new BCryptPasswordEncoder().encode("seller1234"));
+		seller.setUsername("seller1");
+		seller.setRoles(sellerRoles);
+		seller.setUserCreatedDate(new Date());
+		seller.setAccountCreatedDate(new Date());
+		seller.setFirstName("John");
+		seller.setLastName("Doe");
+		seller.setSellerEnabled(true);
+		sellerRepository.save(seller);
 
 		Account staffAccount = new Account();
 		staffAccount.setId((long) 3);
@@ -127,23 +139,20 @@ public class TestDataInit implements ApplicationRunner {
 		tagRepository.save(new Tag(4, "sci-fi"));
 		tagRepository.save(new Tag(5, "sport"));
 
-		typeRepository.save(new Type(1, "Sprites"));
-		typeRepository.save(new Type(2, "Sound effects"));
-		typeRepository.save(new Type(3, "Music"));
-		typeRepository.save(new Type(4, "Textures"));
-		typeRepository.save(new Type(5, "Characters"));
-		typeRepository.save(new Type(6, "Tileset"));
-		typeRepository.save(new Type(7, "Backgrounds"));
-		typeRepository.save(new Type(8, "Fonts"));
-		typeRepository.save(new Type(9, "Icons"));
-		typeRepository.save(new Type(10, "Tileset"));
-		typeRepository.save(new Type(11, "User interfaces"));
-		typeRepository.save(new Type(12, "Lore"));
-		typeRepository.save(new Type(13, "Others"));
 
-
-
-
+		categoryRepository.save(new Category(1, "Sprites"));
+		categoryRepository.save(new Category(2, "Sound effects"));
+		categoryRepository.save(new Category(3, "Music"));
+		categoryRepository.save(new Category(4, "Textures"));
+		categoryRepository.save(new Category(5, "Characters"));
+		categoryRepository.save(new Category(6, "Tileset"));
+		categoryRepository.save(new Category(7, "Backgrounds"));
+		categoryRepository.save(new Category(8, "Fonts"));
+		categoryRepository.save(new Category(9, "Icons"));
+		categoryRepository.save(new Category(10, "Tileset"));
+		categoryRepository.save(new Category(11, "User interfaces"));
+		categoryRepository.save(new Category(12, "Lore"));
+		categoryRepository.save(new Category(13, "Others"));
 
 	}
 }
