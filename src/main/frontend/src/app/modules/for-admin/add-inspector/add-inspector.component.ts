@@ -55,15 +55,15 @@ export class AddInspectorComponent implements OnInit{
   data: any;
 
 
-  public onAddInspector() {
-    if (this.addInspectorForm.valid) {
-      this.forAdminService.addInspector(this.addInspectorForm.value).subscribe(
-        data => {
-          console.log(data);
-          this.router.navigate(['/inspectorList']);
-          this.toastr.success('Inspector added successfully!');
-        },
-      );
-    }
-  }
+  // public onAddInspector() {
+  //   if (this.addInspectorForm.valid) {
+  //     this.forAdminService.addInspector(this.addInspectorForm.value).subscribe(
+  //       data => {
+  //         console.log(data);
+  //         this.router.navigate(['/inspectorList']);
+  //         this.toastr.success('Inspector added successfully!');
+  //       },
+  //     );
+  //   }
+  // }
 }

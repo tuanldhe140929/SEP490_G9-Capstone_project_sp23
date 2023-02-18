@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,8 +37,8 @@ public class ManageStaffController {
 		return ResponseEntity.ok(canAdd);
 	}
 	
-	@PutMapping("updateStaffStatus")
-	public ResponseEntity<?> updateStaffStatus(@RequestParam(name = "id") Long id){
+	@PutMapping("updateStaffStatus/{id}")
+	public ResponseEntity<?> updateStaffStatus(@PathVariable(name = "id") Long id){
 		boolean canUpdate = manageStaffService.updateStaffStatus(id);
 		return ResponseEntity.ok(canUpdate);
 	}

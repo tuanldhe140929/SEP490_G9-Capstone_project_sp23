@@ -1,0 +1,12 @@
+<div class="updateStaffContainer">
+    <mat-dialog-content>
+        <div *ngIf="data.enabled; then toDisable else toEnable">
+        </div>
+        <ng-template #toDisable><p>Bạn có muốn tắt tài khoản {{data.email}}?</p></ng-template>
+        <ng-template #toEnable><p>Bạn có muốn bật tài khoản {{data.email}}</p></ng-template>
+        <div class="form-group" align="end">
+            <button class="btn btn-warning" [mat-dialog-close]="true">Không</button>
+            <button class="btn btn-danger" [mat-dialog-close]="true" (click)="onUpdateStatus()">Có</button>
+        </div>
+    </mat-dialog-content>
+</div>

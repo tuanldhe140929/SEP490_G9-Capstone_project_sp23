@@ -1,12 +1,17 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
+import { Account } from '../DTOS/Account';
 import { User } from '../DTOS/User';
+import * as socketIo from 'socket.io-client'
+
+
 
 const allInspectorsUrl = "http://localhost:9000/public/manageInspector/allInspectors";
 const addInspectorUrl = "http://localhost:9000/public/manageInspector/addInspector";
 const activateUrl = "http://localhost:9000/public/manageInspector/activateInspector";
 const deactivateUrl = "http://localhost:9000/public/manageInspector/deactivateInspector";
+const baseUrl = "http://localhost:9000/public/manageStaff/";
 const httpOptions: Object = {
   headers: new HttpHeaders({
     "Content-Type": "application/json"
@@ -20,31 +25,43 @@ const httpOptions: Object = {
 })
 export class ForAdminService {
 
-  private apiServerUrl = "http://localhost:9000";
+  private apiServerUrl = "http://localhost:9000/public/manageStaff";
 
   constructor(private httpClient: HttpClient) { }
 
-  getAllInspectors(): Observable<User[]>{
-    return this.httpClient.get<User[]>(`${this.apiServerUrl}/private/manageInspector/allInspectors`);
+  // getAllInspectors(): Observable<User[]>{
+  //   return this.httpClient.get<User[]>(`${this.apiServerUrl}/public/manageInspector/allInspectors`);
+  // } 
+
+  // addInspector(body: any): Observable<any> {
+  //   return this.httpClient.post<any>(`${this.apiServerUrl}/public/manageInspector/addInspector`, body, httpOptions);
+  // }
+
+  // updateInspector(body: any): Observable<any>{
+  //   return this.httpClient.put<any>(`${this.apiServerUrl}/public/manageInspector/updateInspector`, body);
+  // }
+
+  // deleteInspector(id: number| undefined): Observable<any>{
+  //   return this.httpClient.delete<any>(`${this.apiServerUrl}/public/manageInspector/deleteInspector/${id}`)
+  // }
+
+  // activateInspector(): Observable<any>{
+  //   return this.httpClient.put<any>(activateUrl, null);
+  // }
+
+  // deactivateInspector(): Observable<any>{
+  //   return this.httpClient.put<any>(deactivateUrl, null);
+  // }
+
+  getAllStaffs(): Observable<Account[]>{
+    return this.httpClient.get<Account[]>(`${this.apiServerUrl}/staffs`);
   }
 
-  addInspector(body: any): Observable<any> {
-    return this.httpClient.post<any>(`${this.apiServerUrl}/private/manageInspector/addInspector`, body, httpOptions);
+  addStaff(body: any): Observable<any>{
+    return this.httpClient.post<any>(baseUrl+"addStaff", body);
   }
 
-  updateInspector(body: any): Observable<any>{
-    return this.httpClient.put<any>(`${this.apiServerUrl}/private/manageInspector/updateInspector`, body);
-  }
-
-  deleteInspector(id: number| undefined): Observable<any>{
-    return this.httpClient.delete<any>(`${this.apiServerUrl}/private/manageInspector/deleteInspector/${id}`)
-  }
-
-  activateInspector(): Observable<any>{
-    return this.httpClient.put<any>(activateUrl, null);
-  }
-
-  deactivateInspector(): Observable<any>{
-    return this.httpClient.put<any>(deactivateUrl, null);
+  updateStaffStatus(id: number): Observable<any>{
+    return this.httpClient.put<any>(`${this.apiServerUrl}/updateStaffStatus/${id}`, id);
   }
 }

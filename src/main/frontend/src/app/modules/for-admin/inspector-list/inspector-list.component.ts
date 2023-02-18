@@ -29,7 +29,6 @@ export class InspectorListComponent implements OnInit{
   username: any;
 
   ngOnInit(): void {
-    this.getAllInspectors(); 
   }
 
   addInspectorForm = this.formBuilder.group({
@@ -41,13 +40,13 @@ export class InspectorListComponent implements OnInit{
 
   
 
-  public getAllInspectors(): any{
-    this.forAdminService.getAllInspectors().subscribe(
-      response => {
-        this.inspectorList = response;
-      }
-    )
-  }
+  // public getAllInspectors(): any{
+  //   this.forAdminService.getAllInspectors().subscribe(
+  //     response => {
+  //       this.inspectorList = response;
+  //     }
+  //   )
+  // }
 
   public onOpenModal(inspector: any, mode: string): void{
     const container = document.getElementById('main-container');
@@ -75,40 +74,40 @@ export class InspectorListComponent implements OnInit{
     "username": ['',[Validators.required,Validators.minLength(4),Validators.maxLength(10), Validators.pattern("^[a-zA-Z0-9_]*$")]],
   })
 
-  public onAddInspector() {
-    if (this.addInspectorForm.valid) {
-      this.forAdminService.addInspector(this.addInspectorForm.value).subscribe(
-        data => {
-          console.log(data);
-          this.toastr.success('Inspector added successfully!');
-        },
-      );
-    }
-  }
+  // public onAddInspector() {
+  //   if (this.addInspectorForm.valid) {
+  //     this.forAdminService.addInspector(this.addInspectorForm.value).subscribe(
+  //       data => {
+  //         console.log(data);
+  //         this.toastr.success('Inspector added successfully!');
+  //       },
+  //     );
+  //   }
+  // }
 
-  public resetAddForm(){
-    this.addInspectorForm.reset();
-  }
+  // public resetAddForm(){
+  //   this.addInspectorForm.reset();
+  // }
 
-  public onUpdateInspector(){
-    if(this.addInspectorForm.valid){
-      this.forAdminService.updateInspector(this.updateInspectorForm.value).subscribe(
-        data => {
-          console.log(data);
-          this.toastr.success('Inspector updated successfully!')
-        }
-      )
-    }
-  }
+  // public onUpdateInspector(){
+  //   if(this.addInspectorForm.valid){
+  //     this.forAdminService.updateInspector(this.updateInspectorForm.value).subscribe(
+  //       data => {
+  //         console.log(data);
+  //         this.toastr.success('Inspector updated successfully!')
+  //       }
+  //     )
+  //   }
+  // }
 
-  public onDeleteInspector(id: number| undefined){
-    this.forAdminService.deleteInspector(id).subscribe(
-      data => {
-        console.log(data);
-        this.toastr.success('Inspector deleted successfully!')
-      }
-    )
-  }
+  // public onDeleteInspector(id: number| undefined){
+  //   this.forAdminService.deleteInspector(id).subscribe(
+  //     data => {
+  //       console.log(data);
+  //       this.toastr.success('Inspector deleted successfully!')
+  //     }
+  //   )
+  // }
 
   get addform(){
     return this.addInspectorForm.controls;
