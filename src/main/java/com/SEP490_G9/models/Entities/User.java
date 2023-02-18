@@ -1,6 +1,7 @@
 package com.SEP490_G9.models.Entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -43,7 +44,10 @@ public class User extends Account implements Serializable{
 	
 	@OneToOne(cascade = CascadeType.ALL)
 	private Cart cart;
-
+	
+	@OneToMany(mappedBy="user",fetch = FetchType.EAGER)
+	private List<Product> products = new ArrayList<>();
+	
 	public User() {
 	}
 	
