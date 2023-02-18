@@ -9,7 +9,7 @@ import { AuthResponse } from 'src/app/DTOS/AuthResponse';
 import { AuthService } from 'src/app/services/auth.service';
 import { ManageProductService } from 'src/app/services/manage-product.service';
 import { StorageService } from '../../../services/storage.service';
-import { Type } from '../../../DTOS/Type';
+import { Category } from '../../../DTOS/Category';
 import { DecimalPipe } from '@angular/common';
 import { Tag } from '../../../DTOS/Tag';
 import { ProductFile } from 'src/app/DTOS/ProductFile';
@@ -61,7 +61,7 @@ export class NewProductComponent implements OnInit {
   uploadProgress: number = 0;
 
   product: Product = new Product;
-  typeList: Type[] = [];
+  typeList: Category[] = [];
   tagList: Tag[] = [];
 
   formattedAmount: string | null | undefined;
@@ -71,7 +71,7 @@ export class NewProductComponent implements OnInit {
   instruction = "";
   productDetails = '';
   draft = true;
-
+  productCate = -1;
 
   public detailsEditor = ClassicEditor;
   newProductForm = this.formBuilder.group({
@@ -79,8 +79,9 @@ export class NewProductComponent implements OnInit {
     "name": ['', [Validators.required]],
     url: new FormControl('', [Validators.required]),
     details: [''],
+    "version":[''],
     "description": [''],
-    "type": [this.product.type],
+    "category": [this.product.category],
     "tags": [this.product.tags],
     "draft": [true, Validators.required],
     price: new FormControl('', [Validators.required, Validators.min(1000), Validators.max(10000000)])
@@ -107,11 +108,11 @@ export class NewProductComponent implements OnInit {
       formData.set("enctype", "multipart/form-data");
       formData.append("productFile", file);
       formData.append("productId", this.product.id.toString());
-
+      formData.append("version", this.product.version);
       const upload$ = this.manageProductService.uploadProductFile(formData).subscribe(
-        (data: Product) => {
+        (data: ProductFile[]) => {
           this.uploadProgress = 0;
-          this.product = data;
+          this.product.files = data;
           console.log(this.product);
           if (index >= 1) {
             this.uploadFileIndex(index - 1, files);
@@ -137,6 +138,7 @@ export class NewProductComponent implements OnInit {
       const formData = new FormData();
       formData.append("fileId", file.id.toString());
       formData.append("productId", this.product.id.toString());
+
       const upload$ = this.manageProductService.deleteProductFile(formData).subscribe(
         (data: Product) => {
           this.product = data;
@@ -172,7 +174,7 @@ export class NewProductComponent implements OnInit {
   getCurrentProduct(): void {
     var productId = this.activatedRoute.snapshot.paramMap.get('productId');
     if (productId) {
-      this.manageProductService.getProductByIdAndUser(+productId).subscribe(
+      this.manageProductService.getProductByIdAndSeller(+productId).subscribe(
         (data) => {
 
           this.product = data;
@@ -180,6 +182,7 @@ export class NewProductComponent implements OnInit {
           this.getTagList();
           this.productDetails = this.product.details;
           this.draft = this.product.draft;
+          this.productCate = this.product.category.id;
           if (this.draft) {
             this.Draft.checked = true;
           } else {
@@ -207,7 +210,7 @@ export class NewProductComponent implements OnInit {
   percent = 'width:100%;';
   getTypeList(): void {
     this.manageProductService.getTypeList().subscribe(
-      (data: Type[]) => {
+      (data: Category[]) => {
         this.typeList = data;
       },
       (error) => {
@@ -274,7 +277,7 @@ export class NewProductComponent implements OnInit {
         formData.set("enctype", "multipart/form-data");
         formData.append("coverImage", file);
         formData.append("productId", this.product.id.toString());
-
+        formData.append("version", this.product.version);
         const upload$ = this.manageProductService.uploadCoverImage(formData).subscribe(
           (data: string) => {
             this.product.coverImage = data;
@@ -309,7 +312,7 @@ export class NewProductComponent implements OnInit {
         formData.set("enctype", "multipart/form-data");
         formData.append("previewVideo", file);
         formData.append("productId", this.product.id.toString());
-
+        formData.append("version", this.product.version);
         const upload$ = this.manageProductService.uploadPreviewVideo(formData).subscribe(
           (data) => {
             this.product.previewVideo = data;
@@ -351,7 +354,7 @@ export class NewProductComponent implements OnInit {
           formData.set("enctype", "multipart/form-data");
           formData.append("previewPicture", files[i]);
             formData.append("productId", this.product.id.toString());
-
+          formData.append("version", this.product.version);
           const upload$ = this.manageProductService.uploadPreviewPicture(formData).subscribe(
             (data) => {
               this.product.previewPictures = data;
@@ -434,8 +437,8 @@ export class NewProductComponent implements OnInit {
   }
 
   isTypeSelected(typeId: number): any {
-    if (this.product.type != null) {
-      if (typeId === this.product.type.id) {
+    if (this.productCate != -1) {
+      if (typeId === this.productCate) {
         this.TypeList.selectedIndex = typeId;
         return "";
       }
@@ -444,10 +447,10 @@ export class NewProductComponent implements OnInit {
   }
 
   onSelectType($event: any): void {
-    this.product.type.id = $event.target.value;
+    this.product.category.id = $event.target.value;
     for (let i = 0; i < this.typeList.length; i++) {
       if (this.typeList[i].id == $event.target.value) {
-        this.product.type = this.typeList[i];
+        this.product.category = this.typeList[i];
         break;
       }
     }
@@ -534,7 +537,7 @@ export class NewProductComponent implements OnInit {
       this.errors.push(MSG100);
     }
 
-    if (this.product.type.id == -1 || this.product.type.id == 0) {
+    if (this.productCate == -1 || this.productCate == 0) {
       this.errors.push(MSG102);
     }
     if (this.newProductForm.value.price == null) {
@@ -549,10 +552,12 @@ export class NewProductComponent implements OnInit {
       this.newProductForm.controls.id.setValue(this.product.id);
       this.newProductForm.controls.name.setValue(this.product.name);
       this.newProductForm.controls.tags.setValue(this.product.tags);
-      this.newProductForm.controls.type.setValue(this.product.type);
+      this.newProductForm.controls.category.setValue(this.typeList[this.productCate-1]);
+
       this.newProductForm.controls.details.setValue(this.productDetails);
       this.newProductForm.controls.draft.setValue(this.draft);
       this.newProductForm.controls.description.setValue(this.product.description);
+      this.newProductForm.controls.version.setValue(this.product.version);
       this.manageProductService.updateProduct(this.newProductForm.value, this.InstructionDetails.value).subscribe(
         (data) => {
           this.product = data;

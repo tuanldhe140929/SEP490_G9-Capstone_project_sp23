@@ -39,35 +39,8 @@ public class CommonServiceImpl implements CommonService {
 	}
 
 	@Override
-	public List<ProductDTO> getProductsByUsername(String username) {
-		User user = null;
-		try {
-			user = userRepository.findByUsername(username);
-		} catch (Exception e) {
-			throw new ResourceNotFoundException("User", "username", username);
-		}
-		List<Product> products = productRepository.findByUser(user);
-		List<ProductDTO> dtos = new ArrayList<>();
-		for(Product product: products) {
-			dtos.add(new ProductDTO(product, previewRepository));
-		}
-		return dtos;
+	public User getCurrentLogedInUser() {
+		// TODO Auto-generated method stub
+		return null;
 	}
-
-	@Override
-	public ProductDTO getProductByNameAndUserId(String productName, Long userId) {
-		Product product = productRepository.findByNameAndUserId(productName, userId);
-		if (product == null || !product.isActive() || product.isDraft()) {
-			throw new ResourceNotFoundException("Product", "productName with userId: " + userId, productName);
-		}
-		ProductDTO dto = new ProductDTO(product, previewRepository);
-		return dto;
-	}
-
-	@Override
-	public Account getCurrentLogedInUser() {
-		Account user = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getAccount();
-		return user;
-	}
-
 }
