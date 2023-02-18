@@ -50,6 +50,7 @@ public class TestDataInit implements ApplicationRunner {
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
 
+
 		roleRepository.save(new Role(Constant.ADMIN_ROLE_ID, "ROLE_ADMIN"));
 		roleRepository.save(new Role(Constant.STAFF_ROLE_ID, "ROLE_STAFF"));
 		roleRepository.save(new Role(Constant.USER_ROLE_ID, "ROLE_USER"));
@@ -93,11 +94,13 @@ public class TestDataInit implements ApplicationRunner {
 //		userAccount.setEmail("user2@gmail.com");
 //		userAccount.setRoles(userRoles);
 //		accountRepository.save(userAccount);
+
 		user.setId((long) 2);
 		user.setEmail("user2@gmail.com");
 		user.setUsername("user2");
 		user.setRoles(sellerRoles);
 		userRepository.save(user);
+
 
 		Account staffAccount = new Account();
 		staffAccount.setId((long) 3);
@@ -116,6 +119,7 @@ public class TestDataInit implements ApplicationRunner {
 		adminAccount.setAccountCreatedDate(new Date());
 		adminAccount.setAccountLastModifed(null);
 		accountRepository.save(adminAccount);
+
 
 		tagRepository.save(new Tag(1, "2D"));
 		tagRepository.save(new Tag(2, "3D"));
@@ -137,20 +141,10 @@ public class TestDataInit implements ApplicationRunner {
 		typeRepository.save(new Type(12, "Lore"));
 		typeRepository.save(new Type(13, "Others"));
 
-		//insert violation_type here
+
 		
-		Product product = new Product();
-		product.setId((long) 1);
-		product.setActive(true);
-		product.setUser(userRepository.getReferenceById((long) 1));
-		product.setName("TEST PRODUCT");
-		product.setType(typeRepository.getReferenceById(7));
-		product.setUploadDate(new Date());
-		List<Tag> tags = new ArrayList<>();
-		tags.add(tagRepository.getReferenceById(1));
-		tags.add(tagRepository.getReferenceById(2));
-		product.setTags(tags);
-		productRepository.save(product);
+
+
 
 	}
 }

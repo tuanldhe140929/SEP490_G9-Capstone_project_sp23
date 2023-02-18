@@ -3,6 +3,7 @@ package com.SEP490_G9.repositories;
 
 import java.util.List;
 import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -26,4 +27,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	Boolean existsByUsername(String username);
 	
 	public List<User> findByEnabled(boolean enabled);
+	public User getReferenceById(Long id);
 }
