@@ -1,6 +1,7 @@
 package com.SEP490_G9.models.Entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -26,6 +27,7 @@ public class User extends Account implements Serializable{
 	@Column(name="first_name" )
 	private String firstName;
 	
+
 	@Column(name="last_name")
 	private String lastName;
 	
@@ -43,7 +45,7 @@ public class User extends Account implements Serializable{
 	
 	@OneToOne(cascade = CascadeType.ALL)
 	private Cart cart;
-
+	
 	public User() {
 	}
 	

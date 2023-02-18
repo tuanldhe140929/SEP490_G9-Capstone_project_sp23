@@ -232,12 +232,6 @@ public class AuthServiceImpl implements AuthService {
 
 	@Override
 	public boolean sendRecoveryPasswordToEmail(String email) {
-		if (userRepository.existsByEmail(email)) {
-			return emailService.sendRecoveryPasswordToEmail(email,ne);
-		} else {
-			throw new ResourceNotFoundException("Email", "email", email);
-		}
-		
 		Account account = accountRepository.findByEmail(email);
 		if(account==null) {
 			throw new ResourceNotFoundException("Email", "email", email);
@@ -246,6 +240,13 @@ public class AuthServiceImpl implements AuthService {
 		account.setPassword(new BCryptPasswordEncoder().encode(newPassword));
 		accountRepository.save(account);
 		return emailService.sendRecoveryPasswordToEmail(email,newPassword);
+	}
+
+	@Override
+	public User getCurrentUser() {
+		Account account = ((UserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getAccount();
+		User user = userRepository.findById(account.getId()).get();
+		return user;
 	}
 
 }

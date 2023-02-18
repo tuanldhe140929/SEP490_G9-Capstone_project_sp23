@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.*;
 
-@JsonIgnoreProperties(value = { "products" })
+@JsonIgnoreProperties(value = { "productDetails" })
 @Entity
 @Table(name="tags")
 public class Tag implements Serializable {
@@ -21,11 +21,12 @@ public class Tag implements Serializable {
 	
 	@Column(name="name")
 	private String name;
-	public Tag() {
-	}
 	
 	@ManyToMany(mappedBy="tags")
-    private List<Product> products = new ArrayList<>();
+    private List<ProductDetails> productDetails = new ArrayList<>();
+	
+	public Tag() {
+	}
 	
 	public Tag(int id, String name) {
 		super();

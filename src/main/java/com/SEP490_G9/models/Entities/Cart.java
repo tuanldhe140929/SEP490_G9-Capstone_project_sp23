@@ -18,21 +18,21 @@ public class Cart {
 	private List<CartItem> items = new ArrayList<CartItem>();
 	
 	@ManyToOne
-	@JoinColumn(name="user_id", nullable=false)
-	private User user;
+	@JoinColumn(name="account_id", nullable=false)
+	private Account account;
 	
 	public Cart() {
 		// TODO Auto-generated constructor stub
 	}
-	public Cart(User user) {
-		this.user= user;
+	public Cart(Account account) {
+		this.account = account;
 	}
 
-	public Cart(Long id, List<CartItem> items, User user) {
+	public Cart(Long id, List<CartItem> items, Account account) {
 		super();
 		this.id = id;
 		this.items = items;
-		this.user = user;
+		this.account = account;
 	}
 
 	public Long getId() {
@@ -51,14 +51,15 @@ public class Cart {
 		this.items = items;
 	}
 
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
 	
+	
+	
+	public Account getAccount() {
+		return account;
+	}
+	public void setAccount(Account account) {
+		this.account = account;
+	}
 	public void addItem(CartItem newItem) {
 		this.items.add(newItem);
 	}

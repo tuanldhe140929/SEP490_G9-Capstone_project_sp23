@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.*;
 
-@JsonIgnoreProperties(value="product")
+@JsonIgnoreProperties(value = "productDetails")
 @Entity
 @Table(name = "previews")
 public class Preview {
@@ -17,11 +17,12 @@ public class Preview {
 
 	@Column(name = "type")
 	private String type;
-	
+
 	@ManyToOne
-	@JoinColumn(name="product_id", nullable=false)
-	private Product product;
-	
+	@JoinColumns({ @JoinColumn(name = "product_id", nullable = false),
+			@JoinColumn(name = "version", nullable = false) })
+	private ProductDetails productDetails;
+
 	public Preview() {
 	}
 
@@ -29,7 +30,7 @@ public class Preview {
 		super();
 		this.id = id;
 		this.source = source;
-		this.type= type;
+		this.type = type;
 	}
 
 	public Long getId() {
@@ -56,12 +57,12 @@ public class Preview {
 		this.type = type;
 	}
 
-	public Product getProduct() {
-		return product;
+	public ProductDetails getProductDetails() {
+		return productDetails;
 	}
 
-	public void setProduct(Product product) {
-		this.product = product;
+	public void setProductDetails(ProductDetails productDetails) {
+		this.productDetails = productDetails;
 	}
 
 }

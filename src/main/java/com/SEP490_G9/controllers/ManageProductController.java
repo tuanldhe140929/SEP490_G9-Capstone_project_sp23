@@ -15,11 +15,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.SEP490_G9.models.DTOS.ProductDTO;
+import com.SEP490_G9.models.DTOS.ProductDetailsDTO;
+import com.SEP490_G9.models.Entities.Category;
 import com.SEP490_G9.models.Entities.Preview;
 import com.SEP490_G9.models.Entities.Product;
+import com.SEP490_G9.models.Entities.ProductFile;
 import com.SEP490_G9.models.Entities.Tag;
-import com.SEP490_G9.models.Entities.Type;
 import com.SEP490_G9.models.Entities.User;
 import com.SEP490_G9.services.FileStorageService;
 import com.SEP490_G9.services.ManageProductService;
@@ -34,28 +35,31 @@ public class ManageProductController {
 	@Autowired
 	FileStorageService fileStorageService;
 
-	@GetMapping(value = "getCurrentUserInfo")
-	public ResponseEntity<?> getCurrentUserInfo() {
-		User user = manageProductService.getCurrentUserInfo();
-		User user2 = new User();
-		user2.setId(user.getId());
-		user2.setEnabled(user.isEnabled());
-		user2.setEmail(user.getEmail());
-		user2.setPassword(null);
-		user2.setUsername(user.getUsername());
-		user2.setRefreshToken(user.getRefreshToken());
-		return ResponseEntity.ok(user2);
-	}
-
-	@GetMapping(value = "getProductsByUser")
+	@GetMapping(value = "getEnabledProductsBySeller")
 	public ResponseEntity<?> getProductsByUser() {
-		List<Product> products = manageProductService.getProductsByUser();
+		List<ProductDetailsDTO> products = manageProductService.getProductDetailsDTOsBySeller();
 		return ResponseEntity.ok(products);
 	}
 
-	@PostMapping(value = "addProduct")
-	public ResponseEntity<?> addProduct(@RequestBody Product product) {
-		Product ret = manageProductService.addProduct(product);
+	@GetMapping("getLatestVersionProductByIdAndSeller")
+	public ResponseEntity<?> getProductByIdAndUser(@RequestParam(name = "productId") Long productId)
+			throws IOException {
+		ProductDetailsDTO productDTO = null;
+		productDTO = manageProductService.getLatestVersionProductDTOByIdAndSeller(productId);
+		return ResponseEntity.ok(productDTO);
+	}
+
+	@PostMapping(value = "createNewProduct")
+	public ResponseEntity<?> createNewProductRequest() {
+		Product product = manageProductService.createNewProduct();
+
+		return ResponseEntity.ok(product);
+	}
+
+	@PostMapping(value = "updateProduct")
+	public ResponseEntity<?> updateProduct(@RequestBody ProductDetailsDTO productDetailsDTO,
+			@RequestParam(name = "instruction") String instructionDetails) throws IOException {
+		ProductDetailsDTO ret = manageProductService.updateProductDetails(productDetailsDTO, instructionDetails);
 		return ResponseEntity.ok(ret);
 	}
 
@@ -64,93 +68,70 @@ public class ManageProductController {
 		return ResponseEntity.ok(manageProductService.deleteProduct(id));
 	}
 
-	@PostMapping(value = "updateProduct")
-	public ResponseEntity<?> updateProduct(@RequestBody Product product, @RequestParam(name="instruction") String instructionDetails) throws IOException {
-		ProductDTO ret = manageProductService.updateProduct(product,instructionDetails);
-		return ResponseEntity.ok(ret);
-	}
-
-	@PostMapping(value="createNewProductRequest")
-	public ResponseEntity<?> createNewProductRequest(){
-		Product product = manageProductService.createNewProduct();
-		return ResponseEntity.ok(product);
-	}
-	
-	
-	
-	
-	
-	
 	@PostMapping(value = "uploadCoverImage")
 	public ResponseEntity<?> uploadCoverImage(@RequestParam(name = "productId") Long productId,
-			@RequestParam(name = "coverImage") MultipartFile coverImage) throws IOException {
-		String src = manageProductService.uploadCoverImage(coverImage, productId);
+			@RequestParam(name = "coverImage") MultipartFile coverImage, @RequestParam(name = "version") String version)
+			throws IOException {
+		String src = manageProductService.uploadCoverImage(coverImage, productId, version);
 		return ResponseEntity.ok(src);
-	}
-	
-	
-	
-	
-	
-	
-	@PostMapping(value = "uploadPreviewVideo")
-	public ResponseEntity<?> uploadPreviewVideo(@RequestParam(name = "productId") Long productId,
-			@RequestParam(name = "previewVideo") MultipartFile previewVideo) throws IOException {
-		Preview src = manageProductService.uploadPreviewVideo(previewVideo, productId);
-		System.out.println(previewVideo.getInputStream().available());
-		return ResponseEntity.ok(src);
-	}
-	
-	@PostMapping(value="uploadPreviewPicture")
-	public ResponseEntity<?> uploadPreviewPicture(@RequestParam(name="productId") Long productId,
-			@RequestParam(name="previewPicture") MultipartFile previewPicture){
-		List<Preview> previews = manageProductService.uploadPreviewPicture(previewPicture, productId);
-		return ResponseEntity.ok(previews);
-	}
-	
-	
-	@GetMapping("getProductByIdAndUser")
-	public ResponseEntity<?> getProductByIdAndUser(@RequestParam(name = "productId") Long productId) throws IOException{
-		ProductDTO productDTO = null;
-		productDTO = manageProductService.getProductDTOByIdAndUser(productId);
-		return ResponseEntity.ok(productDTO);		
 	}
 
-	@GetMapping("getTypeList")
-	public ResponseEntity<?> getTypeList(){
-		List<Type> typeList = manageProductService.getTypeList();
-		return ResponseEntity.ok(typeList);		
+	@PostMapping(value = "uploadPreviewVideo")
+	public ResponseEntity<?> uploadPreviewVideo(@RequestParam(name = "productId") Long productId,
+			@RequestParam(name = "previewVideo") MultipartFile previewVideo,
+			@RequestParam(name = "version") String version) throws IOException {
+		Preview src = manageProductService.uploadPreviewVideo(previewVideo, productId, version);
+		return ResponseEntity.ok(src);
 	}
-	
-	@GetMapping("getTagList")
-	public ResponseEntity<?> getTagList(){
-		List<Tag> tagList = manageProductService.getTagList();
-		return ResponseEntity.ok(tagList);		
+
+	@PostMapping(value = "uploadPreviewPicture")
+	public ResponseEntity<?> uploadPreviewPicture(@RequestParam(name = "productId") Long productId,
+			@RequestParam(name = "previewPicture") MultipartFile previewPicture,
+			@RequestParam(name = "version") String version) {
+		List<Preview> previews = manageProductService.uploadPreviewPicture(previewPicture, productId, version);
+		return ResponseEntity.ok(previews);
 	}
-	
+
 	@PostMapping("uploadProductFile")
-	public ResponseEntity<?> uploadProductFiles(@RequestParam(name = "productId", required=true) Long productId,
-			@RequestParam(name = "productFile", required=true) MultipartFile productFile) throws IOException{
-		ProductDTO product = manageProductService.uploadProductFile(productId,productFile);
-		return ResponseEntity.ok(product);
+	public ResponseEntity<?> uploadProductFiles(@RequestParam(name = "productId", required = true) Long productId,
+			@RequestParam(name = "productFile", required = true) MultipartFile productFile,
+			@RequestParam(name = "version") String version) throws IOException {
+		ProductDetailsDTO product = manageProductService.uploadProductFile(productId, productFile, version);
+		List<ProductFile> files = product.getFiles();
+		return ResponseEntity.ok(files);
 	}
-	
+
 	@PostMapping("deleteProductFile")
-	public ResponseEntity<?> deleteProductFile(@RequestParam(name = "productId", required=true) Long productId,
-			@RequestParam(name = "fileId", required=true) Long fileId) throws IOException{
-		ProductDTO product = manageProductService.deleteProductFile(productId, fileId);
+	public ResponseEntity<?> deleteProductFile(@RequestParam(name = "productId", required = true) Long productId,
+			@RequestParam(name = "fileId", required = true) Long fileId)
+			throws IOException {
+		ProductDetailsDTO product = manageProductService.deleteProductFile(productId, fileId);
 		return ResponseEntity.ok(product);
 	}
-	
+
 	@DeleteMapping("removePreviewVideo")
-	public ResponseEntity<?> removePreviewVideo(@RequestParam(name = "productId", required=true) Long productId) throws IOException{
+	public ResponseEntity<?> removePreviewVideo(@RequestParam(name = "productId", required = true) Long productId)
+			throws IOException {
 		boolean ret = manageProductService.deleteProductPreviewVideo(productId);
 		return ResponseEntity.ok(ret);
 	}
-	
+
 	@DeleteMapping("removePreviewPicture")
-	public ResponseEntity<?> removePreviewPicture(@RequestParam(name = "previewId", required=true) Long previewId) throws IOException{
+	public ResponseEntity<?> removePreviewPicture(@RequestParam(name = "previewId", required = true) Long previewId)
+			throws IOException {
 		List<Preview> previews = manageProductService.deletePreviewPicture(previewId);
 		return ResponseEntity.ok(previews);
+	}
+
+	@GetMapping("getTypeList")
+	public ResponseEntity<?> getTypeList() {
+		List<Category> typeList = manageProductService.getCategoryList();
+		return ResponseEntity.ok(typeList);
+	}
+
+	@GetMapping("getTagList")
+	public ResponseEntity<?> getTagList() {
+		List<Tag> tagList = manageProductService.getTagList();
+		return ResponseEntity.ok(tagList);
 	}
 }

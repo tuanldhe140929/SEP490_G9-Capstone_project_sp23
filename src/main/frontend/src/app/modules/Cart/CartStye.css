@@ -1,0 +1,61 @@
+.container {
+  display:flex;
+  
+  margin-left: 600px;
+}
+
+.item-block {
+  background-color: black;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.item-name {
+  font-size: 18px;
+  color: aliceblue;
+  margin-top: 10px;
+}
+
+img {
+  width: 200px;
+  height: 200px;
+  margin-top: 10px;
+}
+
+.price {
+  font-size: 18px;
+  margin-top: 10px;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+}
+
+.total-block {
+  margin-top: 200;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: 50px;
+}
+
+.total-name {
+  font-size: 18px;
+  margin-top: 10px;
+}
+
+.total-price {
+  font-size: 18px;
+  margin-top: 10px;
+}
+
+.checkout-button {
+  width: 100px;
+  height: 50px;
+  background-color: rgb(255, 0, 0);
+  color: white;
+  font-size: 18px;
+  margin-top: 10px;
+}
+
+  
