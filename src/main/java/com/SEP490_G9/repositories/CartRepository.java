@@ -8,7 +8,8 @@ import com.SEP490_G9.models.Entities.Cart;
 public interface CartRepository extends JpaRepository<Cart, Long> {
 //	public Cart findByUserId(Long userId);
 
-	@Query(value="Select top 1 * from carts where account_id=:accountId ORDER BY cart_id DESC",nativeQuery = true)
-	public Cart findCurrentCart(Long accountID);
+	@Query(value = "SELECT TOP 1 * FROM carts WHERE account_id = :accountId ORDER BY cart_id DESC", nativeQuery = true)
+	public Cart findCurrentCart(Long accountId);
+
 
 }

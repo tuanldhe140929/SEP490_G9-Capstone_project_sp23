@@ -40,7 +40,10 @@ public class CartServiceImplement implements CartService {
 	@Autowired
 	TransactionRepository transactionRepository;
 	@Autowired
-	AccountRepository accountRepository ;
+	AccountRepository accountRepository;
+	@Autowired
+	UserRepository userRepo;
+
 	@Override
 	public CartDTO addProduct(Long productId) {
 
@@ -74,27 +77,45 @@ public class CartServiceImplement implements CartService {
 
 		return cartDto;
 	}
+
 	public CartDTO removeAllProduct(Long productId) {
 		Cart cart = getCurrentCart();
 		CartItem itemToRemove = null;
-		return null;
-		
+
+		// Find the CartItem in the cart with the given productId
+		for (CartItem item : cart.getItems()) {
+			if (item.getProduct().getId().equals(productId)) {
+				itemToRemove = item;
+				break;
+			}
+		}
+
+		if (itemToRemove != null) {
+			// Remove the CartItem from the cart
+			cart.getItems().remove(itemToRemove);
+
+			// Update the cart in the database
+			cartRepository.save(cart);
+		}
+
+		// Convert the updated cart to a CartDTO and return it
+		return new CartDTO(cart);
+
 	}
 
 	private Cart getCurrentCart() {
 
-
-		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getAccount();
-		Cart cart =cartRepository.findCurrentCart(account.getId());
-
-
+		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
+				.getAccount();
+		User user = userRepo.getReferenceById(account.getId());
+		Cart cart = cartRepository.findCurrentCart(account.getId());
 
 		Cart retCart = null;
 		if (cart == null) {
-			retCart = cartRepository.save(new Cart(account));
+			retCart = cartRepository.save(new Cart(user));
 
 		} else {
-			retCart = checkTransactionAndReturnCart(cart, account);
+			retCart = checkTransactionAndReturnCart(cart, user);
 		}
 		return retCart;
 
@@ -106,7 +127,6 @@ public class CartServiceImplement implements CartService {
 		CartDTO cartDTO = new CartDTO(cart);
 		return cartDTO;
 	}
-	
 
 	@Override
 	public Cart getCart(Long cartId) {
@@ -127,44 +147,37 @@ public class CartServiceImplement implements CartService {
 
 	@Override
 	public CartDTO checkOut(Cart cart, Account account) {
-	    // Validate that the user exists
-	    account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getAccount();
-	    if(account == null) {
-	        // Error: User not found
-	        return null;
-	    }
+		// Validate that the user exists
+		account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
+				.getAccount();
+		User user = userRepo.getReferenceById(account.getId());
+		if (user == null) {
+			// Error: User not found
+			return null;
+		}
 
-	    // Validate that the cart is not empty
-	    cart = getCurrentCart();
-	    if(cart == null) {
-	        // Error: Cart is empty
-	        return null;
-	    }
+		// Validate that the cart is not empty
+		cart = getCurrentCart();
+		if (cart == null) {
+			// Error: Cart is empty
+			return null;
+		}
 
-	    
+		// Create a new transaction
+		Transaction transaction = new Transaction();
 
-	    // Create a new transaction
-	    Transaction transaction = new Transaction();
+		// Set the transaction details
 
-	    // Set the transaction details
-	    
+		// Save the transaction
+		transactionRepository.save(transaction);
 
-	    // Save the transaction
-	    transactionRepository.save(transaction);
+		// Clear the cart
+		cart = new Cart();
 
-	    // Clear the cart
-	     cart = new Cart();
-
-	    // Return the transaction details
-	    CartDTO cartDto = new CartDTO();
-	    //....
-	    return cartDto;
+		// Return the transaction details
+		CartDTO cartDto = new CartDTO();
+		// ....
+		return cartDto;
 	}
 
-
-        
-    
-		
-	
-	}
-	
+}
