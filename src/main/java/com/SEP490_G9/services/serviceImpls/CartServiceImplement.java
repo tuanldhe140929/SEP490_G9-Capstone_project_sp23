@@ -146,38 +146,38 @@ public class CartServiceImplement implements CartService {
 	}
 
 	@Override
-	public CartDTO checkOut(Cart cart, Account account) {
-		// Validate that the user exists
-		account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
-				.getAccount();
-		User user = userRepo.getReferenceById(account.getId());
-		if (user == null) {
-			// Error: User not found
-			return null;
-		}
+	public CartDTO checkOut(Account account) {
+	    // Validate that the user exists
+	    User user = userRepo.getReferenceById(account.getId());
+	    if (user == null) {
+	        // Error: User not found
+	        return null;
+	    }
 
-		// Validate that the cart is not empty
-		cart = getCurrentCart();
-		if (cart == null) {
-			// Error: Cart is empty
-			return null;
-		}
+	    // Get the current cart
+	    Cart cart = getCurrentCart();
+	    if (cart == null || cart.getItems().isEmpty()) {
+	        // Error: Cart is empty
+	        return null;
+	    }
 
-		// Create a new transaction
-		Transaction transaction = new Transaction();
+	    // Create a new transaction
+	    Transaction transaction = new Transaction();
 
-		// Set the transaction details
+	    // Set the transaction details
+	    transaction.setAccount(account);
+	    transaction.setItems(cart.getItems());
 
-		// Save the transaction
-		transactionRepository.save(transaction);
+	    // Save the transaction
+	    transactionRepository.save(transaction);
 
-		// Clear the cart
-		cart = new Cart();
+	    // Clear the cart
+	    cart.getItems().clear();
 
-		// Return the transaction details
-		CartDTO cartDto = new CartDTO();
-		// ....
-		return cartDto;
+	    // Return the transaction details
+	    CartDTO cartDto = new CartDTO();
+	    // ....
+	    return cartDto;
 	}
 
 }
