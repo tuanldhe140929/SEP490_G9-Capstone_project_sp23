@@ -45,9 +45,6 @@ public class User extends Account implements Serializable{
 	@OneToOne(cascade = CascadeType.ALL)
 	private Cart cart;
 	
-	@OneToMany(mappedBy="user",fetch = FetchType.EAGER)
-	private List<Product> products = new ArrayList<>();
-	
 	public User() {
 	}
 	

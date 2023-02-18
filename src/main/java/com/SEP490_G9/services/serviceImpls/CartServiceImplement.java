@@ -19,7 +19,7 @@ import com.SEP490_G9.models.Entities.DTOS.CartDTO;
 import com.SEP490_G9.repositories.CartItemRepository;
 import com.SEP490_G9.repositories.CartRepository;
 import com.SEP490_G9.repositories.ProductRepository;
-import com.SEP490_G9.repositories.TransactionRepository;
+//import com.SEP490_G9.repositories.TransactionRepository;
 import com.SEP490_G9.repositories.UserRepository;
 import com.SEP490_G9.services.CartService;
 
@@ -35,8 +35,8 @@ public class CartServiceImplement implements CartService {
 	CartRepository cartRepository;
 	@Autowired
 	private UserRepository userRepository;
-	@Autowired
-	TransactionRepository transactionRepository;
+//	@Autowired
+//	TransactionRepository transactionRepository;
 
 	@Override
 	public CartDTO addProduct(Long productId) {
@@ -75,7 +75,6 @@ public class CartServiceImplement implements CartService {
 	
 	private Cart getCurrentCart() {
 
-		
 
 		User user = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
 		Cart cart = cartRepository.findByUserId(user.getId());

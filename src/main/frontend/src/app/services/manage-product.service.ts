@@ -3,23 +3,24 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Product } from '../DTOS/Product';
 import { User } from '../DTOS/User';
-import { Type } from '../DTOS/Type';
+import { Category } from '../DTOS/Category';
 import { Tag } from '../DTOS/Tag';
 import { Preview } from '../DTOS/Preview';
+import { ProductFile } from '../DTOS/ProductFile';
 const baseUrl = 'http://localhost:9000/private/manageProduct';
 const serveMediaUrl = "http://localhost:9000/public/serveMedia";
 @Injectable({
   providedIn: 'root'
 })
 export class ManageProductService {
-  getTypeList(): Observable<Type[]> {
-    return this.httpClient.get<Type[]>(baseUrl + '/getTypeList');
+  getTypeList(): Observable<Category[]> {
+    return this.httpClient.get<Category[]>(baseUrl + '/getTypeList');
   }
   getTagList(): Observable<Tag[]> {
     return this.httpClient.get<Tag[]>(baseUrl + '/getTagList');
   }
-  getProductByIdAndUser(productId: number): Observable<Product> {
-    return this.httpClient.get<Product>(baseUrl + '/getProductByIdAndUser?productId=' + productId);
+  getProductByIdAndSeller(productId: number): Observable<Product> {
+    return this.httpClient.get<Product>(baseUrl + '/getLatestVersionProductByIdAndSeller?productId=' + productId);
   }
 
   constructor(private httpClient: HttpClient) { }
@@ -34,8 +35,8 @@ export class ManageProductService {
     });
   }
   
-  uploadProductFile(data: any): Observable<Product> {
-    return this.httpClient.post<Product>(baseUrl + '/uploadProductFile', data, {
+  uploadProductFile(data: any): Observable<ProductFile[]> {
+    return this.httpClient.post<ProductFile[]>(baseUrl + '/uploadProductFile', data, {
       //reportProgress: true,
     });
   }

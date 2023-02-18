@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.*;
 
-@JsonIgnoreProperties(value = { "product" })
+@JsonIgnoreProperties(value = { "productDetails" })
 @Entity
 @Table(name = "files")
 public class ProductFile {
@@ -30,41 +30,37 @@ public class ProductFile {
 	@Column(name = "size")
 	private Long size;
 
-	@Column(name="diplay_order")
+	@Column(name = "diplay_order")
 	private String displayOrder;
-	
+
 	@Column(name = "last_update")
 	private Date lastUpdate;
 
 	@ManyToOne
-	@JoinColumn(name="product_id", nullable=false)
-	private Product product;
+	@JoinColumns({ @JoinColumn(name = "product_id", nullable = false),
+			@JoinColumn(name = "version", nullable = false) })
+	private ProductDetails productDetails;
 
 	public ProductFile() {
 		// TODO Auto-generated constructor stub
 	}
-	
-	public ProductFile(Long id, String name, String source, String type, Long size, String displayOrder,
-			Date lastUpdate, Product product) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.source = source;
-		this.type = type;
-		this.size = size;
-		this.displayOrder = displayOrder;
-		this.lastUpdate = lastUpdate;
-		this.product = product;
-	}
 
-	public ProductFile(MultipartFile file, String source, Product product) {
+	public ProductFile(MultipartFile file, String source, ProductDetails productDetails) {
 		this.name = file.getOriginalFilename();
 		this.source = source + this.name;
 		this.type = file.getContentType();
 		this.size = file.getSize();
 		this.lastUpdate = new Date();
-		this.product = product;
+		this.productDetails = productDetails;
 		this.displayOrder = "0";
+	}
+
+	public ProductDetails getProductDetails() {
+		return productDetails;
+	}
+
+	public void setProductDetails(ProductDetails productDetails) {
+		this.productDetails = productDetails;
 	}
 
 	public Long getId() {
@@ -113,14 +109,6 @@ public class ProductFile {
 
 	public void setLastUpdate(Date lastUpdate) {
 		this.lastUpdate = lastUpdate;
-	}
-
-	public Product getProduct() {
-		return product;
-	}
-
-	public void setProduct(Product product) {
-		this.product = product;
 	}
 
 	public String getDisplayOrder() {

@@ -4,6 +4,7 @@ import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinColumns;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.Table;
@@ -30,27 +31,28 @@ public class CartItem implements Serializable {
 	@JoinColumn(name = "cart_id",referencedColumnName = "id")
 	private Cart cart;
 
-	@MapsId("productId")
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "product_id",referencedColumnName = "id")
-	private Product product;
+	@MapsId("productVersionKey")
+	@ManyToOne
+	@JoinColumns({ @JoinColumn(name = "product_id", nullable = false),
+			@JoinColumn(name = "version", nullable = false) })
+	private ProductDetails productDetails;
 	
 	public CartItem() {
 
 	}
 	
-	public CartItem(Cart cart, Product product) {
+	public CartItem(Cart cart, ProductDetails productDetails) {
 		super();
 		//this.cartItemKey = new CartItemKey(cart.getId(),product.getId());
 		this.cart = cart;
-		this.product = product;
+		this.productDetails = productDetails;
 	}
 	
-	public CartItem(CartItemKey cartItemKey, Cart cart, Product product) {
+	public CartItem(CartItemKey cartItemKey, Cart cart, ProductDetails productDetails) {
 		super();
 		this.cartItemKey = cartItemKey;
 		this.cart = cart;
-		this.product = product;
+		this.productDetails = productDetails;
 	}
 
 	public CartItemKey getCartItemKey() {
@@ -69,14 +71,11 @@ public class CartItem implements Serializable {
 		this.cart = cart;
 	}
 
-	public Product getProduct() {
-		return product;
+	public ProductDetails getProductDetails() {
+		return productDetails;
 	}
 
-	public void setProduct(Product product) {
-		this.product = product;
+	public void setProductDetails(ProductDetails productDetails) {
+		this.productDetails = productDetails;
 	}
-	
-	
-
 }
