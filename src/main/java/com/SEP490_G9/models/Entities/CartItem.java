@@ -14,12 +14,10 @@ import java.io.Serializable;
 import com.SEP490_G9.models.embeddables.CartItemKey;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-@JsonIgnoreProperties(value={"cart"})
+@JsonIgnoreProperties(value = { "cart" })
 @Entity
 @Table(name = "cart_items")
 public class CartItem implements Serializable {
-	
-
 
 	private static final long serialVersionUID = 1L;
 
@@ -28,7 +26,7 @@ public class CartItem implements Serializable {
 
 	@MapsId("cartId")
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "cart_id",referencedColumnName = "id")
+	@JoinColumn(name = "cart_id", referencedColumnName = "id")
 	private Cart cart;
 
 	@MapsId("productVersionKey")
@@ -36,18 +34,18 @@ public class CartItem implements Serializable {
 	@JoinColumns({ @JoinColumn(name = "product_id", nullable = false),
 			@JoinColumn(name = "version", nullable = false) })
 	private ProductDetails productDetails;
-	
+
 	public CartItem() {
 
 	}
-	
+
 	public CartItem(Cart cart, ProductDetails productDetails) {
 		super();
-		//this.cartItemKey = new CartItemKey(cart.getId(),product.getId());
+		// this.cartItemKey = new CartItemKey(cart.getId(),product.getId());
 		this.cart = cart;
 		this.productDetails = productDetails;
 	}
-	
+
 	public CartItem(CartItemKey cartItemKey, Cart cart, ProductDetails productDetails) {
 		super();
 		this.cartItemKey = cartItemKey;

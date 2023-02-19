@@ -15,11 +15,13 @@ import com.SEP490_G9.models.Entities.Cart;
 import com.SEP490_G9.models.Entities.CartItem;
 
 import com.SEP490_G9.models.Entities.Product;
+import com.SEP490_G9.models.Entities.ProductDetails;
 import com.SEP490_G9.models.Entities.Transaction;
 import com.SEP490_G9.models.Entities.User;
 import com.SEP490_G9.repositories.AccountRepository;
 import com.SEP490_G9.repositories.CartItemRepository;
 import com.SEP490_G9.repositories.CartRepository;
+import com.SEP490_G9.repositories.ProductDetailsRepository;
 import com.SEP490_G9.repositories.ProductRepository;
 import com.SEP490_G9.repositories.TransactionRepository;
 import com.SEP490_G9.repositories.UserRepository;
@@ -32,7 +34,8 @@ public class CartServiceImplement implements CartService {
 
 	@Autowired
 	ProductRepository productRepository;
-
+	@Autowired
+	ProductDetailsRepository productDetailsRepository ;
 	@Autowired
 	CartRepository cartRepository;
 	@Autowired
@@ -46,46 +49,44 @@ public class CartServiceImplement implements CartService {
 
 
 	@Override
-	public CartDTO addProduct(Long productId) {
-
-		Product product = productRepository.findById(productId).get();
-		Cart cart = getCurrentCart();
-		CartItem item = new CartItem(cart, product);
-		cart.addItem(item);
-		cartItemRepository.save(item);
-		CartDTO cartDTO = new CartDTO(cart);
-		return cartDTO;
-	}
+		public CartDTO addProduct(Long productId, String version) {
+		    ProductDetails productDetails = productDetailsRepository.
+		    		findByProductIdAndProductVersionKeyVersion(productId, version);
+		    Cart cart = getCurrentCart();
+		    CartItem item = new CartItem(cart, productDetails);
+		    cart.addItem(item);
+		    cartItemRepository.save(item);
+		    CartDTO cartDTO = new CartDTO(cart);
+		    return cartDTO;
+		}
 
 	@Override
 	public CartDTO removeProduct(Long productId) {
-		Cart cart = getCurrentCart();
-		CartItem itemToRemove = null;
-		for (CartItem item : cart.getItems()) {
-			if (item.getProduct().getId() == productId) {
-				itemToRemove = item;
-				break;
-			}
-		}
-		if (itemToRemove != null) {
-			cart.getItems().remove(itemToRemove);
-			cartItemRepository.delete(itemToRemove);
-		} else {
-			throw new ResourceNotFoundException("Product with id " + productId + " not found in cart.", null,
-					itemToRemove);
-		}
-		CartDTO cartDto = new CartDTO(cart);
-
-		return cartDto;
+	    Cart cart = getCurrentCart();
+	    CartItem itemToRemove = null;
+	    for (CartItem item : cart.getItems()) {
+	    	if (item.getProductDetails().getProductVersionKey().getProductId() == productId) {
+	            itemToRemove = item;
+	            break;
+	        }
+	    }
+	    if (itemToRemove != null) {
+	        cart.getItems().remove(itemToRemove);
+	        cartItemRepository.delete(itemToRemove);
+	    } else {
+	        throw new ResourceNotFoundException("Product with id " + productId + " not found in cart.", null,
+	                itemToRemove);
+	    }
+	    CartDTO cartDto = new CartDTO(cart);
+	    return cartDto;
 	}
-
 	public CartDTO removeAllProduct(Long productId) {
 		Cart cart = getCurrentCart();
 		CartItem itemToRemove = null;
 
 		// Find the CartItem in the cart with the given productId
 		for (CartItem item : cart.getItems()) {
-			if (item.getProduct().getId().equals(productId)) {
+			if (item.getProductDetails().getProductVersionKey().getProductId().equals(productId)) {
 				itemToRemove = item;
 				break;
 			}
