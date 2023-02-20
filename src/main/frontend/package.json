@@ -24,6 +24,7 @@
     "@ckeditor/ckeditor5-build-classic": "^36.0.0",
     "@ng-bootstrap/ng-bootstrap": "^14.0.1",
     "@popperjs/core": "^2.11.6",
+    "@types/socket.io-client": "^3.0.0",
     "@videogular/ngx-videogular": "^7.0.1",
     "angular-datatables": "^15.0.0",
     "bootstrap": "^5.2.3",
@@ -36,6 +37,8 @@
     "ngx-toastr": "^16.0.2",
     "popper": "^1.0.1",
     "rxjs": "~7.5.0",
+    "rxjs-compat": "^6.6.7",
+    "socket.io-client": "^4.6.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.12.0"
   },

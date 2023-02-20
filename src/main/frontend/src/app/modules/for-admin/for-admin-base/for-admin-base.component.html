@@ -1,28 +1,42 @@
-<mat-toolbar>
+<!-- <mat-toolbar>
     <mat-toolbar-row>
         <mat-icon (click)="sidebar.toggle()">menu</mat-icon>
         <span>
             Admin Screen
         </span>
     </mat-toolbar-row>
-</mat-toolbar>
+</mat-toolbar> -->
+<mat-toolbar>
+    <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon" (click)="sidebar.toggle()">
+     <mat-icon>menu</mat-icon>
+   </button>
+   <span>Hệ thống quản lý DPM</span>
+   <span class="example-spacer"></span>
+   <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
+     <mat-icon>favorite</mat-icon>
+   </button>
+   <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
+    <mat-icon>share</mat-icon>
+  </button>
+ </mat-toolbar>
 <mat-sidenav-container>
     <mat-sidenav #sidebar mode="side">
-        <ul>
+        <!-- <ul>
             <li>
-                <a [routerLink]="['/adminDashboard']">Dashboard</a>
+                <button (click)="openDashboard()">Dashboard</button>
             </li>
             <li>
-                <a [routerLink]="['/inspectorList']">Inspectors</a>
+                <button (click)="openManageStaffs()">Manage Staffs</button>
             </li>
-            <li>
-                <a [routerLink]="['/addInspector']">Add Inspector</a>
-            </li>
-        </ul>
+        </ul> -->
+        <mat-list>
+            <mat-list-item (click)="openDashboard()"><a>Bảng thông tin</a></mat-list-item>
+            <mat-list-item (click)="openManageStaffs()"><a>Quản lý nhân viên</a></mat-list-item>
+        </mat-list>
     </mat-sidenav>
     <mat-sidenav-content>
-        <div>
-            for admin
+        <div class="outletContent">
+            <router-outlet [name]="routerName"></router-outlet>
         </div>
     </mat-sidenav-content>
 </mat-sidenav-container>

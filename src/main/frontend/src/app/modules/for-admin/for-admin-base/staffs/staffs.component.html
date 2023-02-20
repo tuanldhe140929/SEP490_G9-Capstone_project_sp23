@@ -1,0 +1,45 @@
+<h1>Quản lý nhân viên</h1>
+<button class="btn btn-primary" (click)="openAddDialog()">Thêm nhân viên</button>
+<table datatable class="table table-striped table-bordered table-sm" cellspacing="0" width="100%" id="staffsTable">
+    <thead>
+      <tr>
+        <th class="th-sm">Email
+
+        </th>
+        <th class="th-sm">Ngày tạo
+  
+        </th>
+        <th class="th-sm">Trạng thái
+
+        </th>
+        <th class="th-sm">Hành động
+          
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let staff of staffList">
+        <td>
+          {{staff.email}}
+        </td>
+        <td>
+          {{staff.accountCreatedDate}}
+        </td>
+        <td>
+          {{staff.enabled}}
+        </td>
+        <td>
+          <div *ngIf="staff.enabled; then toDisable else toEnable"></div>
+          <ng-template #toDisable><button class="btn btn-danger" (click)="openUpdateDialog(staff.id, staff.email, staff.enabled)">Tắt</button></ng-template>
+          <ng-template #toEnable><button class="btn btn-success" (click)="openUpdateDialog(staff.id, staff.email, staff.enabled)">Bật</button></ng-template>
+        </td>
+      </tr>
+      <!-- <tr>
+        <td>A</td>
+        <td>B</td>
+        <td>C</td>
+        <td>D</td>
+      </tr> -->
+    </tbody>
+  </table>
+

@@ -57,7 +57,7 @@ import { DataTablesModule } from 'angular-datatables'
         progressBar: true
       }
     ),
-    
+
 
   ],
   providers: [

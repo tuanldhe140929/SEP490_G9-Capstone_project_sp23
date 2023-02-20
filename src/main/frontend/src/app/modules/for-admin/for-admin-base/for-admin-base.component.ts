@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-for-admin-base',
@@ -6,5 +7,15 @@ import { Component } from '@angular/core';
   styleUrls: ['./for-admin-base.component.css']
 })
 export class ForAdminBaseComponent {
+  constructor(private router: Router){}
 
+  routerName: string = 'dashboard';
+
+  openDashboard(){
+    this.routerName = 'dashboard';
+  }
+
+  openManageStaffs(){
+    this.routerName = 'staffs';
+  }
 }

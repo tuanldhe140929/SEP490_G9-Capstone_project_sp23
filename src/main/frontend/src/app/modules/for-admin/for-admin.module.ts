@@ -17,6 +17,10 @@ import { ForAdminBaseComponent } from './for-admin-base/for-admin-base.component
 import { AddInspectorComponent } from './add-inspector/add-inspector.component';
 import { UpdateInspectorComponent } from './update-inspector/update-inspector.component';
 import { DeleteInspectorComponent } from './delete-inspector/delete-inspector.component';
+import { DashboardComponent } from './for-admin-base/dashboard/dashboard.component';
+import { StaffsComponent } from './for-admin-base/staffs/staffs.component';
+import { AddStaffComponent } from './for-admin-base/staffs/add-staff/add-staff.component';
+import { UpdateStaffStatusComponent } from './for-admin-base/staffs/update-staff-status/update-staff-status.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +29,11 @@ import { DeleteInspectorComponent } from './delete-inspector/delete-inspector.co
     ForAdminBaseComponent,
     AddInspectorComponent,
     UpdateInspectorComponent,
-    DeleteInspectorComponent
+    DeleteInspectorComponent,
+    DashboardComponent,
+    StaffsComponent,
+    AddStaffComponent,
+    UpdateStaffStatusComponent
   ],
   imports: [
     CommonModule,
