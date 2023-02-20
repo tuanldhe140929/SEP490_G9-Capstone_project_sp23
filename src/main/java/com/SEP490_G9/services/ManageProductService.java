@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.SEP490_G9.models.DTOS.ProductDetailsDTO;
+import com.SEP490_G9.models.DTOS.ProductFileDTO;
 import com.SEP490_G9.models.Entities.Preview;
 import com.SEP490_G9.models.Entities.Product;
 import com.SEP490_G9.models.Entities.Tag;
@@ -31,9 +32,9 @@ public interface ManageProductService {
 	
 	public boolean deleteProduct(Long id);
 
-	public ProductDetailsDTO uploadProductFile(Long productId, MultipartFile productFile, String version) throws IOException;
+	public ProductFileDTO uploadProductFile(Long productId, MultipartFile productFile, String version) throws IOException;
 	
-	public ProductDetailsDTO deleteProductFile(Long productId, Long fileId) throws IOException;
+	public ProductFileDTO deleteProductFile(Long productId, Long fileId) throws IOException;
 	
 	public String uploadCoverImage(MultipartFile coverImage, Long productId, String version) throws IOException;
 

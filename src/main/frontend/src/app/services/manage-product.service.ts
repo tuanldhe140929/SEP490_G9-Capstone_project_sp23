@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpEvent } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Product } from '../DTOS/Product';
@@ -9,10 +9,43 @@ import { Preview } from '../DTOS/Preview';
 import { ProductFile } from '../DTOS/ProductFile';
 const baseUrl = 'http://localhost:9000/private/manageProduct';
 const serveMediaUrl = "http://localhost:9000/public/serveMedia";
+const getScanVirusUrl = "https://www.virustotal.com/api/v3/files/upload_url";
+const virusTotalBaseUrl = "http://www.virustotal.com/_ah/upload/";
 @Injectable({
   providedIn: 'root'
 })
 export class ManageProductService {
+
+
+  scanVirus(file:Blob) {
+    let formData = new FormData();
+    formData.append("file",file);
+    this.getVirusTotalKey().subscribe(
+      (data: string) => {
+        const key = data;
+        this.getUploadUrl(key).subscribe(
+          (data: any) => {
+            return this.httpClient.post(data.data, formData, { headers: {"x-apikey":key} }).subscribe((data:any) => {
+              console.log(data);
+              var analysisUrl = 'https://www.virustotal.com/api/v3/analyses/' + data.data.id;
+              this.httpClient.get(analysisUrl, { headers: { "x-apikey": key } }).subscribe((data) => {
+                console.log(data);
+              })
+            });
+          })
+      },
+      (error: any) => {
+      }
+    )
+  }
+
+  getUploadUrl(key: string) {
+    return this.httpClient.get(getScanVirusUrl, {
+      headers: {
+        "x-apikey": key
+      }
+    })
+  }
   getTypeList(): Observable<Category[]> {
     return this.httpClient.get<Category[]>(baseUrl + '/getTypeList');
   }
@@ -34,19 +67,21 @@ export class ManageProductService {
       responseType: 'text',
     });
   }
-  
-  uploadProductFile(data: any): Observable<ProductFile[]> {
-    return this.httpClient.post<ProductFile[]>(baseUrl + '/uploadProductFile', data, {
-      //reportProgress: true,
+
+  uploadProductFile(data: any): Observable<HttpEvent<any>> {
+    return this.httpClient.post<HttpEvent<any>>(baseUrl + '/uploadProductFile', data, {
+      reportProgress: true,
+      responseType: 'json',
+      observe: 'events',
     });
   }
-  
-  deleteProductFile(data: any): Observable<Product> {
-    return this.httpClient.post<Product>(baseUrl + '/deleteProductFile', data, {
-      
+
+  deleteProductFile(data: any): Observable<ProductFile> {
+    return this.httpClient.post<ProductFile>(baseUrl + '/deleteProductFile', data, {
+
     });
   }
-  
+
   getCoverImage(productId: number): Observable<Blob> {
     return this.httpClient.get(serveMediaUrl + "/serveCoverImage?productId=" + productId, {
       responseType: 'blob'
@@ -92,11 +127,17 @@ export class ManageProductService {
       }
     })
   }
-  getCurrentOwnerInfo(username: string): Observable<User>{
-    return this.httpClient.get<User>(baseUrl+"/getCurrentOwnerInfo",{
-      params:{
+  getCurrentOwnerInfo(username: string): Observable<User> {
+    return this.httpClient.get<User>(baseUrl + "/getCurrentOwnerInfo", {
+      params: {
         username: username
       }
+    })
+  }
+
+  getVirusTotalKey() {
+    return this.httpClient.get(baseUrl + "/getVirusTotalKey", {
+      responseType: 'text',
     })
   }
 }

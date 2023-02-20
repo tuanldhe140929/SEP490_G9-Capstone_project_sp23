@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.SEP490_G9.helpers.Constant;
 import com.SEP490_G9.models.DTOS.ProductDetailsDTO;
+import com.SEP490_G9.models.DTOS.ProductFileDTO;
 import com.SEP490_G9.models.Entities.Category;
 import com.SEP490_G9.models.Entities.Preview;
 import com.SEP490_G9.models.Entities.Product;
@@ -96,17 +98,15 @@ public class ManageProductController {
 	public ResponseEntity<?> uploadProductFiles(@RequestParam(name = "productId", required = true) Long productId,
 			@RequestParam(name = "productFile", required = true) MultipartFile productFile,
 			@RequestParam(name = "version") String version) throws IOException {
-		ProductDetailsDTO product = manageProductService.uploadProductFile(productId, productFile, version);
-		List<ProductFile> files = product.getFiles();
-		return ResponseEntity.ok(files);
+		ProductFileDTO dto = manageProductService.uploadProductFile(productId, productFile, version);
+		return ResponseEntity.ok(dto);
 	}
 
 	@PostMapping("deleteProductFile")
 	public ResponseEntity<?> deleteProductFile(@RequestParam(name = "productId", required = true) Long productId,
-			@RequestParam(name = "fileId", required = true) Long fileId)
-			throws IOException {
-		ProductDetailsDTO product = manageProductService.deleteProductFile(productId, fileId);
-		return ResponseEntity.ok(product);
+			@RequestParam(name = "fileId", required = true) Long fileId) throws IOException {
+		ProductFileDTO productFileDTO = manageProductService.deleteProductFile(productId, fileId);
+		return ResponseEntity.ok(productFileDTO);
 	}
 
 	@DeleteMapping("removePreviewVideo")
@@ -133,5 +133,10 @@ public class ManageProductController {
 	public ResponseEntity<?> getTagList() {
 		List<Tag> tagList = manageProductService.getTagList();
 		return ResponseEntity.ok(tagList);
+	}
+
+	@GetMapping("getVirusTotalKey")
+	public ResponseEntity<?> getVirusTotalKey() {
+		return ResponseEntity.ok(Constant.VIRUS_TOTAL_KEY);
 	}
 }

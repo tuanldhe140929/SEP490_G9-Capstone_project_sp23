@@ -91,6 +91,16 @@
 			<artifactId>commons-io</artifactId>
 			<version>2.6</version>
 		</dependency>
+		<dependency>
+    <groupId>commons-logging</groupId>
+    <artifactId>commons-logging</artifactId>
+    <version>1.2</version>
+		</dependency>
+		<dependency>
+    <groupId>fi.solita.clamav</groupId>
+    <artifactId>clamav-client</artifactId>
+    <version>1.0.0</version>
+</dependency>
 	</dependencies>
 	<build>
 		<plugins>
