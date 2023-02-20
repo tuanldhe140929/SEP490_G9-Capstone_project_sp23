@@ -37,9 +37,11 @@ import com.SEP490_G9.models.embeddables.ProductVersionKey;
 import com.SEP490_G9.exceptions.DuplicateFieldException;
 import com.SEP490_G9.exceptions.FileFormatNotAccept;
 import com.SEP490_G9.exceptions.ResourceNotFoundException;
+import com.SEP490_G9.helpers.ClamAVUtil;
 import com.SEP490_G9.helpers.StorageProperties;
 import com.SEP490_G9.models.UserDetailsImpl;
 import com.SEP490_G9.models.DTOS.ProductDetailsDTO;
+import com.SEP490_G9.models.DTOS.ProductFileDTO;
 import com.SEP490_G9.repositories.PreviewRepository;
 import com.SEP490_G9.repositories.ProductDetailsRepository;
 import com.SEP490_G9.repositories.ProductFileRepository;
@@ -51,6 +53,7 @@ import com.SEP490_G9.repositories.UserRepository;
 import com.SEP490_G9.services.FileStorageService;
 import com.SEP490_G9.services.ManageProductService;
 
+import fi.solita.clamav.ClamAVClient;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -97,6 +100,9 @@ public class ManageProductServiceImpl implements ManageProductService {
 
 	@Autowired
 	private ProductDetailsRepository productDetailsRepo;
+
+	@Autowired
+	private ClamAVUtil clamAVUtil;
 
 	@Override
 	public List<ProductDetailsDTO> getProductDetailsDTOsBySeller() {
@@ -191,17 +197,17 @@ public class ManageProductServiceImpl implements ManageProductService {
 
 	@Transactional
 	@Override
-	public ProductDetailsDTO deleteProductFile(Long productId, Long fileId) throws IOException {
+	public ProductFileDTO deleteProductFile(Long productId, Long fileId) throws IOException {
 		ProductFile productFile = productFileRepository.findById(fileId).get();
 		if (productFile == null) {
 			throw new ResourceNotFoundException("file", productId.toString(), "");
 		}
-		ProductDetails productDetails = productFile.getProductDetails();
-		productDetails.getFiles().remove(productFile);
+//		ProductDetails productDetails = productFile.getProductDetails();
+//		productDetails.getFiles().remove(productFile);
 		productFileRepository.deleteById(fileId);
 		File fileDir = new File(storageProperties.getLocation() + productFile.getSource());
 		fileDir.delete();
-		ProductDetailsDTO dto = new ProductDetailsDTO(productDetails, previewRepository);
+		ProductFileDTO dto = new ProductFileDTO(productFile);
 		return dto;
 	}
 
@@ -239,24 +245,45 @@ public class ManageProductServiceImpl implements ManageProductService {
 
 	@Transactional
 	@Override
-	public ProductDetailsDTO uploadProductFile(Long productId, MultipartFile productFile, String version)
+	public ProductFileDTO uploadProductFile(Long productId, MultipartFile productFile, String version)
 			throws IOException {
-		Product product = getProductByIdAndSeller(productId);
-		ProductDetails productDetails = checkVersion(product, version);
+		ProductFileDTO dto = new ProductFileDTO();
+		dto.setId((long)-1);
+		dto.setSize(productFile.getSize());
+		dto.setName(productFile.getOriginalFilename());
+		dto.setFileState(ProductFileDTO.FileState.UPLOADING);
+		byte[] r = new byte[0];
+		ClamAVClient a = clamAVUtil.newClient();
+		System.out.println(a.ping());
+		try {
+			 r = a.scan(productFile.getInputStream());
+		} catch (Exception e) {
 
-		String fileLocation = getProductFilesLocation(productDetails);
-		ProductFile file = new ProductFile(productFile, fileLocation, productDetails);
-		if (productFileRepository.existsByNameAndProductDetails(file.getName(), productDetails)) {
-			throw new DuplicateFieldException("file name", file.getName());
+		} finally {
+			productFile.getInputStream().close();
 		}
-		File fileDir = new File(storageProperties.getLocation() + fileLocation);
-		fileDir.mkdirs();
-		fileStorageService.store(productFile, fileLocation);
-		productFileRepository.save(file);
-		productDetails.getFiles().add(file);
+		System.out.println("Everything ok : " + ClamAVClient.isCleanReply(r) + "\n");
+		
+		if (ClamAVClient.isCleanReply(r)) {
+			Product product = getProductByIdAndSeller(productId);
+			ProductDetails productDetails = checkVersion(product, version);
+
+			String fileLocation = getProductFilesLocation(productDetails);
+			ProductFile file = new ProductFile(productFile, fileLocation, productDetails);
+			if (productFileRepository.existsByNameAndProductDetails(file.getName(), productDetails)) {
+				throw new DuplicateFieldException("file name", file.getName());
+			}
+			File fileDir = new File(storageProperties.getLocation() + fileLocation);
+			fileDir.mkdirs();
+			fileStorageService.store(productFile, fileLocation);
+			productFileRepository.save(file);
+			productDetails.getFiles().add(file);
 //		product.getFiles().add(file);
 //		productRepository.save(product);
-		ProductDetailsDTO dto = new ProductDetailsDTO(productDetails, previewRepository);
+			dto = new ProductFileDTO(file);
+		}else {
+			dto.setFileState(ProductFileDTO.FileState.ERROR);
+		}
 		return dto;
 	}
 
