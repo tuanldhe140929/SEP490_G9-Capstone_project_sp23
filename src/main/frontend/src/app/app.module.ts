@@ -46,9 +46,9 @@ import { DataTablesModule } from 'angular-datatables'
     NgbModule,
     BrowserAnimationsModule,
     CommonModule,
-<<<<<<< HEAD
+
     ManageProductModule,
-=======
+
     MatSortModule,
     DataTablesModule,
     ToastrModule.forRoot(
@@ -58,7 +58,7 @@ import { DataTablesModule } from 'angular-datatables'
       }
     ),
     
->>>>>>> main
+
   ],
   providers: [
 	      {  
