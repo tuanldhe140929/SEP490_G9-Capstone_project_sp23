@@ -18,7 +18,7 @@ import com.SEP490_G9.models.Entities.Account;
 import com.SEP490_G9.models.Entities.User;
 import com.SEP490_G9.services.ManageStaffService;
 
-@RequestMapping("public/manageStaff")
+@RequestMapping("private/manageStaff")
 @RestController
 public class ManageStaffController {
 

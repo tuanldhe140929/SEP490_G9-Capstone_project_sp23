@@ -7,6 +7,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AuthGuard } from 'src/app/helpers/auth.guard';
 import { DashboardComponent } from './for-admin-base/dashboard/dashboard.component';
 import { StaffsComponent } from './for-admin-base/staffs/staffs.component';
+import { AdminGuard } from 'src/app/helpers/admin.guard';
 
 const routes: Routes = [
   {
@@ -25,7 +26,8 @@ const routes: Routes = [
         component: StaffsComponent,
         pathMatch: 'full'
       }
-    ]
+    ],
+    canActivate: [AdminGuard]
   },
   {
     path: 'adminDashboard',

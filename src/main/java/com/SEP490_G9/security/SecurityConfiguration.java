@@ -55,9 +55,9 @@ JwtAuthenticationEntryPoint authenEntryPoint;
 	
 		http.authorizeHttpRequests()
 		.requestMatchers("/public/**").permitAll().and()
-		.authorizeHttpRequests().requestMatchers("/home").hasAnyRole("USER")
+		.authorizeHttpRequests().requestMatchers("/home").hasAnyRole("USER","ADMIN","STAFF")
 		//.and().authorizeHttpRequests().requestMatchers("/private/api/cart").hasAnyRole("USER")
-		.and().authorizeHttpRequests().requestMatchers("/private/**").hasAnyRole("USER")
+		.and().authorizeHttpRequests().requestMatchers("/private/**").hasAnyRole("USER","ADMIN","STAFF")
 		.and().httpBasic().authenticationEntryPoint(authenEntryPoint)
 		.and().authorizeHttpRequests().anyRequest().authenticated()
 		.and().authenticationProvider(authProvider)

@@ -34,12 +34,74 @@
           <ng-template #toEnable><button class="btn btn-success" (click)="openUpdateDialog(staff.id, staff.email, staff.enabled)">Bật</button></ng-template>
         </td>
       </tr>
-      <!-- <tr>
-        <td>A</td>
-        <td>B</td>
-        <td>C</td>
-        <td>D</td>
-      </tr> -->
     </tbody>
   </table>
 
+  <!-- <mat-form-field>
+    <mat-label>Filter</mat-label>
+    <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Mia" #input>
+  </mat-form-field>
+  
+  <div class="mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource" matSort>
+  
+
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+        <td mat-cell *matCellDef="let row"> {{row.id}} </td>
+      </ng-container>
+  
+
+      <ng-container matColumnDef="progress">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Progress </th>
+        <td mat-cell *matCellDef="let row"> {{row.progress}}% </td>
+      </ng-container>
+  
+
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+        <td mat-cell *matCellDef="let row"> {{row.name}} </td>
+      </ng-container>
+  
+
+      <ng-container matColumnDef="fruit">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Fruit </th>
+        <td mat-cell *matCellDef="let row"> {{row.fruit}} </td>
+      </ng-container>
+  
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  
+
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+      </tr>
+    </table>
+  
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>
+  </div> -->
+
+  <!-- <div class="mat-elevation-z1">
+    <table mat-table [dataSource]="dataSource" matSort>
+  
+      <ng-container matColumnDef="Email">
+        <th mat-header-cell *matHeaderCellDef  mat-sort-header> Email </th>
+        <td mat-cell *matCellDef="let element" class="left-text"> {{element.email}} </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="Ngày tạo">
+        <th mat-header-cell *matHeaderCellDef  mat-sort-header> Ngày tạo </th>
+        <td mat-cell *matCellDef="let element" class="left-text"> {{element.accountCreatedDate}} </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="Trạng thái">
+        <th mat-header-cell *matHeaderCellDef  mat-sort-header> Trạng thái </th>
+        <td mat-cell *matCellDef="let element" class="left-text"> {{element.enabled}} </td>
+      </ng-container>
+  
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  
+    <mat-paginator [pageSizeOptions]="[5]"></mat-paginator>
+</div> -->

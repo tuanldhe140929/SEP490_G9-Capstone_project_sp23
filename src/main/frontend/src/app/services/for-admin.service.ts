@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, map } from 'rxjs';
+import { Observable, map, Subject, tap } from 'rxjs';
 import { Account } from '../DTOS/Account';
 import { User } from '../DTOS/User';
 import * as socketIo from 'socket.io-client'
@@ -11,7 +11,7 @@ const allInspectorsUrl = "http://localhost:9000/public/manageInspector/allInspec
 const addInspectorUrl = "http://localhost:9000/public/manageInspector/addInspector";
 const activateUrl = "http://localhost:9000/public/manageInspector/activateInspector";
 const deactivateUrl = "http://localhost:9000/public/manageInspector/deactivateInspector";
-const baseUrl = "http://localhost:9000/public/manageStaff/";
+const baseUrl = "http://localhost:9000/private/manageStaff/";
 const httpOptions: Object = {
   headers: new HttpHeaders({
     "Content-Type": "application/json"
@@ -25,7 +25,12 @@ const httpOptions: Object = {
 })
 export class ForAdminService {
 
-  private apiServerUrl = "http://localhost:9000/public/manageStaff";
+  private _refresh$ = new Subject<void>();
+  private apiServerUrl = "http://localhost:9000/private/manageStaff";
+
+  get refresh$(){
+    return this._refresh$;
+  }
 
   constructor(private httpClient: HttpClient) { }
 
@@ -58,10 +63,20 @@ export class ForAdminService {
   }
 
   addStaff(body: any): Observable<any>{
-    return this.httpClient.post<any>(baseUrl+"addStaff", body);
+    return this.httpClient.post<any>(`${this.apiServerUrl}/addStaff`, body)
+    .pipe(
+      tap(() => {
+        this._refresh$.next();
+      })
+    );
   }
 
   updateStaffStatus(id: number): Observable<any>{
-    return this.httpClient.put<any>(`${this.apiServerUrl}/updateStaffStatus/${id}`, id);
+    return this.httpClient.put<any>(`${this.apiServerUrl}/updateStaffStatus/${id}`, id)
+    .pipe(
+      tap(() => {
+        this._refresh$.next();
+      })
+    )
   }
 }
