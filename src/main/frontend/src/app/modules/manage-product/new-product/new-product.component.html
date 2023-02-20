@@ -103,21 +103,40 @@
               <div class="upload_drop">
                 <div class="game_edit_upload_list_widget">
                   <div class="file_list has_files">
-                    <div class="uploader" *ngFor="let file of product.files;index as i" style="margin-bottom:12px;">
-                      <div class="upload_tools">
-                        <button class="delete_btn" type="button" (click)="deleteFile(file)">Delete file</button>
+                    <div class="uploader" *ngFor="let file of fileDisplayList;index as i" style="margin-bottom:12px;">
+                      <div *ngIf="file.file.fileState==FileState.UPLOADING" class="upload_tools">
+                        <button class="delete_btn" type="button" (click)="cancelUpload(file)">Cancel</button>
+                      </div>
+                      <div *ngIf="file.file.fileState==FileState.UPLOADED" class="upload_tools">
+                        <button class="delete_btn" type="button" (click)="deleteFile(file.file)">Delete file</button>
                       </div>
                       <div class="upload_content" style="margin:12px;">
                         <div class="upload_title" style="margin-bottom:5px;">
-                          <strong class="upload_display_name">{{file.name}}</strong>
+                          <strong class="upload_display_name">{{file.file.name}}</strong>
                         </div>
                         <div class="meta_data">
-                          <span class="file_size">{{formatFileSize(file.size)}}&#183;</span>
-                          <span class="move_up_wrap" (click)="moveFileUp(file)"><span>Move up</span>&#183;</span>
-                          <span class="move_down_wrap" (click)="moveFileDown(file)"><span>Move down</span></span>
+                          <span class="file_size">{{formatFileSize(file.file.size)}}</span>
+                          {{file.file.fileState}}
                         </div>
-                        <div class="progress">
-                          <mat-progress-bar class="progress-bar" mode="determinate" [value]="uploadProgress" *ngIf="uploadProgress"> </mat-progress-bar>
+                        <div *ngIf="file.file.fileState!=FileState.UPLOADED && file.file.fileState!=null" class="progress">
+                          <div class="progress-bar progress-bar-striped progress-bar-animated"
+                               role="progressbar"
+                               attr.aria-valuenow="{{ file.process.progress }}"
+                               aria-valuemin="0"
+                               aria-valuemax="100"
+                               [ngStyle]="{ width: file.process.progress + '%' }">
+                            <div [ngSwitch]="file.file.fileState">
+                              <div *ngSwitchCase="FileState.UPLOADING">
+                                {{ file.process.progress }}%
+                              </div>
+                              <div *ngSwitchCase="FileState.SCANNING">
+                                Scanning file for viruses
+                              </div>
+                              <div *ngSwitchCase="FileState.ERROR">
+                                Cannot upload file
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -262,5 +281,15 @@
   </div>
   <div class="modal-body">
     <small style="color:red;">{{fileFormatError}}<br /></small>
+  </div>
+</ng-template>
+
+<ng-template #fileSizeErrorModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" style="color:red">Lỗi</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="dismissError()"></button>
+  </div>
+  <div class="modal-body">
+    <small style="color:red;">{{fileError}}<br /></small>
   </div>
 </ng-template>

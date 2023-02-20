@@ -33,7 +33,7 @@ public class ProductDetailsDTO {
 	private Date lastModified = new Date();
 
 	private License license;
-	
+
 	private boolean draft = true;
 
 	private int price = 0;
@@ -48,7 +48,7 @@ public class ProductDetailsDTO {
 
 	private Category category;
 
-	private List<ProductFile> files = new ArrayList<ProductFile>();
+	private List<ProductFileDTO> files = new ArrayList<ProductFileDTO>();
 
 	public ProductDetailsDTO() {
 		// TODO Auto-generated constructor stub
@@ -73,7 +73,11 @@ public class ProductDetailsDTO {
 		this.seller = productDetails.getProduct().getSeller();
 		this.tags = productDetails.getTags();
 		this.category = productDetails.getCategory();
-		this.files = productDetails.getFiles();
+		for (ProductFile file : productDetails.getFiles()) {
+			ProductFileDTO dto = new ProductFileDTO(file);
+			dto.setFileState(ProductFileDTO.FileState.UPLOADED);
+			this.files.add(dto);
+		}
 	}
 
 	private List<Preview> getPreviewPicturesSource(ProductDetails productDetails, PreviewRepository previewRepository) {
@@ -217,11 +221,11 @@ public class ProductDetailsDTO {
 		this.tags = tags;
 	}
 
-	public List<ProductFile> getFiles() {
+	public List<ProductFileDTO> getFiles() {
 		return files;
 	}
 
-	public void setFiles(List<ProductFile> files) {
+	public void setFiles(List<ProductFileDTO> files) {
 		this.files = files;
 	}
 
@@ -229,6 +233,7 @@ public class ProductDetailsDTO {
 		// TODO Auto-generated method stub
 		return license;
 	}
+
 	public void setLicense(License license) {
 		this.license = license;
 	}
