@@ -1,70 +1,49 @@
-import {AfterViewInit, Component, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import {MatPaginator} from '@angular/material/paginator';
-import {MatSort} from '@angular/material/sort';
+import {MatSort, Sort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
+import { Subject } from 'rxjs';
+import { Account } from 'src/app/DTOS/Account';
+import { Tag } from 'src/app/DTOS/Tag';
+import { ForAdminService } from 'src/app/services/for-admin.service';
+import { AddTagComponent } from './add-tag/add-tag.component';
+import { UpdateTagComponent } from './update-tag/update-tag.component';
 
-export interface UserData {
-  id: string;
-  name: string;
-  progress: string;
-  fruit: string;
-}
-
-/** Constants used to fill up our data base. */
-const FRUITS: string[] = [
-  'blueberry',
-  'lychee',
-  'kiwi',
-  'mango',
-  'peach',
-  'lime',
-  'pomegranate',
-  'pineapple',
-];
-const NAMES: string[] = [
-  'Maia',
-  'Asher',
-  'Olivia',
-  'Atticus',
-  'Amelia',
-  'Jack',
-  'Charlotte',
-  'Theodore',
-  'Isla',
-  'Oliver',
-  'Isabella',
-  'Jasper',
-  'Cora',
-  'Levi',
-  'Violet',
-  'Arthur',
-  'Mia',
-  'Thomas',
-  'Elizabeth',
-];
 @Component({
   selector: 'app-tags',
   templateUrl: './tags.component.html',
   styleUrls: ['./tags.component.css']
 })
 export class TagsComponent implements AfterViewInit{
-  displayedColumns: string[] = ['id', 'name', 'progress', 'fruit'];
-  dataSource: MatTableDataSource<UserData>;
+  displayedColumns: string[] = ['ID', 'Tên chủ đề','Hành động'];
+  dataSource: MatTableDataSource<Tag>;
+
+  tagList: Tag[] = [];
+  nameList: string[] = [];
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor() {
-    // Create 100 users
-    const users = Array.from({length: 100}, (_, k) => createNewUser(k + 1));
+  constructor(private forAdminService: ForAdminService, private dialog: MatDialog) {    
+    this.forAdminService.getAllTags().subscribe(response => {
+      this.dataSource = new MatTableDataSource(response);
+      this.tagList = response;
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+      for(let i=0;i<this.tagList.length;i++){
+        this.nameList.push(this.tagList[i].name);
+      }
+      console.log(this.nameList.length)
+    })
 
     // Assign the data to the data source for the table to render
-    this.dataSource = new MatTableDataSource(users);
+    // this.dataSource = new MatTableDataSource([{'id':1,'name':'AAA'},{'id':2,'name':'BBB'}]);
   }
 
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+
+  ngAfterViewInit(): void {
+    
   }
 
   applyFilter(event: Event) {
@@ -75,20 +54,43 @@ export class TagsComponent implements AfterViewInit{
       this.dataSource.paginator.firstPage();
     }
   }
+
+  openAddDialog(getNameList: string[]) {
+    const dialogRef = this.dialog.open(AddTagComponent, {
+      data: {
+        nameList: getNameList
+      }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+      setTimeout(() => this.refresh(),400)
+    });
+  }
+
+  openUpdateDialog(getNameList: string[], getId: number, getOldName: string) {
+    const dialogRef = this.dialog.open(UpdateTagComponent, {
+      data: {
+        nameList: getNameList,
+        id: getId,
+        oldName: getOldName
+      }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+      setTimeout(() => this.refresh(),400)
+    });
+  }
+
+  refresh() {
+    this.forAdminService.getAllTags().subscribe((data: Tag[]) => {
+      this.dataSource.data = data;
+      this.nameList = [];
+      for (let i = 0; i < data.length; i++) {
+        this.nameList.push(data[i].name);
+      }
+      console.log(data);
+    })
+  }
 }
 
-/** Builds and returns a new User. */
-function createNewUser(id: number): UserData {
-  const name =
-    NAMES[Math.round(Math.random() * (NAMES.length - 1))] +
-    ' ' +
-    NAMES[Math.round(Math.random() * (NAMES.length - 1))].charAt(0) +
-    '.';
 
-  return {
-    id: id.toString(),
-    name: name,
-    progress: Math.round(Math.random() * 100).toString(),
-    fruit: FRUITS[Math.round(Math.random() * (FRUITS.length - 1))],
-  };
-}

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.SEP490_G9.models.Entities.Category;
 import com.SEP490_G9.services.ManageCategoryService;
 
-@RequestMapping("public/manageCategory")
+@RequestMapping("private/manageCategory")
 @RestController
 public class ManageCategoryController {
 

@@ -1,47 +1,10 @@
 
-<!-- <table datatable class="table table-striped table-bordered table-sm" cellspacing="0" width="100%" id="staffsTable">
-    <thead>
-      <tr>
-        <th class="th-sm">Email
-
-        </th>
-        <th class="th-sm">Ngày tạo
-  
-        </th>
-        <th class="th-sm">Trạng thái
-
-        </th>
-        <th class="th-sm">Hành động
-          
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let staff of staffList">
-        <td>
-          {{staff.email}}
-        </td>
-        <td>
-          {{staff.accountCreatedDate}}
-        </td>
-        <td>
-          {{staff.enabled}}
-        </td>
-        <td>
-          <div *ngIf="staff.enabled; then toDisable else toEnable"></div>
-          <ng-template #toDisable><button class="btn btn-danger" (click)="openUpdateDialog(staff.id, staff.email, staff.enabled)">Tắt</button></ng-template>
-          <ng-template #toEnable><button class="btn btn-success" (click)="openUpdateDialog(staff.id, staff.email, staff.enabled)">Bật</button></ng-template>
-        </td>
-      </tr>
-    </tbody>
-  </table> -->
-
   <h1>Quản lý nhân viên</h1>
 <button class="btn btn-primary" (click)="openAddDialog(emailList)">Thêm nhân viên</button>
 
   <mat-form-field>
-    <mat-label>Filter</mat-label>
-    <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Mia" #input>
+    <mat-label>Bộ lọc</mat-label>
+    <input matInput (keyup)="applyFilter($event)" #input>
   </mat-form-field>
   
   <div class="mat-elevation-z8">
@@ -63,10 +26,12 @@
       <ng-container matColumnDef="Trạng thái">
         <th mat-header-cell *matHeaderCellDef mat-sort-header="enabled"> Trạng thái </th>
         <td mat-cell *matCellDef="let row"> 
-          <!-- <div *ngIf="row.enabled"; then isEnabled else isDisabled></div>
-          <ng-template #isEnabled>Đang bật</ng-template>
-          <ng-template #isDisabled>Đang tắt</ng-template> -->
-          {{row.enabled}}
+          <div *ngIf="row.enabled">
+            Đang bật
+          </div>
+          <div *ngIf="!row.enabled">
+            Đang tắt
+          </div>
         </td>
       </ng-container>
   
@@ -74,9 +39,6 @@
       <ng-container matColumnDef="Hành động">
         <th mat-header-cell *matHeaderCellDef> Hành động </th>
         <td mat-cell *matCellDef="let row"> 
-          <!-- <div *ngIf="row.enabled"; then isEnabled else isDisabled></div>
-          <ng-template #isEnabled><button class="btn btn-danger" (click)="openUpdateDialog(row.id, row.email, row.enabled)">Tắt</button></ng-template>
-          <ng-template #isDisabled><button class="btn btn-danger" (click)="openUpdateDialog(row.id, row.email, row.enabled)">Bật</button></ng-template> -->
           <div *ngIf="row.enabled">
             <button class="btn btn-danger" (click)="openUpdateDialog(row.id, row.email, row.enabled)">Tắt</button>
           </div>

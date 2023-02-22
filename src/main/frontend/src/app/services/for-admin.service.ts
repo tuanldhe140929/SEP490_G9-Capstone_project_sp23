@@ -28,37 +28,14 @@ export class ForAdminService {
 
   private _refresh$ = new Subject<void>();
   private apiServerUrlManageStaff = "http://localhost:9000/private/manageStaff";
-  private apiServerUrlManageCategory = "http://localhost:9000/public/manageCategory"
+  private apiServerUrlManageCategory = "http://localhost:9000/private/manageCategory";
+  private apiServerUrlManageTag = "http://localhost:9000/private/manageTag"
 
   get refresh$(){
     return this._refresh$;
   }
 
   constructor(private httpClient: HttpClient) { }
-
-  // getAllInspectors(): Observable<User[]>{
-  //   return this.httpClient.get<User[]>(`${this.apiServerUrl}/public/manageInspector/allInspectors`);
-  // } 
-
-  // addInspector(body: any): Observable<any> {
-  //   return this.httpClient.post<any>(`${this.apiServerUrl}/public/manageInspector/addInspector`, body, httpOptions);
-  // }
-
-  // updateInspector(body: any): Observable<any>{
-  //   return this.httpClient.put<any>(`${this.apiServerUrl}/public/manageInspector/updateInspector`, body);
-  // }
-
-  // deleteInspector(id: number| undefined): Observable<any>{
-  //   return this.httpClient.delete<any>(`${this.apiServerUrl}/public/manageInspector/deleteInspector/${id}`)
-  // }
-
-  // activateInspector(): Observable<any>{
-  //   return this.httpClient.put<any>(activateUrl, null);
-  // }
-
-  // deactivateInspector(): Observable<any>{
-  //   return this.httpClient.put<any>(deactivateUrl, null);
-  // }
 
   getAllStaffs(): Observable<any>{
     return this.httpClient.get<any>(`${this.apiServerUrlManageStaff}/staffs`);
@@ -77,15 +54,22 @@ export class ForAdminService {
   }
 
   addCategory(body: any): Observable<any>{
-    return this.httpClient.post<any>(`${this.apiServerUrlManageCategory}/addCategory`,body).
-    pipe(
-      tap(() => {
-        this._refresh$.next();
-      })
-    )
+    return this.httpClient.post<any>(`${this.apiServerUrlManageCategory}/addCategory`,body);
   }
 
   updateCategory(body: any, id: number): Observable<any>{
     return this.httpClient.put<any>(`${this.apiServerUrlManageCategory}/updateCategory/${id}`,body);
+  }
+
+  getAllTags(): Observable<any>{
+    return this.httpClient.get<any>(`${this.apiServerUrlManageTag}/tags`);
+  }
+
+  addTag(body: any): Observable<any>{
+    return this.httpClient.post<any>(`${this.apiServerUrlManageTag}/addTag`,body);
+  }
+
+  updateTag(body: any, id: number): Observable<any>{
+    return this.httpClient.put<any>(`${this.apiServerUrlManageTag}/updateTag/${id}`,body);
   }
 }

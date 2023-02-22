@@ -24,6 +24,8 @@ import { CategoriesComponent } from './for-admin-base/categories/categories.comp
 import { AddCategoryComponent } from './for-admin-base/categories/add-category/add-category.component';
 import { TagsComponent } from './for-admin-base/tags/tags.component';
 import { UpdateCategoryComponent } from './for-admin-base/categories/update-category/update-category.component';
+import { AddTagComponent } from './for-admin-base/tags/add-tag/add-tag.component';
+import { UpdateTagComponent } from './for-admin-base/tags/update-tag/update-tag.component';
 
 
 @NgModule({
@@ -37,6 +39,8 @@ import { UpdateCategoryComponent } from './for-admin-base/categories/update-cate
     AddCategoryComponent,
     TagsComponent,
     UpdateCategoryComponent,
+    AddTagComponent,
+    UpdateTagComponent,
   ],
   imports: [
     CommonModule,
