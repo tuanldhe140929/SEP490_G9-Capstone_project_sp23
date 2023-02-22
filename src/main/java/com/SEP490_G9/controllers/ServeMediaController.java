@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.SEP490_G9.services.ManageAccountInfoService;
-import com.SEP490_G9.services.ManageProductService;
-import com.SEP490_G9.services.serviceImpls.ServeMediaService;
+import com.SEP490_G9.service.ManageAccountInfoService;
+import com.SEP490_G9.service.ManageProductService;
+
 
 @RequestMapping(value = "public/serveMedia")
 @RestController

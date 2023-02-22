@@ -16,13 +16,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.SEP490_G9.exceptions.RefreshTokenException;
-import com.SEP490_G9.models.UserDetailsImpl;
-import com.SEP490_G9.models.DTOS.AuthRequest;
-import com.SEP490_G9.models.DTOS.AuthResponse;
-import com.SEP490_G9.models.Entities.User;
-import com.SEP490_G9.services.authService.AuthService;
-import com.SEP490_G9.services.authService.EmailService;
+
+import com.SEP490_G9.dto.AuthRequest;
+import com.SEP490_G9.dto.AuthResponse;
+import com.SEP490_G9.entity.User;
+import com.SEP490_G9.exception.RefreshTokenException;
+import com.SEP490_G9.service.authService.AuthService;
+import com.SEP490_G9.service.authService.EmailService;
+
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,7 +31,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
-//@EnableMethodSecurity(prePostEnabled = true)
 @CrossOrigin(origins = "http://localhost:4200/")
 @RequestMapping(value = "public/auth")
 @Valid

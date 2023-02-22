@@ -130,13 +130,13 @@ export class NewProductComponent implements OnInit {
         return;
       }
 
-      for (let j = 0; j < this.productFileList.length; j++) {
-        if (this.productFileList[j].name == $event.target.files[i].name) {
+      for (let j = 0; j < this.fileDisplayList.length; j++) {
+        if (this.fileDisplayList[j].file.name == $event.target.files[i].name) {
           this.fileError = "Tên File đã tồn tại";
           this.openFileSizeErrorModal();
           return;
         }
-        totalSize += this.productFileList[j].size;
+        totalSize += this.fileDisplayList[j].file.size;
       }
       totalSize += $event.target.files[i].size;
       if (totalSize > MAX_SIZE) {
@@ -145,25 +145,33 @@ export class NewProductComponent implements OnInit {
         return;
       }
 
-      if (this.productFileList.length + 1 > MAX_FILE_COUNT) {
+      if (this.fileDisplayList.length + 1 > MAX_FILE_COUNT) {
         this.fileError = "Vượt quá tối đa" + MAX_FILE_COUNT + " file";
         this.openFileSizeErrorModal();
         return;
       }
-      console.log("dwad");
-      var fileUpload = ProductFile.fromFile(($event.target.files[i]));
-      this.productFileList.push(fileUpload);
+
+      var productFile = ProductFile.fromFile($event.target.files[i]);
+      var fileDisplay = new FileDisplay();
+      fileDisplay.file = productFile;
+      fileDisplay.file.fileState = FileState.ON_QUEUE;
+      this.fileDisplayList.push(fileDisplay);
     }
+
     this.uploadFileIndex($event.target.files.length - 1, $event.target.files);
   }
   uploadFileIndex(index: number, files: File[]) {
     const file: File = files[index];
     if (file) {
-      var productFile = ProductFile.fromFile(file);
-      var fileDisplay = new FileDisplay();
-      fileDisplay.file = productFile;
-      fileDisplay.file.fileState = FileState.UPLOADING;
-      this.fileDisplayList.push(fileDisplay);
+      let fileDisplay: FileDisplay = new FileDisplay;
+
+      for (let i = 0; i < this.fileDisplayList.length; i++) {
+        if (this.fileDisplayList[i].file.name == file.name) {
+          fileDisplay = this.fileDisplayList[i];
+          
+        }
+      }
+
       const formData = new FormData();
       formData.set("enctype", "multipart/form-data");
       formData.append("productFile", file);
@@ -179,6 +187,7 @@ export class NewProductComponent implements OnInit {
           this.uploadProgress[reference] = 0;
         }
       }*/
+      if (fileDisplay.file.name != '' && fileDisplay.file.name!=null) {
       const upload$ = this.manageProductService.uploadProductFile(formData).subscribe(
         (event) => {
           if (event.type === HttpEventType.UploadProgress) {
@@ -190,7 +199,6 @@ export class NewProductComponent implements OnInit {
           } else if (event instanceof HttpResponse) {
             var ret: ProductFile = event.body;
             fileDisplay.file = ret;
-            fileDisplay.file.fileState = ret.fileState;
             console.log(ret);
             if (index >= 1) {
               this.uploadFileIndex(index - 1, files);
@@ -201,8 +209,8 @@ export class NewProductComponent implements OnInit {
           console.log(error);
         }
       )
-
       fileDisplay.process.subcription = upload$;
+      }
     }
   }
 
@@ -238,12 +246,17 @@ export class NewProductComponent implements OnInit {
 
       const upload$ = this.manageProductService.deleteProductFile(formData).subscribe(
         (data: ProductFile) => {
-          for (let i = 0; i < this.productFileList.length; i++) {
-            if (this.productFileList[i].id == data.id) {
-              this.productFileList.slice(i, 1);
+          var index;
+          for (let i = 0; i < this.fileDisplayList.length; i++) {
+            if (this.fileDisplayList[i].file.id === data.id) {
+              console.log(i);
+              index = i;
             }
           }
-          console.log(data);
+          if (index) {
+            this.fileDisplayList.splice(index, 1);
+          }
+         
         },
         (error) => {
           console.log(error);
@@ -649,7 +662,7 @@ export class NewProductComponent implements OnInit {
     if (this.newProductForm.value.price == null) {
       this.errors.push(MSG103);
     }
-    if (this.product.files.length == 0) {
+    if (this.fileDisplayList.length == 0) {
       this.errors.push(MSG104);
     }
 

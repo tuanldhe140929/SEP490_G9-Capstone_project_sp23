@@ -1,5 +1,7 @@
 export enum FileState {
-  UPLOADING,UPLOADED,SCANNING,ERROR
+  UPLOADING = "UPLOADING"
+  , UPLOADED = "UPLOADED", SCANNING = "SCANNING", ERROR = "ERROR",
+  ON_QUEUE = "ON_QUEUE"
 }
 
 export class ProductFile{

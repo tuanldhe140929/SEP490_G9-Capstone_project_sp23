@@ -23,13 +23,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.SEP490_G9.models.Entities.Product;
-import com.SEP490_G9.models.Entities.Report;
-import com.SEP490_G9.models.Entities.User;
-import com.SEP490_G9.models.embeddables.ReportItemKey;
-import com.SEP490_G9.services.FileStorageService;
-import com.SEP490_G9.services.ManageProductService;
-import com.SEP490_G9.services.ReportService;
+import com.SEP490_G9.entity.Report;
+import com.SEP490_G9.entity.embeddable.ReportItemKey;
+import com.SEP490_G9.service.ReportService;
+
 @RequestMapping("private/manageReport")
 @RestController
 public class ReportController {
