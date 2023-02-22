@@ -42,6 +42,7 @@ import { DataTablesModule } from 'angular-datatables';
     ForAdminModule,
     BasicsModule,
     MatIconModule,
+    MatSortModule,
     MatButtonModule,
     MatDialogModule,
     CKEditorModule,
@@ -49,6 +50,7 @@ import { DataTablesModule } from 'angular-datatables';
     BrowserAnimationsModule,
     CommonModule,
     MatSortModule,
+    ManageProductModule,
     DataTablesModule,
     ToastrModule.forRoot(
       {

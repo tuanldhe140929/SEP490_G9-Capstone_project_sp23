@@ -14,6 +14,7 @@ import { MyCartComponent } from './my-cart/my-cart.component';
 import { CartComponent } from './my-cart/cart/cart.component';
 import { CheckOutComponent } from './check-out/check-out.component';
 import { CheckoutComponent } from './check-out/checkout/checkout.component';
+import { NotFoundComponent } from './not-found/not-found.component';
 
 
 @NgModule({
@@ -29,7 +30,8 @@ import { CheckoutComponent } from './check-out/checkout/checkout.component';
     MyCartComponent,
     CartComponent,
     CheckOutComponent,
-    CheckoutComponent
+    CheckoutComponent,
+    NotFoundComponent,
   ],
   imports: [
     CommonModule,

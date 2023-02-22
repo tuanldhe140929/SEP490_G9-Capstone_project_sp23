@@ -1,38 +1,43 @@
 
 
+import { License } from "./License";
 import { Preview } from "./Preview";
 import { ProductFile } from "./ProductFile";
+import { Seller } from "./Seller";
+import { Category } from "./Category";
 import { Tag } from "./Tag";
-import { Type } from "./Type";
-import { User } from "./User";
 
 export class Product {
   id: number;
+  version: string;
   name: string;
-  url: string;
   description: string;
-  uploadedDate: Date | undefined;
-  lastUpdated: Date | undefined;
-  price: number;
   coverImage: string;
   details: string;
-  files: ProductFile[];
-  user: User;
+  instruction: string;
+  createdDate: Date
+  lastModified: Date
+  license: License;
+  draft: boolean;
+  price: number;
   previewVideo: Preview;
   previewPictures: Preview[];
-  tags: Tag[];
-  type: Type;
-  instruction: string;
-  draft: boolean;
 
-  constructor(){
+  files: ProductFile[];
+  seller: Seller;
+
+  tags: Tag[];
+  category: Category;
+
+  constructor() {
     this.id = -1;
+    this.version = "";
     this.name = "";
-    this.url = "";
     this.description = "";
     this.price = 0;
-    this.user = new User();
-    this.type = new Type();
+    this.seller = new Seller();
+    this.category = new Category();
+    this.license = new License();
     this.files = [];
     this.tags = [];
     this.previewVideo = new Preview;
@@ -41,6 +46,8 @@ export class Product {
     this.details = "";
     this.draft = true;
     this.instruction = "";
+    this.createdDate = new Date();
+    this.lastModified = new Date();
 
-}
+  }
 }

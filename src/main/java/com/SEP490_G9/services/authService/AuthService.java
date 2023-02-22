@@ -31,4 +31,6 @@ public interface AuthService {
 
 	public boolean sendRecoveryPasswordToEmail(String email);
 
+	public User getCurrentUser();
+
 }

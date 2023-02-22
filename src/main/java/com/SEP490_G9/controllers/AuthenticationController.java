@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 //import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -128,5 +129,11 @@ public class AuthenticationController {
 			@RequestParam(name = "email") String email) {
 		boolean verified = authService.verifyEmail(verifyLink, email);
 		return ResponseEntity.ok(verified);
+	}
+	
+	@GetMapping("getCurrentUser")
+	public ResponseEntity<?> getCurrentUser(){
+		User user = authService.getCurrentUser();
+		return ResponseEntity.ok(user);
 	}
 }

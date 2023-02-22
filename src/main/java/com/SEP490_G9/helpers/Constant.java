@@ -8,7 +8,7 @@ public class Constant {
 	public static String GOOGLE_LINK_GET_USER_INFO = "https://www.googleapis.com/oauth2/v1/userinfo?access_token=";
 	public static String GOOGLE_GRANT_TYPE = "authorization_code";
 	public static String GOOGLE_REDIRECT_URI = "http://localhost:4200/auth/loginWithGoogle";
-	
+	public static String VIRUS_TOTAL_KEY = "748b9c9a75f9e60b18b55e0903d6e4849752cd9afc2ffb4c6f4a86486938b167";
 	public static int ADMIN_ROLE_ID = 1;
 	public static int STAFF_ROLE_ID = 2;
 	public static int USER_ROLE_ID = 3;
