@@ -106,3 +106,8 @@ a {
 	border-radius: 3px;
 	border: none;
 }
+
+.submitButton:active {
+  box-shadow: 0 1px #666;
+  transform: translateY(3px);
+}

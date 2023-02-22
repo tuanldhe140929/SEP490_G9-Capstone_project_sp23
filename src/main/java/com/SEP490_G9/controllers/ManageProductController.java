@@ -15,17 +15,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.SEP490_G9.helpers.Constant;
-import com.SEP490_G9.models.DTOS.ProductDetailsDTO;
-import com.SEP490_G9.models.DTOS.ProductFileDTO;
-import com.SEP490_G9.models.Entities.Category;
-import com.SEP490_G9.models.Entities.Preview;
-import com.SEP490_G9.models.Entities.Product;
-import com.SEP490_G9.models.Entities.ProductFile;
-import com.SEP490_G9.models.Entities.Tag;
-import com.SEP490_G9.models.Entities.User;
-import com.SEP490_G9.services.FileStorageService;
-import com.SEP490_G9.services.ManageProductService;
+import com.SEP490_G9.dto.ProductDetailsDTO;
+import com.SEP490_G9.dto.ProductFileDTO;
+import com.SEP490_G9.entity.Category;
+import com.SEP490_G9.entity.Preview;
+import com.SEP490_G9.entity.Product;
+import com.SEP490_G9.entity.Tag;
+import com.SEP490_G9.service.FileIOService;
+import com.SEP490_G9.service.ManageProductService;
+import com.SEP490_G9.util.Constant;
+
 
 @RequestMapping(value = "private/manageProduct")
 @RestController
@@ -35,7 +34,7 @@ public class ManageProductController {
 	ManageProductService manageProductService;
 
 	@Autowired
-	FileStorageService fileStorageService;
+	FileIOService fileStorageService;
 
 	@GetMapping(value = "getEnabledProductsBySeller")
 	public ResponseEntity<?> getProductsByUser() {

@@ -19,6 +19,9 @@ const httpOptions: Object = {
   providedIn: 'root'
 })
 export class AuthService {
+  getCurrentLogedInUser(): Observable<User> {
+    return this.http.get<User>(baseUrl + '/getCurrentUser');
+  }
   sendVerifyEmail(email: string) {
       return this.http.get(baseUrl+'/sendVerifyEmail',{
 		  params:{

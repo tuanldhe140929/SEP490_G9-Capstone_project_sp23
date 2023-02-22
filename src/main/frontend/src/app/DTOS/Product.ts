@@ -17,7 +17,7 @@ export class Product {
   instruction: string;
   createdDate: Date
   lastModified: Date
-  license: License;
+/*  license: License;*/
   draft: boolean;
   price: number;
   previewVideo: Preview;
@@ -37,7 +37,7 @@ export class Product {
     this.price = 0;
     this.seller = new Seller();
     this.category = new Category();
-    this.license = new License();
+/*    this.license = new License();*/
     this.files = [];
     this.tags = [];
     this.previewVideo = new Preview;

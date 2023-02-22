@@ -30,87 +30,69 @@
             </div> <!-- thumbs-wrap.// -->
           </ng-template>
           <ng-template #hasPreviewPictures>
-            <div class="img-big-wrap img-thumbnail">
-              <img src="https://cdn.mos.cms.futurecdn.net/TdaG9Gex57AHnRZG79wYKT.jpg">
-              <div class="preview_count">1/10</div>
+            <div class="img-big-wrap img-thumbnail" style="height:500px;">
+              <img src="https://wallpaperaccess.com/full/112715.jpg">
+              <div class="preview_count">1/{{TotalPreviewCount}}</div>
             </div> <!-- img-big-wrap.// -->
-            <div class="thumbs-wrap" style="background-color: #f8f9fa;border: 1px solid black; padding: 5px;">
-              <div class="thumbs_row">
-                <div class="thumb_column" *ngFor="let pic of product.previewPictures; index as i" (click)="onChooseImage(pic)">
-                  <div class="thumb_content" style="background-image:url({{getPreviewPictureSource(pic)}});"></div>
+              <div class="thumbs-wrap" style="background-color: #f8f9fa;padding: 5px;">
+                <div class="thumbs_row">
+                  <div class="thumb_column" *ngFor="let pic of product.previewPictures; index as i" (click)="onChooseImage(pic)">
+                    <div class="thumb_column_black"></div>
+                    <div class="thumb_content" style="background-image:url({{getPreviewPictureSource(pic)}});"></div>
+                  </div>
                 </div>
-              </div>
-
+                <div>
+                  <div class="dots" *ngFor="let dot of dots;index as i">
+                  <div *ngIf="i==0"><span class="dott active" (click)="currentSlide(dot)"></span></div>
+                    <div *ngIf="i!=0"><span class="dott" (click)="currentSlide(dot)"></span></div>
+                  </div>
+                  <div class="next_arrow"></div>
+                </div>
+       
             </div> <!-- thumbs-wrap.// -->
           </ng-template>
         </article> <!-- gallery-wrap .end// -->
         <section class="padding-y bg-light border-top" style="margin-top:20px">
           <div class="container">
             <div class="row">
-              <div class="col-lg-8">
+              <div class="col-lg-12">
                 <!-- =================== COMPONENT SPECS ====================== -->
                 <div class="card">
                   <header class="card-header">
                     <ul class="nav nav-tabs card-header-tabs">
                       <li class="nav-item">
-                        <a href="#" data-bs-target="#tab_specs" data-bs-toggle="tab" class="nav-link active">Specification</a>
+                        <a href="#" data-bs-target="#tab_specs" data-bs-toggle="tab" class="nav-link active">Mô tả</a>
                       </li>
                       <li class="nav-item">
-                        <a href="#" data-bs-target="#tab_warranty" data-bs-toggle="tab" class="nav-link">Warranty info</a>
+                        <a href="#" data-bs-target="#tab_warranty" data-bs-toggle="tab" class="nav-link">Thông tin nhà sản xuất</a>
                       </li>
                       <li class="nav-item">
-                        <a href="#" data-bs-target="#tab_shipping" data-bs-toggle="tab" class="nav-link">Shipping info</a>
-                      </li>
-                      <li class="nav-item">
-                        <a href="#" data-bs-target="#tab_seller" data-bs-toggle="tab" class="nav-link">Seller profile</a>
+                        <a href="#" data-bs-target="#tab_shipping" data-bs-toggle="tab" class="nav-link">Đánh giá</a>
                       </li>
                     </ul>
                   </header>
                   <div class="tab-content">
                     <article id="tab_specs" class="tab-pane show active card-body">
-                      <p>With supporting text below as a natural lead-in to additional content. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. </p>
-                      <ul class="list-check cols-two">
-                        <li>Some great feature name here </li>
-                        <li>Lorem ipsum dolor sit amet, consectetur </li>
-                        <li>Duis aute irure dolor in reprehenderit </li>
-                        <li>Optical heart sensor </li>
-                        <li>Easy fast and ver good </li>
-                        <li>Some great feature name here </li>
-                        <li>Modern style and design</li>
-                      </ul>
-                      <table class="table border table-hover">
-                        <tr>
-                          <th>  Display: </th>
-                          <td> 13.3-inch LED-backlit display with IPS </td>
-                        </tr>
-                        <tr>
-                          <th>  Processor capacity: </th>
-                          <td> 2.3GHz dual-core Intel Core i5 </td>
-                        </tr>
-                        <tr>
-                          <th>  Camera quality: </th>
-                          <td>720p FaceTime HD camera  </td>
-                        </tr>
-                        <tr>
-                          <th>  Memory </th>
-                          <td> 8 GB RAM or 16 GB RAM </td>
-                        </tr>
-                        <tr>
-                          <th>  Graphics </th>
-                          <td> Intel Iris Plus Graphics 640 </td>
-                        </tr>
-                      </table>
+                      {{product.details}}
                     </article> <!-- tab-content.// -->
-                    <article id="tab_warranty" class="tab-pane card-body">
-                      Tab content or sample information now <br>
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                      tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                      quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                      consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-                      cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-                      proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                      tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                      quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                    <article id="tab_warranty" class="tab-pane card-body sellerInfo">
+                      <div style="display:flex;">
+                        <p style="min-width:150px; font-weight:600;">Người bán</p>
+                        <p>{{product.seller.username}}</p>
+                      </div>
+                      <div style="display:flex;">
+                        <p style="min-width: 150px; font-weight: 600;">Ngày tham gia</p>
+                        <p>Ngày {{SellerJoinedDate}}</p>
+                      </div>
+                      <div style="display:flex;">
+                        <p style="min-width: 150px; font-weight: 600;">Số lượng sản phẩm</p>
+                        <p>{{sellerTotalProductCount}}</p>
+                      </div>
+                      <div style="display:flex;">
+                        <p style="min-width: 150px; font-weight: 600;">Tổng số đánh giá</p>
+                        <p>{{product.seller.username}}</p>
+                      </div>
+
                     </article>
                     <article id="tab_shipping" class="tab-pane card-body">
                       Another tab content  or sample information now <br>
@@ -121,69 +103,11 @@
                       cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
                       proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
                     </article>
-                    <article id="tab_seller" class="tab-pane card-body">
-                      Some other tab content  or sample information now <br>
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                      tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                      quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                      consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-                      cillum dolore eu fugiat nulla pariatur.  Excepteur sint occaecat cupidatat non
-                      proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                    </article>
+
                   </div>
                 </div>
                 <!-- =================== COMPONENT SPECS .// ================== -->
               </div> <!-- col.// -->
-              <aside class="col-lg-4">
-                <!-- =================== COMPONENT ADDINGS ====================== -->
-                <div class="card">
-                  <div class="card-body">
-                    <h5 class="card-title">Similar items</h5>
-
-                    <article class="itemside mb-3">
-                      <a href="#" class="aside">
-                        <img src="assets/images/items/8.webp" width="96" height="96" class="img-md img-thumbnail">
-                      </a>
-                      <div class="info">
-                        <a href="#" class="title mb-1"> Rucksack Backpack Large <br> Line Mounts </a>
-                        <strong class="price"> $38.90</strong> <!-- price.// -->
-                      </div>
-                    </article>
-
-                    <article class="itemside mb-3">
-                      <a href="#" class="aside">
-                        <img src="assets/images/items/9.webp" width="96" height="96" class="img-md img-thumbnail">
-                      </a>
-                      <div class="info">
-                        <a href="#" class="title mb-1"> Summer New Men's Denim <br> Jeans Shorts  </a>
-                        <strong class="price"> $29.50</strong> <!-- price.// -->
-                      </div>
-                    </article>
-
-                    <article class="itemside mb-3">
-                      <a href="#" class="aside">
-                        <img src="assets/images/items/10.webp" width="96" height="96" class="img-md img-thumbnail">
-                      </a>
-                      <div class="info">
-                        <a href="#" class="title mb-1"> T-shirts with multiple colors, for men and lady </a>
-                        <strong class="price"> $120.00</strong> <!-- price.// -->
-                      </div>
-                    </article>
-
-                    <article class="itemside mb-3">
-                      <a href="#" class="aside">
-                        <img src="assets/images/items/11.webp" width="96" height="96" class="img-md img-thumbnail">
-                      </a>
-                      <div class="info">
-                        <a href="#" class="title mb-1"> Blazer Suit Dress Jacket for Men, Blue color </a>
-                        <strong class="price"> $339.90</strong> <!-- price.// -->
-                      </div>
-                    </article>
-
-                  </div> <!-- card-body .// -->
-                </div> <!-- card .// -->
-                <!-- =================== COMPONENT ADDINGS .// ================== -->
-              </aside> <!-- col.// -->
             </div>
             <br><br>
           </div><!-- container // -->
@@ -191,7 +115,19 @@
       </aside>
       <main class="col-lg-4">
         <article class="ps-lg-3">
-          <h4 class="title text-dark">{{product.name}} </h4>
+          <div class="reportBtn" (click)="openReportModal()" style="position:absolute;right:4%; border:1px solid black; cursor:pointer ;border-radius:5px;">
+            <img style="width: 30px; height: 30px;" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQzbVmbfZ3BkG0VBARHNv5MFluIkXOUbLRLEw&usqp=CAU" />
+          </div>
+          <h4 class="title text-dark">{{product.name}}</h4>
+          <a [routerLink]="['/collection', owner.username]" style="text-decoration:none; color:black; display:block; width:fit-content;">
+            <div class="sellerInfo" style="height: 30px; min-height: 30px;width:fit-content; cursor: pointer" (click)="redirectSellerPage()">
+
+              <div style="display:flex;margin : 0;">
+                <div id="sellerImage" style="width:30px; height:30px;"></div>
+                <div style="margin-left:4px; text-align:justify;"><p style="padding:4px;">{{owner.username}}</p></div>
+              </div>
+            </div>
+          </a>
           <div class="rating-wrap my-3">
             <ul class="rating-stars">
               <li style="width:80%" class="stars-active"> <img src="assets/images/misc/stars-active.svg" alt=""> </li>
@@ -214,41 +150,41 @@
           <hr>
           <div class="row metadata">
             <div class="row metadata_details" style="margin-top:10px;">
+              <div class="col-4"><label>Phiên bản</label></div>
+              <div class="col-8"><a class="version_value" href="" style="text-decoration:none; color:black; font-weight:600">{{product.version}}</a></div>
+            </div>
+            <div class="row metadata_details" style="margin-top:10px;">
               <div class="col-4"><label>Phân loại</label></div>
               <div class="col-8"><a class="details_value" href="">{{product.category.name}}</a></div>
             </div>
             <div class="row metadata_details">
               <div class="col-4" style="display: flex; align-items: center; "><label>Nhãn</label></div>
               <div class="col-8" style="display:flex;">
-                <div class="tags" *ngFor="let tag of product.tags" (click)="searchTag(tag)">
+                <div class="tags" *ngFor="let tag of product.tags" (click)="searchTag(tag)" style="width: auto;">
                   <p style=" user-select: none;">{{tag.name}}</p>
                 </div>
               </div>
             </div>
             <div class="row metadata_details">
-              <div class="col-4"><label>Bản quyền</label></div>
-              <div class="col-8"><a class="details_value" href="">Cotton, Jeans</a> </div>
-            </div>
-            <div class="row metadata_details">
-              <div class="col-4"><label>Nhà sản xuất</label></div>
-              <div class="col-8" details_value>Reebook </div>
+              <div class="col-4"><label>Giấy phép</label></div>
+              <div class="col-8"><a class="details_value" href="">Giay phep</a> </div>
             </div>
           </div>
 
           <hr>
           <div class="row cart" style="display:flex; height:60px;">
-            <div class="add_to_cart" style="width:80%; padding-right:0;"><button class="add_to_cart_btn">Thêm vào giỏ hàng</button></div>
-            <div class="buy_now" style="width:20%;"><button class="buy_now_btn">Mua ngay</button></div>
+            <div class="add_to_cart" style="width:80%; padding-right:0; color:lightgrey;"><button class="add_to_cart_btn">Thêm vào giỏ hàng</button></div>
+            <div class="buy_now" style="width: 20%; color: lightgrey;"><button class="buy_now_btn">Mua ngay</button></div>
           </div>
           <div class="row files_metadata" style="margin-top:20px;">
             <div class="card">
               <header class="card-header">
                 <ul class="nav nav-tabs card-header-tabs">
                   <li class="nav-item">
-                    <a href="#" data-bs-target="#tab_overview" data-bs-toggle="tab" class="nav-link active">Metadata</a>
+                    <a href="#" data-bs-target="#tab_overview" data-bs-toggle="tab" class="nav-link active">Thông tin</a>
                   </li>
                   <li class="nav-item">
-                    <a href="#" data-bs-target="#tab_details" data-bs-toggle="tab" class="nav-link">Details</a>
+                    <a href="#" data-bs-target="#tab_details" data-bs-toggle="tab" class="nav-link">Chi tiết</a>
                   </li>
                 </ul>
               </header>
@@ -261,19 +197,11 @@
                     </tr>
                     <tr>
                       <th>Tổng dung lượng</th>
-                      <td></td>
+                      <td>{{TotalSize}}</td>
                     </tr>
                     <tr>
                       <th>Hướng dẫn tải và cài đặt</th>
-                      <td>{{product.instruction || 'Không'}} </td>
-                    </tr>
-                    <tr>
-                      <th>  Memory </th>
-                      <td> 8 GB RAM or 16 GB RAM </td>
-                    </tr>
-                    <tr>
-                      <th>  Graphics </th>
-                      <td> Intel Iris Plus Graphics 640 </td>
+                      <td>{{Instruction}} </td>
                     </tr>
                   </table>
                 </article> <!-- tab-content.// -->

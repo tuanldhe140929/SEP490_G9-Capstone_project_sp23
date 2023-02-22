@@ -11,7 +11,12 @@ const routes: Routes = [{
   component: NewProductComponent,
   title: "Update product",
   canActivate: [SellerGuardGuard]
-},
+}, {
+    path: 'product/new/:productId',
+    component: NewProductComponent,
+    title: "Update product",
+    canActivate: [SellerGuardGuard]
+  },
 {
   path: ':userName',
   component: ProductCollectionComponent,

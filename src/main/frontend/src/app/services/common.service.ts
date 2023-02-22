@@ -10,6 +10,9 @@ const baseUrl = 'http://localhost:9000/public/common';
   providedIn: 'root'
 })
 export class CommonService {
+  getSellerTotalProductCount(id: number): Observable<number> {
+    return this.http.get<number>(baseUrl + '/getSellerTotalProductCount');
+  }
   constructor(private http: HttpClient) { }
 
   getCurrentLogedInUser(): Observable<User> {
@@ -17,10 +20,10 @@ export class CommonService {
   }
 
 
-  getProductByNameAndUserId(productName: string, ownerId:number ): Observable<Product> {
-    return this.http.get<Product>(baseUrl + '/getProductByNameAndUserId', {
+  getProductByIdAndUserId(productId: number, ownerId:number ): Observable<Product> {
+    return this.http.get<Product>(baseUrl + '/getProductByIdAndUserId', {
       params: {
-        productName: productName,
+        productId: productId,
         userId: ownerId
       }
     });

@@ -3,6 +3,6 @@ export class Tag {
   name: string;
   constructor() {
     this.id = -1;
-    this.name = "";
+    this.name = "asd";
   }
 }
