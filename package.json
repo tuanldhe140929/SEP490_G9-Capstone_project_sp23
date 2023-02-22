@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+    "angular-datatables": "^15.0.0",
+    "datatables.net": "^1.13.2",
+    "datatables.net-dt": "^1.13.2",
+    "jquery": "^3.6.3",
+    "ngx-toastr": "^16.0.2"
+  },
+  "devDependencies": {
+    "@types/datatables.net": "^1.10.24",
+    "@types/jquery": "^3.5.16"
+  }
+}
