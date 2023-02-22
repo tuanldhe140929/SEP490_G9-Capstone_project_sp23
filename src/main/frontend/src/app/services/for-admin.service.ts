@@ -4,6 +4,7 @@ import { Observable, map, Subject, tap } from 'rxjs';
 import { Account } from '../DTOS/Account';
 import { User } from '../DTOS/User';
 import * as socketIo from 'socket.io-client'
+import { Category } from '../DTOS/Category';
 
 
 
@@ -26,7 +27,8 @@ const httpOptions: Object = {
 export class ForAdminService {
 
   private _refresh$ = new Subject<void>();
-  private apiServerUrl = "http://localhost:9000/private/manageStaff";
+  private apiServerUrlManageStaff = "http://localhost:9000/private/manageStaff";
+  private apiServerUrlManageCategory = "http://localhost:9000/public/manageCategory"
 
   get refresh$(){
     return this._refresh$;
@@ -58,25 +60,32 @@ export class ForAdminService {
   //   return this.httpClient.put<any>(deactivateUrl, null);
   // }
 
-  getAllStaffs(): Observable<Account[]>{
-    return this.httpClient.get<Account[]>(`${this.apiServerUrl}/staffs`);
+  getAllStaffs(): Observable<any>{
+    return this.httpClient.get<any>(`${this.apiServerUrlManageStaff}/staffs`);
   }
 
   addStaff(body: any): Observable<any>{
-    return this.httpClient.post<any>(`${this.apiServerUrl}/addStaff`, body)
-    .pipe(
-      tap(() => {
-        this._refresh$.next();
-      })
-    );
+    return this.httpClient.post<any>(`${this.apiServerUrlManageStaff}/addStaff`, body);
   }
 
   updateStaffStatus(id: number): Observable<any>{
-    return this.httpClient.put<any>(`${this.apiServerUrl}/updateStaffStatus/${id}`, id)
-    .pipe(
+    return this.httpClient.put<any>(`${this.apiServerUrlManageStaff}/updateStaffStatus/${id}`, id);
+  }
+
+  getAllCategories(): Observable<any>{
+    return this.httpClient.get<any>(`${this.apiServerUrlManageCategory}/categories`);
+  }
+
+  addCategory(body: any): Observable<any>{
+    return this.httpClient.post<any>(`${this.apiServerUrlManageCategory}/addCategory`,body).
+    pipe(
       tap(() => {
         this._refresh$.next();
       })
     )
+  }
+
+  updateCategory(body: any, id: number): Observable<any>{
+    return this.httpClient.put<any>(`${this.apiServerUrlManageCategory}/updateCategory/${id}`,body);
   }
 }

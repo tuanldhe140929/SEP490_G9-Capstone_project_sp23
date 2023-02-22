@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
 import { ForAdminBaseComponent } from './for-admin-base/for-admin-base.component';
-import { InspectorListComponent } from './inspector-list/inspector-list.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AuthGuard } from 'src/app/helpers/auth.guard';
 import { DashboardComponent } from './for-admin-base/dashboard/dashboard.component';
 import { StaffsComponent } from './for-admin-base/staffs/staffs.component';
 import { AdminGuard } from 'src/app/helpers/admin.guard';
+import { CategoriesComponent } from './for-admin-base/categories/categories.component';
+import { TagsComponent } from './for-admin-base/tags/tags.component';
 
 const routes: Routes = [
   {
@@ -25,18 +25,22 @@ const routes: Routes = [
         outlet: 'staffs',
         component: StaffsComponent,
         pathMatch: 'full'
+      },
+      {
+        path: '',
+        outlet: 'categories',
+        component: CategoriesComponent,
+        pathMatch: 'full'
+      },
+      {
+        path: '',
+        outlet: 'tags',
+        component: TagsComponent,
+        pathMatch: 'full'
       }
     ],
     canActivate: [AdminGuard]
   },
-  {
-    path: 'adminDashboard',
-    component: AdminDashboardComponent
-  },
-  {
-    path: 'inspectorList',
-    component: InspectorListComponent
-  }
 ];
 
 @NgModule({

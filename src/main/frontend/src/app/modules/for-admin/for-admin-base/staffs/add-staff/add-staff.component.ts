@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { ForAdminService } from 'src/app/services/for-admin.service';
-
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Account } from 'src/app/DTOS/Account';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-add-staff',
@@ -11,10 +13,12 @@ import { ForAdminService } from 'src/app/services/for-admin.service';
 })
 export class AddStaffComponent implements OnInit{
 
-  constructor(private formBuilder: FormBuilder, private forAdminService: ForAdminService, private toastr: ToastrService){}
+  canCloseDialog: boolean;
+
+  constructor(private formBuilder: FormBuilder, private forAdminService: ForAdminService, private toastr: ToastrService, @Inject(MAT_DIALOG_DATA) public data: {emailList: string[]}){}
 
   ngOnInit(): void {
-    
+    this.canCloseDialog = false;
   }
 
   addStaffForm = this.formBuilder.group({
@@ -22,6 +26,10 @@ export class AddStaffComponent implements OnInit{
     "password": ['',[Validators.required, Validators.minLength(8), Validators.maxLength(30)]],
     "repassword": ['',[Validators.required, Validators.minLength(8), Validators.maxLength(30)]]
   })
+
+  get email(){
+    return this.addStaffForm.controls.email;
+  }
 
   get addform(){
     return this.addStaffForm.controls;
@@ -43,14 +51,30 @@ export class AddStaffComponent implements OnInit{
     }
   }
 
+  checkEmailExists(){
+    for(let i = 0; i < this.data.emailList.length; i++){
+      if(this.email.value?.toLowerCase().trim()==this.data.emailList[i].trim().toLowerCase()){
+        return true;
+      }
+    }
+    return false;
+  }
+
   onAddStaff(){
     if(this.addStaffForm.valid){
-      this.forAdminService.addStaff(this.addStaffForm.value).subscribe(
-        data => {
-          console.log(data);
-          this.toastr.success("Thêm nhân viên thành công!");
-        }
-      )
+      if(!this.checkEmailExists()){
+        this.canCloseDialog = true;
+        console.log(this.data.emailList.length);
+        this.forAdminService.addStaff(this.addStaffForm.value).subscribe(
+          data => {
+            console.log(data);
+            this.toastr.success("Thêm nhân viên thành công!");
+          }
+        )
+      }else{
+        this.toastr.error("Email "+this.email.value+" đã tồn tại trong hệ thống!","Vui lòng dùng một email khác");
+      }
+      
     }
   }
 }
