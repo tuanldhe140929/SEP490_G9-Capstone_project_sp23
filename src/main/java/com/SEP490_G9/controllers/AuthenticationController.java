@@ -19,7 +19,6 @@ import com.SEP490_G9.exceptions.RefreshTokenException;
 import com.SEP490_G9.models.UserDetailsImpl;
 import com.SEP490_G9.models.DTOS.AuthRequest;
 import com.SEP490_G9.models.DTOS.AuthResponse;
-import com.SEP490_G9.models.DTOS.EmailResponse;
 import com.SEP490_G9.models.Entities.User;
 import com.SEP490_G9.services.authService.AuthService;
 import com.SEP490_G9.services.authService.EmailService;
@@ -105,8 +104,8 @@ public class AuthenticationController {
 
 	@RequestMapping(value = "resetPassword", method = RequestMethod.POST)
 	public ResponseEntity<?> resetPassword(HttpServletRequest request, @RequestParam(required = true) String email) {
-		EmailResponse response = authService.sendRecoveryPasswordToEmail(email);
-		return ResponseEntity.ok(response);
+		boolean ret = authService.sendRecoveryPasswordToEmail(email);
+		return ResponseEntity.ok(ret);
 	}
 
 //	@RequestMapping(value = "forgotAndResetPasswordConfirm", method = RequestMethod.POST)
@@ -120,8 +119,8 @@ public class AuthenticationController {
 	
 	@RequestMapping(value="sendVerifyEmail",method = RequestMethod.GET)
 	public ResponseEntity<?> sendVerifyEmail(@RequestParam(name="email") String email){
-		emailService.sendVerifyEmail(email);
-		return ResponseEntity.ok(true);
+		boolean ret = emailService.sendVerifyEmail(email);
+		return ResponseEntity.ok(ret);
 	}
 
 	@RequestMapping(value = "verifyEmail/{verifyLink}", method = RequestMethod.GET)

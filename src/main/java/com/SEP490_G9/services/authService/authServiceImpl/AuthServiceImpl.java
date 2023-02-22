@@ -221,7 +221,7 @@ public class AuthServiceImpl implements AuthService {
 	}
 
 	@Override
-	public EmailResponse sendVerifyEmail(String email) {
+	public boolean sendVerifyEmail(String email) {
 		if (email == null) {
 			throw new AuthRequestException("User not logged in");
 		}
@@ -231,13 +231,21 @@ public class AuthServiceImpl implements AuthService {
 	}
 
 	@Override
-	public EmailResponse sendRecoveryPasswordToEmail(String email) {
+	public boolean sendRecoveryPasswordToEmail(String email) {
 		if (userRepository.existsByEmail(email)) {
-			return emailService.sendRecoveryPasswordToEmail(email);
+			return emailService.sendRecoveryPasswordToEmail(email,ne);
 		} else {
 			throw new ResourceNotFoundException("Email", "email", email);
 		}
-
+		
+		Account account = accountRepository.findByEmail(email);
+		if(account==null) {
+			throw new ResourceNotFoundException("Email", "email", email);
+		}
+		String newPassword = passwordGenerator.generatePassword(8).toString();
+		account.setPassword(new BCryptPasswordEncoder().encode(newPassword));
+		accountRepository.save(account);
+		return emailService.sendRecoveryPasswordToEmail(email,newPassword);
 	}
 
 }

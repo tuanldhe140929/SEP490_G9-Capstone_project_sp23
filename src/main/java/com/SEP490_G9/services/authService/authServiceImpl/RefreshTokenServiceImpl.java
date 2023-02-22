@@ -60,7 +60,6 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 		} else {
 			return false;
 		}
-
 	}
 
 	@Override

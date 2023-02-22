@@ -67,9 +67,11 @@ public class Product implements Serializable {
     @JoinColumn(name = "type_id", unique = false)
     private Type type;
 	
+
 	@OneToMany(mappedBy="product",fetch = FetchType.EAGER)
 	private List<ProductFile> files = new ArrayList<ProductFile>();
 	
+
 	public Product() {}
 	
 	public Product(User user) {

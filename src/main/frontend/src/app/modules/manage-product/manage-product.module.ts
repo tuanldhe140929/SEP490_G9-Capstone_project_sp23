@@ -17,6 +17,7 @@ import { VgControlsModule } from '@videogular/ngx-videogular/controls';
 import { VgOverlayPlayModule } from '@videogular/ngx-videogular/overlay-play';
 import { VgBufferingModule } from '@videogular/ngx-videogular/buffering';
 import { ProductCollectionComponent } from './product-collection/product-collection.component';
+import { SellerGuardGuard } from '../../helpers/seller-guard.guard';
 
     
 @NgModule({
@@ -41,7 +42,7 @@ import { ProductCollectionComponent } from './product-collection/product-collect
     VgOverlayPlayModule,
     VgBufferingModule
   ],
-  providers: [AuthGuard, DecimalPipe],
+  providers: [SellerGuardGuard, DecimalPipe],
 
 })
 export class ManageProductModule { }

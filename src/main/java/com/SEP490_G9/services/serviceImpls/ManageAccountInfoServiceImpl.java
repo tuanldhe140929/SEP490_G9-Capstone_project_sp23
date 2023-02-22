@@ -16,6 +16,7 @@ import com.SEP490_G9.helpers.StorageProperties;
 import com.SEP490_G9.models.UserDetailsImpl;
 import com.SEP490_G9.models.Entities.Account;
 import com.SEP490_G9.models.Entities.Product;
+import com.SEP490_G9.models.Entities.Account;
 import com.SEP490_G9.models.Entities.User;
 import com.SEP490_G9.repositories.AccountRepository;
 import com.SEP490_G9.repositories.UserRepository;
@@ -41,18 +42,20 @@ public class ManageAccountInfoServiceImpl implements ManageAccountInfoService {
 	AccountRepository accountRepo;
 	
 	@Override
+
 	public User getUserInfo() {
 		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getAccount();
 		User user = userRepo.findById(account.getId()).get();
 		return user;
+
 	}
 
 	@Override
 	public boolean changeAccountPassword(String newPassword,String oldPassword) {
 		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getAccount();
-	
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 		if(encoder.matches(oldPassword, account.getPassword())) {
+
 			String encodedPassword = encoder.encode(newPassword);
 			account.setPassword(encodedPassword);
 			accountRepo.save(account);
