@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.SEP490_G9.exceptions.RefreshTokenException;
+import com.SEP490_G9.models.UserDetailsImpl;
 import com.SEP490_G9.models.DTOS.AuthRequest;
 import com.SEP490_G9.models.DTOS.AuthResponse;
 import com.SEP490_G9.models.DTOS.EmailResponse;

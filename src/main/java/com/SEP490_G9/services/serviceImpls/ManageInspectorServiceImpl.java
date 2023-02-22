@@ -26,6 +26,9 @@ public class ManageInspectorServiceImpl implements ManageInspectorService{
 	@Autowired
 	RoleRepository roleRepo;
 	
+	@Autowired
+	UserRepository userRepo;
+	
 	@Override
 	public List<User> getAllInspectors() {
 		List<User> inspectorList = accountRepo.findByRolesIn(new Role(Constant.STAFF_ROLE_ID,"ROLE_STAFF"));

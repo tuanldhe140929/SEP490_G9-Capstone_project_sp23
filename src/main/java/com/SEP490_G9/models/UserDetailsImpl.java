@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.SEP490_G9.models.Entities.Account;
 import com.SEP490_G9.models.Entities.Role;
+import com.SEP490_G9.models.Entities.User;
 
 public class UserDetailsImpl implements UserDetails {
 
@@ -78,5 +79,4 @@ public class UserDetailsImpl implements UserDetails {
 	public void setAccount(Account account) {
 		this.account = account;
 	}
-
 }
