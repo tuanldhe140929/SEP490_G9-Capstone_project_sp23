@@ -29,12 +29,10 @@ public class ManageAccountInfoController {
 	@Autowired
 	ManageAccountInfoService manageAccountInfoService;
 
-
-	
 	@GetMapping(value = "getUserInfo")
 	public ResponseEntity<?> getUserInfo() {
 		User user;
-		user = manageAccountInfoService.getAccountInfo();
+		user = manageAccountInfoService.getUserInfo();
 		return ResponseEntity.ok(user);
 	}
 
@@ -47,17 +45,20 @@ public class ManageAccountInfoController {
 		return ResponseEntity.ok(ret);
 	}
 
-	@PostMapping(value = "changeAccountName")
-	public ResponseEntity<?> changeAccountName(
-			@Valid @RequestParam(name = "newName", required = true) @Size(min = 3, max = 30) String newName) {
-		User user;
-		user = manageAccountInfoService.changeAccountName(newName);
-		return ResponseEntity.ok(user);
-	}
 	@PostMapping(value = "uploadProfileImage")
-	public ResponseEntity<?> uploadProfileImage(@RequestParam(name = "profileImage") MultipartFile profileImage) throws IOException {
+	public ResponseEntity<?> uploadProfileImage(@RequestParam(name = "profileImage") MultipartFile profileImage)
+			throws IOException {
 		String src = manageAccountInfoService.uploadProfileImage(profileImage);
 		return ResponseEntity.ok(src);
 	}
 
+	@PostMapping(value = "changeAccountInfo")
+	public ResponseEntity<?> changeAccountInfo(
+			@Valid @RequestParam(name="newUserName", required = true) @Size(min = 3, max = 30) String newUserName,
+			@Valid @RequestParam(name="newFirstName", required = true) @Size(min = 3, max = 30) String newFirstName,
+			@Valid @RequestParam(name="newLastName", required = true) @Size(min = 3, max = 30) String newLastName){
+		User user;
+		user = manageAccountInfoService.changeAccountInfo(newUserName, newFirstName, newLastName);
+		return ResponseEntity.ok(user);
+	}
 }

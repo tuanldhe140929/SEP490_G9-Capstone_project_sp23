@@ -20,8 +20,6 @@ import com.SEP490_G9.service.FileIOService;
 import com.SEP490_G9.service.ManageAccountInfoService;
 import com.SEP490_G9.util.StorageUtil;
 
-
-
 @Service
 public class ManageAccountInfoServiceImpl implements ManageAccountInfoService {
 	final String[] IMAGE_EXTENSIONS = { "image/png", "image/jpeg", "image/svg+xml" };
@@ -37,34 +35,34 @@ public class ManageAccountInfoServiceImpl implements ManageAccountInfoService {
 	@Autowired
 	ServeMediaService serveMediaService;
 	
+	@Autowired
+	AccountRepository accountRepo;
+	
 	@Override
-	public Account getAccountInfo() {
+
+	public User getUserInfo() {
 		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getAccount();
-		return account;
+		User user = userRepo.findById(account.getId()).get();
+		return user;
+
 	}
 
 	@Override
 	public boolean changeAccountPassword(String newPassword,String oldPassword) {
-		Account account= ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getAccount();
+		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getAccount();
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 		if(encoder.matches(oldPassword, account.getPassword())) {
 
 			String encodedPassword = encoder.encode(newPassword);
-			user.setPassword(encodedPassword);
-			userRepo.save(user);
+			account.setPassword(encodedPassword);
+			accountRepo.save(account);
 		}else {
 			return false;
 		}	
 		return true;
 	}
 
-	@Override
-	public User changeAccountName(String newName) {
-		User user = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
-		user.setUsername(newName);
-		userRepo.save(user);
-		return user;
-	}
+	
 
 	@Override
 	public String uploadProfileImage(MultipartFile profileImage) throws IOException {
@@ -78,7 +76,7 @@ public class ManageAccountInfoServiceImpl implements ManageAccountInfoService {
 			fileIOService.store(profileImage, profileImageLocation);
 			user.setImage(profileImageLocation+ profileImage.getOriginalFilename());
 			userRepo.save(user);
-			return user.getImage();
+			return user.getAvatar();
 		}
 	}
 	private boolean checkFileType(MultipartFile file, String... extensions) {
@@ -90,7 +88,8 @@ public class ManageAccountInfoServiceImpl implements ManageAccountInfoService {
 		return false;
 	}
 	private User getUserById() {
-		User user = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();	
+		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getAccount();	
+		User user = userRepo.getReferenceById(account.getId());
 		return user;
 	}
 
@@ -101,7 +100,19 @@ public class ManageAccountInfoServiceImpl implements ManageAccountInfoService {
 		if (user == null) {
 			throw new ResourceNotFoundException("Product id:",userId.toString(), "");
 		}
+
 		return serveMediaService.serveImage(storageUtil.getLocation() + user.getAvatar());
+	}
+
+	@Override
+	public User changeAccountInfo(String newUserName, String newFirstName, String newLastName) {
+		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getAccount();
+		User user = userRepo.findById(account.getId()).get();
+		user.setFirstName(newFirstName);
+		user.setUsername(newUserName);
+		user.setLastName(newLastName);
+		userRepo.save(user);
+		return user;
 	}
 
 }

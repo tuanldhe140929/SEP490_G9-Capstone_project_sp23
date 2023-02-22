@@ -2,6 +2,7 @@ import { Role } from "./Role";
 
 
 export class User{
+
   id: number
   email: string;
   accountCreatedDate: Date;
@@ -18,7 +19,9 @@ export class User{
   userLastModified: Date;
 
   constructor() {
-    this.joinedDate = new Date;
+    this.firstName ="";
+    this.lastName ="";
+    this.userCreatedDate = new Date;
     this.id = -1;
     this.email = '';
     this.accountCreatedDate = new Date;

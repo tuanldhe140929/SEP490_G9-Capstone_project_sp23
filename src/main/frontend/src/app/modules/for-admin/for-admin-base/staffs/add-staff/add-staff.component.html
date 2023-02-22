@@ -1,0 +1,36 @@
+<div class="addFormContainer">
+    <mat-dialog-content class="mat-typography">
+        <h2>Thêm nhân viên</h2>
+        <form [formGroup]="addStaffForm" (submit)="onAddStaff()">
+            <div class="form-group">
+                <label>Email</label>
+                <input type="text" class="form-control" formControlName="email" (change)="checkEmailExists()">
+                <div *ngIf="addform.email.invalid&&addform.email.touched; then emailNotOkay else emailOkay"></div>
+                    <ng-template #emailNotOkay><small>Email không hợp lệ</small></ng-template>
+                    <ng-template #emailOkay>
+                        <div *ngIf="checkEmailExists(); then existed else notexisted"></div>
+                        <ng-template #existed><small>Email đã được sử dụng</small></ng-template>
+                        <ng-template #notexisted><small>&nbsp;</small></ng-template>
+                    </ng-template>
+            </div>
+            <div class="form-group">
+                <label>Mật khẩu</label>
+                <input type="password" class="form-control" formControlName="password" (change)="onPasswordMatch()">
+                <div *ngIf="addform.password.invalid&&addform.password.touched; then passwordNotOkay else passwordOkay"></div>
+                    <ng-template #passwordNotOkay><small>Mật khẩu phải từ 8 đến 30 ký tự</small></ng-template>
+                    <ng-template #passwordOkay><small>&nbsp;</small></ng-template>
+            </div>
+            <div class="form-group">
+                <label>Nhập lại mật khẩu</label>
+                <input type="password" class="form-control" formControlName="repassword" (change)="onPasswordMatch()">
+                <div *ngIf="!onPasswordMatch()&&addform.repassword.touched; then repasswordNotOkay else repasswordOkay"></div>
+                    <ng-template #repasswordNotOkay><small>Mật khẩu không khớp</small></ng-template>
+                    <ng-template #repasswordOkay><small>&nbsp;</small></ng-template>
+            </div>
+            <div class="form-group" align="end">
+                <button mat-dialog-close="true" class="btn btn-warning">Hủy</button>
+                <button type="submit" [mat-dialog-close]="true" [disabled]="addStaffForm.invalid||!onPasswordMatch()||checkEmailExists()" class="btn btn-success">Thêm</button>
+            </div>
+        </form>
+    </mat-dialog-content>
+</div>
