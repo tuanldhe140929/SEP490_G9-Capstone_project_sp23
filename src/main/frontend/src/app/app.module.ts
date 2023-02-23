@@ -36,8 +36,6 @@ import { DataTablesModule } from 'angular-datatables';
     ReactiveFormsModule,
     AuthModule,
     ManageAccountInfoModule,
-    ManageProductModule,
-
     ForUsersModule,
     ForAdminModule,
     BasicsModule,
