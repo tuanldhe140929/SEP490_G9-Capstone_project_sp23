@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.SEP490_G9.helpers.Constant;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;

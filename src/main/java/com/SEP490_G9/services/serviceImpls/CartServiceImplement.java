@@ -49,14 +49,16 @@ public class CartServiceImplement implements CartService {
 
 
 	@Override
-		public CartDTO addProduct(Long productId, String version) {
+		public CartDTO addProduct(Long productId) {
 		    ProductDetails productDetails = productDetailsRepository.
-		    		findByProductIdAndProductVersionKeyVersion(productId, version);
+		    		findFirstByProductIdOrderByCreatedDateDesc(productId);
 		    Cart cart = getCurrentCart();
+		    
 		    CartItem item = new CartItem(cart, productDetails);
+		    
 		    cart.addItem(item);
 		    cartItemRepository.save(item);
-		    CartDTO cartDTO = new CartDTO(cart);
+		    CartDTO cartDTO = new CartDTO(getCurrentCart());
 		    return cartDTO;
 		}
 
@@ -77,7 +79,7 @@ public class CartServiceImplement implements CartService {
 	        throw new ResourceNotFoundException("Product with id " + productId + " not found in cart.", null,
 	                itemToRemove);
 	    }
-	    CartDTO cartDto = new CartDTO(cart);
+	    CartDTO cartDto = new CartDTO(getCurrentCart());
 	    return cartDto;
 	}
 	public CartDTO removeAllProduct(Long productId) {
@@ -101,7 +103,7 @@ public class CartServiceImplement implements CartService {
 		}
 
 		// Convert the updated cart to a CartDTO and return it
-		return new CartDTO(cart);
+		return new CartDTO(getCurrentCart());
 
 	}
 
@@ -109,8 +111,9 @@ public class CartServiceImplement implements CartService {
 
 		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
 				.getAccount();
-		User user = userRepo.getReferenceById(account.getId());
-		Cart cart = cartRepository.findCurrentCart(account.getId());
+		User user = userRepo.findById(account.getId()).get();
+		
+		Cart cart = cartRepository.findFirstByUserOrderByIdDesc(user) ;
 
 		Cart retCart = null;
 		if (cart == null) {
@@ -136,12 +139,12 @@ public class CartServiceImplement implements CartService {
 		return cart;
 	}
 
-	private Cart checkTransactionAndReturnCart(Cart cart, Account account) {
+	private Cart checkTransactionAndReturnCart(Cart cart,User user) {
 		Transaction transactions = transactionRepository.findByCartId(cart.getId());
 		if (transactions == null) {
 			return cart;
 		} else {
-			Cart newCart = cartRepository.save(new Cart(account));
+			Cart newCart = cartRepository.save(new Cart(user));
 			return newCart;
 		}
 

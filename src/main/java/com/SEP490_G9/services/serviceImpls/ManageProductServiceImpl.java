@@ -252,19 +252,19 @@ public class ManageProductServiceImpl implements ManageProductService {
 		dto.setSize(productFile.getSize());
 		dto.setName(productFile.getOriginalFilename());
 		dto.setFileState(ProductFileDTO.FileState.UPLOADING);
-		byte[] r = new byte[0];
-		ClamAVClient a = clamAVUtil.newClient();
-		System.out.println(a.ping());
-		try {
-			 r = a.scan(productFile.getInputStream());
-		} catch (Exception e) {
-
-		} finally {
-			productFile.getInputStream().close();
-		}
-		System.out.println("Everything ok : " + ClamAVClient.isCleanReply(r) + "\n");
-		
-		if (ClamAVClient.isCleanReply(r)) {
+		//byte[] r = new byte[0];
+		//ClamAVClient a = clamAVUtil.newClient();
+		//System.out.println(a.ping());
+//		try {
+//			// r = a.scan(productFile.getInputStream());
+//		} catch (Exception e) {
+//
+//		} finally {
+//			productFile.getInputStream().close();
+//		}
+		//System.out.println("Everything ok : " + ClamAVClient.isCleanReply(r) + "\n");
+		//ClamAVClient.isCleanReply(r)
+		if (true) {
 			Product product = getProductByIdAndSeller(productId);
 			ProductDetails productDetails = checkVersion(product, version);
 

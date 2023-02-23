@@ -3,36 +3,33 @@ package com.SEP490_G9.models.DTOS;
 import com.SEP490_G9.models.Entities.Cart;
 
 import com.SEP490_G9.models.Entities.CartItem;
+import com.SEP490_G9.models.Entities.ProductDetails;
 import com.SEP490_G9.models.embeddables.CartItemKey;
 
 
 
 public class CartItemDTO {
 	
-	private Long productId;
+	private ProductDetails product;
 	private Long cartId;
-	private double price;
-	private String version;
 
 	public CartItemDTO(CartItem cartItem) {
 		super();
-		
-		this.productId = cartItem.getCartItemKey().getProductVersionKey().getProductId();
+		this.product= cartItem.getProductDetails();
 		this.cartId= cartItem.getCart().getId();
-		this.price = cartItem.getProductDetails().getPrice();
-		this.version = cartItem.getCartItemKey().getProductVersionKey().getVersion();
+
 	}
 
 	public CartItemDTO() {
 
 	}
 
-	public Long getProductId() {
-		return productId;
+	public ProductDetails getProduct() {
+		return product;
 	}
 
-	public void setProductId(Long productId) {
-		this.productId = productId;
+	public void setProduct(ProductDetails product) {
+		this.product = product;
 	}
 
 	public Long getCartId() {
@@ -42,15 +39,4 @@ public class CartItemDTO {
 	public void setCartId(Long cartId) {
 		this.cartId = cartId;
 	}
-
-	public double getPrice() {
-		return price;
-	}
-
-	public void setPrice(double price) {
-		this.price = price;
-	}
-
-
-
 }

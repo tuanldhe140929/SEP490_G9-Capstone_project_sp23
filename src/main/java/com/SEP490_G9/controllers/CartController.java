@@ -18,10 +18,9 @@ public class CartController {
     }
     
 
-    @PostMapping("/add/{productId}/{version}")
-    public ResponseEntity<?> addProduct(@PathVariable(name="productId") Long productId ,
-    		@PathVariable(name="version") String version ) {
-    	CartDTO cartDTO = cartService.addProduct(productId,version);
+    @PostMapping("/add/{productId}")
+    public ResponseEntity<?> addProduct(@PathVariable(name="productId") Long productId ) {
+    	CartDTO cartDTO = cartService.addProduct(productId);
         return ResponseEntity.ok(cartDTO);
     }
 
