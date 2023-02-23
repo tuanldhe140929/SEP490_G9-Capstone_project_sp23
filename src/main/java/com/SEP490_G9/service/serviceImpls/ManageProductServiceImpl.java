@@ -246,10 +246,15 @@ public class ManageProductServiceImpl implements ManageProductService {
 		dto.setSize(productFile.getSize());
 		dto.setName(productFile.getOriginalFilename());
 		dto.setFileState(ProductFileDTO.FileState.UPLOADING);
+
+		
+		
+
 		if (productFile.getSize() == 0) {
 
 		}
 		if (scanForViruses(productFile)) {
+
 			Product product = getProductByIdAndSeller(productId);
 			ProductDetails productDetails = checkVersion(product, version);
 			if (productFile.getSize() == 0) {

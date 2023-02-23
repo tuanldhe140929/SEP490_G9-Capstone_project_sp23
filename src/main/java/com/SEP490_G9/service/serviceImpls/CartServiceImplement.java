@@ -24,6 +24,18 @@ import com.SEP490_G9.repository.TransactionRepository;
 import com.SEP490_G9.repository.UserRepository;
 import com.SEP490_G9.service.CartService;
 
+import com.SEP490_G9.entity.Product;
+import com.SEP490_G9.entity.ProductDetails;
+import com.SEP490_G9.entity.Transaction;
+import com.SEP490_G9.entity.User;
+import com.SEP490_G9.repository.AccountRepository;
+import com.SEP490_G9.repository.CartItemRepository;
+import com.SEP490_G9.repository.CartRepository;
+import com.SEP490_G9.repository.ProductDetailsRepository;
+import com.SEP490_G9.repository.ProductRepository;
+import com.SEP490_G9.repository.TransactionRepository;
+import com.SEP490_G9.repository.UserRepository;
+import com.SEP490_G9.service.CartService;
 
 @Service
 public class CartServiceImplement implements CartService {
@@ -32,7 +44,8 @@ public class CartServiceImplement implements CartService {
 
 	@Autowired
 	ProductRepository productRepository;
-
+	@Autowired
+	ProductDetailsRepository productDetailsRepository ;
 	@Autowired
 	CartRepository cartRepository;
 	@Autowired
@@ -46,46 +59,46 @@ public class CartServiceImplement implements CartService {
 
 
 	@Override
-	public CartDTO addProduct(Long productId) {
-
-		Product product = productRepository.findById(productId).get();
-		Cart cart = getCurrentCart();
-		CartItem item = new CartItem(cart, product);
-		cart.addItem(item);
-		cartItemRepository.save(item);
-		CartDTO cartDTO = new CartDTO(cart);
-		return cartDTO;
-	}
+		public CartDTO addProduct(Long productId) {
+		    ProductDetails productDetails = productDetailsRepository.
+		    		findFirstByProductIdOrderByCreatedDateDesc(productId);
+		    Cart cart = getCurrentCart();
+		    
+		    CartItem item = new CartItem(cart, productDetails);
+		    
+		    cart.addItem(item);
+		    cartItemRepository.save(item);
+		    CartDTO cartDTO = new CartDTO(getCurrentCart());
+		    return cartDTO;
+		}
 
 	@Override
 	public CartDTO removeProduct(Long productId) {
-		Cart cart = getCurrentCart();
-		CartItem itemToRemove = null;
-		for (CartItem item : cart.getItems()) {
-			if (item.getProduct().getId() == productId) {
-				itemToRemove = item;
-				break;
-			}
-		}
-		if (itemToRemove != null) {
-			cart.getItems().remove(itemToRemove);
-			cartItemRepository.delete(itemToRemove);
-		} else {
-			throw new ResourceNotFoundException("Product with id " + productId + " not found in cart.", null,
-					itemToRemove);
-		}
-		CartDTO cartDto = new CartDTO(cart);
-
-		return cartDto;
+	    Cart cart = getCurrentCart();
+	    CartItem itemToRemove = null;
+	    for (CartItem item : cart.getItems()) {
+	    	if (item.getProductDetails().getProductVersionKey().getProductId() == productId) {
+	            itemToRemove = item;
+	            break;
+	        }
+	    }
+	    if (itemToRemove != null) {
+	        cart.getItems().remove(itemToRemove);
+	        cartItemRepository.delete(itemToRemove);
+	    } else {
+	        throw new ResourceNotFoundException("Product with id " + productId + " not found in cart.", null,
+	                itemToRemove);
+	    }
+	    CartDTO cartDto = new CartDTO(getCurrentCart());
+	    return cartDto;
 	}
-
 	public CartDTO removeAllProduct(Long productId) {
 		Cart cart = getCurrentCart();
 		CartItem itemToRemove = null;
 
 		// Find the CartItem in the cart with the given productId
 		for (CartItem item : cart.getItems()) {
-			if (item.getProduct().getId().equals(productId)) {
+			if (item.getProductDetails().getProductVersionKey().getProductId().equals(productId)) {
 				itemToRemove = item;
 				break;
 			}
@@ -100,7 +113,7 @@ public class CartServiceImplement implements CartService {
 		}
 
 		// Convert the updated cart to a CartDTO and return it
-		return new CartDTO(cart);
+		return new CartDTO(getCurrentCart());
 
 	}
 
@@ -108,8 +121,9 @@ public class CartServiceImplement implements CartService {
 
 		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
 				.getAccount();
-		User user = userRepo.getReferenceById(account.getId());
-		Cart cart = cartRepository.findCurrentCart(account.getId());
+		User user = userRepo.findById(account.getId()).get();
+		
+		Cart cart = cartRepository.findFirstByUserOrderByIdDesc(user) ;
 
 		Cart retCart = null;
 		if (cart == null) {
@@ -135,19 +149,19 @@ public class CartServiceImplement implements CartService {
 		return cart;
 	}
 
-	private Cart checkTransactionAndReturnCart(Cart cart, Account account) {
+	private Cart checkTransactionAndReturnCart(Cart cart,User user) {
 		Transaction transactions = transactionRepository.findByCartId(cart.getId());
 		if (transactions == null) {
 			return cart;
 		} else {
-			Cart newCart = cartRepository.save(new Cart(account));
+			Cart newCart = cartRepository.save(new Cart(user));
 			return newCart;
 		}
 
 	}
 
 	@Override
-	public CartDTO checkOut(Cart cart, Account account) {
+	public CartDTO checkOut( Account account) {
 		// Validate that the user exists
 		account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
 				.getAccount();
@@ -158,13 +172,13 @@ public class CartServiceImplement implements CartService {
 		}
 
 		// Validate that the cart is not empty
-		cart = getCurrentCart();
+		Cart cart = getCurrentCart();
 		if (cart == null) {
 			// Error: Cart is empty
 			return null;
 		}
 
-		// Create a new transaction
+		// Create  new transaction
 		Transaction transaction = new Transaction();
 
 		// Set the transaction details

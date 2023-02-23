@@ -19,7 +19,7 @@ public class CartController {
     
 
     @PostMapping("/add/{productId}")
-    public ResponseEntity<?> addProduct(@PathVariable(name="productId") Long productId) {
+    public ResponseEntity<?> addProduct(@PathVariable(name="productId") Long productId ) {
     	CartDTO cartDTO = cartService.addProduct(productId);
         return ResponseEntity.ok(cartDTO);
     }
