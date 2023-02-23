@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AuthResponse } from 'src/app/DTOS/AuthResponse';
 import { AuthService } from 'src/app/services/auth.service';
 import { StorageService } from 'src/app/services/storage.service';
 
@@ -50,6 +51,17 @@ export class LoginComponent implements OnInit {
           this.authService.authResponse = response.body;
           this.storageService.saveUser(response.body);
           this.storageService.saveToken(response.body.accessToken);
+          let authResponse: AuthResponse;
+          authResponse = this.storageService.getAuthResponse();
+          if(authResponse){
+            if(authResponse.roles.includes('ROLE_USER')||authResponse.roles.includes('ROLE_SELLER')){
+              this.router.navigate(['homepage']);
+            }else if(authResponse.roles.includes('ROLE_ADMIN')){
+              this.router.navigate(['admin']);
+            }else{
+              this.router.navigate(['login']);
+            }
+          }
         },
         err => {
 			console.log(err);

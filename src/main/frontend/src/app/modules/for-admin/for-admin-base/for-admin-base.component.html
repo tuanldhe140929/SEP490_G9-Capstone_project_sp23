@@ -1,11 +1,4 @@
-<!-- <mat-toolbar>
-    <mat-toolbar-row>
-        <mat-icon (click)="sidebar.toggle()">menu</mat-icon>
-        <span>
-            Admin Screen
-        </span>
-    </mat-toolbar-row>
-</mat-toolbar> -->
+
 <mat-toolbar>
     <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon" (click)="sidebar.toggle()">
      <mat-icon>menu</mat-icon>
@@ -21,17 +14,11 @@
  </mat-toolbar>
 <mat-sidenav-container>
     <mat-sidenav #sidebar mode="side">
-        <!-- <ul>
-            <li>
-                <button (click)="openDashboard()">Dashboard</button>
-            </li>
-            <li>
-                <button (click)="openManageStaffs()">Manage Staffs</button>
-            </li>
-        </ul> -->
         <mat-list>
             <mat-list-item (click)="openDashboard()"><a>Bảng thông tin</a></mat-list-item>
             <mat-list-item (click)="openManageStaffs()"><a>Quản lý nhân viên</a></mat-list-item>
+            <mat-list-item (click)="openCategories()"><a>Quản lý phân loại sản phẩm</a></mat-list-item>
+            <mat-list-item (click)="openTags()"><a>Quản lý chủ đề sản phẩm</a></mat-list-item>
         </mat-list>
     </mat-sidenav>
     <mat-sidenav-content>

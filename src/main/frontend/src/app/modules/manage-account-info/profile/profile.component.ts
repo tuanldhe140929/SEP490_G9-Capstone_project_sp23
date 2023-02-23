@@ -31,27 +31,35 @@ export class ProfileComponent implements OnInit {
   ngOnInit(): void {
     this.authResponse = this.storageService.getAuthResponse();
     this.getUserInfo();
-    console.log(this.user.image);
+    console.log(this.user.avatar);
   }
 
   public Profileform = this.FormBuilder.group({
-    "newname": ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]]
+    "newFirstName": ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
+    "newUsername": ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
+    "newLastName": ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]]
   });
 
   get Form() {
     return this.Profileform.controls;
   }
-  get newname() {
-    return this.Profileform.controls.newname;
+  get newUsername() {
+    return this.Profileform.controls.newUsername;
+  }
+  get newFirstName() {
+    return this.Profileform.controls.newFirstName
+  }
+  get newLastName() {
+    return this.Profileform.controls.newLastName;
   }
   public username = "";
 
   onChangeName() {
-    this.Profileform.controls.newname.setValue(this.user.username)
+    this.Profileform.controls.newUsername.setValue(this.user.username)
+    this.Profileform.controls.newFirstName.setValue(this.user.firstName)
+    this.Profileform.controls.newLastName.setValue(this.user.lastName)
     this.manageAccountInfoService.onChangeName(this.Profileform.value).subscribe(
       data => {
-        this.authResponse.username = data.username;
-        this.storageService.saveUser(this.authResponse);
         console.log(data)
       },
       error => {
@@ -59,10 +67,18 @@ export class ProfileComponent implements OnInit {
       }
     )
   }
+
   getUserInfo() {
     this.manageAccountInfoService.getCurrentUserInfo().subscribe(
       data => {
         this.user = data;
+        
+        if (this.user.avatar == "" || this.user.avatar == null) {  
+            this.ProfileImage.setAttribute('src',"http://ssl.gstatic.com/accounts/ui/avatar_2x.png") ;
+        } else {
+         this.ProfileImage.setAttribute('src',"http://localhost:9000/public/serveMedia/serveProfileImage?userId=" + this.user.id) ;
+        }
+        
         console.log(data)
       },
       error => {
@@ -71,28 +87,37 @@ export class ProfileComponent implements OnInit {
     )
   }
   UpdateInfo() {
-    if (this.UsernameInput != null) {
+    if (this.UsernameInput != null && this.FirstNameInput != null && this.LastNameInput != null) {
       this.UsernameInput.removeAttribute('readonly');
+      this.FirstNameInput.removeAttribute('readonly');
+      this.LastNameInput.removeAttribute('readonly');
     }
     console.log("abc")
   }
-
+  get ProfileImage(){
+    return document.getElementById('Image') as HTMLImageElement;
+  }
   get UsernameInput() {
+    return document.getElementById('user_name') as HTMLInputElement;
+  }
+  get FirstNameInput() {
     return document.getElementById('first_name') as HTMLInputElement;
+  }
+  get LastNameInput() {
+    return document.getElementById('last_name') as HTMLInputElement;
   }
 
   UploadProfileImage($event: any) {
     const file: File = $event.target.files[0];
-
     if (file) {
       const formData = new FormData();
-
       formData.append("thumbnail", file);
-
       const upload$ = this.manageAccountInfoService.uploadProfileImage(file).subscribe(
         data => {
-          this.user.image = data;
-          console.log(data)
+          this.user.avatar = data;
+          console.log(data);
+          this.ProfileImage.setAttribute('src',"" );
+          this.ProfileImage.setAttribute('src',"http://localhost:9000/public/serveMedia/serveProfileImage?userId=" + this.user.id);
         },
         error => {
           console.log(error)
@@ -100,12 +125,5 @@ export class ProfileComponent implements OnInit {
       )
     }
   }
-  getUserImage(): string {
 
-    if (this.user.image == "" && this.user.image == null) {
-      return "http://ssl.gstatic.com/accounts/ui/avatar_2x.png";
-    } else {
-      return "http://localhost:9000/public/serveMedia/serveProfileImage?userId=" + this.user.id;
-    }
-  }
 }

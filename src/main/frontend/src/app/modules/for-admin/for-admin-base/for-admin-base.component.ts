@@ -18,4 +18,12 @@ export class ForAdminBaseComponent {
   openManageStaffs(){
     this.routerName = 'staffs';
   }
+
+  openCategories(){
+    this.routerName = 'categories';
+  }
+
+  openTags(){
+    this.routerName = 'tags';
+  }
 }

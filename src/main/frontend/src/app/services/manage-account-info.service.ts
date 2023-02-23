@@ -5,7 +5,7 @@ import { User } from '../DTOS/User';
 
 
 const changePasswordUrl = "http://localhost:9000/private/profile/changeAccountPassword";
-const ChangeNameUrl = "http://localhost:9000/private/profile/changeAccountName";
+const ChangeInfoUrl = "http://localhost:9000/private/profile/changeAccountInfo";
 const baseUrl = "http://localhost:9000/private/profile"
 @Injectable({
   providedIn: 'root'
@@ -29,9 +29,11 @@ export class ManageAccountInfoService {
   }
 
   public onChangeName(data: any) {
-    return this.httpClient.post<any>(ChangeNameUrl, null, {
+    return this.httpClient.post<any>(ChangeInfoUrl, null, {
       params: {
-        newName: data.newname
+        newUserName: data.newUsername,
+        newFirstName: data.newFirstName,
+        newLastName: data.newLastName
       }
     })
   }
@@ -39,7 +41,7 @@ export class ManageAccountInfoService {
     const formData = new FormData();
     formData.append("profileImage", file);
     return this.httpClient.post(baseUrl + "/uploadProfileImage", formData,{
-      responseType:'text'
+    responseType:'text'
     });
   }
 }

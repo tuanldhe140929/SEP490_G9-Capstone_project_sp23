@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.SEP490_G9.models.Entities.Account;
-import com.SEP490_G9.models.Entities.User;
-import com.SEP490_G9.services.ManageStaffService;
+import com.SEP490_G9.entity.Account;
+import com.SEP490_G9.service.ManageStaffService;
 
-@RequestMapping("public/manageStaff")
+
+@RequestMapping("private/manageStaff")
 @RestController
 public class ManageStaffController {
 

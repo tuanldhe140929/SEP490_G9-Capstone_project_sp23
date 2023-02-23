@@ -10,7 +10,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { ManageProductModule } from './modules/manage-product/manage-product.module';
 import { CommonModule } from './modules/common/common.module';
 import { BasicsModule } from './modules/basics/basics.module';
-import {MatIconModule} from '@angular/material/icon';	
+import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
@@ -22,7 +22,7 @@ import { ForAdminModule } from './modules/for-admin/for-admin.module';
 import { ToastrModule } from 'ngx-toastr';
 import { timeout } from 'rxjs';
 import { MatSortModule } from '@angular/material/sort';
-import { DataTablesModule } from 'angular-datatables'
+import { DataTablesModule } from 'angular-datatables';
 
 @NgModule({
   declarations: [
@@ -40,6 +40,7 @@ import { DataTablesModule } from 'angular-datatables'
     ForAdminModule,
     BasicsModule,
     MatIconModule,
+    MatSortModule,
     MatButtonModule,
     MatDialogModule,
     CKEditorModule,
@@ -49,7 +50,9 @@ import { DataTablesModule } from 'angular-datatables'
 
     ManageProductModule,
 
+
     MatSortModule,
+    ManageProductModule,
     DataTablesModule,
     ToastrModule.forRoot(
       {
@@ -61,12 +64,12 @@ import { DataTablesModule } from 'angular-datatables'
 
   ],
   providers: [
-	      {  
-      provide: HTTP_INTERCEPTORS,  
-      useClass: AuthInterceptor,  
-      multi: true  
-    }  
-  ],  
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

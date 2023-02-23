@@ -16,7 +16,7 @@ const routes: Routes = [
   component: ShoppingComponent
 },
 {
-  path: ':username/:productName',
+  path: ':username/:productId',
   component: ProductDetailsComponent,
   title:'Chi tiết sản phẩm'
 },
@@ -27,7 +27,8 @@ const routes: Routes = [
 {
   path: 'checkout',
   component: CheckOutComponent
-}
+},
+
 ];
 
 @NgModule({

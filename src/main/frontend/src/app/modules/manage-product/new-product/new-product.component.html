@@ -116,9 +116,8 @@
                         </div>
                         <div class="meta_data">
                           <span class="file_size">{{formatFileSize(file.file.size)}}</span>
-                          {{file.file.fileState}}
                         </div>
-                        <div *ngIf="file.file.fileState!=FileState.UPLOADED && file.file.fileState!=null" class="progress">
+                        <div *ngIf="file.file.fileState!=FileState.UPLOADED" class="progress">
                           <div class="progress-bar progress-bar-striped progress-bar-animated"
                                role="progressbar"
                                attr.aria-valuenow="{{ file.process.progress }}"
@@ -134,6 +133,9 @@
                               </div>
                               <div *ngSwitchCase="FileState.ERROR">
                                 Cannot upload file
+                              </div>
+                              <div *ngSwitchCase="FileState.ON_QUEUE">
+                                On queue
                               </div>
                             </div>
                           </div>

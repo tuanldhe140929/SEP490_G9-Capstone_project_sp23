@@ -16,11 +16,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-import com.SEP490_G9.services.FileStorageService;
+import com.SEP490_G9.service.FileIOService;
 
-@EntityScan("com.SEP490_G9.models")
+@EntityScan("com.SEP490_G9.entity")
 @ComponentScan(basePackages = "com.SEP490_G9")
-@EnableJpaRepositories("com.SEP490_G9.repositories")
+@EnableJpaRepositories("com.SEP490_G9.repository")
 @SpringBootApplication
 public class Sep490G9Application {
 
@@ -29,7 +29,7 @@ public class Sep490G9Application {
 	}
 	
 	@Bean
-	CommandLineRunner init(FileStorageService storageService) {
+	CommandLineRunner init(FileIOService storageService) {
 		return (args) -> {	
 			String[] script = {"cmd.exe", "/c", "net", "start", "clamd"};
 			Process process = Runtime.getRuntime().exec(script);
