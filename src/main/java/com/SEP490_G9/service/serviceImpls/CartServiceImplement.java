@@ -19,6 +19,7 @@ import com.SEP490_G9.exception.ResourceNotFoundException;
 import com.SEP490_G9.repository.AccountRepository;
 import com.SEP490_G9.repository.CartItemRepository;
 import com.SEP490_G9.repository.CartRepository;
+import com.SEP490_G9.repository.PreviewRepository;
 import com.SEP490_G9.repository.ProductRepository;
 import com.SEP490_G9.repository.TransactionRepository;
 import com.SEP490_G9.repository.UserRepository;
@@ -43,6 +44,8 @@ public class CartServiceImplement implements CartService {
 	CartItemRepository cartItemRepository;
 
 	@Autowired
+	PreviewRepository previewRepo;
+	@Autowired
 	ProductRepository productRepository;
 	@Autowired
 	ProductDetailsRepository productDetailsRepository ;
@@ -64,11 +67,13 @@ public class CartServiceImplement implements CartService {
 		    		findFirstByProductIdOrderByCreatedDateDesc(productId);
 		    Cart cart = getCurrentCart();
 		    
-		    CartItem item = new CartItem(cart, productDetails);
 		    
+		    //cart
+		    //
+		    CartItem item = new CartItem(cart, productDetails);
 		    cart.addItem(item);
 		    cartItemRepository.save(item);
-		    CartDTO cartDTO = new CartDTO(getCurrentCart());
+		    CartDTO cartDTO = new CartDTO(getCurrentCart(),previewRepo);
 		    return cartDTO;
 		}
 
@@ -89,7 +94,7 @@ public class CartServiceImplement implements CartService {
 	        throw new ResourceNotFoundException("Product with id " + productId + " not found in cart.", null,
 	                itemToRemove);
 	    }
-	    CartDTO cartDto = new CartDTO(getCurrentCart());
+	    CartDTO cartDto = new CartDTO(getCurrentCart(),previewRepo);
 	    return cartDto;
 	}
 	public CartDTO removeAllProduct(Long productId) {
@@ -113,7 +118,7 @@ public class CartServiceImplement implements CartService {
 		}
 
 		// Convert the updated cart to a CartDTO and return it
-		return new CartDTO(getCurrentCart());
+		return new CartDTO(getCurrentCart(),previewRepo);
 
 	}
 
@@ -139,7 +144,7 @@ public class CartServiceImplement implements CartService {
 	@Override
 	public CartDTO getCurrentCartDTO() {
 		Cart cart = getCurrentCart();
-		CartDTO cartDTO = new CartDTO(cart);
+		CartDTO cartDTO = new CartDTO(cart,previewRepo);
 		return cartDTO;
 	}
 

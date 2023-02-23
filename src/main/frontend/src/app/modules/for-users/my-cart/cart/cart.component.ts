@@ -33,7 +33,12 @@ export class CartComponent implements OnInit{
     )
   }
 public getItemCoverImageSrc(cartItem:CartItem){
+  if(cartItem!=null && cartItem.product.id!=-1){
   return "http://localhost:9000/public/serveMedia/serveCoverImage?productId="+cartItem.product.id;
+}
+else{
+  return "";
+}
 }
 
   public RemoveItem(cartItem:CartItem): void{
@@ -52,6 +57,10 @@ this.RemoveItem === null
 }
 public checkout(): void{
   console.log('check it out')
+}
+
+get TotalPrice(){
+  return this.cart.totalPrice;
 }
 
 }

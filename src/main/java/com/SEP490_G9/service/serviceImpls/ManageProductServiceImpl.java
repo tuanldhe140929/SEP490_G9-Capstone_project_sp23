@@ -253,7 +253,7 @@ public class ManageProductServiceImpl implements ManageProductService {
 		if (productFile.getSize() == 0) {
 
 		}
-		if (scanForViruses(productFile)) {
+		if (true) {
 
 			Product product = getProductByIdAndSeller(productId);
 			ProductDetails productDetails = checkVersion(product, version);

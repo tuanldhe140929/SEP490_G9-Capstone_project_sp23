@@ -13,7 +13,7 @@ import java.io.Serializable;
 
 
 import com.SEP490_G9.entity.embeddable.CartItemKey;
-
+import com.SEP490_G9.entity.embeddable.ProductVersionKey;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(value = { "cart" })
