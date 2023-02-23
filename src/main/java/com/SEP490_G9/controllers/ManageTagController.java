@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.SEP490_G9.models.Entities.Tag;
-import com.SEP490_G9.services.ManageTagService;
+import com.SEP490_G9.entity.Tag;
+import com.SEP490_G9.service.ManageTagService;
 
 @RequestMapping("private/manageTag")
 @RestController

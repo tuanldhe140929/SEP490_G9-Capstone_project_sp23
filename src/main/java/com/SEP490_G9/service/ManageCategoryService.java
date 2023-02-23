@@ -1,8 +1,10 @@
-package com.SEP490_G9.services;
+package com.SEP490_G9.service;
 
 import java.util.List;
 
-import com.SEP490_G9.models.Entities.Category;
+import com.SEP490_G9.entity.Category;
+
+
 
 public interface ManageCategoryService {
 	public List<Category> getAllCategories();

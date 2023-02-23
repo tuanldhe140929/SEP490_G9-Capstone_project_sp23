@@ -1,14 +1,15 @@
-package com.SEP490_G9.services.serviceImpls;
+package com.SEP490_G9.service.serviceImpls;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.SEP490_G9.exceptions.DuplicateFieldException;
-import com.SEP490_G9.models.Entities.Category;
-import com.SEP490_G9.repositories.CategoryRepository;
-import com.SEP490_G9.services.ManageCategoryService;
+import com.SEP490_G9.entity.Category;
+import com.SEP490_G9.exception.DuplicateFieldException;
+
+import com.SEP490_G9.repository.CategoryRepository;
+import com.SEP490_G9.service.ManageCategoryService;
 
 @Service
 public class ManageCategoryServiceImpl implements ManageCategoryService{

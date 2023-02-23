@@ -56,7 +56,7 @@ export class ProductDetailsComponent implements OnInit {
   }
   getProfileImage() {
     var imageUrl = '';
-    if (this.owner.image != null && this.owner.image != '') {
+    if (this.owner.avatar != null && this.owner.avatar != '') {
       imageUrl = 'http://localhost:9000/public/serveMedia/serveProfileImage?userId=' + this.owner.id;
     } else {
       imageUrl = 'https://img.freepik.com/premium-vector/cute-ladybug-vector-illustration-isolated-white-background_543090-46.jpg?w=2000';

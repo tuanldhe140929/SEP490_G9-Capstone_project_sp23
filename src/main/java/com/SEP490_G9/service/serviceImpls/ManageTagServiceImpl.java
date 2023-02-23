@@ -1,14 +1,14 @@
-package com.SEP490_G9.services.serviceImpls;
+package com.SEP490_G9.service.serviceImpls;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.SEP490_G9.exceptions.DuplicateFieldException;
-import com.SEP490_G9.models.Entities.Tag;
-import com.SEP490_G9.repositories.TagRepository;
-import com.SEP490_G9.services.ManageTagService;
+import com.SEP490_G9.exception.DuplicateFieldException;
+import com.SEP490_G9.entity.Tag;
+import com.SEP490_G9.repository.TagRepository;
+import com.SEP490_G9.service.ManageTagService;
 
 @Service
 public class ManageTagServiceImpl implements ManageTagService{

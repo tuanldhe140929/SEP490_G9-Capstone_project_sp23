@@ -1,8 +1,8 @@
-package com.SEP490_G9.services;
+package com.SEP490_G9.service;
 
 import java.util.List;
 
-import com.SEP490_G9.models.Entities.Tag;
+import com.SEP490_G9.entity.Tag;
 
 public interface ManageTagService {
 	public List<Tag> getAllTags();

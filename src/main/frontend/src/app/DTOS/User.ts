@@ -10,10 +10,10 @@ export class User{
   enabled: boolean;
   role: Role[];
   username: string;
-  firstname: string;
-  lastname: string;
+  firstName: string;
+  lastName: string;
   emailVerified:boolean;
-  image: string;
+  avatar: string;
   joinedDate: Date;
   userCreatedDate: Date;
   userLastModified: Date;
@@ -29,10 +29,10 @@ export class User{
     this.enabled = true;
     this.role = [];
     this.username = "";
-    this.firstname = "";
-    this.lastname = "";
+    this.firstName = "";
+    this.lastName = "";
     this.emailVerified = false;
-    this.image = "";
+    this.avatar = "";
     this.userCreatedDate = new Date();
     this.userLastModified = new Date();
   }
