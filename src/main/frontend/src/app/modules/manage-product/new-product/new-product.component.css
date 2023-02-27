@@ -352,3 +352,17 @@ section {
   opacity: 1;
   background-color: black;;
 }
+
+.ver {
+  text-align: center;
+  padding: 7px;
+  width: 80px;
+  height: 40px;
+  background-color: #FF2449;
+  color: white;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: inset 0 0 1px rgb(255 255 255/ 70%);
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 10px;
+}

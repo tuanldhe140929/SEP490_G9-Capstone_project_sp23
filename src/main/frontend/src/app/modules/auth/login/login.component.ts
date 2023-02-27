@@ -47,8 +47,6 @@ export class LoginComponent implements OnInit {
 
         response => {
 			console.log(response.body);
-          AuthService.isLoggedIn = true;
-          this.authService.authResponse = response.body;
           this.storageService.saveUser(response.body);
           this.storageService.saveToken(response.body.accessToken);
           let authResponse: AuthResponse;

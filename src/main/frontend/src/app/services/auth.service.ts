@@ -5,9 +5,9 @@ import { AuthResponse } from '../DTOS/AuthResponse';
 import { User } from '../DTOS/User';
 
 
-const baseUrl = "http://localhost:9000/public/auth";
-
-
+const accountController = "http://localhost:9000/account";
+const userController = "http://localhost:9000/user"
+const refreshTokenController = "http://localhost:9000/refreshToken";
 const httpOptions: Object = {
   headers: new HttpHeaders({
     "Content-Type": "application/json"
@@ -19,72 +19,53 @@ const httpOptions: Object = {
   providedIn: 'root'
 })
 export class AuthService {
+
   getCurrentLogedInUser(): Observable<User> {
-    return this.http.get<User>(baseUrl + '/getCurrentUser');
+    return this.http.get<User>(userController + '/getCurrentUser');
   }
   sendVerifyEmail(email: string) {
-      return this.http.get(baseUrl+'/sendVerifyEmail',{
-		  params:{
-			  email:email
-		  }
-	  });
+    return this.http.get(userController + '/sendVerifyEmail', {
+      params: {
+        email: email
+      }
+    });
   }
-  verifyEmail(verifyLink: string | null,email:string) {
-      return this.http.get(baseUrl+'/verifyEmail/'+verifyLink,{
-		  params:{
-			  email:email
-		  }
-	  });
-  }
-
-  static isLoggedIn: boolean;
-
-  authResponse: AuthResponse | undefined;
-
-  set AuthResponse(auth: AuthResponse) {
-    this.authResponse = auth;
+  verifyEmail(verifyLink: string | null, email: string) {
+    return this.http.get(userController + '/verifyEmail/' + verifyLink, {
+      params: {
+        email: email
+      }
+    });
   }
 
-  get AuthResponset() {
-    return this.authResponse;
-  }
   constructor(private http: HttpClient) { }
 
   login(body: any): Observable<any> {
-    return this.http.post<any>(baseUrl + '/login', body, httpOptions);
+    return this.http.post<any>(accountController + '/login', body, httpOptions);
   }
 
   register(body: any): Observable<string> {
-    return this.http.post<string>(baseUrl + "/register", body, {
-		headers: new HttpHeaders({
-    "Content-Type": "text"
-  }),
-  withCredentials: true
-	});
+    return this.http.post<string>(userController + "/register", body, {
+      headers: new HttpHeaders({
+        "Content-Type": "text"
+      }),
+      withCredentials: true
+    });
   }
 
   loginWithGoogle(body: any): Observable<any> {
-    return this.http.post<any>(baseUrl + "/loginWithGoogle", body, httpOptions);
+    return this.http.post<any>(userController + "/loginWithGoogle", body, httpOptions);
   }
 
   logout() {
     localStorage.clear();
-    return this.http.get<any>(baseUrl + '/logout', httpOptions);
+    return this.http.get<any>(accountController + '/logout', httpOptions);
   }
   refreshToken() {
-    return this.http.post<any>(baseUrl + '/refreshToken', 1, httpOptions);
+    return this.http.post<any>(refreshTokenController + '/refresh', 1, httpOptions);
   }
 
-  resetPasswordRequest(email: String) {
-    return this.http.post<any>(baseUrl + '/forgotAndResetPassword?email=' + email.toString(), {});
+  resetPassword(email: String) {
+    return this.http.post<any>(accountController + '/resetPassword?email=' + email.toString(), {});
   }
-
-  resetPassword(body: any, email: String) {
-    console.log(body.captcha);
-    return this.http.post<any>(baseUrl + '/forgotAndResetPasswordConfirm?email=' + email.toString() + "&captcha="
-      + body.captcha + "&newPassword=" + body.newPassword, {
-    });
-  }
-
-
 }

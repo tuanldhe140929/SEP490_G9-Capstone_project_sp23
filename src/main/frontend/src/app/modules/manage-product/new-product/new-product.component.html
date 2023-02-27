@@ -9,7 +9,7 @@
           <div class="left_col col-8" style="border-right:1px solid black">
             <div class="input_row">
               <div><label for="product_version">Version</label></div>
-              <div><input type="text" value="{{product.version}}" id="product_version" name="product_version" readonly/></div>
+              <div><input type="text" value="{{product.version}}" id="product_version" name="product_version" readonly (click)="openSpecifyVersionModal()" /></div>
             </div>
             <div class="input_row">
               <div><label for="product_name">Title</label></div>
@@ -85,7 +85,19 @@
                       <div class="input_row">
                         <div><label>Minimum price<span class="sub"> - Minimum price to get access to download this product</span></label></div>
                         <div>
-                          <input id="price" type="text" name="minPrice" placeholder="1.000đ" value="1.000" (keydown)="onPriceChange($event)" />
+                          <div class="input-group">
+                            <input id="price-input"
+                                   class="form-control"
+                                   type="text"
+                                   (keydown)="checkInput($event)"
+                                   [(ngModel)]="formattedPrice"
+                                   (ngModelChange)="updatePrice($event)"
+                                   [ngModelOptions]="{standalone: true}" />
+                          </div>
+
+                          <div *ngFor="let error of priceErrorr">
+                            <small style="color:red;"> {{error}} </small>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -98,6 +110,25 @@
                 </div>
               </div>
             </section>
+            <div class="input_row classification_picker">
+              <div class="classification_picker_label">
+                <div>
+                  <h5 for="type_list" style="font-weight: 600;">License</h5>
+                </div>
+                <div>
+                  <small>License for this product's user</small>
+                </div>
+              </div>
+              <div class="">
+                <select class="classification_picker_body" id="type_list" name="type" [(ngModel)]="productCate">
+                  <option value="0" selected>Select product category</option>
+                  <option *ngFor="let category of typeList; index as i;" value="{{category.id}}"
+                          [attr.selected]="isTypeSelected(category.id)">
+                    {{category.name}}
+                  </option>s
+                </select>
+              </div>
+            </div>
             <section class="upload_editor">
               <h2>Uploads</h2>
               <div class="upload_drop">
@@ -240,13 +271,13 @@
                     <div class="widget_pictures" style="position: absolute;width:100%;">
                       <button class="delete_btn2" type="button" (click)="removePreviewPicture(pic)" id="remove_picture_btn">Gỡ</button>
                       <button class="upload_btn2" type="button" (click)="previewPicturesUpload.click()">Tải lên</button>
-                    </div>  
+                    </div>
                     <img src="{{getPreviewPictureSource(pic)}}" style="height: 100%; width: auto; display: inherit; margin-left: auto; margin-right: auto;">
                   </div>
                   <div class="row" style="width: 100%; height: 5px; background-color: #434343; margin: auto;"> </div>
                   <div class="row" style="width: 100%; height: 30%; margin-left: auto; margin-right: auto; overflow: auto;">
                     <div class="column cursor" *ngFor="let pic of product.previewPictures; index as i" (click)="onChooseImage(i)" style="{{percent}}">
-                      <img class="picker" src="{{getPreviewPictureSource(pic)}}" style="display:block;" >
+                      <img class="picker" src="{{getPreviewPictureSource(pic)}}" style="display:block;">
                     </div>
                   </div>
                 </ng-template>
@@ -293,5 +324,22 @@
   </div>
   <div class="modal-body">
     <small style="color:red;">{{fileError}}<br /></small>
+  </div>
+</ng-template>
+
+<ng-template #specifyVersionModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" style="color:black"> Cập nhật phiên bản mới của sản phẩm</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="dismissError()"></button>
+  </div>
+  <div class="modal-body">
+    <div *ngFor="let ver of versions">
+      <div class="ver" (click)="chooseVersion(ver)">{{ver}}</div>
+    </div>
+    <input style="width:75%;" type="text" name="new_version" value="{{product.version}}" id="new_version" placeholder="{{product.version}}" (keydown)="checkInputVersion($event)" />
+    <div *ngFor="let err of versionError">
+    <small style="color:red;">{{err}}</small>
+    </div>
+    <button style=" width:20%;margin-left: 15px; border-radius: 5px; background-color: #FF2449; color: white; border: 1px solid rgba(0, 0, 0, 0.1);height:35px;" class="update_version_btn" (click)="createNewVersion()">Cập nhật</button>
   </div>
 </ng-template>

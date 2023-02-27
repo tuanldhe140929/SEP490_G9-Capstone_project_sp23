@@ -24,7 +24,6 @@ import com.SEP490_G9.repository.TransactionRepository;
 import com.SEP490_G9.repository.UserRepository;
 import com.SEP490_G9.service.CartService;
 
-
 @Service
 public class CartServiceImplement implements CartService {
 	@Autowired
@@ -35,15 +34,18 @@ public class CartServiceImplement implements CartService {
 
 	@Autowired
 	CartRepository cartRepository;
+	
 	@Autowired
 	private UserRepository userRepository;
+	
 	@Autowired
 	TransactionRepository transactionRepository;
+	
 	@Autowired
 	AccountRepository accountRepository;
+	
 	@Autowired
 	UserRepository userRepo;
-
 
 	@Override
 	public CartDTO addProduct(Long productId) {

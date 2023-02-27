@@ -18,10 +18,10 @@ public class ProductFile {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@Column(name = "name", unique = true)
+	@Column(name = "name")
 	private String name;
 
-	@Column(name = "source", unique = true)
+	@Column(name = "source")
 	private String source;
 
 	@Column(name = "type")
@@ -48,6 +48,16 @@ public class ProductFile {
 	public ProductFile(MultipartFile file, String source, ProductDetails productDetails) {
 		this.name = file.getOriginalFilename();
 		this.source = source + this.name;
+		this.type = file.getContentType();
+		this.size = file.getSize();
+		this.lastUpdate = new Date();
+		this.productDetails = productDetails;
+		this.displayOrder = "0";
+	}
+
+	public ProductFile(String source, MultipartFile file, ProductDetails productDetails) {
+		this.name = file.getOriginalFilename();
+		this.source = source;
 		this.type = file.getContentType();
 		this.size = file.getSize();
 		this.lastUpdate = new Date();

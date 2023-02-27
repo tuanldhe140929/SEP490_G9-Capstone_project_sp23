@@ -1,6 +1,7 @@
 package com.SEP490_G9.service.serviceImpls;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,7 +30,6 @@ import com.SEP490_G9.exception.StorageException;
 import com.SEP490_G9.service.FileIOService;
 import com.SEP490_G9.util.StorageUtil;
 
-
 @Service
 public class FileIOServiceImpl implements FileIOService {
 
@@ -39,6 +39,7 @@ public class FileIOServiceImpl implements FileIOService {
 	public FileIOServiceImpl(StorageUtil properties) {
 		this.rootLocation = Paths.get(properties.getLocation());
 	}
+
 	@Override
 	public void init() {
 		try {
@@ -54,14 +55,49 @@ public class FileIOServiceImpl implements FileIOService {
 			if (file.isEmpty()) {
 				throw new StorageException("Failed to store empty file.");
 			}
-			Path destinationFile = this.rootLocation.resolve(Paths.get(path+"\\"+file.getOriginalFilename())).normalize()
-					.toAbsolutePath();	
-	
+			Path destinationFile = this.rootLocation.resolve(Paths.get(path + "\\" + file.getOriginalFilename()))
+					.normalize().toAbsolutePath();
+
 			try (InputStream inputStream = file.getInputStream()) {
 				Files.copy(inputStream, destinationFile, StandardCopyOption.REPLACE_EXISTING);
 			}
 		} catch (IOException e) {
 			throw new StorageException("Failed to store file.", e);
+		}
+	}
+
+	@Override
+	public String storeV2(MultipartFile file, String path) {
+		InputStream is = null;
+		OutputStream os = null;
+		String dest = path + "\\" + file.getOriginalFilename();
+		File destFile = new File(dest);
+		int count = 0;
+		while (destFile.exists()) {
+			count++;
+			dest = path + "\\(" + count + ") " + file.getOriginalFilename();
+			destFile = new File(dest);
+		}
+		try {
+			is = file.getInputStream();
+			os = new FileOutputStream(dest);
+			System.out.println(dest);
+
+			byte[] buffer = new byte[1024];
+			int length;
+			while ((length = is.read(buffer)) > 0) {
+				os.write(buffer, 0, length);
+			}
+			return dest;
+		} catch (IOException e) {
+			throw new StorageException("Failed to store file.", e);
+		} finally {
+			try {
+				is.close();
+				os.close();
+			} catch (IOException e) {
+				throw new StorageException("Failed to store file.", e);
+			}
 		}
 	}
 
@@ -80,7 +116,6 @@ public class FileIOServiceImpl implements FileIOService {
 		FileSystemUtils.deleteRecursively(rootLocation.toFile());
 	}
 
-
 	@Override
 	public Path load(String filename) {
 		return rootLocation.resolve(filename);
@@ -93,31 +128,26 @@ public class FileIOServiceImpl implements FileIOService {
 			Resource resource = new UrlResource(file.toUri());
 			if (resource.exists() || resource.isReadable()) {
 				return resource;
-			}
-			else {
-				throw new StorageException(
-						"Could not read file: " + filename);
+			} else {
+				throw new StorageException("Could not read file: " + filename);
 
 			}
-		}
-		catch (MalformedURLException e) {
+		} catch (MalformedURLException e) {
 			throw new StorageException("Could not read file: " + filename, e);
 		}
 	}
-	
+
 	@Override
 	public MultipartFile loadAsMultipartFile(String filename) {
 		try {
 			Path path = load(filename);
 			File file = new File("");
 			MultipartFile multipartFile = null;
-			
-			 ClassPathResource imgFile = new ClassPathResource("image/sid.jpg");
-			 
 
-			 return multipartFile;
-		}
-		catch (Exception e) {
+			ClassPathResource imgFile = new ClassPathResource("image/sid.jpg");
+
+			return multipartFile;
+		} catch (Exception e) {
 			throw new StorageException("Could not read file: " + filename, e);
 		}
 	}

@@ -1,5 +1,7 @@
 package com.SEP490_G9.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.SEP490_G9.entity.ProductDetails;
@@ -10,4 +12,8 @@ public interface ProductDetailsRepository extends JpaRepository<ProductDetails, 
 	ProductDetails findByProductIdAndProductVersionKeyVersion(Long productId, String version);
 
 	ProductDetails findFirstByProductIdOrderByCreatedDateDesc(Long productId);
+
+	List<ProductDetails> findByProductId(Long id);
+
+	ProductDetails findFirstByProductIdOrderByLastModifiedDesc(Long productId);
 }

@@ -7,78 +7,52 @@ import { Category } from '../DTOS/Category';
 import { Tag } from '../DTOS/Tag';
 import { Preview } from '../DTOS/Preview';
 import { ProductFile } from '../DTOS/ProductFile';
-const baseUrl = 'http://localhost:9000/private/manageProduct';
+const baseUrl = 'http://localhost:9000/product';
 const serveMediaUrl = "http://localhost:9000/public/serveMedia";
-const getScanVirusUrl = "https://www.virustotal.com/api/v3/files/upload_url";
-const virusTotalBaseUrl = "http://www.virustotal.com/_ah/upload/";
+
 @Injectable({
   providedIn: 'root'
 })
 export class ManageProductService {
-
-
-  scanVirus(file:Blob) {
-    let formData = new FormData();
-    formData.append("file",file);
-    this.getVirusTotalKey().subscribe(
-      (data: string) => {
-        const key = data;
-        this.getUploadUrl(key).subscribe(
-          (data: any) => {
-            return this.httpClient.post(data.data, formData, { headers: {"x-apikey":key} }).subscribe((data:any) => {
-              console.log(data);
-              var analysisUrl = 'https://www.virustotal.com/api/v3/analyses/' + data.data.id;
-              this.httpClient.get(analysisUrl, { headers: { "x-apikey": key } }).subscribe((data) => {
-                console.log(data);
-              })
-            });
-          })
-      },
-      (error: any) => {
+  getProductByIdAndVersionAndSeller(productId: number, version: string): Observable<Product> {
+    return this.httpClient.post<Product>(baseUrl + '/chooseVersion', null, {
+      params: {
+        productId: productId,
+        version: version
       }
-    )
+    });
   }
 
-  getUploadUrl(key: string) {
-    return this.httpClient.get(getScanVirusUrl, {
-      headers: {
-        "x-apikey": key
+  getAllVersionOfProduct(productId: number): Observable<string[]> {
+    return this.httpClient.get<string[]>(baseUrl + '/getAllVersion', {
+      params: {
+        productId: productId
       }
     })
-  }
-  getTypeList(): Observable<Category[]> {
-    return this.httpClient.get<Category[]>(baseUrl + '/getTypeList');
-  }
-  getTagList(): Observable<Tag[]> {
-    return this.httpClient.get<Tag[]>(baseUrl + '/getTagList');
-  }
-  getProductByIdAndSeller(productId: number): Observable<Product> {
-    return this.httpClient.get<Product>(baseUrl + '/getLatestVersionProductByIdAndSeller?productId=' + productId);
   }
 
   constructor(private httpClient: HttpClient) { }
 
-  getCurrentUserInfo(email: string): Observable<User> {
-    return this.httpClient.get<User>(baseUrl + '/getCurrentUserInfo?email=' + email);
+  createNewVersion(product: Product, newVersion: string): Observable<Product> {
+    return this.httpClient.post<Product>(baseUrl + '/createNewVersionV2', product, {
+      params: {
+        newVersion: newVersion
+      }
+    }
+    )
   }
+
+  getProductByIdAndSeller(productId: number): Observable<Product> {
+    return this.httpClient.get<Product>(baseUrl + '/getProductById?productId=' + productId);
+  }
+
+  /*  getCurrentUserInfo(email: string): Observable<User> {
+      return this.httpClient.get<User>(baseUrl + '/getCurrentUserInfo?email=' + email);
+    }*/
 
   uploadCoverImage(data: any): any {
     return this.httpClient.post(baseUrl + '/uploadCoverImage', data, {
       responseType: 'text',
-    });
-  }
-
-  uploadProductFile(data: any): Observable<HttpEvent<any>> {
-    return this.httpClient.post<HttpEvent<any>>(baseUrl + '/uploadProductFile', data, {
-      reportProgress: true,
-      responseType: 'json',
-      observe: 'events',
-    });
-  }
-
-  deleteProductFile(data: any): Observable<ProductFile> {
-    return this.httpClient.post<ProductFile>(baseUrl + '/deleteProductFile', data, {
-
     });
   }
 
@@ -96,48 +70,21 @@ export class ManageProductService {
     });
   }
 
-  getPreviewVideo(previewId: number): any {
-    return this.httpClient.get(serveMediaUrl + "/servePreviewVideo/" + previewId, {
-      headers: { 'Range': 'bytes=0-500' }
-    });
-  }
+  /*  getPreviewVideo(previewId: number): any {
+      return this.httpClient.get(serveMediaUrl + "/servePreviewVideo/" + previewId, {
+        headers: { 'Range': 'bytes=0-500' }
+      });
+    }
+  */
 
-  uploadPreviewVideo(data: any): Observable<Preview> {
-    return this.httpClient.post<Preview>(baseUrl + '/uploadPreviewVideo', data, {
-      reportProgress: true
-    });
-  }
 
-  uploadPreviewPicture(data: any): Observable<Preview[]> {
-    return this.httpClient.post<Preview[]>(baseUrl + '/uploadPreviewPicture', data);
-  }
 
-  removePreviewVideo(productId: number) {
-    return this.httpClient.delete(baseUrl + "/removePreviewVideo", {
-      params: {
-        productId: productId
-      }
-    });
-  }
+  /*  getCurrentOwnerInfo(username: string): Observable<User> {
+      return this.httpClient.get<User>(baseUrl + "/getCurrentOwnerInfo", {
+        params: {
+          username: username
+        }
+      })
+    }*/
 
-  removePreviewPicture(previewId: number): Observable<Preview[]> {
-    return this.httpClient.delete<Preview[]>(baseUrl + "/removePreviewPicture", {
-      params: {
-        previewId: previewId
-      }
-    })
-  }
-  getCurrentOwnerInfo(username: string): Observable<User> {
-    return this.httpClient.get<User>(baseUrl + "/getCurrentOwnerInfo", {
-      params: {
-        username: username
-      }
-    })
-  }
-
-  getVirusTotalKey() {
-    return this.httpClient.get(baseUrl + "/getVirusTotalKey", {
-      responseType: 'text',
-    })
-  }
 }
