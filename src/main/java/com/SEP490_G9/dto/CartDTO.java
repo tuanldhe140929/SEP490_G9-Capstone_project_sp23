@@ -1,22 +1,28 @@
 package com.SEP490_G9.dto;
 
+import java.util.ArrayList;
 import java.util.List;
+
 
 import com.SEP490_G9.entity.Account;
 import com.SEP490_G9.entity.Cart;
 import com.SEP490_G9.entity.CartItem;
+import com.SEP490_G9.entity.User;
+import com.SEP490_G9.repository.PreviewRepository;
+
 
 
 public class CartDTO {
 	private Long id;
-	private Account account;
-	private List<CartItem> items;
+	private User user;
+	private List<CartItemDTO> items;
 	private int totalPrice;
 
-	public CartDTO(Long id, Account account, List<CartItem> items, int totalPrice) {
+
+	public CartDTO(Long id, User user, List<CartItemDTO> items, int totalPrice) {
 		super();
 		this.id = id;
-		this.account = account;
+		this.user = user;
 		this.items = items;
 		this.totalPrice = totalPrice;
 	}
@@ -25,10 +31,15 @@ public class CartDTO {
 
 	}
 
-	public CartDTO(Cart cart) {
+	public CartDTO(Cart cart, PreviewRepository previewRepository) {
 		this.id = cart.getId();
-		this.account = cart.getAccount();
-		this.items = cart.getItems();
+		this.user = cart.getUser();
+		List<CartItemDTO> itemDtos = new ArrayList<>();
+		for(CartItem item: cart.getItems()) {
+			itemDtos.add(new CartItemDTO(item,previewRepository));
+		}
+		this.items = itemDtos;
+		
 		for (CartItem item : cart.getItems()) {
 	       this.totalPrice += item.getProductDetails().getPrice();
 	    }
@@ -44,22 +55,19 @@ public class CartDTO {
 		this.id = id;
 	}
 
-	
-	
-
-	public Account getAccount() {
-		return account;
+	public User getUser() {
+		return user;
 	}
 
-	public void setAccount(Account account) {
-		this.account = account;
+	public void setUser(User user) {
+		this.user = user;
 	}
 
-	public List<CartItem> getItems() {
+	public List<CartItemDTO> getItems() {
 		return items;
 	}
 
-	public void setItems(List<CartItem> items) {
+	public void setItems(List<CartItemDTO> items) {
 		this.items = items;
 	}
 
@@ -70,5 +78,8 @@ public class CartDTO {
 	public void setTotalPrice(int totalPrice) {
 		this.totalPrice = totalPrice;
 	}
+
+
+
 
 }

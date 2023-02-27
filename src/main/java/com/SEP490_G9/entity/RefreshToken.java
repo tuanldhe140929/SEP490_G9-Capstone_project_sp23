@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.*;
 
-@JsonIgnoreProperties(value = "user")
+@JsonIgnoreProperties(value = "account")
 @Entity
 @Table(name = "refresh_token")
 public class RefreshToken {

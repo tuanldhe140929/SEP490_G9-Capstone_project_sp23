@@ -3,9 +3,11 @@ package com.SEP490_G9.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.*;
 
-
+@JsonIgnoreProperties(value="user")
 @Entity
 @Table(name = "carts")
 public class Cart {
@@ -19,20 +21,20 @@ public class Cart {
 	
 	@ManyToOne
 	@JoinColumn(name="account_id", nullable=false)
-	private Account account;
+	private User user;
 	
 	public Cart() {
 		// TODO Auto-generated constructor stub
 	}
-	public Cart(Account account) {
-		this.account = account;
+	public Cart(User user) {
+		this.user = user;
 	}
 
-	public Cart(Long id, List<CartItem> items, Account account) {
+	public Cart(Long id, List<CartItem> items, User user) {
 		super();
 		this.id = id;
 		this.items = items;
-		this.account = account;
+		this.user = user;
 	}
 
 	public Long getId() {
@@ -51,11 +53,16 @@ public class Cart {
 		this.items = items;
 	}
 
-	public Account getAccount() {
-		return account;
+
+	
+	
+	
+	public User getUser() {
+		return user;
+
 	}
-	public void setAccount(Account account) {
-		this.account = account;
+	public void setUser(User user) {
+		this.user = user;
 	}
 	public void addItem(CartItem newItem) {
 		this.items.add(newItem);

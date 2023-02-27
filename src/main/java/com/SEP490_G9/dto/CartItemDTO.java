@@ -1,31 +1,34 @@
+
 package com.SEP490_G9.dto;
 
+import com.SEP490_G9.entity.ProductDetails;
+import com.SEP490_G9.repository.PreviewRepository;
 import com.SEP490_G9.entity.CartItem;
 
 public class CartItemDTO {
 	
-	private Long productId;
+	private ProductDetailsDTO product;
 	private Long cartId;
-	private double price;
 
-	public CartItemDTO(CartItem cartItem) {
+	public CartItemDTO(CartItem cartItem, PreviewRepository previewRepo) {
 		super();
-		
-		this.productId = cartItem.getProduct().getId();
+		ProductDetailsDTO pdd = new ProductDetailsDTO(cartItem.getProductDetails(), previewRepo);
+		this.product= pdd;
 		this.cartId= cartItem.getCart().getId();
-		this.price = cartItem.getProduct().getPrice();
+
 	}
 
 	public CartItemDTO() {
 
 	}
 
-	public Long getProductId() {
-		return productId;
+
+	public ProductDetailsDTO getProduct() {
+		return product;
 	}
 
-	public void setProductId(Long productId) {
-		this.productId = productId;
+	public void setProduct(ProductDetailsDTO product) {
+		this.product = product;
 	}
 
 	public Long getCartId() {
@@ -35,15 +38,4 @@ public class CartItemDTO {
 	public void setCartId(Long cartId) {
 		this.cartId = cartId;
 	}
-
-	public double getPrice() {
-		return price;
-	}
-
-	public void setPrice(double price) {
-		this.price = price;
-	}
-
-
-
 }

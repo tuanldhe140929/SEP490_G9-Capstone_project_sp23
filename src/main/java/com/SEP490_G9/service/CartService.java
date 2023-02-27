@@ -11,7 +11,7 @@ public interface CartService {
 	public CartDTO addProduct(Long productId);
     public CartDTO removeProduct(Long productId);
     public CartDTO getCurrentCartDTO();
-    public CartDTO checkOut(Cart cart, Account account);
+    public CartDTO checkOut( Account account);
 	public Cart getCart(Long cartId);
 	public CartDTO removeAllProduct(Long productId);
 	

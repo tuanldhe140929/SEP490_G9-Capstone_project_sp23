@@ -139,6 +139,7 @@ public class TestDataInit implements ApplicationRunner {
 		tagRepository.save(new Tag(4, "sci-fi"));
 		tagRepository.save(new Tag(5, "sport"));
 
+
 		categoryRepository.save(new Category(1, "Sprites"));
 		categoryRepository.save(new Category(2, "Sound effects"));
 		categoryRepository.save(new Category(3, "Music"));

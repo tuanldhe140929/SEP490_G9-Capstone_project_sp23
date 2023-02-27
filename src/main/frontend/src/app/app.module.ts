@@ -47,6 +47,10 @@ import { DataTablesModule } from 'angular-datatables';
     NgbModule,
     BrowserAnimationsModule,
     CommonModule,
+
+    ManageProductModule,
+
+
     MatSortModule,
     ManageProductModule,
     DataTablesModule,
@@ -56,6 +60,7 @@ import { DataTablesModule } from 'angular-datatables';
         progressBar: true
       }
     ),
+
 
   ],
   providers: [

@@ -3,6 +3,11 @@ package com.SEP490_G9.entity;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
