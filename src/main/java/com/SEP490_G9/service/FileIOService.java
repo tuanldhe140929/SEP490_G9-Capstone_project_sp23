@@ -14,6 +14,8 @@ public interface FileIOService {
 
 	void store(MultipartFile file, String path);
 
+	String storeV2(MultipartFile file, String path);
+
 	Stream<Path> loadAll();
 
 	Path load(String filename);
