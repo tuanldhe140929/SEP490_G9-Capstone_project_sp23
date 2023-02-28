@@ -9,10 +9,10 @@ import com.SEP490_G9.entity.Category;
 import com.SEP490_G9.exception.DuplicateFieldException;
 
 import com.SEP490_G9.repository.CategoryRepository;
-import com.SEP490_G9.service.ManageCategoryService;
+import com.SEP490_G9.service.CategoryService;
 
 @Service
-public class ManageCategoryServiceImpl implements ManageCategoryService{
+public class CategoryServiceImpl implements CategoryService{
 
 	@Autowired
 	CategoryRepository categoryRepo;

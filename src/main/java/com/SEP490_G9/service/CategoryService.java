@@ -6,7 +6,7 @@ import com.SEP490_G9.entity.Category;
 
 
 
-public interface ManageCategoryService {
+public interface CategoryService {
 	public List<Category> getAllCategories();
 	
 	public boolean addCategory(Category category);
