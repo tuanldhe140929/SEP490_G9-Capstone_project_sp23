@@ -16,6 +16,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -130,5 +132,23 @@ public class AccountController {
 		accountService.update(account);
 		boolean ret = emailService.sendRecoveryPasswordToEmail(email,newPassword);
 		return ResponseEntity.ok(ret);
+	}
+	
+	@GetMapping("staffs")
+	public ResponseEntity<?> getAllStaffs(){
+		List<Account> staffList = accountService.getAllStaffs();
+		return ResponseEntity.ok(staffList);
+	}
+	
+	@PostMapping("addStaff")
+	public ResponseEntity<?> addStaff(@RequestBody Account staff){
+		boolean canAdd = accountService.addStaff(staff);
+		return ResponseEntity.ok(canAdd);
+	}
+	
+	@PutMapping("updateStaffStatus/{id}")
+	public ResponseEntity<?> updateStaffStatus(@PathVariable(name = "id") Long id){
+		boolean canUpdate = accountService.updateStaffStatus(id);
+		return ResponseEntity.ok(canUpdate);
 	}
 }

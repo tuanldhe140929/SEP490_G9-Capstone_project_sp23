@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.SEP490_G9.entity.Tag;
 
-public interface ManageTagService {
+public interface TagService {
 	public List<Tag> getAllTags();
 	
 	public boolean addTag(Tag tag);

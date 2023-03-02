@@ -13,13 +13,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.SEP490_G9.entity.Tag;
-import com.SEP490_G9.service.ManageTagService;
+import com.SEP490_G9.service.TagService;
 
 @RequestMapping("private/manageTag")
 @RestController
-public class ManageTagController {
+public class TagController {
 	@Autowired
-	ManageTagService manageTagService;
+	TagService manageTagService;
 	
 	@GetMapping("tags")
 	public ResponseEntity<?> getAllTags(){

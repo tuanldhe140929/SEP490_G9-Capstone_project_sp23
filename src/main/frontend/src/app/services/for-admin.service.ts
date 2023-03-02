@@ -31,7 +31,7 @@ const httpOptions: Object = {
 export class ForAdminService {
 
   private _refresh$ = new Subject<void>();
-  private apiServerUrlManageStaff = "http://localhost:9000/private/manageStaff";
+  private apiServerUrlManageStaff = "http://localhost:9000/account";
   private apiServerUrlManageCategory = "http://localhost:9000/private/manageCategory";
   private apiServerUrlManageTag = "http://localhost:9000/private/manageTag"
 

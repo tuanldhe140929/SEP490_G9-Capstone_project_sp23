@@ -41,11 +41,11 @@ export class AuthService {
   constructor(private http: HttpClient) { }
 
   login(body: any): Observable<any> {
-    return this.http.post<any>(accountController + '/login', body, httpOptions);
+    return this.http.post<any>('http://localhost:9000/public/auth/login', body, httpOptions);
   }
 
   register(body: any): Observable<string> {
-    return this.http.post<string>(userController + "/register", body, {
+    return this.http.post<string>('http://localhost:9000/public/auth/register', body, {
       headers: new HttpHeaders({
         "Content-Type": "text"
       }),
