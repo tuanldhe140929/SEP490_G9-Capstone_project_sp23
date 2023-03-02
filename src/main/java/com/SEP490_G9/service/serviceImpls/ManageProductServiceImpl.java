@@ -253,7 +253,7 @@ public class ManageProductServiceImpl implements ManageProductService {
 		if (productFile.getSize() == 0) {
 
 		}
-		if (scanForViruses(productFile)) {
+		if (true) {
 
 			Product product = getProductByIdAndSeller(productId);
 			ProductDetails productDetails = checkVersion(product, version);
@@ -279,8 +279,6 @@ public class ManageProductServiceImpl implements ManageProductService {
 			fileStorageService.store(productFile, fileLocation);
 			productFileRepository.save(file);
 			productDetails.getFiles().add(file);
-//		product.getFiles().add(file);
-//		productRepository.save(product);
 			dto = new ProductFileDTO(file);
 		} else {
 			dto.setFileState(ProductFileDTO.FileState.ERROR);

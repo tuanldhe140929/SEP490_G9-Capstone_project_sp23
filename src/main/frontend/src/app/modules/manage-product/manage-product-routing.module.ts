@@ -7,16 +7,22 @@ import { NewProductComponent } from './new-product/new-product.component';
 
 
 const routes: Routes = [{
-  path: 'product/update/:productId',
+  path: 'product/update/:productId/:version',
   component: NewProductComponent,
   title: "Update product",
   canActivate: [SellerGuardGuard]
 }, {
-    path: 'product/new/:productId',
-    component: NewProductComponent,
-    title: "Update product",
-    canActivate: [SellerGuardGuard]
-  },
+  path: 'product/new/:productId/:version',
+  component: NewProductComponent,
+  title: "Update product",
+  canActivate: [SellerGuardGuard]
+},
+{
+  path: 'product/update/:productId',
+  component: NewProductComponent,
+  title: "Update product",
+  canActivate: [SellerGuardGuard]
+},
 {
   path: ':userName',
   component: ProductCollectionComponent,

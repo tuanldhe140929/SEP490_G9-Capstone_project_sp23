@@ -9,25 +9,23 @@ import { StorageService } from 'src/app/services/storage.service';
   styleUrls: ['./login-with-google.component.css']
 })
 export class LoginWithGoogleComponent implements OnInit {
-	
-	
-	constructor(private storageService:StorageService,private route: ActivatedRoute, private authService: AuthService, private router: Router) {}
 
-	ngOnInit(): void {
-		var code = this.route.snapshot.queryParamMap.get('code');
-		if (code != null) {
-			this.authService.loginWithGoogle(code).subscribe(
-				(response) => {
-					this.router.navigate(['login']);
-					AuthService.isLoggedIn = true;
-          			this.authService.authResponse = response.body;
-          			this.storageService.saveUser(response.body);
-          			this.storageService.saveToken(response.body.accessToken);
-				}
-				,error => {
-					console.log(error);
-				}
-			);
-		}
-	}
+
+  constructor(private storageService: StorageService, private route: ActivatedRoute, private authService: AuthService, private router: Router) { }
+
+  ngOnInit(): void {
+    var code = this.route.snapshot.queryParamMap.get('code');
+    if (code != null) {
+      this.authService.loginWithGoogle(code).subscribe(
+        (response) => {
+          this.router.navigate(['login']);
+          this.storageService.saveUser(response.body);
+          this.storageService.saveToken(response.body.accessToken);
+        }
+        , error => {
+          console.log(error);
+        }
+      );
+    }
+  }
 }

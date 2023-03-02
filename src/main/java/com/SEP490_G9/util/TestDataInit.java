@@ -52,7 +52,6 @@ public class TestDataInit implements ApplicationRunner {
 	@Autowired
 	private ManageProductService manageProductService;
 
-	@Autowired AuthService authService;
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
 

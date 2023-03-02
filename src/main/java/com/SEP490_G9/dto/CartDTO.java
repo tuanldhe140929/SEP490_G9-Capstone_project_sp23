@@ -10,6 +10,10 @@ import com.SEP490_G9.entity.CartItem;
 import com.SEP490_G9.entity.User;
 
 
+import com.SEP490_G9.repository.PreviewRepository;
+
+
+
 
 public class CartDTO {
 	private Long id;
@@ -30,12 +34,12 @@ public class CartDTO {
 
 	}
 
-	public CartDTO(Cart cart) {
+	public CartDTO(Cart cart, PreviewRepository previewRepository) {
 		this.id = cart.getId();
 		this.user = cart.getUser();
 		List<CartItemDTO> itemDtos = new ArrayList<>();
 		for(CartItem item: cart.getItems()) {
-			itemDtos.add(new CartItemDTO(item));
+			itemDtos.add(new CartItemDTO(item,previewRepository));
 		}
 		this.items = itemDtos;
 		

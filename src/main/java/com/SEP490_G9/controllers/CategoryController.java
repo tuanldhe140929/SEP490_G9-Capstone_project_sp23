@@ -13,16 +13,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.SEP490_G9.entity.Category;
-import com.SEP490_G9.service.ManageCategoryService;
+import com.SEP490_G9.service.CategoryService;
 
 
 
 @RequestMapping("private/manageCategory")
 @RestController
-public class ManageCategoryController {
+public class CategoryController {
 
 	@Autowired
-	ManageCategoryService manageCategoryService;
+	CategoryService manageCategoryService;
 	
 	@GetMapping("categories")
 	public ResponseEntity<?> getAllCategories(){

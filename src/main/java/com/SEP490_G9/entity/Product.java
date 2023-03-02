@@ -33,7 +33,7 @@ public class Product implements Serializable {
 	private Seller seller;
 
 	@OneToMany(mappedBy = "product")
-	private List<ProductDetails> productDetails;
+	private List<ProductDetails> productDetails = new ArrayList<>();
 
 	@OneToMany(mappedBy = "product")
 	private List<Report> reports = new ArrayList<>();

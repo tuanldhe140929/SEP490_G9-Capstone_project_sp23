@@ -20,10 +20,12 @@ import com.SEP490_G9.exception.ResourceNotFoundException;
 import com.SEP490_G9.repository.AccountRepository;
 import com.SEP490_G9.repository.CartItemRepository;
 import com.SEP490_G9.repository.CartRepository;
+import com.SEP490_G9.repository.PreviewRepository;
 import com.SEP490_G9.repository.ProductRepository;
 import com.SEP490_G9.repository.TransactionRepository;
 import com.SEP490_G9.repository.UserRepository;
 import com.SEP490_G9.service.CartService;
+
 
 import com.SEP490_G9.entity.Product;
 import com.SEP490_G9.entity.ProductDetails;
@@ -44,52 +46,63 @@ public class CartServiceImplement implements CartService {
 	CartItemRepository cartItemRepository;
 
 	@Autowired
+	PreviewRepository previewRepo;
+	@Autowired
 	ProductRepository productRepository;
 	@Autowired
 	ProductDetailsRepository productDetailsRepository;
 	@Autowired
 	CartRepository cartRepository;
+	
 	@Autowired
 	private UserRepository userRepository;
+	
 	@Autowired
 	TransactionRepository transactionRepository;
+	
 	@Autowired
 	AccountRepository accountRepository;
+	
 	@Autowired
 	UserRepository userRepo;
 
 	@Override
-	public CartDTO addProduct(Long productId) {
-		ProductDetails productDetails = productDetailsRepository.findFirstByProductIdOrderByCreatedDateDesc(productId);
-		Cart cart = getCurrentCart();
 
-		CartItem item = new CartItem(cart, productDetails);
-
-		cart.addItem(item);
-		cartItemRepository.save(item);
-		CartDTO cartDTO = new CartDTO(getCurrentCart());
-		return cartDTO;
-	}
+		public CartDTO addProduct(Long productId) {
+		    ProductDetails productDetails = productDetailsRepository.
+		    		findFirstByProductIdOrderByCreatedDateDesc(productId);
+		    Cart cart = getCurrentCart();
+		    
+		    
+		    //cart
+		    //
+		    CartItem item = new CartItem(cart, productDetails);
+		    cart.addItem(item);
+		    cartItemRepository.save(item);
+		    CartDTO cartDTO = new CartDTO(getCurrentCart(),previewRepo);
+		    return cartDTO;
+		}
 
 	@Override
 	public CartDTO removeProduct(Long productId) {
-		Cart cart = getCurrentCart();
-		CartItem itemToRemove = null;
-		for (CartItem item : cart.getItems()) {
-			if (item.getProductDetails().getProductVersionKey().getProductId() == productId) {
-				itemToRemove = item;
-				break;
-			}
-		}
-		if (itemToRemove != null) {
-			cart.getItems().remove(itemToRemove);
-			cartItemRepository.delete(itemToRemove);
-		} else {
-			throw new ResourceNotFoundException("Product with id " + productId + " not found in cart.", null,
-					itemToRemove);
-		}
-		CartDTO cartDto = new CartDTO(getCurrentCart());
-		return cartDto;
+	    Cart cart = getCurrentCart();
+	    CartItem itemToRemove = null;
+	    for (CartItem item : cart.getItems()) {
+	    	if (item.getProductDetails().getProductVersionKey().getProductId() == productId) {
+	            itemToRemove = item;
+	            break;
+	        }
+	    }
+	    if (itemToRemove != null) {
+	        cart.getItems().remove(itemToRemove);
+	        cartItemRepository.delete(itemToRemove);
+	    } else {
+	        throw new ResourceNotFoundException("Product with id " + productId + " not found in cart.", null,
+	                itemToRemove);
+	    }
+	    CartDTO cartDto = new CartDTO(getCurrentCart(),previewRepo);
+	    return cartDto;
+
 	}
 
 	public CartDTO removeAllProduct(Long productId) {
@@ -113,7 +126,7 @@ public class CartServiceImplement implements CartService {
 		}
 
 		// Convert the updated cart to a CartDTO and return it
-		return new CartDTO(getCurrentCart());
+		return new CartDTO(getCurrentCart(),previewRepo);
 
 	}
 
@@ -168,7 +181,7 @@ public class CartServiceImplement implements CartService {
 	@Override
 	public CartDTO getCurrentCartDTO() {
 		Cart cart = getCurrentCart();
-		CartDTO cartDTO = new CartDTO(cart);
+		CartDTO cartDTO = new CartDTO(cart,previewRepo);
 		return cartDTO;
 	}
 
