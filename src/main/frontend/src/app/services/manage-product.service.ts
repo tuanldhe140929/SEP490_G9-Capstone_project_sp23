@@ -7,13 +7,24 @@ import { Category } from '../DTOS/Category';
 import { Tag } from '../DTOS/Tag';
 import { Preview } from '../DTOS/Preview';
 import { ProductFile } from '../DTOS/ProductFile';
+import { License } from '../DTOS/License';
 const baseUrl = 'http://localhost:9000/product';
 const serveMediaUrl = "http://localhost:9000/public/serveMedia";
+const licenseBaseUrl = "http://localhost:9000/license";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ManageProductService {
+  activeVersion(version: Product): Observable<boolean> {
+    return this.httpClient.post<boolean>(baseUrl + '/activeVersion', null, {
+      params: {
+        productId: version.id,
+        version: version.version
+      }
+    }
+    );
+  }
   getProductByIdAndVersionAndSeller(productId: number, version: string): Observable<Product> {
     return this.httpClient.post<Product>(baseUrl + '/chooseVersion', null, {
       params: {
@@ -23,8 +34,8 @@ export class ManageProductService {
     });
   }
 
-  getAllVersionOfProduct(productId: number): Observable<string[]> {
-    return this.httpClient.get<string[]>(baseUrl + '/getAllVersion', {
+  getAllVersionOfProduct(productId: number): Observable<Product[]> {
+    return this.httpClient.get<Product[]>(baseUrl + '/getAllVersion', {
       params: {
         productId: productId
       }
@@ -42,10 +53,9 @@ export class ManageProductService {
     )
   }
 
-  getProductByIdAndSeller(productId: number): Observable<Product> {
-    return this.httpClient.get<Product>(baseUrl + '/getProductById?productId=' + productId);
-  }
-
+  getActiveVersionProductByIdAndSeller(productId: number): Observable<Product> {
+    return this.httpClient.get<Product>(baseUrl + '/getActiveVersionProductById?productId=' + productId);
+   }
   /*  getCurrentUserInfo(email: string): Observable<User> {
       return this.httpClient.get<User>(baseUrl + '/getCurrentUserInfo?email=' + email);
     }*/
@@ -63,7 +73,16 @@ export class ManageProductService {
   }
 
   updateProduct(data: any, instructionDetail: string): Observable<Product> {
+    console.log(data);
     return this.httpClient.post<Product>(baseUrl + '/updateProduct', data, {
+      params: {
+        instruction: instructionDetail
+      }
+    });
+  }
+
+  getLicense(data: any, instructionDetail: string): Observable<License[]> {
+    return this.httpClient.post<License[]>(baseUrl + '/updateProduct', data, {
       params: {
         instruction: instructionDetail
       }

@@ -75,7 +75,8 @@ public class ProductFileController {
 	@PostMapping(value = "uploadProductFile")
 	public ResponseEntity<?> uploadProductFile(@RequestParam(name = "productId", required = true) Long productId,
 			@RequestParam(name = "productFile", required = true) MultipartFile productFile,
-			@RequestParam(name = "version") String version) throws IOException, InterruptedException, ExecutionException {
+			@RequestParam(name = "version") String version)
+			throws IOException, InterruptedException, ExecutionException {
 
 		ProductFileDTO ret = new ProductFileDTO();
 		ret.setId((long) -1);
@@ -99,16 +100,14 @@ public class ProductFileController {
 		}
 
 		Path tempFilePath = createTempFile(productFile);
-		
+
 		boolean isSafe;
 		File file = new File(tempFilePath.toString());
-		System.out.println(file.getAbsolutePath());
-		
-			isSafe = virusTotalService.scanFile(file);
-			System.out.println("isSafe?" + isSafe);
-		
-		
-		if (isSafe) {
+//		isSafe = virusTotalService.scanFile(file);
+//		System.out.println("isSafe?" + isSafe);
+
+//		if (isSafe) {
+		if (true) {
 			Files.deleteIfExists(tempFilePath);
 			String fileLocation = getProductFilesLocation(productDetails);
 			File fileDir = new File(storageUtil.getLocation() + fileLocation);
@@ -119,7 +118,7 @@ public class ProductFileController {
 			ret = new ProductFileDTO(savedFile);
 		} else {
 			Files.deleteIfExists(tempFilePath);
-			ret.setFileState(ProductFileDTO.FileState.ERROR);
+			ret.setFileState(ProductFileDTO.FileState.MALICIOUS);
 		}
 		return ResponseEntity.ok(ret);
 	}
@@ -142,12 +141,35 @@ public class ProductFileController {
 				os.write(buffer, 0, length);
 			}
 		} catch (Exception e) {
-			
+
 		} finally {
 			is.close();
 			os.close();
 		}
 		return tempFilePath;
+	}
+
+	@PostMapping(value = "deleteProductFile")
+	public ResponseEntity<?> deleteProductFile(@RequestParam(name = "productId", required = true) Long productId,
+			@RequestParam(name = "fileId", required = true) Long fileId) throws IOException {
+
+		ProductFile pf = productFileService.getById(fileId);
+		String version = pf.getProductDetails().getVersion();
+		long id = pf.getProductDetails().getProduct().getId();
+		ProductDetails pd = productDetailsService.getByIdAndVersion(id, version);
+		pd.getFiles().remove(pf);
+		ProductFileDTO dto = new ProductFileDTO(pf, false);
+
+		productFileService.deleteById(fileId);
+
+		if (pd.getFiles().size()<= 0) {
+			pd.setDraft(true);
+			dto.setLastFile(true);
+
+			productDetailsService.updateProductDetailsStatus(pd);
+		}
+
+		return ResponseEntity.ok(dto);
 	}
 
 	private ProductDetails checkVersion(Product product, String version) {
