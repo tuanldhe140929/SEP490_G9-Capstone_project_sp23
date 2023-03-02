@@ -11,9 +11,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.*;
 
-@JsonIgnoreProperties(value={"product","cartItems"})
+@JsonIgnoreProperties(value = { "product", "cartItems" })
 @Entity
-@Table(name = "product_details")
+@Table(name = "product_details", uniqueConstraints = {
+		@UniqueConstraint(name = "uk_product_version", columnNames = { "product_id", "version" }) })
 public class ProductDetails implements Serializable {
 
 	@EmbeddedId
@@ -41,6 +42,9 @@ public class ProductDetails implements Serializable {
 
 	@Column(name = "instruction")
 	private String instruction;
+
+	@Column(name = "draft")
+	private boolean draft;
 
 	@Column(name = "upload_date")
 	private Date createdDate;
@@ -75,41 +79,18 @@ public class ProductDetails implements Serializable {
 		// TODO Auto-generated constructor stub
 	}
 
-	public ProductDetails(ProductVersionKey productVersionKey, Product product, String name, String description,
-			String coverImage, String detailDescription, int price, String instruction, Date createdDate,
-			Date lastModified, License license, Category category, List<Tag> tags, List<Preview> previews,
-			List<ProductFile> files, List<CartItem> cartItems) {
-		super();
-		this.productVersionKey = productVersionKey;
-		this.product = product;
-		this.name = name;
-		this.description = description;
-		this.coverImage = coverImage;
-		this.detailDescription = detailDescription;
-		this.price = price;
-		this.instruction = instruction;
-		this.createdDate = createdDate;
-		this.lastModified = lastModified;
-		this.license = license;
-		this.category = category;
-		this.tags = tags;
-		this.previews = previews;
-		this.files = files;
-		this.cartItems = cartItems;
-	}
-
 	public ProductDetails(ProductDetailsDTO productDetailsDTO) {
-		
+
 		this.productVersionKey.setProductId(productDetailsDTO.getId());
 		this.productVersionKey.setVersion(productDetailsDTO.getVersion());
 		this.category = productDetailsDTO.getCategory();
 		this.name = productDetailsDTO.getName();
 		this.description = productDetailsDTO.getDescription();
 		this.price = productDetailsDTO.getPrice();
-		this.license = productDetailsDTO.getLicense();
+		this.license = new License(productDetailsDTO.getLicense());
 		this.tags = productDetailsDTO.getTags();
 		this.detailDescription = productDetailsDTO.getDetails();
-		
+
 	}
 
 	public String getVersion() {
@@ -246,6 +227,14 @@ public class ProductDetails implements Serializable {
 
 	public void setCartItems(List<CartItem> cartItems) {
 		this.cartItems = cartItems;
+	}
+
+	public boolean isDraft() {
+		return draft;
+	}
+
+	public void setDraft(boolean draft) {
+		this.draft = draft;
 	}
 
 }

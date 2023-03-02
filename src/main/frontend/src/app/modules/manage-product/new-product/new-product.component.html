@@ -1,5 +1,5 @@
 <div class="container-fluid grad">
-  <div class="row padded" style="width:80%; background:white; margin:auto;margin-bottom:5%;">
+  <div class="row padded" style="width:93%; background:white; margin:auto;margin-bottom:5%;">
     <div class="row" style="border-bottom:0.5px solid grey; margin:auto;">
       <h2>Upload new product</h2>
     </div>
@@ -9,15 +9,15 @@
           <div class="left_col col-8" style="border-right:1px solid black">
             <div class="input_row">
               <div><label for="product_version">Version</label></div>
-              <div><input type="text" value="{{product.version}}" id="product_version" name="product_version" readonly (click)="openSpecifyVersionModal()" /></div>
+              <div><input type="text" value="{{product.version}}" id="product_version" name="product_version" readonly (click)="openSpecifyVersionModal()" style="cursor:pointer;"/></div>
             </div>
             <div class="input_row">
               <div><label for="product_name">Title</label></div>
-              <div><input type="text" [(ngModel)]="product.name" id="product_name" name="product_name" /></div>
+              <div><input type="text" [(ngModel)]="product.name" id="product_name" name="product_name" autocomplete="off"/></div>
             </div>
             <div class="input_row description">
               <div><label for="description">Description</label>&#45;<small>Short description for your product</small> </div>
-              <div><input id="description" type="text" placeholder="Optional" [(ngModel)]="product.description" name="description" /></div>
+              <div><input id="description" type="text" placeholder="Optional" [(ngModel)]="product.description" name="description" autocomplete="off"/></div>
             </div>
             <div class="input_row classification_picker">
               <div class="classification_picker_label">
@@ -71,17 +71,17 @@
               <div class="price_picker_drop">
                 <div class="game_edit_price_picker_widget" (click)="onChoosePricingOption($event)">
                   <div class="payment_modes">
-                    <button id="clickThis" type="button" class="payment_mode_paid active">
+                    <button id="pay_btn" type="button" class="payment_mode_paid">
                       <span class="icon"></span>
                       Paid
                     </button>
-                    <button type="button" class="payment_mode_no_paid">
+                    <button type="button" class="payment_mode_no_paid" id="no_payment_btn">
                       <span class="icon icon-checkbox-unchecked"></span>
                       No payment
                     </button>
                   </div>
                   <div class="describe">
-                    <div class="paid">
+                    <div class="paid" id="paid">
                       <div class="input_row">
                         <div><label>Minimum price<span class="sub"> - Minimum price to get access to download this product</span></label></div>
                         <div>
@@ -92,7 +92,8 @@
                                    (keydown)="checkInput($event)"
                                    [(ngModel)]="formattedPrice"
                                    (ngModelChange)="updatePrice($event)"
-                                   [ngModelOptions]="{standalone: true}" />
+                                   [ngModelOptions]="{standalone: true}"
+                                   autocomplete="off"/>
                           </div>
 
                           <div *ngFor="let error of priceErrorr">
@@ -101,7 +102,7 @@
                         </div>
                       </div>
                     </div>
-                    <div class="no_payment">
+                    <div class="no_payment" id="no_payment">
                       <div class="input_row">
                         <div><label>No payments<span class="sub"> - This product is free to download  </span></label></div>
                       </div>
@@ -120,13 +121,18 @@
                 </div>
               </div>
               <div class="">
-                <select class="classification_picker_body" id="type_list" name="type" [(ngModel)]="productCate">
-                  <option value="0" selected>Select product category</option>
-                  <option *ngFor="let category of typeList; index as i;" value="{{category.id}}"
-                          [attr.selected]="isTypeSelected(category.id)">
-                    {{category.name}}
-                  </option>s
+                <select class="classification_picker_body" id="license_list" name="type" [(ngModel)]="productLicense">
+                  <option value="0" selected>No license</option>
+                  <option *ngFor="let license of licenseList index as i;" value="{{license.id}}"
+                          [attr.selected]="isTypeSelected(license.id)">
+                          {{license.name}} - {{license.acrynosm}}
+                  </option>
                 </select>
+              </div>
+
+              <div class="license_details" style="position: relative; cursor: pointer; width:180px;" *ngIf="productLicense>=1">
+              <img src="https://png.pngtree.com/png-clipart/20190705/original/pngtree-vector-information-icon-png-image_4184479.jpg" style="height:20px;width:20px;" />Details about this license
+              <span class="license_details_content" style="position: absolute; text-align:justify;">{{LicenseDetails}}<br />{{LicenseReferenceLink}}</span>
               </div>
             </div>
             <section class="upload_editor">
@@ -167,6 +173,9 @@
                               </div>
                               <div *ngSwitchCase="FileState.ON_QUEUE">
                                 On queue
+                              </div>
+                              <div *ngSwitchCase="FileState.MALICIOUS">
+                                Malicious detected
                               </div>
                             </div>
                           </div>
@@ -222,13 +231,13 @@
                     <div class="button add_file_btn has_multi_upload" (click)="coverImageUpload.click()">
                       Tải lên
                     </div>
-                    <input type="file" class="file-input" (change)="onCoverImageUpload($event)" #coverImageUpload>
+                    <input type="file" class="file-input" (input)="onCoverImageUpload($event)" #coverImageUpload>
                   </div>
                 </div>
               </div>
               <div class="upload_coverImage_label"><label for="cover_img_container">Tải lên ảnh bìa sản phẩm. <br /><small>Định dạng: .png, .jpeg hoặc .webp. Kích cỡ khuyến nghị : 630x500</small></label></div>
             </div>
-            <div class="preview_pictures drop" id="preview_video_container">
+            <div class="preview_pictures drop" id="preview_video_container" style="margin-top: 30px;">
               <div class="upload_container">
                 <div *ngIf="product.previewVideo==null||product.previewVideo.id==-1;then noPreviewVideo else hasPreviewVideo"></div>
                 <ng-template #hasPreviewVideo>
@@ -243,18 +252,18 @@
                 </ng-template>
                 <ng-template #noPreviewVideo>
                   <div class="widget">
-                    <div class="add_file_btn_outer upload_buttons no_upload" id="upload_button">
+                    <div class="add_file_btn_outer upload_buttons no_upload" id="upload_button" >
                       <div class="button add_file_btn has_multi_upload" (click)="previewVideoUpload.click()">
                         Tải lên
                       </div>
-                      <input type="file" class="file-input" (change)="onPreviewVideoUpload($event)" #previewVideoUpload>
+                      <input type="file" class="file-input" (input)="onPreviewVideoUpload($event)" #previewVideoUpload>
                     </div>
                   </div>
                 </ng-template>
               </div>
               <div class="upload_preview_pictures_label"><label for="preview_video_container">Tải lên video xem trước<br /><small>Định dạng: .mp4, .mkv, .mov, kích thước tối đa: 1GB</small></label> </div>
             </div>
-            <div class="preview_pictures drop" id="preview_pictures_container">
+            <div class="preview_pictures drop" id="preview_pictures_container" style="margin-top:30px;">
               <div class="upload_container" style="position:relative; background-color:white;max-height:500px;">
                 <div *ngIf="product.previewPictures.length!=0;then hasPreviewPictures else noPreviewPictures"></div>
                 <ng-template #noPreviewPictures>
@@ -291,7 +300,7 @@
     </form>
   </div>
 </div>
-<input type="file" class="file-input" (change)="onPreviewPicturesUpload($event)" multiple="multiple" #previewPicturesUpload>
+<input type="file" class="file-input" (input)="onPreviewPicturesUpload($event)" multiple="multiple" #previewPicturesUpload>
 <div id="editor"></div>
 
 
@@ -327,14 +336,30 @@
   </div>
 </ng-template>
 
+<ng-template #infoModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" style="color:black">Thông báo</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="dismissError()"></button>
+  </div>
+  <div class="modal-body">
+    <small style="color:black;">{{info}}<br /></small>
+  </div>
+</ng-template>
+
 <ng-template #specifyVersionModal let-modal>
   <div class="modal-header">
     <h4 class="modal-title" style="color:black"> Cập nhật phiên bản mới của sản phẩm</h4>
     <button type="button" class="btn-close" aria-label="Close" (click)="dismissError()"></button>
   </div>
   <div class="modal-body">
-    <div *ngFor="let ver of versions">
-      <div class="ver" (click)="chooseVersion(ver)">{{ver}}</div>
+    <div *ngFor="let ver of productVersions" style="display:flex">
+      <div class="ver" (click)="chooseVersion(ver)">{{ver.version}}</div>
+
+      <div *ngIf="isCurrent(ver); then showActive else optionActive"></div>
+      <ng-template #showActive> <div class="current_version">Current</div></ng-template>
+      <ng-template #optionActive> <div class="option_active" (click)="activeVersion(ver)">Active</div></ng-template>
+
+     
     </div>
     <input style="width:75%;" type="text" name="new_version" value="{{product.version}}" id="new_version" placeholder="{{product.version}}" (keydown)="checkInputVersion($event)" />
     <div *ngFor="let err of versionError">

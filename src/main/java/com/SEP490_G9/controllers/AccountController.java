@@ -33,7 +33,6 @@ import com.SEP490_G9.entity.UserDetailsImpl;
 import com.SEP490_G9.exception.RefreshTokenException;
 import com.SEP490_G9.exception.ResourceNotFoundException;
 import com.SEP490_G9.service.AccountService;
-import com.SEP490_G9.service.authService.AuthService;
 import com.SEP490_G9.service.authService.EmailService;
 import com.SEP490_G9.service.authService.RefreshTokenService;
 import com.SEP490_G9.util.JwtTokenUtil;
@@ -48,9 +47,6 @@ import jakarta.validation.Valid;
 @RequestMapping(value="account")
 @RestController
 public class AccountController {
-	@Autowired
-	AuthService authService;
-
 	@Autowired
 	EmailService emailService;
 

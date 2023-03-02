@@ -12,4 +12,6 @@ public interface ProductFileService {
 	public ProductFile getById(Long id);
 
 	public boolean deleteById(Long fileId);
+	
+	public List<ProductFile> getAllFileByIdAndVersion();
 }

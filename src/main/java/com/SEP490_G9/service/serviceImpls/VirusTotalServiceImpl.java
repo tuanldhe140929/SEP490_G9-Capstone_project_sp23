@@ -42,7 +42,7 @@ public class VirusTotalServiceImpl implements VirusTotalService {
 	@Override
 	public boolean scanFile(File file) throws IOException {
 		List<byte[]> chunks = splitFileIntoChunks(file.getPath().toString());
-		boolean isSafe = true;
+
 		List<Boolean> isChunksSafe = new ArrayList<>();
 		List<Future<Boolean>> futures = new ArrayList<>();
 
@@ -63,7 +63,7 @@ public class VirusTotalServiceImpl implements VirusTotalService {
 				boolean safe = future.get();
 				isChunksSafe.add(safe);
 			} catch (InterruptedException | ExecutionException e) {
-				throw new FileUploadException(e.getMessage());
+				e.printStackTrace();
 			}
 		}
 
@@ -89,14 +89,31 @@ public class VirusTotalServiceImpl implements VirusTotalService {
 				Response response = client.newCall(request).execute();
 				ObjectMapper objectMapper = new ObjectMapper();
 				JsonNode rootNode = objectMapper.readTree(response.body().string());
-
+				System.out.println(rootNode.toPrettyString());
 				// Check if the analysis is completed
+				
+				
+//				{
+//					  "error" : {
+//					    "message" : "Quota exceeded",
+//					    "code" : "QuotaExceededError"
+//					  }
+//					}
+//					gettin analysis
+//					{
+//					  "error" : {
+//					    "message" : "Quota exceeded",
+//					    "code" : "QuotaExceededError"
+//					  }
+//					}
+				
+				
 				String status = rootNode.get("data").get("attributes").get("status").asText();
 				if (status.equals("completed")) {
 					// Print out the JSON object
 					notCompleted = false;
 					System.out.println(index);
-					// System.out.println(rootNode.toPrettyString());
+					
 					int malicious = rootNode.get("data").get("attributes").get("stats").get("malicious").asInt();
 					if (malicious == 0) {
 						isSafe = true;
@@ -113,13 +130,19 @@ public class VirusTotalServiceImpl implements VirusTotalService {
 	}
 
 	public String uploadChunk(String url, byte[] data) {
+		OkHttpClient.Builder builder = new OkHttpClient.Builder();
+		builder.connectTimeout(100, TimeUnit.SECONDS); 
+		builder.readTimeout(100, TimeUnit.SECONDS); 
+		builder.writeTimeout(100, TimeUnit.SECONDS); 
+		
 		OkHttpClient client = new OkHttpClient();
-
+		client = builder.build();
+		
 		System.out.println("create request");
 		MediaType mediaType = MediaType.parse("multipart/form-data");
 		RequestBody requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM)
 				.addFormDataPart("file", "temp-file-" + UUID.randomUUID(), RequestBody.create(data, mediaType)).build();
-		
+
 		Request request = new Request.Builder().url(url).post(requestBody).addHeader("accept", "application/json")
 				.addHeader("x-apikey", virusTotalKey).build();
 		String id = "";
@@ -132,7 +155,8 @@ public class VirusTotalServiceImpl implements VirusTotalService {
 			// Get the value of the "id" attribute
 			id = rootNode.get("data").get("id").asText();
 		} catch (IOException e) {
-			throw new FileUploadException("Error when upload chunks \n" + e.getMessage());
+			e.printStackTrace();
+			//throw new FileUploadException("Error when upload chunks \n" + e.getMessage());
 		}
 		return id;
 

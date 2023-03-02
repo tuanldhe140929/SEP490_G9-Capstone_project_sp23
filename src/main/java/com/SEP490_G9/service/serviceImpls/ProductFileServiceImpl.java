@@ -11,6 +11,8 @@ import com.SEP490_G9.exception.ResourceNotFoundException;
 import com.SEP490_G9.repository.ProductFileRepository;
 import com.SEP490_G9.service.ProductFileService;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class ProductFileServiceImpl implements ProductFileService {
 
@@ -50,6 +52,7 @@ public class ProductFileServiceImpl implements ProductFileService {
 		return ret;
 	}
 
+	@Transactional
 	@Override
 	public boolean deleteById(Long fileId) {
 		if (!productFileRepo.existsById(fileId)) {
@@ -57,6 +60,12 @@ public class ProductFileServiceImpl implements ProductFileService {
 		}
 		productFileRepo.deleteById(fileId);
 		return true;
+	}
+
+	@Override
+	public List<ProductFile> getAllFileByIdAndVersion() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

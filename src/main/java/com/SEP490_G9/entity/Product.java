@@ -22,15 +22,15 @@ public class Product implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@Column(name = "draft")
-	private boolean draft = true;
-
 	@Column(name = "enabled")
 	private boolean enabled = true;
 
 	@ManyToOne
 	@JoinColumn(name = "seller_id", nullable = false)
 	private Seller seller;
+
+	@Column(name = "active_version")
+	private String activeVersion;
 
 	@OneToMany(mappedBy = "product")
 	private List<ProductDetails> productDetails = new ArrayList<>();
@@ -43,13 +43,11 @@ public class Product implements Serializable {
 
 	public Product(Seller seller) {
 		this.seller = seller;
-		this.draft = true;
 	}
 
-	public Product(Long id, boolean draft, boolean enabled, Seller seller, List<ProductDetails> productDetails) {
+	public Product(Long id, boolean enabled, Seller seller, List<ProductDetails> productDetails) {
 		super();
 		this.id = id;
-		this.draft = draft;
 		this.enabled = enabled;
 		this.seller = seller;
 		this.productDetails = productDetails;
@@ -61,14 +59,6 @@ public class Product implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public boolean isDraft() {
-		return draft;
-	}
-
-	public void setDraft(boolean draft) {
-		this.draft = draft;
 	}
 
 	public boolean isEnabled() {
@@ -101,6 +91,14 @@ public class Product implements Serializable {
 
 	public void setReports(List<Report> reports) {
 		this.reports = reports;
+	}
+
+	public String getActiveVersion() {
+		return activeVersion;
+	}
+
+	public void setActiveVersion(String activeVersion) {
+		this.activeVersion = activeVersion;
 	}
 
 }

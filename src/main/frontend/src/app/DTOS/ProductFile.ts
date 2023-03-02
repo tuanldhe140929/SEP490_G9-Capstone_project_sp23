@@ -1,19 +1,21 @@
 export enum FileState {
   UPLOADING = "UPLOADING"
   , UPLOADED = "UPLOADED", SCANNING = "SCANNING", ERROR = "ERROR",
-  ON_QUEUE = "ON_QUEUE"
+  ON_QUEUE = "ON_QUEUE",MALICIOUS = "MALICIOUS"
 }
 
 export class ProductFile{
 		id:number;
 		name:string;
 		type:string;
-		size:number;
+  size: number;
+  lastFile:boolean
   fileState: FileState;
 		constructor(){
 			this.id=-1;
 			this.name="";
-			this.type="";
+      this.type = "";
+      this.lastFile = false;
       this.size = -1;
       this.fileState = FileState.UPLOADED;
     }

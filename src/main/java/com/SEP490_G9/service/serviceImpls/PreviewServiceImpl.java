@@ -18,13 +18,13 @@ public class PreviewServiceImpl implements PreviewService {
 	PreviewRepository previewRepository;
 
 	@Override
-	public Preview getByProductDetailsAndType(ProductDetails pd, String type) {
+	public List<Preview> getByProductDetailsAndType(ProductDetails pd, String type) {
 		List<Preview> ret = previewRepository.findByProductDetailsAndType(pd, type);
 		if (ret == null) {
 			throw new ResourceNotFoundException("preview video product id, version ",
 					pd.getProduct().getId() + " " + pd.getVersion(), "");
 		}
-		return ret.get(0);
+		return ret;
 	}
 
 	@Override
@@ -47,7 +47,10 @@ public class PreviewServiceImpl implements PreviewService {
 
 	@Override
 	public boolean deletePreview(Preview preview) {
-		// TODO Auto-generated method stub
+		if(!previewRepository.existsById(preview.getId())) {
+			throw new ResourceNotFoundException("Preview video id", preview.getId().toString(), "");
+		}
+		previewRepository.deleteById(preview.getId());
 		return false;
 	}
 
@@ -58,6 +61,11 @@ public class PreviewServiceImpl implements PreviewService {
 			ret = previewRepository.saveAll(previews);
 		}
 		return ret;
+	}
+
+	@Override
+	public Preview createPreview(Preview preview) {
+		return previewRepository.save(preview);
 	}
 
 }

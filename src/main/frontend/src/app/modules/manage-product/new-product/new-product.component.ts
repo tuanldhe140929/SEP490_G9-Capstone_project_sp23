@@ -19,14 +19,22 @@ import { Preview } from '../../../DTOS/Preview';
 import { PreviewService } from '../../../services/preview.service';
 import { ProductFileService } from '../../../services/product-file.service';
 import { ForAdminService } from '../../../services/for-admin.service';
+import { License } from 'src/app/DTOS/License';
+import { LicenseService } from 'src/app/services/license.service';
 
 
 const MSG100 = 'Tên sản phẩm không được để trống';
-const MSG101 = 'Đường dẫn sản phẩm không được để trống';
+const MSG1001 = 'Tên sản phẩm có độ dài từ 3 đến 30 kí tự'
+const MSG1002 = 'Độ dài tối đa của mô tả là 100';
+const MSG1003 = 'Độ dài tối đa của mô tả chi tiết là 1000 kí tự'
+const MSG1004 = 'Độ dài tối đa của hướng dẫn là 200 kí tự'
+const MSG1005 = 'Mỗi sản phẩm chỉ có tối đa 5 nhãn'
 const MSG102 = 'Phân loại sản phẩm không được để trống';
 const MSG103 = 'Giá sản phẩm không được để trống';
+const MSG1031 = 'Giá sản phẩm tối đa là 50.000.000';
 const MSG104 = 'Không có tệp nào để download';
 const MSG105 = 'Định dạng này không được hỗ trợ';
+
 const IMAGE_EXTENSIONS = ['image/png', 'image/jpeg', 'image/svg+xml'];
 const VIDEO_EXTENSIONS = ['video/mp4', 'video/x-matroska', 'video/quicktime'];
 const baseUrl = "http://localhost:9000/private/manageProduct";
@@ -73,6 +81,7 @@ export class NewProductComponent implements OnInit {
 
   @ViewChild('specifyVersionModal', { static: false }) private specifyVersionModal: any;
 
+  @ViewChild('infoModal', { static: false }) private infoModal: any;
 
 
   fileError = "";
@@ -86,18 +95,22 @@ export class NewProductComponent implements OnInit {
     private modalService: NgbModal,
     private previewService: PreviewService,
     private productFileService: ProductFileService,
-    private adminService: ForAdminService) { }
+    private adminService: ForAdminService,
+    private licenseService: LicenseService) { }
 
   product: Product = new Product;
   typeList: Category[] = [];
   tagList: Tag[] = [];
+  licenseList: License[] = [];
   productFileList: ProductFile[] = [];
   fileDisplayList: FileDisplay[] = [];
   formattedAmount: string | null | undefined;
 
-  productUrl = "";
-  versions: string[] = [];
 
+  info = '';
+  productUrl = "";
+  productVersions: Product[] = [];
+  versions: string[] = [];
   price = 0;
   private lastValue: string = '';
 
@@ -105,29 +118,35 @@ export class NewProductComponent implements OnInit {
   productDetails = '';
   draft = true;
   productCate = -1;
+  productLicense = -1;
   assertDate = new Date(0);
   public detailsEditor = ClassicEditor;
   newProductForm = this.formBuilder.group({
     "id": [this.product.id, [Validators.required]],
     "name": ['', [Validators.required]],
-    url: new FormControl('', [Validators.required]),
     details: [''],
     "version": [''],
     "description": [''],
+    "license": [this.product.license],
     "category": [this.product.category],
     "tags": [this.product.tags],
     "draft": [true, Validators.required],
-    price: new FormControl('', [Validators.required, Validators.min(1000), Validators.max(10000000)])
+    price: new FormControl('')
   });
 
   ngOnInit(): void {
     this.getCurrentProduct();
     this.getTypeList();
-    this.newProductForm.valueChanges.subscribe((form) => {
-      /*const formattedValue = this.getFormattedValue(form.priceUnformated);
-      this.newProductForm.patchValue({ priceUnformated: formattedValue }, { emitEvent: false });*/
-    });
+    this.getLicenseList();
 
+
+  }
+  getLicenseList() {
+    this.licenseService.getAllLicense().subscribe((data) => {
+      this.licenseList = data;
+    }, (error) => {
+
+    })
   }
 
 
@@ -172,6 +191,7 @@ export class NewProductComponent implements OnInit {
 
     this.uploadFileIndex($event.target.files.length - 1, $event.target.files);
   }
+
   uploadFileIndex(index: number, files: File[]) {
     const file: File = files[index];
     if (file) {
@@ -180,7 +200,6 @@ export class NewProductComponent implements OnInit {
       for (let i = 0; i < this.fileDisplayList.length; i++) {
         if (this.fileDisplayList[i].file.name == file.name) {
           fileDisplay = this.fileDisplayList[i];
-          
         }
       }
 
@@ -190,15 +209,6 @@ export class NewProductComponent implements OnInit {
       formData.append("productId", this.product.id.toString());
       formData.append("version", this.product.version);
 
-
-      /*      var reference: number;
-            for (let i = 0; i < this.productFileList.length; i++) {
-              // this.uploadProgress[i] = -1;
-              if (this.productFileList[i].name == file.name) {
-                reference = i;
-                this.uploadProgress[reference] = 0;
-              }
-            }*/
       if (fileDisplay.file.name != '' && fileDisplay.file.name != null) {
         const upload$ = this.productFileService.uploadProductFile(formData).subscribe(
           (event) => {
@@ -219,6 +229,18 @@ export class NewProductComponent implements OnInit {
           },
           (error) => {
             fileDisplay.file.fileState = FileState.ERROR;
+            this.info = "Không thể tải lên file " + file.name;
+            this.openInfoModal();
+            var index = -1;
+            for (let i = 0; i < this.fileDisplayList.length; i++) {
+              if (file.name == this.fileDisplayList[i].file.name) {
+                index = i;
+                break;
+              }
+            }
+            if (index != -1) {
+              this.fileDisplayList.slice(index, 1);
+            }
           }
         )
         fileDisplay.process.subcription = upload$;
@@ -255,19 +277,28 @@ export class NewProductComponent implements OnInit {
       const formData = new FormData();
       formData.append("fileId", file.id.toString());
       formData.append("productId", this.product.id.toString());
-
+      formData.append("version", this.product.version);
       const upload$ = this.productFileService.deleteProductFile(formData).subscribe(
         (data: ProductFile) => {
-          var index;
+          var index = -1;
           for (let i = 0; i < this.fileDisplayList.length; i++) {
             if (this.fileDisplayList[i].file.id === data.id) {
-              console.log(i);
               index = i;
             }
           }
-          if (index) {
+          if (index != -1) {
             this.fileDisplayList.splice(index, 1);
+            console.log(this.fileDisplayList.length);
           }
+
+          console.log(data.lastFile && !this.product.draft);
+          console.log(data.lastFile);
+          console.log(this.product.draft);
+          if (data.lastFile && !this.product.draft) {
+              this.info = 'Vì không có downloadable file nào, trạng thái sản phẩm sẽ chuyển về "Nháp"';
+              this.openInfoModal();
+          }
+          
 
         },
         (error) => {
@@ -285,23 +316,26 @@ export class NewProductComponent implements OnInit {
 
   getCurrentProduct(): void {
     var productId = this.activatedRoute.snapshot.paramMap.get('productId');
-    if (productId) { 
-    var version = this.activatedRoute.snapshot.paramMap.get('version');
-    if (version != null) {
-      this.getByProductIdAndVersion(productId, version);
-    } else {
-      this.getLastModifiedVersion(productId);
-    }
-    
+    if (productId) {
+      var version = this.activatedRoute.snapshot.paramMap.get('version');
+      if (version != null) {
+        this.getByProductIdAndVersion(productId, version);
+      } else {
+        this.getActiveVersion(productId);
+      }
+
       this.getAllVersionOfProduct(+productId);
     }
   }
 
   getAllVersionOfProduct(productId: number) {
     const request = this.manageProductService.getAllVersionOfProduct(productId);
-     request.subscribe(data => {
-       this.versions = data;
-       console.log(this.versions);
+    request.subscribe(data => {
+      this.productVersions = data;
+      for (let i = 0; i < this.productVersions.length; i++) {
+        this.versions.push(this.productVersions[i].version);
+      }
+      console.log(this.versions);
     })
   }
 
@@ -328,6 +362,13 @@ export class NewProductComponent implements OnInit {
             this.Publish.checked = true;
           }
 
+          if (this.product.license != null) {
+            this.productLicense = this.product.license.id;
+            console.log(this.productLicense);
+          } else {
+            this.productLicense = -1;
+          }
+
           this.InstructionDetails.value = this.product.instruction;
 
           for (let i = 0; i < this.Columns.length; i++) {
@@ -336,6 +377,29 @@ export class NewProductComponent implements OnInit {
 
           if (this.product.coverImage != '' && this.product.coverImage != null) {
             this.loadCoverImage();
+          }
+
+          if (this.product.price != 0) {
+            this.PayBtn.className += ' active';
+            this.formattedPrice = this.getFormattedValue(this.product.price);
+          } else {
+            console.log("no payment");
+            this.NoPaymentBtn.className += ' active';
+            this.price = 0;
+            const paid = (<HTMLElement>this.ElByClassName.nativeElement).querySelector(
+              '.paid'
+            );
+            if (paid != null) {
+              paid.setAttribute("style", "display:none;");
+            }
+
+            const noPayment = (<HTMLElement>this.ElByClassName.nativeElement).querySelector(
+              '.no_payment'
+            );
+
+            if (noPayment) {
+              noPayment.setAttribute("style", "display:block;");
+            }
           }
 
           this.percent = 'width:' + 100 / this.product.previewPictures.length + '%;';
@@ -352,14 +416,14 @@ export class NewProductComponent implements OnInit {
         },
 
         (error) => {
-          this.router.navigate(['error']);
+          console.log(error);
         }
       );
     }
   }
-  getLastModifiedVersion(productId: string | null) {
+  getActiveVersion(productId: string | null) {
     if (productId) {
-      this.manageProductService.getProductByIdAndSeller(+productId).subscribe(
+      this.manageProductService.getActiveVersionProductByIdAndSeller(+productId).subscribe(
         (data) => {
 
           this.product = data;
@@ -379,6 +443,11 @@ export class NewProductComponent implements OnInit {
           } else {
             this.Publish.checked = true;
           }
+          if (this.product.license != null) {
+            this.productLicense = this.product.license.id;
+          } else {
+            this.productLicense = -1;
+          }
 
           this.InstructionDetails.value = this.product.instruction;
 
@@ -401,10 +470,32 @@ export class NewProductComponent implements OnInit {
             this.fileDisplayList.push(fileDisplay);
           }
           console.log(this.fileDisplayList);
+
+          if (this.product.price != 0) {
+            this.PayBtn.className += ' active';
+            this.formattedPrice = this.getFormattedValue(this.product.price);
+          } else {
+            console.log("no payment");
+            this.NoPaymentBtn.className += ' active';
+            this.price = 0;
+            const paid = (<HTMLElement>this.ElByClassName.nativeElement).querySelector(
+              '.paid'
+            );
+            if (paid != null) {
+              paid.setAttribute("style", "display:none;");
+            } const noPayment = (<HTMLElement>this.ElByClassName.nativeElement).querySelector(
+              '.no_payment'
+            );
+
+            if (noPayment) {
+              noPayment.setAttribute("style", "display:block;");
+            }
+
+          }
         },
 
         (error) => {
-          this.router.navigate(['error']);
+          console.log(error);
         }
       );
     }
@@ -448,7 +539,7 @@ export class NewProductComponent implements OnInit {
       this.coverImgContainer?.appendChild(img);
     }
     if (this.coverImg != null) {
-      this.coverImg.setAttribute('src', 'http://localhost:9000/public/serveMedia/serveCoverImage?productId=' + this.product.id);
+      this.coverImg.setAttribute('src', 'http://localhost:9000/public/serveMedia/image?source=' + this.product.coverImage.replace(/\\/g, '/'));
       this.coverImg.style.width = "100%";
       this.coverImg.style.height = "100%";
       this.coverImg.style.padding = "0";
@@ -488,7 +579,8 @@ export class NewProductComponent implements OnInit {
             this.loadCoverImage();
           },
           (error: any) => {
-            console.log(error);
+            this.fileError = 'Tải lên hình ảnh không thành công';
+            this.openFileSizeErrorModal();
           }
         )
       }
@@ -498,7 +590,7 @@ export class NewProductComponent implements OnInit {
   getPreviewVideoSource(): string {
     console.log(this.product.previewVideo);
     if (this.product.previewVideo.id != -1 && this.product.previewVideo != null) {
-      return "http://localhost:9000/public/serveMedia/servePreviewVideo/" + this.product.previewVideo.id;
+      return "http://localhost:9000/public/serveMedia/video?source=" + this.product.previewVideo.source.replace(/\\/g, '/');
     }
     return "";
   }
@@ -521,7 +613,8 @@ export class NewProductComponent implements OnInit {
             this.product.previewVideo = data;
           },
           (error) => {
-            console.log(error);
+            this.fileError = 'Tải lên video không thành công';
+            this.openFileSizeErrorModal();
           }
         )
       }
@@ -542,6 +635,7 @@ export class NewProductComponent implements OnInit {
 
   onPreviewPicturesUpload($event: any) {
     const files: File[] = $event.target.files;
+    console.log($event.target.files.length);
     if (files) {
       var valid = true;
       for (let i = 0; i < files.length; i++) {
@@ -560,11 +654,13 @@ export class NewProductComponent implements OnInit {
           formData.append("version", this.product.version);
           const upload$ = this.previewService.uploadPreviewPicture(formData).subscribe(
             (data) => {
+              console.log(data);
               this.product.previewPictures = data;
               this.percent = 'width:' + 100 / this.product.previewPictures.length + '%;';
             },
             (error) => {
-              console.log(error);
+              this.fileError = 'Tải lên hình ảnh không thành công';
+              this.openFileSizeErrorModal();
             }
           )
         }
@@ -572,12 +668,12 @@ export class NewProductComponent implements OnInit {
     }
   }
 
-  chooseVersion(ver: string) {
-    window.location.href = "http://localhost:4200/product/update/" + this.product.id + "/" + ver;
+  chooseVersion(ver: Product) {
+    window.location.href = "http://localhost:4200/product/update/" + this.product.id + "/" + ver.version;
   }
 
   getPreviewPictureSource(preview: Preview): string {
-    return "http://localhost:9000/public/serveMedia/servePreviewPicture/" + preview.id;
+    return "http://localhost:9000/public/serveMedia/image?source=" + encodeURIComponent(preview.source.replace(/\\/g, '/'));
   }
 
   onChooseImage(index: number) {
@@ -622,14 +718,19 @@ export class NewProductComponent implements OnInit {
 
   onTagSelect($event: any) {
     if ($event.target.value != 0) {
-      for (let i = 0; i < this.tagList.length; i++) {
-        if (this.tagList[i].id == $event.target.value) {
-          if (!this.product.tags.includes(this.tagList[i])) {
-            this.product.tags.push(this.tagList[i]);
-            this.tagList.splice(i, 1);
+      if (this.product.tags.length < 5) {
+        for (let i = 0; i < this.tagList.length; i++) {
+          if (this.tagList[i].id == $event.target.value) {
+            if (!this.product.tags.includes(this.tagList[i])) {
+              this.product.tags.push(this.tagList[i]);
+              this.tagList.splice(i, 1);
+            }
           }
         }
       }
+    } else {
+      this.fileError = MSG1005;
+      this.openFileSizeErrorModal();
     }
     $event.target.value = 0;
   }
@@ -647,6 +748,16 @@ export class NewProductComponent implements OnInit {
     if (this.productCate != -1) {
       if (typeId === this.productCate) {
         this.TypeList.selectedIndex = typeId;
+        return "";
+      }
+    }
+    return null;
+  }
+
+  isLicenseSelected(licenseId: number): any {
+    if (this.productLicense != -1) {
+      if (licenseId === this.productLicense) {
+        this.LicenseList.selectedIndex = licenseId;
         return "";
       }
     }
@@ -743,16 +854,58 @@ export class NewProductComponent implements OnInit {
     if (this.ProductName.value == null || this.ProductName.value.trim() == '') {
       this.errors.push(MSG100);
     }
-
-    if (this.productCate == -1 || this.productCate == 0) {
-      this.errors.push(MSG102);
+    if (this.ProductName.value.length > 30 || this.ProductName.value.length < 3) {
+      this.errors.push(MSG1001);
     }
+
     if (this.newProductForm.value.price == null) {
       this.errors.push(MSG103);
     }
     if (this.fileDisplayList.length == 0) {
       this.errors.push(MSG104);
     }
+    if (this.product.description!=null)
+    if (this.product.description.length > 100) {
+      const MSG1002 = 'Độ dài tối đa của mô tả là 100';
+      this.errors.push();
+    }
+
+    if (this.productDetails!=null)
+    if (this.productDetails.length > 1000) {
+      this.errors.push(MSG1003);
+    }
+
+    if (this.product.price > 50000000) {
+      this.errors.push()
+    }
+
+    if (this.InstructionDetails.value.length > 200) {
+      this.errors.push(MSG1004);
+    }
+    if (this.productCate == -1 || this.productCate == 0) {
+      this.errors.push(MSG102);
+    }
+
+    if (this.Paid.style.display === 'none') {
+      this.price = 0;
+      console.log(true);
+    } else {
+
+      var priceString = this.formattedPrice.replace(",", "");
+      this.price = Number.parseInt(priceString);
+      console.log(priceString);
+      console.log(Number.parseInt(priceString));
+    }
+
+    if (this.price > 50000000) {
+      this.errors.push("Số tiền tối đa là 50.000.000đ");
+    }
+
+    if (this.price % 1000 != 0) {
+      this.errors.push('Số tiền là bội số của 1000');
+    }
+
+
 
     if (this.errors.length == 0) {
 
@@ -760,11 +913,14 @@ export class NewProductComponent implements OnInit {
       this.newProductForm.controls.name.setValue(this.product.name);
       this.newProductForm.controls.tags.setValue(this.product.tags);
       this.newProductForm.controls.category.setValue(this.typeList[this.productCate - 1]);
-
+      this.newProductForm.controls.license.setValue(this.licenseList[this.productLicense - 1])
       this.newProductForm.controls.details.setValue(this.productDetails);
       this.newProductForm.controls.draft.setValue(this.draft);
+      this.newProductForm.controls.price.setValue(this.price.toString());
       this.newProductForm.controls.description.setValue(this.product.description);
       this.newProductForm.controls.version.setValue(this.product.version);
+
+
       this.manageProductService.updateProduct(this.newProductForm.value, this.InstructionDetails.value).subscribe(
         (data) => {
           this.product = data;
@@ -783,18 +939,55 @@ export class NewProductComponent implements OnInit {
       this.fileError = 'Version cannot end with "."';
       this.openFileSizeErrorModal();
     }
+    if (this.versions.includes(newVersion)) {
+      this.fileError = 'Version exist!';
+      this.openFileSizeErrorModal();
+    }
     else {
-    this.manageProductService.createNewVersion(this.product, newVersion).subscribe(
-      data => {
-        console.log(data);
-        window.location.href = 'http://localhost:4200/product/update/1/' + newVersion;
-      },
-      error => {
-        console.log(error);
-      });
+      this.manageProductService.createNewVersion(this.product, newVersion).subscribe(
+        data => {
+          console.log(data);
+          window.location.href = 'http://localhost:4200/product/update/1/' + newVersion;
+        },
+        error => {
+          console.log(error);
+        });
     }
   }
 
+  get PayBtn() {
+    return document.getElementById('pay_btn') as HTMLButtonElement;
+  }
+
+  get NoPaymentBtn() {
+    return document.getElementById('no_payment_btn') as HTMLButtonElement;
+  }
+
+  get Paid() {
+    return document.getElementById('paid') as HTMLDivElement;
+  }
+
+  get No_Payment() {
+    return document.getElementById('no_payment') as HTMLDivElement;
+  }
+
+  get LicenseDetails() {
+    if (this.productLicense >= 1) {
+      return this.licenseList[this.productLicense - 1].details;
+    }
+    else {
+      return "";
+    }
+  }
+
+  get LicenseReferenceLink() {
+    if (this.productLicense >= 1) {
+      return this.licenseList[this.productLicense - 1].referenceLink;
+    }
+    else {
+      return "";
+    }
+  }
   get NewVersionSpecify() {
     return document.getElementById('new_version') as HTMLInputElement;
   }
@@ -813,6 +1006,10 @@ export class NewProductComponent implements OnInit {
 
   get TypeList() {
     return document.getElementById('type_list') as HTMLSelectElement;
+  }
+
+  get LicenseList() {
+    return document.getElementById('license_list') as HTMLSelectElement;
   }
 
   get UploadBtn() {
@@ -858,6 +1055,10 @@ export class NewProductComponent implements OnInit {
     this.modalService.open(this.fileSizeErrorModal, { centered: true });
   }
 
+  openInfoModal() {
+    this.modalService.open(this.infoModal, { centered: true });
+  }
+
   get Draft() {
     return document.getElementById('draft') as HTMLInputElement;
   }
@@ -897,11 +1098,11 @@ export class NewProductComponent implements OnInit {
     return FileState;
   }
 
-  
-  formattedPrice = '10.000';
+
+  formattedPrice = '10,000';
 
   updatePrice(value: any) {
-     this.priceError();
+    this.priceError();
     this.formattedPrice = this.getFormattedValue(value);
   }
 
@@ -911,28 +1112,28 @@ export class NewProductComponent implements OnInit {
 
 
   checkInput($event: any) {
-    if (this.exclusiveKey.includes($event.keyCode) && $event.keyCode <48 || $event.keyCode>57) {
+    if (this.exclusiveKey.includes($event.keyCode) && $event.keyCode < 48 || $event.keyCode > 57) {
       $event.preventDefault();
     }
     this.priceErrorr = [];
     console.log($event.keyCode);
   }
 
-  version = ''; 
+  version = '';
   versionError: string[] = [];
   checkInputVersion($event: any) {
-    if (!this.exclusiveKey2.includes($event.keyCode) && $event.keyCode < 48 && ($event.keyCode > 57 && $event.keyCode<65) && $event.keyCode>90) {
+    if (!this.exclusiveKey2.includes($event.keyCode) && $event.keyCode < 48 && ($event.keyCode > 57 && $event.keyCode < 65) && $event.keyCode > 90) {
       $event.preventDefault();
     }
     let maxLength = 6;
     let a = 's';
-  
+
     let value = $event.target.value;
     console.log($event.keyCode);
-    if (value.length + 1 > maxLength && $event.keyCode!=8) {
+    if (value.length + 1 > maxLength && $event.keyCode != 8) {
       $event.preventDefault();
     } this.versionError = [];
-    
+
   }
 
   priceErrorr: string[] = [];
@@ -944,13 +1145,31 @@ export class NewProductComponent implements OnInit {
       this.priceErrorr.push("Số tiền tối thiểu là 10.000đ")
     } else {
 
-    if (intValue % 1000 != 0) {
-      this.priceErrorr.push("Tiền là bội số của 1.000");
+      if (intValue % 1000 != 0) {
+        this.priceErrorr.push("Tiền là bội số của 1.000");
       }
     }
     console.log(this.priceErrorr);
+  }
 
+  isCurrent(version: Product): boolean {
+    console.log(version.activeVersion);;
+    if (version.version == this.product.activeVersion)
+      return true;
+    else
+      return false;
+  }
 
-
+  activeVersion(version: Product) {
+    const $request = this.manageProductService.activeVersion(version);
+    $request.subscribe(
+      (data) => {
+        if (data)
+          this.product.activeVersion = version.version;
+      },
+      (error) => {
+        this.fileError = "Thay đổi phiên bản sản phảm không thành công";
+        this.openFileSizeErrorModal();
+      });
   }
 }

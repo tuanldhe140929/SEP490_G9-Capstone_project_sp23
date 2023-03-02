@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.SEP490_G9.dto.AuthRequest;
 import com.SEP490_G9.dto.AuthResponse;
 import com.SEP490_G9.entity.Account;
 import com.SEP490_G9.entity.RefreshToken;
@@ -28,16 +27,13 @@ import com.SEP490_G9.entity.Role;
 import com.SEP490_G9.entity.User;
 import com.SEP490_G9.entity.UserDetailsImpl;
 import com.SEP490_G9.exception.AuthRequestException;
-import com.SEP490_G9.exception.DuplicateFieldException;
-import com.SEP490_G9.exception.RefreshTokenException;
 import com.SEP490_G9.service.AccountService;
+import com.SEP490_G9.service.GoogleAuthService;
 import com.SEP490_G9.service.RoleService;
 import com.SEP490_G9.service.UserService;
-import com.SEP490_G9.service.authService.AuthService;
 import com.SEP490_G9.service.authService.EmailService;
 import com.SEP490_G9.service.authService.RefreshTokenService;
 import com.SEP490_G9.util.Constant;
-import com.SEP490_G9.util.GoogleUtil;
 import com.SEP490_G9.util.JwtTokenUtil;
 import com.SEP490_G9.util.PasswordGenerator;
 
@@ -53,8 +49,8 @@ public class UserController {
 	@Value("${jwtRefreshExpirationMs}")
 	private int REFRESH_TOKEN_VALIDITY;
 
-	@Autowired
-	AuthService authService;
+//	@Autowired
+//	AuthService authService;
 
 	@Autowired
 	EmailService emailService;
@@ -72,7 +68,7 @@ public class UserController {
 	RefreshTokenService refreshTokenService;
 
 	@Autowired
-	GoogleUtil googleUtil;
+	GoogleAuthService googleUtil;
 
 	@Autowired
 	PasswordGenerator passwordGenerator;
@@ -82,7 +78,7 @@ public class UserController {
 
 	@RequestMapping(value = "register", method = RequestMethod.POST)
 	public ResponseEntity<?> register(@Valid @RequestBody User user, HttpServletRequest request) {
-		authService.register(user);
+		
 		user.setUsername(user.getUsername().trim());
 		if (user.getUsername().contains(" ")) {
 			// invalidate input exception
@@ -183,7 +179,7 @@ public class UserController {
 
 	@GetMapping("getCurrentUser")
 	public ResponseEntity<?> getCurrentUser() {
-		User user = authService.getCurrentUser();
-		return ResponseEntity.ok(user);
+		
+		return ResponseEntity.ok(null);
 	}
 }
