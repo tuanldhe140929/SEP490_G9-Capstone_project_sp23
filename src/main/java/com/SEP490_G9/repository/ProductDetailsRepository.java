@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import com.SEP490_G9.entity.Product;
 import com.SEP490_G9.entity.ProductDetails;
 import com.SEP490_G9.entity.embeddable.ProductVersionKey;
 
@@ -16,4 +17,6 @@ public interface ProductDetailsRepository extends JpaRepository<ProductDetails, 
 	List<ProductDetails> findByProductId(Long id);
 
 	ProductDetails findFirstByProductIdOrderByLastModifiedDesc(Long productId);
+
+	boolean existsByProductAndProductVersionKeyVersion(Product product, String version);
 }

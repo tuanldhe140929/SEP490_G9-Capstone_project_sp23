@@ -81,8 +81,6 @@ public class FileIOServiceImpl implements FileIOService {
 		try {
 			is = file.getInputStream();
 			os = new FileOutputStream(dest);
-			System.out.println(dest);
-
 			byte[] buffer = new byte[1024];
 			int length;
 			while ((length = is.read(buffer)) > 0) {

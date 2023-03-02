@@ -9,6 +9,11 @@ import com.SEP490_G9.entity.ProductFile;
 import com.SEP490_G9.entity.Seller;
 import com.SEP490_G9.entity.Tag;
 import com.SEP490_G9.repository.PreviewRepository;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+
 import com.SEP490_G9.entity.Category;
 import com.SEP490_G9.entity.License;
 
@@ -18,21 +23,28 @@ public class ProductDetailsDTO {
 
 	private String version;
 
+	@NotBlank
+	@Size(min = 3, max = 30)
 	private String name;
 
+	@Size(max = 50)
 	private String description;
 
 	private String coverImage;
 
+	@Size(max = 1000)
 	private String details;
 
+	@Size(max = 200)
 	private String instruction;
 
 	private Date createdDate = new Date();
 
 	private Date lastModified = new Date();
 
-	private License license;
+	private LicenseDTO license;
+
+	private String activeVersion;
 
 	private boolean draft = true;
 
@@ -40,12 +52,13 @@ public class ProductDetailsDTO {
 
 	private Preview previewVideo;
 
-	private List<Preview> previewPictures;
+	private List<Preview> previewPictures = new ArrayList<>();
 
 	private Seller seller;
 
 	private List<Tag> tags = new ArrayList<Tag>();
 
+	@NotNull
 	private Category category;
 
 	private List<ProductFileDTO> files = new ArrayList<ProductFileDTO>();
@@ -54,7 +67,7 @@ public class ProductDetailsDTO {
 		// TODO Auto-generated constructor stub
 	}
 
-	public ProductDetailsDTO(ProductDetails productDetails, PreviewRepository previewRepository) {
+	public ProductDetailsDTO(ProductDetails productDetails) {
 		super();
 		this.id = productDetails.getProduct().getId();
 		this.version = productDetails.getVersion();
@@ -65,11 +78,14 @@ public class ProductDetailsDTO {
 		this.instruction = productDetails.getInstruction();
 		this.createdDate = productDetails.getCreatedDate();
 		this.lastModified = productDetails.getLastModified();
-		this.draft = productDetails.getProduct().isDraft();
+		this.draft = productDetails.isDraft();
 		this.price = productDetails.getPrice();
-		this.license = productDetails.getLicense();
-		this.previewVideo = getPreviewVideoSource(productDetails, previewRepository);
-		this.previewPictures = getPreviewPicturesSource(productDetails, previewRepository);
+		this.activeVersion = productDetails.getProduct().getActiveVersion();
+		if (productDetails.getLicense() != null) {
+			this.license = new LicenseDTO(productDetails.getLicense());
+		}
+		this.previewVideo = getPreviewVideoSource(productDetails);
+		this.previewPictures = getPreviewPicturesSource(productDetails);
 		this.seller = productDetails.getProduct().getSeller();
 		this.tags = productDetails.getTags();
 		this.category = productDetails.getCategory();
@@ -80,17 +96,22 @@ public class ProductDetailsDTO {
 		}
 	}
 
-	private List<Preview> getPreviewPicturesSource(ProductDetails productDetails, PreviewRepository previewRepository) {
-		List<Preview> previewPictures = previewRepository.findByProductDetailsAndType(productDetails, "picture");
-		return previewPictures;
+	private List<Preview> getPreviewPicturesSource(ProductDetails productDetails) {
+		List<Preview> ret = new ArrayList<>();
+		for (Preview preview : productDetails.getPreviews()) {
+			if (preview.getType().equalsIgnoreCase("picture"))
+				ret.add(preview);
+		}
+		return ret;
 	}
 
-	private Preview getPreviewVideoSource(ProductDetails productDetails, PreviewRepository previewRepository) {
-		List<Preview> previewVideo = previewRepository.findByProductDetailsAndType(productDetails, "video");
-		if (!previewVideo.isEmpty()) {
-			return previewVideo.get(0);
+	private Preview getPreviewVideoSource(ProductDetails productDetails) {
+		Preview ret = null;
+		for (Preview preview : productDetails.getPreviews()) {
+			if (preview.getType().equalsIgnoreCase("video"))
+				ret = preview;
 		}
-		return null;
+		return ret;
 	}
 
 	public Long getId() {
@@ -229,13 +250,20 @@ public class ProductDetailsDTO {
 		this.files = files;
 	}
 
-	public License getLicense() {
-		// TODO Auto-generated method stub
+	public LicenseDTO getLicense() {
 		return license;
 	}
 
-	public void setLicense(License license) {
+	public void setLicense(LicenseDTO license) {
 		this.license = license;
+	}
+
+	public String getActiveVersion() {
+		return activeVersion;
+	}
+
+	public void setActiveVersion(String activeVersion) {
+		this.activeVersion = activeVersion;
 	}
 
 }

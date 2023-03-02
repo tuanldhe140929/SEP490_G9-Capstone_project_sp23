@@ -12,19 +12,20 @@ import org.springframework.stereotype.Component;
 
 import com.SEP490_G9.entity.Account;
 import com.SEP490_G9.entity.Category;
+import com.SEP490_G9.entity.License;
 import com.SEP490_G9.entity.Role;
 import com.SEP490_G9.entity.Seller;
 import com.SEP490_G9.entity.Tag;
 import com.SEP490_G9.entity.User;
 import com.SEP490_G9.repository.AccountRepository;
 import com.SEP490_G9.repository.CategoryRepository;
+import com.SEP490_G9.repository.LicenseRepository;
 import com.SEP490_G9.repository.ProductRepository;
 import com.SEP490_G9.repository.RoleRepository;
 import com.SEP490_G9.repository.SellerRepository;
 import com.SEP490_G9.repository.TagRepository;
 import com.SEP490_G9.repository.UserRepository;
 import com.SEP490_G9.service.ManageProductService;
-import com.SEP490_G9.service.authService.AuthService;
 
 @Component
 public class TestDataInit implements ApplicationRunner {
@@ -48,13 +49,12 @@ public class TestDataInit implements ApplicationRunner {
 
 	@Autowired
 	private SellerRepository sellerRepository;
-	
+
 	@Autowired
-	private ManageProductService manageProductService;
+	private LicenseRepository licenseRepo;
 
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
-
 
 		roleRepository.save(new Role(Constant.ADMIN_ROLE_ID, "ROLE_ADMIN"));
 		roleRepository.save(new Role(Constant.STAFF_ROLE_ID, "ROLE_STAFF"));
@@ -132,13 +132,11 @@ public class TestDataInit implements ApplicationRunner {
 		adminAccount.setAccountLastModifed(null);
 		accountRepository.save(adminAccount);
 
-
 		tagRepository.save(new Tag(1, "2D"));
 		tagRepository.save(new Tag(2, "3D"));
 		tagRepository.save(new Tag(3, "adventure"));
 		tagRepository.save(new Tag(4, "sci-fi"));
 		tagRepository.save(new Tag(5, "sport"));
-
 
 		categoryRepository.save(new Category(1, "Sprites"));
 		categoryRepository.save(new Category(2, "Sound effects"));
@@ -152,6 +150,20 @@ public class TestDataInit implements ApplicationRunner {
 		categoryRepository.save(new Category(10, "Tileset"));
 		categoryRepository.save(new Category(11, "User interfaces"));
 		categoryRepository.save(new Category(12, "Lore"));
-		categoryRepository.save(new Category(13, "Others"));		
+		categoryRepository.save(new Category(13, "Others"));
+
+		License license2 = new License();
+		license2.setId(1);
+		license2.setName("All Rights Reserved");
+		license2.setAcrynosm("");
+		license2.setDetails("The copyright owner exclusive rights to control the use, distribution, and modification of their work, and anyone who wishes to use the work in any way must obtain permission from the copyright owner. This license is the most restrictive and does not allow for any form of sharing, copying, or modification without explicit permission from the copyright holder.");
+		licenseRepo.save(license2);
+		
+		License license = new License();
+		license.setId(2);
+		license.setName("Attribution-NonCommercial");
+		license.setAcrynosm("CC BY-NC");
+		license.setDetails("Others are allowed to use, distribute, and build upon the licensed work for non-commercial purposes, as long as they give appropriate credit to the original creator. However, if someone wants to use the work for commercial purposes, they must first obtain permission from the copyright holder");
+		licenseRepo.save(license);
 	}
 }

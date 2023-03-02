@@ -15,6 +15,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -133,7 +134,7 @@ public class CommonExceptionHandler {
 		errorResponse.setStatus(HttpStatus.FORBIDDEN);
 		return errorResponse;
 	}
-	
+
 	@ExceptionHandler(HttpMessageNotReadableException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public final ErrorResponse handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
@@ -144,7 +145,7 @@ public class CommonExceptionHandler {
 		errorResponse.setStatus(HttpStatus.BAD_REQUEST);
 		return errorResponse;
 	}
-	
+
 	@ExceptionHandler(HttpMessageNotWritableException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public final ErrorResponse handleHttpMessageNotReadableException(HttpMessageNotWritableException ex) {
@@ -155,6 +156,7 @@ public class CommonExceptionHandler {
 		errorResponse.setStatus(HttpStatus.BAD_REQUEST);
 		return errorResponse;
 	}
+
 	@ExceptionHandler(FileNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	public final ErrorResponse handleHttpMessageNotReadableException(FileNotFoundException ex) {
@@ -165,6 +167,7 @@ public class CommonExceptionHandler {
 		errorResponse.setStatus(HttpStatus.NOT_FOUND);
 		return errorResponse;
 	}
+
 	@ExceptionHandler(IOException.class)
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	public final ErrorResponse handleHttpMessageNotReadableException(IOException ex) {
@@ -173,6 +176,17 @@ public class CommonExceptionHandler {
 		msgs.add(ex.getMessage());
 		errorResponse.setMessages(msgs);
 		errorResponse.setStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+		return errorResponse;
+	}
+
+	@ExceptionHandler(MissingServletRequestParameterException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public final ErrorResponse exceptionResolve(MissingServletRequestParameterException ex) {
+		ErrorResponse errorResponse = new ErrorResponse();
+		List<String> msgs = new ArrayList<>();
+		msgs.add(ex.getMessage());
+		errorResponse.setMessages(msgs);
+		errorResponse.setStatus(HttpStatus.BAD_REQUEST);
 		return errorResponse;
 	}
 //	@ExceptionHandler({ CustomException.class })
