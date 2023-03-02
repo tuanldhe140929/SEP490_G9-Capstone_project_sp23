@@ -16,6 +16,7 @@ import com.SEP490_G9.entity.Role;
 import com.SEP490_G9.entity.Seller;
 import com.SEP490_G9.entity.Tag;
 import com.SEP490_G9.entity.User;
+import com.SEP490_G9.entity.ViolationType;
 import com.SEP490_G9.repository.AccountRepository;
 import com.SEP490_G9.repository.CategoryRepository;
 import com.SEP490_G9.repository.ProductRepository;
@@ -23,6 +24,7 @@ import com.SEP490_G9.repository.RoleRepository;
 import com.SEP490_G9.repository.SellerRepository;
 import com.SEP490_G9.repository.TagRepository;
 import com.SEP490_G9.repository.UserRepository;
+import com.SEP490_G9.repository.ViolationTypeRepository;
 import com.SEP490_G9.service.ManageProductService;
 import com.SEP490_G9.service.authService.AuthService;
 
@@ -48,6 +50,9 @@ public class TestDataInit implements ApplicationRunner {
 
 	@Autowired
 	private SellerRepository sellerRepository;
+	
+	@Autowired
+	private ViolationTypeRepository violationTypeRepository;
 	
 	@Autowired
 	private ManageProductService manageProductService;
@@ -152,6 +157,14 @@ public class TestDataInit implements ApplicationRunner {
 		categoryRepository.save(new Category(10, "Tileset"));
 		categoryRepository.save(new Category(11, "User interfaces"));
 		categoryRepository.save(new Category(12, "Lore"));
-		categoryRepository.save(new Category(13, "Others"));		
+		categoryRepository.save(new Category(13, "Others"));
+		
+//		violationTypeRepository.save(new ViolationType("Kích động thù ghét"));
+//		violationTypeRepository.save(new ViolationType("Thông tin sai sự thật"));
+//		violationTypeRepository.save(new ViolationType("Nội dung phản cảm"));
+//		violationTypeRepository.save(new ViolationType("Nội dung nguy hiểm"));
+//		violationTypeRepository.save(new ViolationType("Lừa đảo"));
+//		violationTypeRepository.save(new ViolationType("Spam"));
+//		violationTypeRepository.save(new ViolationType("Vi phạm bản quyền"));
 	}
 }

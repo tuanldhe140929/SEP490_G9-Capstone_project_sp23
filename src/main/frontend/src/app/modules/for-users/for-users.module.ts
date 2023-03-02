@@ -1,5 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatSelectModule } from '@angular/material/select';
+import { MatRadioModule } from '@angular/material/radio';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { ForUsersRoutingModule } from './for-users-routing.module';
 import { HomepageComponent } from './homepage/homepage.component';
@@ -15,6 +19,7 @@ import { CartComponent } from './my-cart/cart/cart.component';
 import { CheckOutComponent } from './check-out/check-out.component';
 import { CheckoutComponent } from './check-out/checkout/checkout.component';
 import { NotFoundComponent } from './not-found/not-found.component';
+import { ReportProductComponent } from './product-details/report-product/report-product.component';
 
 
 @NgModule({
@@ -32,10 +37,15 @@ import { NotFoundComponent } from './not-found/not-found.component';
     CheckOutComponent,
     CheckoutComponent,
     NotFoundComponent,
+    ReportProductComponent,
   ],
   imports: [
     CommonModule,
-    ForUsersRoutingModule
+    ForUsersRoutingModule,
+    MatDialogModule,
+    MatSelectModule,
+    MatRadioModule,
+    ReactiveFormsModule
   ]
 })
 export class ForUsersModule { }

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { Preview } from '../../../DTOS/Preview';
 import { Product } from '../../../DTOS/Product';
@@ -7,6 +8,7 @@ import { User } from '../../../DTOS/User';
 import { AuthService } from '../../../services/auth.service';
 import { CommonService } from '../../../services/common.service';
 import { StorageService } from '../../../services/storage.service';
+import { ReportProductComponent } from './report-product/report-product.component';
 
 @Component({
   selector: 'app-product-details',
@@ -27,7 +29,8 @@ export class ProductDetailsComponent implements OnInit {
     private commonService: CommonService,
     private router: Router,
     private storageService: StorageService,
-    private authService: AuthService) {
+    private authService: AuthService,
+    private dialog: MatDialog) {
   }
 
   ngOnInit(): void {
@@ -206,7 +209,13 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   openReportModal() {
-
+    const dialogRef = this.dialog.open(ReportProductComponent,{
+      height: '80%',
+      width: '50%'
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
   }
 
 
