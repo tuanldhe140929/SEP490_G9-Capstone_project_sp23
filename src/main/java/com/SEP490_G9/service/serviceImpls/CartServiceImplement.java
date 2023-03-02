@@ -46,7 +46,7 @@ public class CartServiceImplement implements CartService {
 	@Autowired
 	ProductRepository productRepository;
 	@Autowired
-	ProductDetailsRepository productDetailsRepository ;
+	ProductDetailsRepository productDetailsRepository;
 	@Autowired
 	CartRepository cartRepository;
 	@Autowired
@@ -58,41 +58,40 @@ public class CartServiceImplement implements CartService {
 	@Autowired
 	UserRepository userRepo;
 
-
 	@Override
-		public CartDTO addProduct(Long productId) {
-		    ProductDetails productDetails = productDetailsRepository.
-		    		findFirstByProductIdOrderByCreatedDateDesc(productId);
-		    Cart cart = getCurrentCart();
-		    
-		    CartItem item = new CartItem(cart, productDetails);
-		    
-		    cart.addItem(item);
-		    cartItemRepository.save(item);
-		    CartDTO cartDTO = new CartDTO(getCurrentCart());
-		    return cartDTO;
-		}
+	public CartDTO addProduct(Long productId) {
+		ProductDetails productDetails = productDetailsRepository.findFirstByProductIdOrderByCreatedDateDesc(productId);
+		Cart cart = getCurrentCart();
+
+		CartItem item = new CartItem(cart, productDetails);
+
+		cart.addItem(item);
+		cartItemRepository.save(item);
+		CartDTO cartDTO = new CartDTO(getCurrentCart());
+		return cartDTO;
+	}
 
 	@Override
 	public CartDTO removeProduct(Long productId) {
-	    Cart cart = getCurrentCart();
-	    CartItem itemToRemove = null;
-	    for (CartItem item : cart.getItems()) {
-	    	if (item.getProductDetails().getProductVersionKey().getProductId() == productId) {
-	            itemToRemove = item;
-	            break;
-	        }
-	    }
-	    if (itemToRemove != null) {
-	        cart.getItems().remove(itemToRemove);
-	        cartItemRepository.delete(itemToRemove);
-	    } else {
-	        throw new ResourceNotFoundException("Product with id " + productId + " not found in cart.", null,
-	                itemToRemove);
-	    }
-	    CartDTO cartDto = new CartDTO(getCurrentCart());
-	    return cartDto;
+		Cart cart = getCurrentCart();
+		CartItem itemToRemove = null;
+		for (CartItem item : cart.getItems()) {
+			if (item.getProductDetails().getProductVersionKey().getProductId() == productId) {
+				itemToRemove = item;
+				break;
+			}
+		}
+		if (itemToRemove != null) {
+			cart.getItems().remove(itemToRemove);
+			cartItemRepository.delete(itemToRemove);
+		} else {
+			throw new ResourceNotFoundException("Product with id " + productId + " not found in cart.", null,
+					itemToRemove);
+		}
+		CartDTO cartDto = new CartDTO(getCurrentCart());
+		return cartDto;
 	}
+
 	public CartDTO removeAllProduct(Long productId) {
 		Cart cart = getCurrentCart();
 		CartItem itemToRemove = null;
@@ -120,50 +119,51 @@ public class CartServiceImplement implements CartService {
 
 	private Cart getCurrentCart() {
 		// Get the currently user's account information
-	    Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
-	            .getAccount();
-	 // Retrieve User based on the account ID
-	    User user = userRepo.findById(account.getId()).get();
-	 // Get the newest cart for this user
-	    Cart cart = cartRepository.findFirstByUserOrderByIdDesc(user);
+		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
+				.getAccount();
+		// Retrieve User based on the account ID
+		User user = userRepo.findById(account.getId()).get();
+		// Get the newest cart for this user
+		Cart cart = cartRepository.findFirstByUserOrderByIdDesc(user);
 
-	    Cart retCart = null;
-	 // If the user has no existing cart, create a new one and save it
-	    if (cart == null) {
-	        retCart = cartRepository.save(new Cart(user));
-	    } else {
-	    	// Check if any items in the cart need to be updated due to changes in product details
-	    				boolean cartUpdated = false;
-	       
-	        List<CartItem> updatedItems = new ArrayList<>();
-	        for (CartItem item : cart.getItems()) {
-	        	// Retrieve the latest version of the product based on its ID
-	            Long productId = item.getProductDetails().getProductVersionKey().getProductId();
-	            String version = item.getProductDetails().getProductVersionKey().getVersion();
-	         
-	            ProductDetails latestProductDetails = productDetailsRepository.findFirstByProductIdOrderByCreatedDateDesc(productId);
-	         // If the version of the product in the cart is outdated, update it
-	            if (latestProductDetails != null && !latestProductDetails.getProductVersionKey().getVersion().equals(version)) {
-	                // Update the product in the cart to the latest version
-	                item.getProductDetails().setVersion(latestProductDetails.getProductVersionKey().getVersion());
-	                item.getProductDetails().setPrice(latestProductDetails.getPrice());
-	                updatedItems.add(item);
-	                cartUpdated = true;
-	            }
-	        }
-	        if (cartUpdated) {
-	            cart.setItems(updatedItems);
-	         // If any items were updated, save the cart
-	            retCart = cartRepository.save(cart);
-	        } else {
-	        	// lâu ko làm quên mẹ cái này để chi rồi
-	            retCart = checkTransactionAndReturnCart(cart, user);
-	        }
-	    }
-	    return retCart;
+		Cart retCart = null;
+		// If the user has no existing cart, create a new one and save it
+		if (cart == null) {
+			retCart = cartRepository.save(new Cart(user));
+		} else {
+			// Check if any items in the cart need to be updated due to changes in product
+			// details
+			boolean cartUpdated = false;
+
+			List<CartItem> updatedItems = new ArrayList<>();
+			for (CartItem item : cart.getItems()) {
+				// Retrieve the latest version of the product based on its ID
+				Long productId = item.getProductDetails().getProductVersionKey().getProductId();
+				String version = item.getProductDetails().getProductVersionKey().getVersion();
+
+				ProductDetails latestProductDetails = productDetailsRepository
+						.findFirstByProductIdOrderByCreatedDateDesc(productId);
+				// If the version of the product in the cart is outdated, update it
+				if (latestProductDetails != null
+						&& !latestProductDetails.getProductVersionKey().getVersion().equals(version)) {
+					// Update the product in the cart to the latest version
+					item.getProductDetails().setVersion(latestProductDetails.getProductVersionKey().getVersion());
+					item.getProductDetails().setPrice(latestProductDetails.getPrice());
+					updatedItems.add(item);
+					cartUpdated = true;
+				}
+			}
+			if (cartUpdated) {
+				cart.setItems(updatedItems);
+				// If any items were updated, save the cart
+				retCart = cartRepository.save(cart);
+			} else {
+				// lâu ko làm quên mẹ cái này để chi rồi
+				retCart = checkTransactionAndReturnCart(cart, user);
+			}
+		}
+		return retCart;
 	}
-
-
 
 	@Override
 	public CartDTO getCurrentCartDTO() {
@@ -178,7 +178,7 @@ public class CartServiceImplement implements CartService {
 		return cart;
 	}
 
-	private Cart checkTransactionAndReturnCart(Cart cart,User user) {
+	private Cart checkTransactionAndReturnCart(Cart cart, User user) {
 		Transaction transactions = transactionRepository.findByCartId(cart.getId());
 		if (transactions == null) {
 			return cart;
@@ -190,7 +190,7 @@ public class CartServiceImplement implements CartService {
 	}
 
 	@Override
-	public CartDTO checkOut( Account account) {
+	public CartDTO checkOut(Account account) {
 		// Validate that the user exists
 		account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
 				.getAccount();
@@ -207,7 +207,7 @@ public class CartServiceImplement implements CartService {
 			return null;
 		}
 
-		// Create  new transaction
+		// Create new transaction
 		Transaction transaction = new Transaction();
 
 		// Set the transaction details

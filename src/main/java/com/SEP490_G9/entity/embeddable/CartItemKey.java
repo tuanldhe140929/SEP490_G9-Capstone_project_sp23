@@ -16,10 +16,10 @@ public class CartItemKey implements Serializable {
 		// TODO Auto-generated constructor stub
 	}
 
-	public CartItemKey(Long cartId, ProductVersionKey productVersionKey) {
+	public CartItemKey(Long cartId, String key) {
 		super();
 		this.cartId = cartId;
-		this.productVersionKey = productVersionKey;
+		this.
 	}
 
 	public Long getCartId() {

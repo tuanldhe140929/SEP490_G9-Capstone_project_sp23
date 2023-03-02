@@ -6,12 +6,12 @@ import com.SEP490_G9.entity.CartItem;
 
 public class CartItemDTO {
 	
-	private ProductDetails product;
+	private ProductDetailsDTO product;
 	private Long cartId;
 
 	public CartItemDTO(CartItem cartItem) {
 		super();
-		this.product= cartItem.getProductDetails();
+		this.product= cartItem.;
 		this.cartId= cartItem.getCart().getId();
 
 	}
