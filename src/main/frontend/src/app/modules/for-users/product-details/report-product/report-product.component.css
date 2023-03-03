@@ -1,0 +1,18 @@
+*{
+    color: black;
+    background-color: white;
+}
+
+mat-radio-button{
+    color: black;
+}
+
+textarea{
+    min-height: 200px;
+    width: 100%;
+}
+
+.addReportContainer{
+    padding: 10px;
+    align-items: center;
+}

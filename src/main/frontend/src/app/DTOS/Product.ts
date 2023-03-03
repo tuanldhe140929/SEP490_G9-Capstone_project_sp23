@@ -17,12 +17,12 @@ export class Product {
   instruction: string;
   createdDate: Date
   lastModified: Date
-/*  license: License;*/
+ license: License;
   draft: boolean;
   price: number;
   previewVideo: Preview;
   previewPictures: Preview[];
-
+  activeVersion: string;
   files: ProductFile[];
   seller: Seller;
 
@@ -37,8 +37,9 @@ export class Product {
     this.price = 0;
     this.seller = new Seller();
     this.category = new Category();
-/*    this.license = new License();*/
+    this.license = new License();
     this.files = [];
+    this.activeVersion = '';
     this.tags = [];
     this.previewVideo = new Preview;
     this.previewPictures = [];

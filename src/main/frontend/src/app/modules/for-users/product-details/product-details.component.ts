@@ -1,12 +1,16 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
+import { AuthResponse } from '../../../DTOS/AuthResponse';
 import { Preview } from '../../../DTOS/Preview';
 import { Product } from '../../../DTOS/Product';
 import { Tag } from '../../../DTOS/Tag';
 import { User } from '../../../DTOS/User';
 import { AuthService } from '../../../services/auth.service';
 import { CommonService } from '../../../services/common.service';
+import { ProductService } from '../../../services/product.service';
 import { StorageService } from '../../../services/storage.service';
+import { ReportProductComponent } from './report-product/report-product.component';
 
 @Component({
   selector: 'app-product-details',
@@ -18,6 +22,7 @@ export class ProductDetailsComponent implements OnInit {
   own: boolean = false;
 
   owner: User = new User;
+  visitorAuth: AuthResponse = new AuthResponse;
   visitor: User = new User;
   product: Product = new Product;
   totalSize: number | undefined;
@@ -27,33 +32,21 @@ export class ProductDetailsComponent implements OnInit {
     private commonService: CommonService,
     private router: Router,
     private storageService: StorageService,
-    private authService: AuthService) {
+    private authService: AuthService,
+    private dialog: MatDialog,
+    private productService: ProductService) {
+
   }
 
   ngOnInit(): void {
-    this.getOwner(); //=> getProduct()
+    this.getProduct();
+    
     if (this.storageService.isLoggedIn()) {
       this.getVisitor();
     }
   }
 
-  getOwner() {
-    var username = this.activatedRoute.snapshot.paramMap.get('username')?.toString();
-    if (username) {
-      this.commonService.getUserInfoByUsername(username).subscribe(
-        data => {
-          this.owner = data;
-          console.log(data);
-          this.getSellerTotalProductCount(this.owner.id);
-          this.getProfileImage();
-          this.getProduct();
-        },
-        error => {
-          this.router.navigate(['error']);
-        }
-      );
-    }
-  }
+
   getProfileImage() {
     var imageUrl = '';
     if (this.owner.avatar != null && this.owner.avatar != '') {
@@ -65,7 +58,7 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   getSellerTotalProductCount(sellerId: number) {
-    this.commonService.getSellerTotalProductCount(sellerId).subscribe(
+    this.productService.getProductsCountBySellerId(sellerId).subscribe(
       (data) => {
         this.sellerTotalProductCount = data;
       },
@@ -76,31 +69,26 @@ export class ProductDetailsComponent implements OnInit {
     }
 
   getVisitor() {
-    this.authService.getCurrentLogedInUser().subscribe(
-      data => {
-        this.visitor = data;
-        if (this.visitor.id == this.owner.id) {
-          this.own = true;
-        }
-
-        this.checkIfPurchased();
-      },
-      error => {
-        console.log(error);
-      })
+    this.visitorAuth = this.storageService.getAuthResponse();
+    this.checkIfPurchased();
+    
   }
 
   getProduct() {
-    var productId = this.activatedRoute.snapshot.paramMap.get('productId');
-    if (productId) {
-      this.commonService.getProductByIdAndUserId(+productId, this.owner.id).subscribe(
+    var productIdAndName = this.activatedRoute.snapshot.paramMap.get('productId');
+    if (productIdAndName) {
+      var productId = productIdAndName.split("-")[0];
+
+      this.productService.getProductById(+productId).subscribe(
         data => {
           this.product = data;
           console.log(this.product);
           if (this.DescriptionTab) {
             this.DescriptionTab.innerHTML = this.product.details;
           }
-
+          this.owner = data.seller;
+          this.getSellerTotalProductCount(this.owner.id);
+          this.getProfileImage();
         },
         error => {
           console.log(error);
@@ -117,12 +105,17 @@ export class ProductDetailsComponent implements OnInit {
 
   }
 
+
+  onChooseImage(preview: Preview): void {
+
+  }
+
   hasPreviewPictures():boolean {
     return true;
   }
 
   getPreviewPictureSource(preview: Preview): string {
-    return 'http://localhost:9000/public/serveMedia/servePreviewPicture/' + preview.id;
+    return 'http://localhost:9000/public/serveMedia/image?source=' + preview.source.replace(/\\/g, '/');
   }
 
   get TotalSize() {
@@ -158,13 +151,6 @@ export class ProductDetailsComponent implements OnInit {
       return 'Không'
   }
 
-  onChooseImage(preview: Preview): void {
-
-  }
-
-
-
-
   formatFileSize(fileSize: number) {
     if (fileSize < 1000000) {
       return fileSize / 1000 + 'Kb';
@@ -195,18 +181,21 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   currentSlide(index:number) {
-
       for (let i = 0; i < this.Dots.length; i++) {
-      
         this.Dots[i].className = this.Dots[i].className.replace(" active", "");
-
       }
-
     this.Dots[index].className += " active";
   }
 
-  openReportModal() {
 
+  openReportModal() {
+    const dialogRef = this.dialog.open(ReportProductComponent,{
+      height: '80%',
+      width: '50%'
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
   }
 
 
@@ -218,4 +207,5 @@ export class ProductDetailsComponent implements OnInit {
         this.router.navigate(['/collection'], navigationExtras);
       */
   }
+
 }

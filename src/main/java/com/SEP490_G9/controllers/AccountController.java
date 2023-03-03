@@ -33,7 +33,6 @@ import com.SEP490_G9.entity.UserDetailsImpl;
 import com.SEP490_G9.exception.RefreshTokenException;
 import com.SEP490_G9.exception.ResourceNotFoundException;
 import com.SEP490_G9.service.AccountService;
-import com.SEP490_G9.service.authService.AuthService;
 import com.SEP490_G9.service.authService.EmailService;
 import com.SEP490_G9.service.authService.RefreshTokenService;
 import com.SEP490_G9.util.JwtTokenUtil;
@@ -48,9 +47,6 @@ import jakarta.validation.Valid;
 @RequestMapping(value="account")
 @RestController
 public class AccountController {
-	@Autowired
-	AuthService authService;
-
 	@Autowired
 	EmailService emailService;
 
@@ -73,6 +69,7 @@ public class AccountController {
 	PasswordGenerator passwordGenerator;
 	@RequestMapping(value = "login", method = RequestMethod.POST)
 	public ResponseEntity<?> login(@Valid @RequestBody AuthRequest authRequest, HttpServletResponse response) {
+		System.out.println("test tren");
 		AuthResponse authResponse = null;
 		
 		Authentication authentication = authenticationProvider.authenticate(
@@ -106,7 +103,7 @@ public class AccountController {
 		
 		authResponse = new AuthResponse(account.getEmail(), jwt, roles);
 		
-		
+		System.out.println("test duoi");
 		return ResponseEntity.ok(authResponse);
 	}
 

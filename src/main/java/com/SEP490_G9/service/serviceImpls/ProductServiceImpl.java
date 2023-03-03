@@ -10,16 +10,12 @@ import com.SEP490_G9.entity.Seller;
 import com.SEP490_G9.exception.ResourceNotFoundException;
 import com.SEP490_G9.repository.ProductRepository;
 import com.SEP490_G9.service.ProductService;
+
 @Service
 public class ProductServiceImpl implements ProductService {
 
 	@Autowired
 	ProductRepository productRepository;
-
-	@Override
-	public List<Product> getProductsBySeller(Seller seller) {
-		return productRepository.findBySellerId(seller.getId());
-	}
 
 	@Override
 	public Product createProduct(Product product) {
@@ -43,10 +39,28 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public Product getProductByIdAndSeller(Long productId, Seller currentSeller) {
 		Product product = productRepository.findById(productId).get();
-		if(product==null||product.getSeller()!=currentSeller) {
+		if (product == null || product.getSeller() != currentSeller) {
 			throw new ResourceNotFoundException("product id", productId.toString(), currentSeller);
 		}
 		return product;
 	}
 
+	@Override
+	public List<Product> getProductsBySellerId(Long sellerId) {
+		return productRepository.findBySellerId(sellerId);
+	}
+
+	@Override
+	public boolean setActiveVersion(Long productId, String version) {
+		Product product = productRepository.findById(productId).orElseThrow();
+		product.setActiveVersion(version);
+		productRepository.save(product);
+		return true;
+	}
+
+	@Override
+	public Product getProductById(Long id) {
+		Product product = productRepository.findById(id).orElseThrow();
+		return product;
+	}
 }

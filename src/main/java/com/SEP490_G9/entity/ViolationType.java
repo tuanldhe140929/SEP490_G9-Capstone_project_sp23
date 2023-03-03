@@ -29,6 +29,11 @@ public class ViolationType {
 	public ViolationType() {
 
 	}
+	
+	public ViolationType(String name) {
+		this.name = name;
+	}
+	
 	public ViolationType(String name, List<Report> report) {
 		this.name = name;
 		this.reports = report;

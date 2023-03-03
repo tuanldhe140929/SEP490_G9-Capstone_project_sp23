@@ -53,7 +53,6 @@ public class ServeMediaService implements ServeMediaServiceImpl {
 	
 	private ResponseEntity<ResourceRegion> getVideoRegion(String rangeHeader, String directory) throws IOException {
 		FileUrlResource videoResource = new FileUrlResource(directory);
-		System.out.println(videoResource.getFilename());
 		ResourceRegion resourceRegion = getResourceRegion(videoResource, rangeHeader);
 
 		return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
@@ -63,7 +62,6 @@ public class ServeMediaService implements ServeMediaServiceImpl {
 
 	private ResourceRegion getResourceRegion(UrlResource video, String httpHeaders) throws IOException {
 		ResourceRegion resourceRegion = null;
-		System.out.println(video.getFilename());
 		long contentLength = video.contentLength();
 		int fromRange = 0;
 		int toRange = 0;

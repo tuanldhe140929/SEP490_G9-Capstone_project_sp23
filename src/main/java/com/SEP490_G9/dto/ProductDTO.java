@@ -12,8 +12,6 @@ public class ProductDTO {
 
 	private Long id;
 
-	private boolean draft = true;
-
 	private boolean enabled = true;
 
 	private Seller seller;
@@ -22,12 +20,11 @@ public class ProductDTO {
 
 	public ProductDTO(Product product, PreviewRepository previewRepository) {
 		this.id = product.getId();
-		this.draft = product.isDraft();
 		this.enabled = product.isEnabled();
 		this.seller = product.getSeller();
 		if (product.getProductDetails()!=null & product.getProductDetails().size() >0) {
 			for (ProductDetails pd : product.getProductDetails()) {
-				this.productDetails.add(new ProductDetailsDTO(pd, previewRepository));
+				this.productDetails.add(new ProductDetailsDTO(pd));
 			}
 		}
 	}
@@ -38,14 +35,6 @@ public class ProductDTO {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public boolean isDraft() {
-		return draft;
-	}
-
-	public void setDraft(boolean draft) {
-		this.draft = draft;
 	}
 
 	public boolean isEnabled() {

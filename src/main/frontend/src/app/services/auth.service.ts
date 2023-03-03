@@ -41,7 +41,7 @@ export class AuthService {
   constructor(private http: HttpClient) { }
 
   login(body: any): Observable<any> {
-    return this.http.post<any>('http://localhost:9000/public/auth/login', body, httpOptions);
+    return this.http.post<any>('http://localhost:9000/account/login', body, httpOptions);
   }
 
   register(body: any): Observable<string> {
