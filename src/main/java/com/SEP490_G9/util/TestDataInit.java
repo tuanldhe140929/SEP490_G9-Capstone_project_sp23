@@ -56,8 +56,6 @@ public class TestDataInit implements ApplicationRunner {
 	private ViolationTypeRepository violationTypeRepository;
 	
 	@Autowired
-	private ManageProductService manageProductService;
-
 	private LicenseRepository licenseRepo;
 
 

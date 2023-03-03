@@ -69,6 +69,7 @@ public class AccountController {
 	PasswordGenerator passwordGenerator;
 	@RequestMapping(value = "login", method = RequestMethod.POST)
 	public ResponseEntity<?> login(@Valid @RequestBody AuthRequest authRequest, HttpServletResponse response) {
+		System.out.println("test tren");
 		AuthResponse authResponse = null;
 		
 		Authentication authentication = authenticationProvider.authenticate(
@@ -102,7 +103,7 @@ public class AccountController {
 		
 		authResponse = new AuthResponse(account.getEmail(), jwt, roles);
 		
-		
+		System.out.println("test duoi");
 		return ResponseEntity.ok(authResponse);
 	}
 
