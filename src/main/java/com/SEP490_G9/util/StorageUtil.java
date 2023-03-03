@@ -12,7 +12,7 @@ public class StorageUtil {
 	 */
 
 
-	private String location = "C:\\Users\\Asus\\Desktop\\Capstone Project\\Project_Data\\";
+	private String location = "D:\\eclipse\\SEP490_G9_Datas";
 
 
 	public String getLocation() {

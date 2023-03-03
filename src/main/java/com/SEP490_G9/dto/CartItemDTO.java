@@ -13,7 +13,7 @@ public class CartItemDTO {
 	public CartItemDTO(CartItem cartItem, PreviewRepository previewRepo) {
 		super();
 
-		ProductDetailsDTO pdd = new ProductDetailsDTO(cartItem.getProductDetails(), previewRepo);
+		ProductDetailsDTO pdd = new ProductDetailsDTO(cartItem.getProductDetails());
 		this.product= pdd;
 
 		this.cartId= cartItem.getCart().getId();
