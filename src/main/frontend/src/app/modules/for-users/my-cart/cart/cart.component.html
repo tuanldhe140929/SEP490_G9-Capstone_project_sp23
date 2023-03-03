@@ -1,4 +1,5 @@
 <!-- ============== SECTION PAGETOP ============== -->
+
 <section class="bg-primary padding-y-sm">
     <div class="container">
       <ol class="breadcrumb ondark mb-0">
@@ -34,7 +35,11 @@
                 <figcaption class="info">
                   <a href="#" class="title">{{cartitem.product.name}}</a>
                   <p class="text-muted">Category {{cartitem.product.category.name}}</p>
+                  
                 </figcaption>
+                <button (click)="RemoveItem(cartitem)" class="btn btn-light text-danger" style=" position: absolute;
+                
+                right:0;">xóa bỏ</button>
               </figure>
             </div>
              
@@ -44,12 +49,17 @@
                 <var class="price h6">Price {{cartitem.product.price}}</var>  <br>
                 <small class="text-muted"> $460.00 / per item </small> 
               </div> <!-- price-wrap .// -->
+              
             </div>
             <div class="col-lg col-sm-4">
+            
+
+
               <div class="float-lg-end">
                
-                <button (click)="RemoveItem(cartitem)" class="btn btn-light text-danger"> xóa bỏ</button>
+               
               </div>
+             
             </div>
           </dl>
           </article> <!-- row.// -->
