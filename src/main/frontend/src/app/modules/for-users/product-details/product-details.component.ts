@@ -11,6 +11,7 @@ import { CommonService } from '../../../services/common.service';
 import { ProductService } from '../../../services/product.service';
 import { StorageService } from '../../../services/storage.service';
 import { ReportProductComponent } from './report-product/report-product.component';
+import { CartService } from 'src/app/services/cart.service'; 
 
 @Component({
   selector: 'app-product-details',
@@ -23,8 +24,8 @@ export class ProductDetailsComponent implements OnInit {
 
   owner: User = new User;
   visitorAuth: AuthResponse = new AuthResponse;
-  visitor: User = new User;
-  product: Product = new Product;
+  visitor: User = new User;//thằng đang xem trang ấy
+  product: Product = new Product;//hiển thị
   totalSize: number | undefined;
   sellerTotalProductCount = 0;
   dots: number[] = [0];
@@ -34,10 +35,14 @@ export class ProductDetailsComponent implements OnInit {
     private storageService: StorageService,
     private authService: AuthService,
     private dialog: MatDialog,
-    private productService: ProductService) {
+    
+    private productService: ProductService,
+    private cartService: CartService) {
 
-  }
-
+  } 
+  
+  
+  
   ngOnInit(): void {
     this.getProduct();
     
@@ -207,5 +212,24 @@ export class ProductDetailsComponent implements OnInit {
         this.router.navigate(['/collection'], navigationExtras);
       */
   }
+  addToCart() {
+    if (!this.storageService.isLoggedIn()) {
+      // If user is not logged in, redirect to login page
+      this.router.navigate(['/login']);
+      return;
+    }
+  
+    this.cartService.addToCart(this.product.id).subscribe(
+      () => {
+        // Success, show a message to the user
+        alert('Sản phẩm đã được thêm vào giỏ hàng.');
+      },
+      () => {
+        // Error, show an error message to the user
+        alert('Đã có lỗi xảy ra, vui lòng thử lại sau.');
+      }
+    );
+  }
+  
 
 }
