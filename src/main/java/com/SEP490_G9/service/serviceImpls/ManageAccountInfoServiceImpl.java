@@ -75,7 +75,7 @@ public class ManageAccountInfoServiceImpl implements ManageAccountInfoService {
 			File coverImageDir = new File(storageUtil.getLocation() + profileImageLocation);
 			coverImageDir.mkdirs();
 			fileIOService.store(profileImage, profileImageLocation);
-			user.setImage(profileImageLocation+ profileImage.getOriginalFilename());
+			user.setAvatar(profileImageLocation+ profileImage.getOriginalFilename());
 			userRepo.save(user);
 			return user.getAvatar();
 		}

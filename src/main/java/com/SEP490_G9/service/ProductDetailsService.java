@@ -21,4 +21,5 @@ public interface ProductDetailsService {
 	public ProductDetails getByIdAndVersion(Long productId, String activeVersion);
 
 	public ProductDetails updateProductDetailsStatus(ProductDetails edited);
+	
 }

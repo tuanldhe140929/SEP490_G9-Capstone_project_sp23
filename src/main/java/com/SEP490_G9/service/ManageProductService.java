@@ -20,6 +20,8 @@ import com.SEP490_G9.entity.Tag;
 public interface ManageProductService {
 	public List<ProductDetailsDTO> getProductDetailsDTOsBySeller();
 	
+	public Product getProductById();
+	
 	public Product createNewProduct();
 	
 	public Product createNewProductDetails(Long productId, String version);

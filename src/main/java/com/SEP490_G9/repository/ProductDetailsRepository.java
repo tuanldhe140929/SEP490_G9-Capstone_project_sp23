@@ -19,4 +19,5 @@ public interface ProductDetailsRepository extends JpaRepository<ProductDetails, 
 	ProductDetails findFirstByProductIdOrderByLastModifiedDesc(Long productId);
 
 	boolean existsByProductAndProductVersionKeyVersion(Product product, String version);
+	
 }

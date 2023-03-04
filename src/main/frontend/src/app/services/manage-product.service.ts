@@ -16,6 +16,9 @@ const licenseBaseUrl = "http://localhost:9000/license";
   providedIn: 'root'
 })
 export class ManageProductService {
+  getProductById(): Observable<Product>{
+    return this.httpClient.get<Product>("http://localhost:9000/product/getProductById")
+  }
   activeVersion(version: Product): Observable<boolean> {
     return this.httpClient.post<boolean>(baseUrl + '/activeVersion', null, {
       params: {

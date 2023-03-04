@@ -6,7 +6,8 @@ import { User } from '../DTOS/User';
 
 // import * as socketIo from 'socket.io-client'
 
-import * as socketIo from 'socket.io-client'
+// import * as socketIo from 'socket.io-client';
+
 import { Category } from '../DTOS/Category';
 
 

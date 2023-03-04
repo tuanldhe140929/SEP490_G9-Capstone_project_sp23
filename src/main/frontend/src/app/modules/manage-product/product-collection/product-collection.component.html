@@ -4,6 +4,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="../product-collection/product-collection.component.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/fontawesome.min.css"></script>
 </head>
 
 <body>
@@ -13,26 +14,30 @@
                 <div class="col-md-12">
                     <h3 class="tittleProduct">Product List</h3>
                 </div>
+                <div class="Addproduct">
+                    <button>Add product</button>
+                </div>
             </div>
             <div class="row">
                 <div class="col-md-4">
-                    <div class="product-Box">
-                        <div class="product-img"> <img src="../product-collection/Cao Sơn á á á á á á á á á .png"
+                    <div class="product-Box"*ngFor ='let item of ps'>
+                        <div class="product-img"  > <img src="../product-collection/Cao Sơn á á á á á á á á á .png"
                                 alt="Anh ko hien"></div>
                         <div class="product-content">
-                            <h3>Heading 1</h3>
+                            <h3>{{ item.name }}</h3>
                             <p></p>
                             <div class="priceTag">
-                                Rs.300
+                                 {{item.price}}
                             </div>
                             <div class="contentbox">
-                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus similique
-                                    laboriosam deleniti voluptatem unde fuga repellendus? Doloremque assumenda rem modi
-                                    harum, alias tenetur placeat fugit sint, porro ex iste vero?</p>
+                                <p>{{item.description}}</p>
                                 <ul class="bottom-Link">
-                                    <li><a href="#" class="">ReadMore</a></li>
-                                    <li><a href="#"></a></li>
-                                    <li><a href="#"></a></li>
+                                    <li>
+                                        <a href="#" class="Readmore">Add to cart</a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="Readmore">ReadMore</a>
+                                    </li>
                                 </ul>
                             </div>
                         </div>
