@@ -20,9 +20,9 @@ mat-toolbar{
     flex: 1 1 auto;
 }
 mat-list-item:hover{
-    background-color: #4489f1;
+    background-color: #7da7e7;
 }
-mat-list-item:onclick{
-    background-color: #4489f1;
+.chosenTab{
+    background-color: #2d5da5;
 }
 
