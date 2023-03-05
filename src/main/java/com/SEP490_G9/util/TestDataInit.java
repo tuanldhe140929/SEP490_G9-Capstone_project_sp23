@@ -17,6 +17,7 @@ import com.SEP490_G9.entity.Role;
 import com.SEP490_G9.entity.Seller;
 import com.SEP490_G9.entity.Tag;
 import com.SEP490_G9.entity.User;
+import com.SEP490_G9.entity.ViolationType;
 import com.SEP490_G9.repository.AccountRepository;
 import com.SEP490_G9.repository.CategoryRepository;
 import com.SEP490_G9.repository.LicenseRepository;
@@ -25,6 +26,7 @@ import com.SEP490_G9.repository.RoleRepository;
 import com.SEP490_G9.repository.SellerRepository;
 import com.SEP490_G9.repository.TagRepository;
 import com.SEP490_G9.repository.UserRepository;
+import com.SEP490_G9.repository.ViolationTypeRepository;
 
 @Component
 public class TestDataInit implements ApplicationRunner {
@@ -51,7 +53,11 @@ public class TestDataInit implements ApplicationRunner {
 
 
 	@Autowired
+	private ViolationTypeRepository violationTypeRepository;
+	
+	@Autowired
 	private LicenseRepository licenseRepo;
+
 
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
@@ -152,6 +158,16 @@ public class TestDataInit implements ApplicationRunner {
 		categoryRepository.save(new Category(12, "Lore"));
 		categoryRepository.save(new Category(13, "Others"));
 
+		
+//		violationTypeRepository.save(new ViolationType("Kích động thù ghét"));
+//		violationTypeRepository.save(new ViolationType("Thông tin sai sự thật"));
+//		violationTypeRepository.save(new ViolationType("Nội dung phản cảm"));
+//		violationTypeRepository.save(new ViolationType("Nội dung nguy hiểm"));
+//		violationTypeRepository.save(new ViolationType("Lừa đảo"));
+//		violationTypeRepository.save(new ViolationType("Spam"));
+//		violationTypeRepository.save(new ViolationType("Vi phạm bản quyền"));
+
+
 		License license2 = new License();
 		license2.setId(1);
 		license2.setName("All Rights Reserved");
@@ -165,5 +181,6 @@ public class TestDataInit implements ApplicationRunner {
 		license.setAcrynosm("CC BY-NC");
 		license.setDetails("Others are allowed to use, distribute, and build upon the licensed work for non-commercial purposes, as long as they give appropriate credit to the original creator. However, if someone wants to use the work for commercial purposes, they must first obtain permission from the copyright holder");
 		licenseRepo.save(license);
+
 	}
 }

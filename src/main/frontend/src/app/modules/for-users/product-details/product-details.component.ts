@@ -1,5 +1,7 @@
+
 import { DecimalPipe } from '@angular/common';
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { AuthResponse } from '../../../DTOS/AuthResponse';
 import { Preview } from '../../../DTOS/Preview';
@@ -10,6 +12,7 @@ import { AuthService } from '../../../services/auth.service';
 import { CommonService } from '../../../services/common.service';
 import { ProductService } from '../../../services/product.service';
 import { StorageService } from '../../../services/storage.service';
+import { ReportProductComponent } from './report-product/report-product.component';
 
 
 class DisplayPreview {
@@ -62,8 +65,9 @@ export class ProductDetailsComponent implements OnInit{
     private router: Router,
     private storageService: StorageService,
     private authService: AuthService,
-    private productService: ProductService,
-    private decimalPipe: DecimalPipe) {
+    private decimalPipe: DecimalPipe,
+    private dialog: MatDialog,
+    private productService: ProductService) {
   }
 
   ngOnInit(): void {
@@ -175,10 +179,7 @@ export class ProductDetailsComponent implements OnInit{
 
   }
 
-  openReportModal() {
 
-  }
- 
 
   hasPreviewPictures(): boolean {
     return true;
@@ -251,10 +252,6 @@ export class ProductDetailsComponent implements OnInit{
     }
   }
 
-  redirectSellerPage() {
-
-  }
-
   get Dots() {
     return document.querySelectorAll('.dott');
   }
@@ -282,4 +279,25 @@ export class ProductDetailsComponent implements OnInit{
   get Price() {
     return this.getFormattedValue(this.product.price);
   }
+
+  openReportModal() {
+    const dialogRef = this.dialog.open(ReportProductComponent,{
+      height: '80%',
+      width: '50%'
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
+  }
+
+
+  redirectSellerPage() {
+    /*    let navigationExtras: NavigationExtras = {
+          
+          queryParams: { 'username': this.owner.username }
+        };
+        this.router.navigate(['/collection'], navigationExtras);
+      */
+  }
+
 }

@@ -1,5 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatSelectModule } from '@angular/material/select';
+import { MatRadioModule } from '@angular/material/radio';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { ForUsersRoutingModule } from './for-users-routing.module';
 import { HomepageComponent } from './homepage/homepage.component';
@@ -19,6 +23,7 @@ import { VgCoreModule } from '@videogular/ngx-videogular/core';
 import { VgControlsModule } from '@videogular/ngx-videogular/controls';
 import { VgOverlayPlayModule } from '@videogular/ngx-videogular/overlay-play';
 import { VgBufferingModule } from '@videogular/ngx-videogular/buffering';
+import { ReportProductComponent } from './product-details/report-product/report-product.component';
 
 
 @NgModule({
@@ -35,8 +40,8 @@ import { VgBufferingModule } from '@videogular/ngx-videogular/buffering';
     CartComponent,
     CheckOutComponent,
     CheckoutComponent,
-    NotFoundComponent
- 
+    NotFoundComponent,
+    ReportProductComponent,
   ],
   imports: [
     CommonModule,
@@ -45,6 +50,10 @@ import { VgBufferingModule } from '@videogular/ngx-videogular/buffering';
     VgControlsModule,
     VgOverlayPlayModule,
     VgBufferingModule
+    MatDialogModule,
+    MatSelectModule,
+    MatRadioModule,
+    ReactiveFormsModule
   ]
 })
 export class ForUsersModule { }

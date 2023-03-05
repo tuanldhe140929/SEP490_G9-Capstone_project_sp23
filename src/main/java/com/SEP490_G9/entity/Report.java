@@ -1,5 +1,6 @@
 package com.SEP490_G9.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import com.SEP490_G9.entity.embeddable.ReportItemKey;
@@ -14,7 +15,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "reports")
-public class Report {
+public class Report{
 	private static final long serialVersionUID = 1L;
 	
 	@EmbeddedId

@@ -13,6 +13,8 @@ import { BasicsModule } from './modules/basics/basics.module';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatMenuModule } from '@angular/material/menu';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { ManageAccountInfoModule } from './modules/manage-account-info/manage-account-info.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -43,14 +45,13 @@ import { DataTablesModule } from 'angular-datatables';
     MatSortModule,
     MatButtonModule,
     MatDialogModule,
+    MatRadioModule,
     CKEditorModule,
     NgbModule,
     BrowserAnimationsModule,
     CommonModule,
-
     ManageProductModule,
-
-
+    MatMenuModule,
     MatSortModule,
     ManageProductModule,
     DataTablesModule,

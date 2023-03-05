@@ -6,15 +6,14 @@ import java.util.Optional;
 import com.SEP490_G9.entity.Report;
 import com.SEP490_G9.entity.embeddable.ReportItemKey;
 
-
 public interface ReportService {
-	 List<Report> getAllReport();  
+	List<Report> getAllReport();
 
-	  void saveReport(Report report);  
+	void saveReport(Report report);
 
-	  void deleteReport(ReportItemKey id);  
+	void deleteReport(ReportItemKey id);
 
-	  Optional<Report> findReportById(ReportItemKey id);
+	Optional<Report> findReportById(ReportItemKey id);
 
-	void saveEditedReport(Report reportEdit);  
+	void saveEditedReport(Report reportEdit);
 }

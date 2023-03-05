@@ -41,11 +41,13 @@ export class AuthService {
   constructor(private http: HttpClient) { }
 
   login(body: any): Observable<any> {
-    return this.http.post<any>(accountController+"/login", body, httpOptions);
+    return this.http.post<any>(accountController+'/login', body, httpOptions);
   }
 
   register(body: any): Observable<string> {
+
     return this.http.post<string>(userController+"/register", body);
+
   }
 
   loginWithGoogle(body: any): Observable<any> {
