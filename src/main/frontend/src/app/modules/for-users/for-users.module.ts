@@ -15,6 +15,10 @@ import { CartComponent } from './my-cart/cart/cart.component';
 import { CheckOutComponent } from './check-out/check-out.component';
 import { CheckoutComponent } from './check-out/checkout/checkout.component';
 import { NotFoundComponent } from './not-found/not-found.component';
+import { VgCoreModule } from '@videogular/ngx-videogular/core';
+import { VgControlsModule } from '@videogular/ngx-videogular/controls';
+import { VgOverlayPlayModule } from '@videogular/ngx-videogular/overlay-play';
+import { VgBufferingModule } from '@videogular/ngx-videogular/buffering';
 
 
 @NgModule({
@@ -31,11 +35,16 @@ import { NotFoundComponent } from './not-found/not-found.component';
     CartComponent,
     CheckOutComponent,
     CheckoutComponent,
-    NotFoundComponent,
+    NotFoundComponent
+ 
   ],
   imports: [
     CommonModule,
-    ForUsersRoutingModule
+    ForUsersRoutingModule,
+    VgCoreModule,
+    VgControlsModule,
+    VgOverlayPlayModule,
+    VgBufferingModule
   ]
 })
 export class ForUsersModule { }

@@ -86,6 +86,7 @@ public class FileIOServiceImpl implements FileIOService {
 			while ((length = is.read(buffer)) > 0) {
 				os.write(buffer, 0, length);
 			}
+			
 			return dest;
 		} catch (IOException e) {
 			throw new StorageException("Failed to store file.", e);

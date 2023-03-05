@@ -30,12 +30,6 @@ public class ProductFile {
 	@Column(name = "size")
 	private Long size;
 
-	@Column(name = "diplay_order")
-	private String displayOrder;
-
-	@Column(name = "last_update")
-	private Date lastUpdate;
-
 	@ManyToOne
 	@JoinColumns({ @JoinColumn(name = "product_id", nullable = false),
 			@JoinColumn(name = "version", nullable = false) })
@@ -50,9 +44,7 @@ public class ProductFile {
 		this.source = source + this.name;
 		this.type = file.getContentType();
 		this.size = file.getSize();
-		this.lastUpdate = new Date();
 		this.productDetails = productDetails;
-		this.displayOrder = "0";
 	}
 
 	public ProductFile(String source, MultipartFile file, ProductDetails productDetails) {
@@ -60,9 +52,7 @@ public class ProductFile {
 		this.source = source;
 		this.type = file.getContentType();
 		this.size = file.getSize();
-		this.lastUpdate = new Date();
 		this.productDetails = productDetails;
-		this.displayOrder = "0";
 	}
 
 	public ProductDetails getProductDetails() {
@@ -111,22 +101,6 @@ public class ProductFile {
 
 	public void setSize(Long size) {
 		this.size = size;
-	}
-
-	public Date getLastUpdate() {
-		return lastUpdate;
-	}
-
-	public void setLastUpdate(Date lastUpdate) {
-		this.lastUpdate = lastUpdate;
-	}
-
-	public String getDisplayOrder() {
-		return displayOrder;
-	}
-
-	public void setDisplayOrder(String displayOrder) {
-		this.displayOrder = displayOrder;
 	}
 
 }

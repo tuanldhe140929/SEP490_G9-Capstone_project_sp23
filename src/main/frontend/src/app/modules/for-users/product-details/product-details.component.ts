@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { DecimalPipe } from '@angular/common';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { AuthResponse } from '../../../DTOS/AuthResponse';
 import { Preview } from '../../../DTOS/Preview';
@@ -10,12 +11,40 @@ import { CommonService } from '../../../services/common.service';
 import { ProductService } from '../../../services/product.service';
 import { StorageService } from '../../../services/storage.service';
 
+
+class DisplayPreview {
+  preview: Preview;
+  thumb: string;
+
+  constructor() {
+    this.preview = new Preview;
+    this.thumb = "";
+  }
+
+  public static fromPreview(preview: Preview): DisplayPreview {
+    var ret = new DisplayPreview;
+    ret.preview = preview;
+    if (preview.type == 'picture')
+      ret.thumb = this.getSrc(preview.source);
+    else
+      ret.thumb = 'https://xn--b1akdajq8j.xn--p1ai/app/plugins/video-thumbnails/default.jpg';
+    return ret;
+  }
+
+  public static getSrc(source: string) {
+    return 'http://localhost:9000/public/serveMedia/image?source=' + source.replace(/\\/g, '/');
+  }
+
+}
+
+
 @Component({
   selector: 'app-product-details',
   templateUrl: './product-details.component.html',
   styleUrls: ['./product-details.component.css']
 })
-export class ProductDetailsComponent implements OnInit {
+
+export class ProductDetailsComponent implements OnInit{
 
   own: boolean = false;
 
@@ -26,23 +55,56 @@ export class ProductDetailsComponent implements OnInit {
   totalSize: number | undefined;
   sellerTotalProductCount = 0;
   dots: number[] = [0];
+
+  displayPreviews: DisplayPreview[] = [];
   constructor(private activatedRoute: ActivatedRoute,
     private commonService: CommonService,
     private router: Router,
     private storageService: StorageService,
     private authService: AuthService,
-    private productService: ProductService) {
+    private productService: ProductService,
+    private decimalPipe: DecimalPipe) {
   }
 
   ngOnInit(): void {
     this.getProduct();
-    
+
     if (this.storageService.isLoggedIn()) {
       this.getVisitor();
     }
+
   }
 
+  currentPreview: DisplayPreview = new DisplayPreview;
 
+  onChoosePreview(preview: DisplayPreview): void {
+
+    this.currentPreview = preview;
+    var index = -1;
+    for (let i = 0; i < this.displayPreviews.length; i++) {
+      if (preview == this.displayPreviews[i]) {
+        index = i;
+        console.log(index);
+        break;
+      }
+    }
+
+    for (let i = 0; i < this.BlackThumbs.length; i++) {
+      this.BlackThumbs.item(i)?.setAttribute("style", "border-radius: 4px; position: absolute; top: 0; right: 9px; bottom: 0; left: 0; background: #000; opacity: .6;");
+    }
+
+    if (index!=-1) {
+      this.BlackThumbs.item(index)?.setAttribute("style", "border-radius: 4px; position: absolute; top: 0; right: 9px; bottom: 0; left: 0; background: #000; opacity: 0;");
+    }
+   
+  }
+
+  getPreviewVideoSource() {
+    if (this.product.previewVideo != null) {
+      return 'http://localhost:9000/public/serveMedia/video?source=' + this.product.previewVideo.source.replace(/\\/g, '/');
+    }
+    return "";
+  }
   getProfileImage() {
     var imageUrl = '';
     if (this.owner.avatar != null && this.owner.avatar != '') {
@@ -62,12 +124,12 @@ export class ProductDetailsComponent implements OnInit {
         console.log(error);
       }
     );
-    }
+  }
 
   getVisitor() {
     this.visitorAuth = this.storageService.getAuthResponse();
     this.checkIfPurchased();
-    
+
   }
 
   getProduct() {
@@ -85,6 +147,18 @@ export class ProductDetailsComponent implements OnInit {
           this.owner = data.seller;
           this.getSellerTotalProductCount(this.owner.id);
           this.getProfileImage();
+          if (this.product.previewVideo != null)
+            this.displayPreviews.push(DisplayPreview.fromPreview(this.product.previewVideo));
+
+          if (this.product.previewPictures != null)
+            for (let i = 0; i < this.product.previewPictures.length; i++) {
+              this.displayPreviews.push(DisplayPreview.fromPreview(this.product.previewPictures[i]));
+            }
+
+          if (this.BlackThumbs.length > 0)
+            this.BlackThumbs.item(0)?.setAttribute("style", "border-radius: 4px; position: absolute; top: 0; right: 9px; bottom: 0; left: 0; background: #000; opacity: 0;");
+
+          
         },
         error => {
           console.log(error);
@@ -104,16 +178,14 @@ export class ProductDetailsComponent implements OnInit {
   openReportModal() {
 
   }
-  onChooseImage(preview: Preview): void {
+ 
 
-  }
-
-  hasPreviewPictures():boolean {
+  hasPreviewPictures(): boolean {
     return true;
   }
 
-  getPreviewPictureSource(preview: Preview): string {
-    return 'http://localhost:9000/public/serveMedia/image?source=' + preview.source.replace(/\\/g, '/');
+  getPreviewPictureSource(): string {
+    return 'http://localhost:9000/public/serveMedia/image?source=' + this.currentPreview.preview.source.replace(/\\/g, '/');
   }
 
   get TotalSize() {
@@ -137,9 +209,14 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   get SellerJoinedDate() {
-    return this.product.seller.accountCreatedDate.getDay
-      + "-" + this.product.seller.accountCreatedDate.getMonth
-      + "-" + this.product.seller.accountCreatedDate.getFullYear;
+    if (this.product.seller != null) {
+      var joinedDate: Date = new Date(this.product.seller.accountCreatedDate.toString());
+      if (joinedDate)
+      return joinedDate.getDate()
+        + "-" + joinedDate.getMonth()
+        + "-" + joinedDate.getFullYear();
+    }
+    return "";
   }
 
   get Instruction() {
@@ -166,7 +243,7 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   get OwnerUsername() {
-    if (this.owner!=null&&this.owner.username != '' && this.owner.username != null) {
+    if (this.owner != null && this.owner.username != '' && this.owner.username != null) {
       return this.owner.username;
     }
     else {
@@ -182,10 +259,27 @@ export class ProductDetailsComponent implements OnInit {
     return document.querySelectorAll('.dott');
   }
 
-  currentSlide(index:number) {
-      for (let i = 0; i < this.Dots.length; i++) {
-        this.Dots[i].className = this.Dots[i].className.replace(" active", "");
-      }
+  currentSlide(index: number) {
+    for (let i = 0; i < this.Dots.length; i++) {
+      this.Dots[i].className = this.Dots[i].className.replace(" active", "");
+    }
     this.Dots[index].className += " active";
+  }
+
+  getFormattedValue(value: any): string {
+    const stringToTransform = String(value ?? '')
+      .replace(/\D/g, '')
+      .replace(/^0+/, '');
+    return (
+      this.decimalPipe.transform(stringToTransform === '' ? '0' : stringToTransform, '1.0')
+      + '');
+  }
+
+  get BlackThumbs() {
+    return document.getElementsByClassName('thumb_column_black');
+  }
+
+  get Price() {
+    return this.getFormattedValue(this.product.price);
   }
 }

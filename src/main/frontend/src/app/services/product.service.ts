@@ -13,7 +13,7 @@ export class ProductService {
   constructor(private httpClient: HttpClient) { }
 
   public getProductById(productId: number): Observable<Product> {
-    return this.httpClient.get<Product>(baseUrl + "/getProductById", {
+    return this.httpClient.get<Product>(baseUrl + "/getActiveVersionProductById", {
       params: {
         productId: productId
       }

@@ -28,7 +28,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 	private UserRepository userRepository;
 
 	@Override
-	public RefreshToken findByToken(String token) {
+	public RefreshToken getByToken(String token) {
 		RefreshToken refreshToken = refreshTokenRepository.findByToken(token);
 		if(refreshToken==null) {
 			throw new RefreshTokenException(token,"Not found");
