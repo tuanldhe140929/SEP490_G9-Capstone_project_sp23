@@ -24,8 +24,7 @@ import com.SEP490_G9.entity.ProductDetails;
 import com.SEP490_G9.entity.User;
 import com.SEP490_G9.exception.ResourceNotFoundException;
 import com.SEP490_G9.service.FileIOService;
-import com.SEP490_G9.service.ManageAccountInfoService;
-import com.SEP490_G9.service.ManageProductService;
+import com.SEP490_G9.service.ManageAccountInfoService;	
 import com.SEP490_G9.service.PreviewService;
 import com.SEP490_G9.service.ProductDetailsService;
 import com.SEP490_G9.service.UserService;
@@ -56,7 +55,7 @@ public class ServeMediaController {
 
 	@GetMapping("serveCoverImage")
 	public ResponseEntity<byte[]> serveCoverImage(@RequestParam(name = "productId") Long productId) throws IOException {
-		ProductDetails pd = productDetailsService.getProductDetailsByProductId(productId);
+		ProductDetails pd = productDetailsService.getActiveVersion(productId);
 		File file = new File(pd.getCoverImage());
 		String mimeType = URLConnection.guessContentTypeFromName(file.getName());
 		byte[] image = new byte[0];

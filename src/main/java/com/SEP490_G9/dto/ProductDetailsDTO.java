@@ -48,18 +48,20 @@ public class ProductDetailsDTO {
 
 	private boolean draft = true;
 
+	private EngineDTO engine;
+
 	private int price = 0;
 
-	private Preview previewVideo;
+	private PreviewDTO previewVideo;
 
-	private List<Preview> previewPictures = new ArrayList<>();
+	private List<PreviewDTO> previewPictures = new ArrayList<>();
 
 	private Seller seller;
 
-	private List<Tag> tags = new ArrayList<Tag>();
+	private List<TagDTO> tags = new ArrayList<>();
 
 	@NotNull
-	private Category category;
+	private CategoryDTO category;
 
 	private List<ProductFileDTO> files = new ArrayList<ProductFileDTO>();
 
@@ -84,11 +86,15 @@ public class ProductDetailsDTO {
 		if (productDetails.getLicense() != null) {
 			this.license = new LicenseDTO(productDetails.getLicense());
 		}
+		this.engine = new EngineDTO(productDetails.getEngine());
 		this.previewVideo = getPreviewVideoSource(productDetails);
 		this.previewPictures = getPreviewPicturesSource(productDetails);
 		this.seller = productDetails.getProduct().getSeller();
-		this.tags = productDetails.getTags();
-		this.category = productDetails.getCategory();
+		for (Tag tag : productDetails.getTags()) {
+			this.tags.add(new TagDTO(tag));
+		}
+
+		this.category = new CategoryDTO(productDetails.getCategory());
 		for (ProductFile file : productDetails.getFiles()) {
 			ProductFileDTO dto = new ProductFileDTO(file);
 			dto.setFileState(ProductFileDTO.FileState.UPLOADED);
@@ -96,22 +102,22 @@ public class ProductDetailsDTO {
 		}
 	}
 
-	private List<Preview> getPreviewPicturesSource(ProductDetails productDetails) {
-		List<Preview> ret = new ArrayList<>();
+	private List<PreviewDTO> getPreviewPicturesSource(ProductDetails productDetails) {
+		List<PreviewDTO> ret = new ArrayList<>();
 		for (Preview preview : productDetails.getPreviews()) {
 			if (preview.getType().equalsIgnoreCase("picture"))
-				ret.add(preview);
+				ret.add(new PreviewDTO(preview));
 		}
 		return ret;
 	}
 
-	private Preview getPreviewVideoSource(ProductDetails productDetails) {
+	private PreviewDTO getPreviewVideoSource(ProductDetails productDetails) {
 		Preview ret = null;
 		for (Preview preview : productDetails.getPreviews()) {
 			if (preview.getType().equalsIgnoreCase("video"))
 				ret = preview;
 		}
-		return ret;
+		return new PreviewDTO(ret);
 	}
 
 	public Long getId() {
@@ -178,14 +184,6 @@ public class ProductDetailsDTO {
 		this.lastModified = lastModified;
 	}
 
-	public Category getCategory() {
-		return category;
-	}
-
-	public void setCategory(Category category) {
-		this.category = category;
-	}
-
 	public boolean isDraft() {
 		return draft;
 	}
@@ -200,22 +198,6 @@ public class ProductDetailsDTO {
 
 	public void setPrice(int price) {
 		this.price = price;
-	}
-
-	public Preview getPreviewVideo() {
-		return previewVideo;
-	}
-
-	public void setPreviewVideo(Preview previewVideo) {
-		this.previewVideo = previewVideo;
-	}
-
-	public List<Preview> getPreviewPictures() {
-		return previewPictures;
-	}
-
-	public void setPreviewPictures(List<Preview> previewPictures) {
-		this.previewPictures = previewPictures;
 	}
 
 	public String getVersion() {
@@ -234,12 +216,36 @@ public class ProductDetailsDTO {
 		this.seller = seller;
 	}
 
-	public List<Tag> getTags() {
+	public PreviewDTO getPreviewVideo() {
+		return previewVideo;
+	}
+
+	public void setPreviewVideo(PreviewDTO previewVideo) {
+		this.previewVideo = previewVideo;
+	}
+
+	public List<PreviewDTO> getPreviewPictures() {
+		return previewPictures;
+	}
+
+	public void setPreviewPictures(List<PreviewDTO> previewPictures) {
+		this.previewPictures = previewPictures;
+	}
+
+	public List<TagDTO> getTags() {
 		return tags;
 	}
 
-	public void setTags(List<Tag> tags) {
+	public void setTags(List<TagDTO> tags) {
 		this.tags = tags;
+	}
+
+	public CategoryDTO getCategory() {
+		return category;
+	}
+
+	public void setCategory(CategoryDTO category) {
+		this.category = category;
 	}
 
 	public List<ProductFileDTO> getFiles() {
@@ -264,6 +270,14 @@ public class ProductDetailsDTO {
 
 	public void setActiveVersion(String activeVersion) {
 		this.activeVersion = activeVersion;
+	}
+
+	public EngineDTO getEngine() {
+		return engine;
+	}
+
+	public void setEngine(EngineDTO engine) {
+		this.engine = engine;
 	}
 
 }

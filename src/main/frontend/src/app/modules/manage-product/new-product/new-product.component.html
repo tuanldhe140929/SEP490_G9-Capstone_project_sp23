@@ -243,7 +243,7 @@
                 <ng-template #hasPreviewVideo>
                   <vg-player style="position: relative;">
                     <video [vgMedia]="$any(media)" #media id="preview_video" preload="auto" controls style="width: 100%;">
-                      <source src="{{getPreviewVideoSource()}}" type="video/mp4">
+                      <source id="video_src" src="{{getPreviewVideoSource()}}" type="video/mp4">
                     </video>
                     <div class="widget_video" style="position: absolute">
                       <button class="delete_btn2" type="button" (click)="removePreviewVideo()">Gỡ</button>

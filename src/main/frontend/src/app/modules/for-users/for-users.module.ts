@@ -19,6 +19,10 @@ import { CartComponent } from './my-cart/cart/cart.component';
 import { CheckOutComponent } from './check-out/check-out.component';
 import { CheckoutComponent } from './check-out/checkout/checkout.component';
 import { NotFoundComponent } from './not-found/not-found.component';
+import { VgCoreModule } from '@videogular/ngx-videogular/core';
+import { VgControlsModule } from '@videogular/ngx-videogular/controls';
+import { VgOverlayPlayModule } from '@videogular/ngx-videogular/overlay-play';
+import { VgBufferingModule } from '@videogular/ngx-videogular/buffering';
 import { ReportProductComponent } from './product-details/report-product/report-product.component';
 
 
@@ -42,6 +46,10 @@ import { ReportProductComponent } from './product-details/report-product/report-
   imports: [
     CommonModule,
     ForUsersRoutingModule,
+    VgCoreModule,
+    VgControlsModule,
+    VgOverlayPlayModule,
+    VgBufferingModule
     MatDialogModule,
     MatSelectModule,
     MatRadioModule,

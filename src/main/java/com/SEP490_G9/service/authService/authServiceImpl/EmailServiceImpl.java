@@ -50,7 +50,7 @@ public class EmailServiceImpl implements EmailService {
 			helper.setTo(toEmail);
 
 			message.setSubject("DPM System mail verify");
-			String html = "Click here to verify your email \n" + "<a href='http:localhost:4200/auth/verifyEmail/"
+			String html = "Click here to verify your email \n" + "<a href='http:localhost:4200/users/verifyEmail/"
 					+ verifyLink + "'>Verify link</a>";
 			message.setText(html, "UTF-8", "html");
 		} catch (MessagingException e) {

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.SEP490_G9.dto.PreviewDTO;
 import com.SEP490_G9.dto.ProductDetailsDTO;
 import com.SEP490_G9.entity.Account;
 import com.SEP490_G9.entity.Preview;
@@ -47,8 +48,6 @@ public class PreviewController {
 	@Autowired
 	PreviewService previewService;
 
-	@Autowired
-	PreviewRepository previewRepository;
 
 	@Autowired
 	ProductDetailsService productDetailsService;
@@ -71,10 +70,8 @@ public class PreviewController {
 		ProductDetailsDTO dto = new ProductDetailsDTO();
 		dto.setId(productId);
 		dto.setVersion(version);
-		ProductDetails pd = productDetailsService.getProductDetailsByProductIdAndVersionAndSeller(dto,
-				getCurrentSeller());
+		ProductDetails pd = productDetailsService.getByIdAndVersion(productId,version);
 		Preview preview = previewService.getByProductDetailsAndType(pd, "video").get(0);
-
 		boolean ret = previewService.deletePreview(preview);
 		return ResponseEntity.ok(ret);
 	}
@@ -84,7 +81,7 @@ public class PreviewController {
 			throws IOException {
 		Preview preview = previewService.getById(previewId);
 		boolean ret = previewService.deleteById(previewId);
-		List<Preview> returnData = previewRepository.findByProductDetailsAndType(preview.getProductDetails(),
+		List<Preview> returnData = previewService.getByProductDetailsAndType(preview.getProductDetails(),
 				"picture");
 		return ResponseEntity.ok(returnData);
 	}
@@ -93,7 +90,7 @@ public class PreviewController {
 	public ResponseEntity<?> uploadPreviewPicture(@RequestParam(name = "productId") Long productId,
 			@RequestParam(name = "previewPicture") MultipartFile previewPicture,
 			@RequestParam(name = "version") String version) {
-		List<Preview> previews = null;
+		List<PreviewDTO> previews = null;
 
 		if (!checkFileType(previewPicture, IMAGE_EXTENSIONS)) {
 			throw new FileUploadException(previewPicture.getContentType() + " file not accept");
@@ -108,7 +105,7 @@ public class PreviewController {
 			String storedPath = fileStorageService.storeV2(previewPicture,
 					storageUtil.getLocation() + previewPictureLocation);
 			Preview preview = new Preview();
-			preview.setSource(previewPictureLocation + previewPicture.getOriginalFilename());
+			preview.setSource(storedPath.replace(storageUtil.getLocation(), ""));
 			preview.setType("picture");
 			preview.setProductDetails(productDetails);
 			preview = previewService.createPreview(preview);
@@ -127,7 +124,7 @@ public class PreviewController {
 	public ResponseEntity<?> uploadPreviewVideo(@RequestParam(name = "productId") Long productId,
 			@RequestParam(name = "previewVideo") MultipartFile previewVideo,
 			@RequestParam(name = "version") String version) throws IOException {
-		Preview src = null;
+		PreviewDTO src = null;
 		if (!checkFileType(previewVideo, VIDEO_EXTENSIONS)) {
 			throw new FileUploadException(previewVideo.getContentType() + " file not accept");
 		} else {

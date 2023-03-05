@@ -27,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.SEP490_G9.dto.ProductDTO;
 import com.SEP490_G9.dto.ProductDetailsDTO;
 import com.SEP490_G9.dto.ProductFileDTO;
+import com.SEP490_G9.dto.TagDTO;
 import com.SEP490_G9.entity.Account;
 import com.SEP490_G9.entity.Category;
 import com.SEP490_G9.entity.License;
@@ -44,7 +45,6 @@ import com.SEP490_G9.exception.ResourceNotFoundException;
 import com.SEP490_G9.exception.StorageException;
 import com.SEP490_G9.repository.PreviewRepository;
 import com.SEP490_G9.service.FileIOService;
-import com.SEP490_G9.service.ManageProductService;
 import com.SEP490_G9.service.PreviewService;
 import com.SEP490_G9.service.ProductDetailsService;
 import com.SEP490_G9.service.ProductFileService;
@@ -116,20 +116,18 @@ public class ProductController {
 	public ResponseEntity<?> getActiveVersionProduct(@RequestParam(name = "productId") Long productId) {
 		Product product = productService.getProductById(productId);
 		String activeVersion = product.getActiveVersion();
-		ProductDetails productDetails = productDetailsService.getByIdAndVersion(productId,activeVersion);
+		ProductDetails productDetails = productDetailsService.getByIdAndVersion(productId, activeVersion);
 		ProductDetailsDTO dto = new ProductDetailsDTO(productDetails);
 		return ResponseEntity.ok(dto);
 	}
 
 	@GetMapping(value = "getPublishedProductsBySeller")
 	public ResponseEntity<?> getProductsBySeller() {
-
 		Seller seller = getCurrentSeller();
 		List<Product> products = productService.getProductsBySellerId(seller.getId());
-
 		List<ProductDetails> latestVersionProducts = new ArrayList<>();
 		for (Product product : products) {
-			latestVersionProducts.add(productDetailsService.getProductDetailsByProductId(product.getId()));
+			latestVersionProducts.add(productDetailsService.getActiveVersion(product.getId()));
 		}
 		List<ProductDetailsDTO> dtos = new ArrayList<>();
 		for (ProductDetails pd : latestVersionProducts) {
@@ -138,12 +136,12 @@ public class ProductController {
 		return ResponseEntity.ok(dtos);
 	}
 
-	@GetMapping("getProductById")
-	public ResponseEntity<?> getProductById(@RequestParam(name = "productId") Long productId) throws IOException {
-		ProductDetails pd = productDetailsService.getProductDetailsByProductId(productId);
-		ProductDetailsDTO dto = new ProductDetailsDTO(pd);
-		return ResponseEntity.ok(dto);
-	}
+//	@GetMapping("getProductById")
+//	public ResponseEntity<?> getProductById(@RequestParam(name = "productId") Long productId) throws IOException {
+//		ProductDetails pd = productDetailsService.getProductDetailsByProductId(productId);
+//		ProductDetailsDTO dto = new ProductDetailsDTO(pd);
+//		return ResponseEntity.ok(dto);
+//	}
 
 	@PostMapping(value = "createNewVersion")
 	public ResponseEntity<?> createNewVersion(@RequestBody ProductDetailsDTO productDetailsDTO,
@@ -158,8 +156,7 @@ public class ProductController {
 		if (versions.contains(newVersion) || newVersion.endsWith(".") || newVersion.length() > 6) {
 			throw new DuplicateFieldException("version", newVersion);
 		} else {
-			ProductDetails productDetails = productDetailsService
-					.getProductDetailsByProductId(productDetailsDTO.getId());
+			ProductDetails productDetails = productDetailsService.getActiveVersion(productDetailsDTO.getId());
 			ProductDetails newPD = new ProductDetails();
 			newPD = createProductDetails(productDetails.getProduct(), newVersion);
 			String source = getProductVersionDataLocation(productDetails);
@@ -214,7 +211,7 @@ public class ProductController {
 
 			previewService.createPreviews(newPDPreviews);
 			productFileService.createProductFiles(newPDFiles);
-			newPD = productDetailsService.getProductDetailsByProductId(productDetailsDTO.getId());
+			newPD = productDetailsService.getActiveVersion(productDetailsDTO.getId());
 			ret = new ProductDetailsDTO(newPD);
 		}
 		return ResponseEntity.ok(ret);
@@ -223,11 +220,7 @@ public class ProductController {
 	@PostMapping(value = "chooseVersion")
 	public ResponseEntity<?> createNewVersionV2(@RequestParam(name = "productId", required = true) Long productId,
 			@RequestParam(name = "version", required = true) String newVersion) throws IOException {
-		ProductDetailsDTO dto = new ProductDetailsDTO();
-		dto.setId(productId);
-		dto.setVersion(newVersion);
-		ProductDetails productDetails = productDetailsService.getProductDetailsByProductIdAndVersionAndSeller(dto,
-				getCurrentSeller());
+		ProductDetails productDetails = productDetailsService.getByIdAndVersion(productId, newVersion);
 		ProductDetailsDTO ret = new ProductDetailsDTO(productDetails);
 		return ResponseEntity.ok(ret);
 
@@ -254,7 +247,7 @@ public class ProductController {
 			}
 		}
 
-		ProductDetails productDetails = productDetailsService.getProductDetailsByProductId(productDetailsDTO.getId());
+		ProductDetails productDetails = productDetailsService.getActiveVersion(productDetailsDTO.getId());
 		ProductDetails newPD = new ProductDetails();
 		newPD = createProductDetails(productDetails.getProduct(), newVersion);
 		newPD.setCoverImage(productDetails.getCoverImage());
@@ -301,7 +294,7 @@ public class ProductController {
 		}
 		previewService.createPreviews(newPDPreviews);
 		productFileService.createProductFiles(newPDFiles);
-		newPD = productDetailsService.getProductDetailsByProductId(productDetailsDTO.getId());
+		newPD = productDetailsService.getActiveVersion(productDetailsDTO.getId());
 		ProductDetailsDTO dto = new ProductDetailsDTO(newPD);
 		return ResponseEntity.ok(dto);
 	}
@@ -328,18 +321,22 @@ public class ProductController {
 		ProductDetailsDTO ret = null;
 
 		Seller seller = getCurrentSeller();
-		ProductDetails notEdited = productDetailsService
-				.getProductDetailsByProductIdAndVersionAndSeller(productDetailsDTO, seller);
+		ProductDetails notEdited = productDetailsService.getByIdAndVersion(productDetailsDTO.getId(),
+				productDetailsDTO.getVersion());
 		notEdited.setLastModified(new Date());
 
 		Product product = notEdited.getProduct();
-		if (productDetailsDTO.getTags() != null)
-			notEdited.setTags(productDetailsDTO.getTags());
-		else
+		if (productDetailsDTO.getTags() != null) {
+			List<Tag> tags = new ArrayList<>();
+			for (TagDTO tag : productDetailsDTO.getTags()) {
+				tags.add(new Tag(tag));
+			}
+			notEdited.setTags(tags);
+		} else
 			notEdited.setTags(null);
 
 		if (productDetailsDTO.getCategory() != null)
-			notEdited.setCategory(productDetailsDTO.getCategory());
+			notEdited.setCategory(new Category(productDetailsDTO.getCategory()));
 		else
 			notEdited.setCategory(null);
 
@@ -389,12 +386,11 @@ public class ProductController {
 			Product product = productService.getProductByIdAndSeller(productId, getCurrentSeller());
 			ProductDetails productDetails = checkVersion(product, version);
 			String coverImageLocation = getCoverImageLocation(productDetails);
-			File coverImageDir = new File(
-					storageUtil.getLocation() + coverImageLocation + coverImage.getOriginalFilename());
+			File coverImageDir = new File(storageUtil.getLocation() + coverImageLocation);
 			coverImageDir.mkdirs();
 
 			String storedPath = fileStorageService.storeV2(coverImage, storageUtil.getLocation() + coverImageLocation);
-			productDetails.setCoverImage(coverImageLocation + coverImage.getOriginalFilename());
+			productDetails.setCoverImage(storedPath.replace(storageUtil.getLocation(), ""));
 			productService.updateProduct(product);
 			src = productDetails.getCoverImage();
 		}
