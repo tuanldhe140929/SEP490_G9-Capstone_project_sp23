@@ -1,9 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { Category } from 'src/app/DTOS/Category';
-import { ForAdminService } from 'src/app/services/for-admin.service';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { CategoryService } from 'src/app/services/category.service';
 
 @Component({
   selector: 'app-update-category',
@@ -12,7 +11,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 })
 export class UpdateCategoryComponent implements OnInit{
 
-  constructor(private formBuilder: FormBuilder, private forAdminService: ForAdminService, private toastr: ToastrService, @Inject(MAT_DIALOG_DATA) public data: {nameList: string[], id: number, oldName: string}){}
+  constructor(private formBuilder: FormBuilder, private categoryService: CategoryService, private toastr: ToastrService, @Inject(MAT_DIALOG_DATA) public data: {nameList: string[], id: number, oldName: string}){}
 
   ngOnInit(): void {
     this.updateCategoryForm.controls['name'].setValue(this.data.oldName)
@@ -46,7 +45,7 @@ export class UpdateCategoryComponent implements OnInit{
   updateCategory(id: number){
     if(this.updateCategoryForm.valid){
       if(!this.checkNameExists()){
-        this.forAdminService.updateCategory(this.updateCategoryForm.value,id).subscribe(
+        this.categoryService.updateCategory(this.updateCategoryForm.value,id).subscribe(
           response => {
             console.log(response);
             this.toastr.success('Cập nhật tên phân loại thành công!')

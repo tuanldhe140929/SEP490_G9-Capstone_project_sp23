@@ -21,4 +21,8 @@ public interface ProductDetailsService {
 	public ProductDetails getByIdAndVersion(Long productId, String activeVersion);
 
 	public ProductDetails updateProductDetailsStatus(ProductDetails edited);
+	
+	public List<ProductDetails> getByKeyword(String keyword);
+	
+	public List<ProductDetails> getAll();
 }

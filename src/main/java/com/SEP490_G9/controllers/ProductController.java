@@ -493,4 +493,24 @@ public class ProductController {
 		int count = sellerProducts.size();
 		return ResponseEntity.ok(count);
 	}
+	
+	@GetMapping(value = "getProductsByKeyword/{keyword}")
+	public ResponseEntity<?> getProductsByKeyword(@PathVariable(name = "keyword") String keyword){
+		List<ProductDetails> searchResult = this.productDetailsService.getByKeyword(keyword);
+		List<ProductDetailsDTO> searchResultDto = new ArrayList<>();
+		for(ProductDetails result: searchResult) {
+			searchResultDto.add(new ProductDetailsDTO(result));
+		}
+		return ResponseEntity.ok(searchResultDto);
+	}
+	
+	@GetMapping(value = "getAllProducts")
+	public ResponseEntity<?> getAllProducts(){
+		List<ProductDetails> allProducts = this.productDetailsService.getAll();
+		List<ProductDetailsDTO> allProductsDto = new ArrayList<>();
+		for(ProductDetails product: allProducts) {
+			allProductsDto.add(new ProductDetailsDTO(product));
+		}
+		return ResponseEntity.ok(allProductsDto);
+	}
 }

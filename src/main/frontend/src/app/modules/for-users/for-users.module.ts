@@ -4,6 +4,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatSelectModule } from '@angular/material/select';
 import { MatRadioModule } from '@angular/material/radio';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 import { ForUsersRoutingModule } from './for-users-routing.module';
 import { HomepageComponent } from './homepage/homepage.component';
@@ -45,7 +46,8 @@ import { ReportProductComponent } from './product-details/report-product/report-
     MatDialogModule,
     MatSelectModule,
     MatRadioModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatAutocompleteModule
   ]
 })
 export class ForUsersModule { }

@@ -18,9 +18,10 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Preview } from '../../../DTOS/Preview';
 import { PreviewService } from '../../../services/preview.service';
 import { ProductFileService } from '../../../services/product-file.service';
-import { ForAdminService } from '../../../services/for-admin.service';
 import { License } from 'src/app/DTOS/License';
 import { LicenseService } from 'src/app/services/license.service';
+import { CategoryService } from 'src/app/services/category.service';
+import { TagService } from 'src/app/services/tag.service';
 
 
 const MSG100 = 'Tên sản phẩm không được để trống';
@@ -51,7 +52,7 @@ const price = new Intl.NumberFormat('vi-VN',
 class UploadProcess {
   progress: number;
   subcription: Subscription
-
+  
   constructor() {
     this.progress = 0;
     this.subcription = new Subscription;
@@ -95,8 +96,9 @@ export class NewProductComponent implements OnInit {
     private modalService: NgbModal,
     private previewService: PreviewService,
     private productFileService: ProductFileService,
-    private adminService: ForAdminService,
-    private licenseService: LicenseService) { }
+    private licenseService: LicenseService,
+    private categoryService: CategoryService,
+    private tagService: TagService) { }
 
   product: Product = new Product;
   typeList: Category[] = [];
@@ -507,14 +509,14 @@ export class NewProductComponent implements OnInit {
 
   percent = 'width:100%;';
   getTypeList(): void {
-    this.adminService.getAllCategories().subscribe((response: any) => {
+    this.categoryService.getAllCategories().subscribe((response: any) => {
       this.typeList = response;
     })
 
   }
 
   getTagList(): void {
-    this.adminService.getAllTags().subscribe(
+    this.tagService.getAllTags().subscribe(
       (data: Tag[]) => {
         this.tagList = data;
         for (let j = 0; j < this.product.tags.length; j++) {

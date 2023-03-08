@@ -4,33 +4,33 @@
         <div class="row gy-3 align-items-center">
           <div class="col-lg-2 col-sm-4 col-4">
             <a href="http://therichpost.com" class="navbar-brand">
-              RichEcom
+              Digital Product Marketplace
             </a> <!-- brand end.// -->
           </div>
           <div class="order-lg-last col-lg-5 col-sm-8 col-8">
             <div class="float-end">
               <a href="#" class="btn btn-light"> 
-                  <i class="fa fa-user"></i>  <span class="ms-1 d-none d-sm-inline-block">Sign in  </span> 
-              </a>
-              <a href="#" class="btn btn-light"> 
-                <i class="fa fa-heart"></i>  <span class="ms-1 d-none d-sm-inline-block">Wishlist</span>   
+                  <i class="fa fa-user"></i>  <span class="ms-1 d-none d-sm-inline-block">Đăng nhập</span> 
               </a>
               <a data-bs-toggle="offcanvas" href="#offcanvas_cart" class="btn btn-light"> 
-                <i class="fa fa-shopping-cart"></i> <span class="ms-1">My cart </span> 
+                <i class="fa fa-shopping-cart"></i> <span class="ms-1">Giỏ hàng</span> 
               </a>
                 </div>
           </div> <!-- col end.// -->
           <div class="col-lg-5 col-md-12 col-12">
-            <form action="#" class="">
+            <form action="#" class="" (submit)="onSearch()">
                     <div class="input-group">
-                      <input type="search" class="form-control" style="width:55%" placeholder="Tìm kiếm">
+                      <input type="search" class="form-control" style="width:55%" placeholder="Tìm kiếm" [formControl]="myControl" [matAutocomplete]="auto" [(ngModel)]="keyword">
+                      <mat-autocomplete autoActiveFirstOption="" #auto="matAutocomplete" (optionSelected)="onOptionSelected($event.option.value)">
+                        <mat-option *ngFor="let option of filteredOptions| async" [value]="option">{{option}}</mat-option>
+                      </mat-autocomplete>
                       <select class="form-select">
                         <option value="codex">Tên sản phẩm</option>
                         <option value="codex">Phân loại</option>
                         <option value="codex">Chủ đề</option>
                         <option value="comments">Người bán</option>
                       </select>
-                      <button class="btn btn-primary">
+                      <button class="btn btn-primary" type="submit" routerLink="/shopping/{{keyword}}" queryParamsHandling="preserve">
                         <i class="fa fa-search"></i> 
                       </button>
                     </div> <!-- input-group end.// -->
