@@ -22,11 +22,20 @@ import { ForAdminModule } from './modules/for-admin/for-admin.module';
 import { ToastrModule } from 'ngx-toastr';
 import { timeout } from 'rxjs';
 import { MatSortModule } from '@angular/material/sort';
+<<<<<<< Updated upstream
 import { DataTablesModule } from 'angular-datatables'
+=======
+import { DataTablesModule } from 'angular-datatables';
+import { ReportListComponent } from './report-list/report-list.component';
+import { CreateReportComponent } from './create-report/create-report.component';
+
+>>>>>>> Stashed changes
 
 @NgModule({
   declarations: [
     AppComponent,
+    ReportListComponent,
+    CreateReportComponent,
   ],
   imports: [
     BrowserModule,
