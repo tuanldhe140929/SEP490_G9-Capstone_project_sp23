@@ -24,7 +24,7 @@ const routes: Routes = [{
   canActivate: [SellerGuardGuard]
 },
 {
-  path: ':userName',
+  path: 'sellers/:sellerId',
   component: ProductCollectionComponent,
   title: "User product collection",
 }

@@ -19,4 +19,5 @@ public interface ProductService {
 	boolean setActiveVersion(Long productId, String version);
 	
 	Product getProductById(Long id);
+	
 }

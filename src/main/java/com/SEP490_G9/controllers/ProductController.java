@@ -120,6 +120,8 @@ public class ProductController {
 		ProductDetailsDTO dto = new ProductDetailsDTO(productDetails);
 		return ResponseEntity.ok(dto);
 	}
+	
+	
 
 	@GetMapping(value = "getPublishedProductsBySeller")
 	public ResponseEntity<?> getProductsBySeller() {
@@ -480,6 +482,26 @@ public class ProductController {
 		folder = new File(storageUtil.getLocation() + previewsDestinations);
 		folder.mkdirs();
 		return savedProductDetails;
+	}
+
+	@GetMapping(value = "getProductDetails")
+	public ResponseEntity<?> getProductDetails(
+			@RequestParam(name = "sellerId", required = true) Long sellerId){
+		List<Product> p = new ArrayList<>();
+		p = this.productService.getProductsBySellerId(sellerId);
+		List<ProductDetails> pd = new ArrayList<>();
+		for(int i = 0; i < p.size(); i++) {
+			p.get(i).getActiveVersion();
+			ProductDetails pde = null;
+			pde = this.productDetailsService.getByIdAndVersion(p.get(i).getId(), p.get(i).getActiveVersion());
+			pd.add(pde);
+		}
+		List<ProductDetailsDTO> ret = new ArrayList<>();
+		for(int i = 0; i< pd.size(); i++) {
+			ProductDetailsDTO pdto = new ProductDetailsDTO(pd.get(i));
+			ret.add(pdto);
+		}
+		return ResponseEntity.ok(ret);
 	}
 
 	@GetMapping(value = "getProductsCountBySellerId")
