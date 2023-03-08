@@ -1,6 +1,4 @@
-* {
-  font-family: 'Lato', sans-serif;
-}
+
 .grad {
   min-height: 100vh;
   background-color: #f4f4f4;
@@ -64,10 +62,6 @@
 .invalid {
   color: red;
 }
-.submitButton:active {
-  box-shadow: 0 1px #666;
-  transform: translateY(1px);
-}
 
 .submitButton {
     margin-top:10px;
@@ -109,4 +103,9 @@ a {
 	cursor: pointer;
 	border-radius: 3px;
 	border: none;
+}
+
+.submitButton:active {
+  box-shadow: 0 1px #666;
+  transform: translateY(3px);
 }

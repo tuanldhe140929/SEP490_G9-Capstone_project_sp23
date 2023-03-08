@@ -10,9 +10,11 @@ import { AuthModule } from './modules/auth/auth.module';
 import { ManageProductModule } from './modules/manage-product/manage-product.module';
 import { CommonModule } from './modules/common/common.module';
 import { BasicsModule } from './modules/basics/basics.module';
-import {MatIconModule} from '@angular/material/icon';	
+import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatMenuModule } from '@angular/material/menu';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { ManageAccountInfoModule } from './modules/manage-account-info/manage-account-info.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -22,14 +24,9 @@ import { ForAdminModule } from './modules/for-admin/for-admin.module';
 import { ToastrModule } from 'ngx-toastr';
 import { timeout } from 'rxjs';
 import { MatSortModule } from '@angular/material/sort';
-<<<<<<< Updated upstream
-import { DataTablesModule } from 'angular-datatables'
-=======
 import { DataTablesModule } from 'angular-datatables';
 import { ReportListComponent } from './report-list/report-list.component';
 import { CreateReportComponent } from './create-report/create-report.component';
-
->>>>>>> Stashed changes
 
 @NgModule({
   declarations: [
@@ -44,19 +41,23 @@ import { CreateReportComponent } from './create-report/create-report.component';
     FormsModule,
     ReactiveFormsModule,
     AuthModule,
-    ManageProductModule,
     ManageAccountInfoModule,
     ForUsersModule,
     ForAdminModule,
     BasicsModule,
     MatIconModule,
+    MatSortModule,
     MatButtonModule,
     MatDialogModule,
+    MatRadioModule,
     CKEditorModule,
     NgbModule,
     BrowserAnimationsModule,
     CommonModule,
+    ManageProductModule,
+    MatMenuModule,
     MatSortModule,
+    ManageProductModule,
     DataTablesModule,
     ToastrModule.forRoot(
       {
@@ -64,15 +65,16 @@ import { CreateReportComponent } from './create-report/create-report.component';
         progressBar: true
       }
     ),
-    
+
+
   ],
   providers: [
-	      {  
-      provide: HTTP_INTERCEPTORS,  
-      useClass: AuthInterceptor,  
-      multi: true  
-    }  
-  ],  
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

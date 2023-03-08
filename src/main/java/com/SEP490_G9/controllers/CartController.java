@@ -1,10 +1,11 @@
 package com.SEP490_G9.controllers;
 import org.springframework.http.ResponseEntity;
+
 import org.springframework.web.bind.annotation.*;
 
-import com.SEP490_G9.models.Entities.Cart;
-import com.SEP490_G9.models.Entities.DTOS.CartDTO;
-import com.SEP490_G9.services.CartService;
+import com.SEP490_G9.dto.CartDTO;
+import com.SEP490_G9.service.CartService;
+
 
 @RestController
 @RequestMapping("private/cart")
@@ -18,7 +19,7 @@ public class CartController {
     
 
     @PostMapping("/add/{productId}")
-    public ResponseEntity<?> addProduct(@PathVariable(name="productId") Long productId) {
+    public ResponseEntity<?> addProduct(@PathVariable(name="productId") Long productId ) {
     	CartDTO cartDTO = cartService.addProduct(productId);
         return ResponseEntity.ok(cartDTO);
     }
@@ -28,7 +29,6 @@ public class CartController {
     	CartDTO cart = cartService.removeProduct(productId);
     	return ResponseEntity.ok(cart);
     }
-
     
     @GetMapping("/getCurrentCartDTO")
     public ResponseEntity<?> getCart() {
@@ -36,5 +36,15 @@ public class CartController {
         return ResponseEntity.ok(cart);
     }	
     
-    //Check out api
+    @GetMapping("/checkOut")
+    public ResponseEntity<?> checkOut() {
+        CartDTO cart = cartService.getCurrentCartDTO();
+        return ResponseEntity.ok(cart);
+    }	
+    
+    @DeleteMapping("/removeAll/{productId}")
+    public ResponseEntity<?> removeAllProduct(@PathVariable(name="productId") Long productId) {
+    	CartDTO cart = cartService.removeAllProduct(productId);
+    	return ResponseEntity.ok(cart);
+    }
 }

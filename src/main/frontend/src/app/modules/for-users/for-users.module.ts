@@ -1,5 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatSelectModule } from '@angular/material/select';
+import { MatRadioModule } from '@angular/material/radio';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 import { ForUsersRoutingModule } from './for-users-routing.module';
 import { HomepageComponent } from './homepage/homepage.component';
@@ -14,6 +19,13 @@ import { MyCartComponent } from './my-cart/my-cart.component';
 import { CartComponent } from './my-cart/cart/cart.component';
 import { CheckOutComponent } from './check-out/check-out.component';
 import { CheckoutComponent } from './check-out/checkout/checkout.component';
+import { NotFoundComponent } from './not-found/not-found.component';
+import { VgCoreModule } from '@videogular/ngx-videogular/core';
+import { VgControlsModule } from '@videogular/ngx-videogular/controls';
+import { VgOverlayPlayModule } from '@videogular/ngx-videogular/overlay-play';
+import { VgBufferingModule } from '@videogular/ngx-videogular/buffering';
+import { ReportProductComponent } from './product-details/report-product/report-product.component';
+import { DownloadComponent } from './download/download.component';
 
 
 @NgModule({
@@ -29,11 +41,23 @@ import { CheckoutComponent } from './check-out/checkout/checkout.component';
     MyCartComponent,
     CartComponent,
     CheckOutComponent,
-    CheckoutComponent
+    CheckoutComponent,
+    NotFoundComponent,
+    ReportProductComponent,
+    DownloadComponent,
   ],
   imports: [
     CommonModule,
-    ForUsersRoutingModule
+    ForUsersRoutingModule,
+    VgCoreModule,
+    VgControlsModule,
+    VgOverlayPlayModule,
+    VgBufferingModule,
+    MatDialogModule,
+    MatSelectModule,
+    MatRadioModule,
+    ReactiveFormsModule,
+    MatAutocompleteModule
   ]
 })
 export class ForUsersModule { }

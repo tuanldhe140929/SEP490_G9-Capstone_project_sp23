@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AuthGuard } from '../../helpers/auth.guard';
 import { CheckOutComponent } from './check-out/check-out.component';
+import { DownloadComponent } from './download/download.component';
 import { HomepageComponent } from './homepage/homepage.component';
 import { MyCartComponent } from './my-cart/my-cart.component';
 import { ProductDetailsComponent } from './product-details/product-details.component';
@@ -12,11 +14,11 @@ const routes: Routes = [
   component: HomepageComponent
 },
 {
-  path: 'shopping',
+  path: 'shopping/:keyword',
   component: ShoppingComponent
 },
 {
-  path: ':username/:productName',
+  path: 'products/:productId',
   component: ProductDetailsComponent,
   title:'Chi tiết sản phẩm'
 },
@@ -27,7 +29,13 @@ const routes: Routes = [
 {
   path: 'checkout',
   component: CheckOutComponent
-}
+},
+  {
+    path: 'download/:productId',
+    component: DownloadComponent,
+    title:'Download',
+    canActivate: [AuthGuard]
+  }
 ];
 
 @NgModule({

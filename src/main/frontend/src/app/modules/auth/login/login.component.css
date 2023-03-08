@@ -1,6 +1,4 @@
-* {
-  font-family: 'Lato', sans-serif;
-}
+
 .formTitle{
     font-size:40px;
     font-weight:900;
@@ -106,7 +104,7 @@ a {
 
 button:active {
   box-shadow: 0 1px #666;
-  transform: translateY(1px);
+  transform: translateY(3px);
 }
 
 .google {

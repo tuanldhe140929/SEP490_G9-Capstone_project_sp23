@@ -9,23 +9,39 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
 import { FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { DataTablesModule } from 'angular-datatables';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatInputModule } from '@angular/material/input';
+import { MatSortModule } from '@angular/material/sort';
+import { MatMenu, MatMenuModule } from '@angular/material/menu';
 
 import { ForAdminRoutingModule } from './for-admin-routing.module';
-import { InspectorListComponent } from './inspector-list/inspector-list.component';
-import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
 import { ForAdminBaseComponent } from './for-admin-base/for-admin-base.component';
-import { AddInspectorComponent } from './add-inspector/add-inspector.component';
-import { UpdateInspectorComponent } from './update-inspector/update-inspector.component';
-import { DeleteInspectorComponent } from './delete-inspector/delete-inspector.component';
+import { DashboardComponent } from './for-admin-base/dashboard/dashboard.component';
+import { StaffsComponent } from './for-admin-base/staffs/staffs.component';
+import { AddStaffComponent } from './for-admin-base/staffs/add-staff/add-staff.component';
+import { UpdateStaffStatusComponent } from './for-admin-base/staffs/update-staff-status/update-staff-status.component';
+import { CategoriesComponent } from './for-admin-base/categories/categories.component';
+import { AddCategoryComponent } from './for-admin-base/categories/add-category/add-category.component';
+import { TagsComponent } from './for-admin-base/tags/tags.component';
+import { UpdateCategoryComponent } from './for-admin-base/categories/update-category/update-category.component';
+import { AddTagComponent } from './for-admin-base/tags/add-tag/add-tag.component';
+import { UpdateTagComponent } from './for-admin-base/tags/update-tag/update-tag.component';
+
 
 @NgModule({
   declarations: [
-    InspectorListComponent,
-    AdminDashboardComponent,
     ForAdminBaseComponent,
-    AddInspectorComponent,
-    UpdateInspectorComponent,
-    DeleteInspectorComponent
+    DashboardComponent,
+    StaffsComponent,
+    AddStaffComponent,
+    UpdateStaffStatusComponent,
+    CategoriesComponent,
+    AddCategoryComponent,
+    TagsComponent,
+    UpdateCategoryComponent,
+    AddTagComponent,
+    UpdateTagComponent,
   ],
   imports: [
     CommonModule,
@@ -39,7 +55,12 @@ import { DeleteInspectorComponent } from './delete-inspector/delete-inspector.co
     MatListModule,
     FormsModule,
     ReactiveFormsModule,
-    DataTablesModule
+    DataTablesModule,
+    MatFormFieldModule,
+    MatPaginatorModule,
+    MatInputModule,
+    MatSortModule,
+    MatMenuModule
   ]
 })
 export class ForAdminModule { }

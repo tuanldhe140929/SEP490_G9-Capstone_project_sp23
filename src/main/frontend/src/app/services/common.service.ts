@@ -4,12 +4,15 @@ import { Observable } from 'rxjs';
 import { Product } from '../DTOS/Product';
 import { User } from '../DTOS/User';
 
-const baseUrl = 'http://localhost:9000/public/common';
+const baseUrl = 'http://localhost:9000/seller/';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CommonService {
+  getSellerTotalProductCount(id: number): Observable<number> {
+    return this.http.get<number>(baseUrl + '/getTotalNumberProduct');
+  }
   constructor(private http: HttpClient) { }
 
   getCurrentLogedInUser(): Observable<User> {
@@ -17,10 +20,10 @@ export class CommonService {
   }
 
 
-  getProductByNameAndUserId(productName: string, ownerId:number ): Observable<Product> {
-    return this.http.get<Product>(baseUrl + '/getProductByNameAndUserId', {
+  getProductByIdAndUserId(productId: number, ownerId:number ): Observable<Product> {
+    return this.http.get<Product>(baseUrl + '/getProductByIdAndUserId', {
       params: {
-        productName: productName,
+        productId: productId,
         userId: ownerId
       }
     });

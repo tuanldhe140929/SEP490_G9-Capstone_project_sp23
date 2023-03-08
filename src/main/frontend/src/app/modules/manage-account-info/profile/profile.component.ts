@@ -1,4 +1,7 @@
-import { FormBuilder } from '@angular/forms';
+import { AppComponent } from 'src/app/app.component';
+import { HttpClient } from '@angular/common/http';
+import { AuthResponse } from 'src/app/DTOS/AuthResponse';
+import { FormBuilder, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -16,12 +19,111 @@ import { ManageAccountInfoService } from '../../../services/manage-account-info.
 })
 export class ProfileComponent implements OnInit {
 
-  constructor(private manageAccountInfoService: ManageAccountInfoService,
+  authResponse: AuthResponse = new AuthResponse();
+  user: User = new User();
+  constructor(private FormBuilder: FormBuilder,
+    private httpClient: HttpClient,
+    private app: AppComponent,
     private storageService: StorageService,
-     private authService: AuthService, 
-     private router: Router,
-     private fb: FormBuilder) { }
+    private manageAccountInfoService: ManageAccountInfoService) {
 
-  ngOnInit(): void {
   }
+  ngOnInit(): void {
+    this.authResponse = this.storageService.getAuthResponse();
+    this.getUserInfo();
+    console.log(this.user.avatar);
+  }
+
+  public Profileform = this.FormBuilder.group({
+    "newFirstName": ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
+    "newUsername": ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
+    "newLastName": ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]]
+  });
+
+  get Form() {
+    return this.Profileform.controls;
+  }
+  get newUsername() {
+    return this.Profileform.controls.newUsername;
+  }
+  get newFirstName() {
+    return this.Profileform.controls.newFirstName
+  }
+  get newLastName() {
+    return this.Profileform.controls.newLastName;
+  }
+  public username = "";
+
+  onChangeName() {
+    this.Profileform.controls.newUsername.setValue(this.user.username)
+    this.Profileform.controls.newFirstName.setValue(this.user.firstName)
+    this.Profileform.controls.newLastName.setValue(this.user.lastName)
+    this.manageAccountInfoService.onChangeName(this.Profileform.value).subscribe(
+      data => {
+        console.log(data)
+      },
+      error => {
+        console.log(error)
+      }
+    )
+  }
+
+  getUserInfo() {
+    this.manageAccountInfoService.getCurrentUserInfo().subscribe(
+      data => {
+        this.user = data;
+        
+        if (this.user.avatar == "" || this.user.avatar == null) {  
+            this.ProfileImage.setAttribute('src',"http://ssl.gstatic.com/accounts/ui/avatar_2x.png") ;
+        } else {
+         this.ProfileImage.setAttribute('src',"http://localhost:9000/public/serveMedia/serveProfileImage?userId=" + this.user.id) ;
+        }
+        
+        console.log(data)
+      },
+      error => {
+        console.log(error)
+      }
+    )
+  }
+  UpdateInfo() {
+    if (this.UsernameInput != null && this.FirstNameInput != null && this.LastNameInput != null) {
+      this.UsernameInput.removeAttribute('readonly');
+      this.FirstNameInput.removeAttribute('readonly');
+      this.LastNameInput.removeAttribute('readonly');
+    }
+    console.log("abc")
+  }
+  get ProfileImage(){
+    return document.getElementById('Image') as HTMLImageElement;
+  }
+  get UsernameInput() {
+    return document.getElementById('user_name') as HTMLInputElement;
+  }
+  get FirstNameInput() {
+    return document.getElementById('first_name') as HTMLInputElement;
+  }
+  get LastNameInput() {
+    return document.getElementById('last_name') as HTMLInputElement;
+  }
+
+  UploadProfileImage($event: any) {
+    const file: File = $event.target.files[0];
+    if (file) {
+      const formData = new FormData();
+      formData.append("thumbnail", file);
+      const upload$ = this.manageAccountInfoService.uploadProfileImage(file).subscribe(
+        data => {
+          this.user.avatar = data;
+          console.log(data);
+          this.ProfileImage.setAttribute('src',"" );
+          this.ProfileImage.setAttribute('src',"http://localhost:9000/public/serveMedia/serveProfileImage?userId=" + this.user.id);
+        },
+        error => {
+          console.log(error)
+        }
+      )
+    }
+  }
+
 }

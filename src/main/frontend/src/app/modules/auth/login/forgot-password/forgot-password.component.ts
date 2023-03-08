@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from 'src/app/services/auth.service';
-import { ErrorResponse } from '../../../../DTOS/ErrorResponse';
 
 @Component({
   selector: 'app-forgot-password',
@@ -11,16 +11,36 @@ import { ErrorResponse } from '../../../../DTOS/ErrorResponse';
   styleUrls: ['./forgot-password.component.css']
 })
 export class ForgotPasswordComponent implements OnInit {
-  constructor(private http: HttpClient, private formBuilder: FormBuilder, private authService: AuthService, private router: Router) {
+  @ViewChild('messageModal', { static: false }) private messageModal: any;
 
-  }
-  msg = '';
+
+  message = '';
   email: String | undefined;
 
   resetPasswordRequestForm = this.formBuilder.group({
     "email": ['', [Validators.required, Validators.email]],
   });
 
+
+  get Form1() {
+    return this.resetPasswordRequestForm.controls;
+  }
+
+
+  constructor(private http: HttpClient,
+    private formBuilder: FormBuilder,
+    private authService: AuthService,
+    private router: Router,
+    private modalService: NgbModal) {
+
+  }
+  openModal() {
+    this.modalService.open(this.messageModal, { centered: true });
+  }
+  dismissError() {
+    this.message = "";
+    this.modalService.dismissAll();
+  }
   ngOnInit(): void {
 
   }
@@ -29,33 +49,14 @@ export class ForgotPasswordComponent implements OnInit {
     if (this.resetPasswordRequestForm.valid) {
       if (this.resetPasswordRequestForm.value.email != null) {
         this.email = this.resetPasswordRequestForm.value.email.toString();
-        this.authService.resetPasswordRequest(this.resetPasswordRequestForm.value.email.toString()).subscribe(
-          (data) => {
-            this.msg = "Đổi mật khẩu thành công, hãy kiểm tra hòm thư";
+        this.authService.resetPassword(this.resetPasswordRequestForm.value.email.toString()).subscribe(
+          data => {
+            this.message = "Đặt lại password thành công, hãy kiểm tra email";
           },
-          (error) => {
-            let errorResponse: ErrorResponse = error.error;
-            switch (errorResponse.status) {
-              case 404:
-                this.msg = "Không tìm thấy email";
-                break;
-              case 400:
-                this.msg = "Không thể gửi email tới hòm thư";
-                break;
-              default:
-                this.msg = "Có lỗi xảy ra";
-            }
+          error => {
+            this.message = "Yêu cầu chưa được thực hiện"
           });
       }
     }
   }
-
-  public redirectLogin() {
-    this.router.navigate(['login']);
-  }
-
-  get Form1() {
-    return this.resetPasswordRequestForm.controls;
-  }
-
 }
