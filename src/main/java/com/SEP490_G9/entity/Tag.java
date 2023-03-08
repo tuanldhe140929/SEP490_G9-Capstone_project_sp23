@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.SEP490_G9.dto.TagDTO;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.*;
@@ -32,6 +33,11 @@ public class Tag implements Serializable {
 		super();
 		this.id = id;
 		this.name = name;
+	}
+
+	public Tag(TagDTO tag) {
+		this.id = tag.getId();
+		this.name = tag.getName();
 	}
 
 	public int getId() {

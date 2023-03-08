@@ -65,11 +65,13 @@
 .add_to_cart_btn{
     width:100%;
     height:100%;
+    font-weight:200;
 }
 
 .buy_now_btn {
   width: 100%;
   height: 100%;
+  font-weight:200;
 }
 .cart button {
   border-radius: 3px;
@@ -202,4 +204,26 @@
 
 .dott.active {
   background-color: #2196f3;
+}
+
+.details_value{
+    position:relative;
+}
+.details_value_hover {
+    display:none;
+  position: absolute;
+  text-align: justify;
+  width: 400px;
+  height: auto;
+  z-index:11;
+  background:white;
+  border:1px solid black;
+  border-radius:4px;
+  font-size:14px;
+  padding:5px;
+  right:1%;
+}
+
+.sen:hover .details_value_hover {
+    display:block;
 }

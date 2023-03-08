@@ -45,12 +45,9 @@ export class AuthService {
   }
 
   register(body: any): Observable<string> {
-    return this.http.post<string>(userController+'/register', body, {
-      headers: new HttpHeaders({
-        "Content-Type": "text"
-      }),
-      withCredentials: true
-    });
+
+    return this.http.post<string>(userController+"/register", body);
+
   }
 
   loginWithGoogle(body: any): Observable<any> {

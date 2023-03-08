@@ -18,9 +18,10 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Preview } from '../../../DTOS/Preview';
 import { PreviewService } from '../../../services/preview.service';
 import { ProductFileService } from '../../../services/product-file.service';
-import { ForAdminService } from '../../../services/for-admin.service';
 import { License } from 'src/app/DTOS/License';
 import { LicenseService } from 'src/app/services/license.service';
+import { CategoryService } from 'src/app/services/category.service';
+import { TagService } from 'src/app/services/tag.service';
 
 
 const MSG100 = 'Tên sản phẩm không được để trống';
@@ -51,7 +52,7 @@ const price = new Intl.NumberFormat('vi-VN',
 class UploadProcess {
   progress: number;
   subcription: Subscription
-
+  
   constructor() {
     this.progress = 0;
     this.subcription = new Subscription;
@@ -95,8 +96,9 @@ export class NewProductComponent implements OnInit {
     private modalService: NgbModal,
     private previewService: PreviewService,
     private productFileService: ProductFileService,
-    private adminService: ForAdminService,
-    private licenseService: LicenseService) { }
+    private licenseService: LicenseService,
+    private categoryService: CategoryService,
+    private tagService: TagService) { }
 
   product: Product = new Product;
   typeList: Category[] = [];
@@ -295,15 +297,15 @@ export class NewProductComponent implements OnInit {
           console.log(data.lastFile);
           console.log(this.product.draft);
           if (data.lastFile && !this.product.draft) {
-              this.info = 'Vì không có downloadable file nào, trạng thái sản phẩm sẽ chuyển về "Nháp"';
-              this.openInfoModal();
+            this.info = 'Vì không có downloadable file nào, trạng thái sản phẩm sẽ chuyển về "Nháp"';
+            this.openInfoModal();
+            this.Draft.checked = true;
+            this.Publish.checked = false;
           }
-          
-
         },
-        (error) => {
-          console.log(error);
-        }
+          (error) => {
+            console.log(error);
+          }
       )
     }
   }
@@ -507,14 +509,14 @@ export class NewProductComponent implements OnInit {
 
   percent = 'width:100%;';
   getTypeList(): void {
-    this.adminService.getAllCategories().subscribe((response: any) => {
+    this.categoryService.getAllCategories().subscribe((response: any) => {
       this.typeList = response;
     })
 
   }
 
   getTagList(): void {
-    this.adminService.getAllTags().subscribe(
+    this.tagService.getAllTags().subscribe(
       (data: Tag[]) => {
         this.tagList = data;
         for (let j = 0; j < this.product.tags.length; j++) {
@@ -588,7 +590,6 @@ export class NewProductComponent implements OnInit {
   }
 
   getPreviewVideoSource(): string {
-    console.log(this.product.previewVideo);
     if (this.product.previewVideo.id != -1 && this.product.previewVideo != null) {
       return "http://localhost:9000/public/serveMedia/video?source=" + this.product.previewVideo.source.replace(/\\/g, '/');
     }
@@ -598,7 +599,6 @@ export class NewProductComponent implements OnInit {
   onPreviewVideoUpload($event: any) {
     const file: File = $event.target.files[0];
     if (file) {
-      console.log(file.type);
       if (!this.checkFileType(file.type, VIDEO_EXTENSIONS)) {
         this.openFormatErrorModal();
       } else {
@@ -610,6 +610,7 @@ export class NewProductComponent implements OnInit {
         formData.append("version", this.product.version);
         const upload$ = this.previewService.uploadPreviewVideo(formData).subscribe(
           (data) => {
+            console.log(data);
             this.product.previewVideo = data;
           },
           (error) => {
@@ -864,16 +865,16 @@ export class NewProductComponent implements OnInit {
     if (this.fileDisplayList.length == 0) {
       this.errors.push(MSG104);
     }
-    if (this.product.description!=null)
-    if (this.product.description.length > 100) {
-      const MSG1002 = 'Độ dài tối đa của mô tả là 100';
-      this.errors.push();
-    }
+    if (this.product.description != null)
+      if (this.product.description.length > 100) {
+        const MSG1002 = 'Độ dài tối đa của mô tả là 100';
+        this.errors.push();
+      }
 
-    if (this.productDetails!=null)
-    if (this.productDetails.length > 1000) {
-      this.errors.push(MSG1003);
-    }
+    if (this.productDetails != null)
+      if (this.productDetails.length > 1000) {
+        this.errors.push(MSG1003);
+      }
 
     if (this.product.price > 50000000) {
       this.errors.push()
@@ -924,9 +925,13 @@ export class NewProductComponent implements OnInit {
       this.manageProductService.updateProduct(this.newProductForm.value, this.InstructionDetails.value).subscribe(
         (data) => {
           this.product = data;
-          console.log(data);
+          console.log(this.product);
+          this.info = "Cập nhật thành công";
+          this.openInfoModal();
         },
         (error) => {
+          this.fileError = "Cập nhật không thành công";
+          this.openFileSizeErrorModal();
           console.log(error);
         }
       )
@@ -972,7 +977,7 @@ export class NewProductComponent implements OnInit {
   }
 
   get LicenseDetails() {
-    if (this.productLicense >= 1) {
+    if (this.productLicense >= 1 && this.licenseList.length>0) {
       return this.licenseList[this.productLicense - 1].details;
     }
     else {

@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.SEP490_G9.dto.ProductDetailsDTO;
+import com.SEP490_G9.dto.TagDTO;
 import com.SEP490_G9.entity.embeddable.ProductVersionKey;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -75,6 +76,10 @@ public class ProductDetails implements Serializable {
 	@OneToMany(mappedBy = "productDetails", fetch = FetchType.EAGER)
 	private List<CartItem> cartItems = new ArrayList<>();
 
+	@ManyToOne
+	@JoinColumn(name = "engine_id")
+	private Engine engine;
+
 	public ProductDetails() {
 		// TODO Auto-generated constructor stub
 	}
@@ -83,12 +88,16 @@ public class ProductDetails implements Serializable {
 
 		this.productVersionKey.setProductId(productDetailsDTO.getId());
 		this.productVersionKey.setVersion(productDetailsDTO.getVersion());
-		this.category = productDetailsDTO.getCategory();
+		this.category = new Category(productDetailsDTO.getCategory());
 		this.name = productDetailsDTO.getName();
 		this.description = productDetailsDTO.getDescription();
 		this.price = productDetailsDTO.getPrice();
 		this.license = new License(productDetailsDTO.getLicense());
-		this.tags = productDetailsDTO.getTags();
+		List<Tag> t = new ArrayList<>();
+		for (TagDTO tag : productDetailsDTO.getTags()) {
+			t.add(new Tag(tag));
+		}
+		this.tags = t;
 		this.detailDescription = productDetailsDTO.getDetails();
 
 	}
@@ -235,6 +244,14 @@ public class ProductDetails implements Serializable {
 
 	public void setDraft(boolean draft) {
 		this.draft = draft;
+	}
+
+	public Engine getEngine() {
+		return engine;
+	}
+
+	public void setEngine(Engine engine) {
+		this.engine = engine;
 	}
 
 }

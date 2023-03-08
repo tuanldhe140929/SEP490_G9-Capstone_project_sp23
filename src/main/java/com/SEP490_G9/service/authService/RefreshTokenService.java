@@ -13,5 +13,5 @@ public interface RefreshTokenService {
 
 	int deleteByAccountId(Long accountId);
 
-	RefreshToken findByToken(String token);
+	RefreshToken getByToken(String token);
 }

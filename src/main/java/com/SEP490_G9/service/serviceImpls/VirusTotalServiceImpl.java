@@ -83,7 +83,8 @@ public class VirusTotalServiceImpl implements VirusTotalService {
 		boolean notCompleted = true;
 		while (notCompleted) {
 			Request request = new Request.Builder().url(ANALYSIS_ENDPOINT + analysisId).get()
-					.addHeader("accept", "application/json").addHeader("x-apikey", virusTotalKey).build();
+					.addHeader("accept", "application/json")
+					.addHeader("x-apikey", virusTotalKey).build();
 
 			try {
 				Response response = client.newCall(request).execute();
@@ -106,7 +107,6 @@ public class VirusTotalServiceImpl implements VirusTotalService {
 //					    "code" : "QuotaExceededError"
 //					  }
 //					}
-				
 				
 				String status = rootNode.get("data").get("attributes").get("status").asText();
 				if (status.equals("completed")) {
@@ -135,15 +135,21 @@ public class VirusTotalServiceImpl implements VirusTotalService {
 		builder.readTimeout(100, TimeUnit.SECONDS); 
 		builder.writeTimeout(100, TimeUnit.SECONDS); 
 		
+		
 		OkHttpClient client = new OkHttpClient();
 		client = builder.build();
 		
 		System.out.println("create request");
+		
+		
 		MediaType mediaType = MediaType.parse("multipart/form-data");
+		
+		
 		RequestBody requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM)
 				.addFormDataPart("file", "temp-file-" + UUID.randomUUID(), RequestBody.create(data, mediaType)).build();
 
-		Request request = new Request.Builder().url(url).post(requestBody).addHeader("accept", "application/json")
+		Request request = new Request.Builder().url(url).post(requestBody)
+				.addHeader("accept", "application/json")
 				.addHeader("x-apikey", virusTotalKey).build();
 		String id = "";
 		try {

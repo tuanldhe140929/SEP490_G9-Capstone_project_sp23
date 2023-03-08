@@ -2,7 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
-import { ForAdminService } from 'src/app/services/for-admin.service';
+import { TagService } from 'src/app/services/tag.service';
 
 @Component({
   selector: 'app-update-tag',
@@ -10,7 +10,7 @@ import { ForAdminService } from 'src/app/services/for-admin.service';
   styleUrls: ['./update-tag.component.css']
 })
 export class UpdateTagComponent {
-  constructor(private formBuilder: FormBuilder, private forAdminService: ForAdminService, private toastr: ToastrService, @Inject(MAT_DIALOG_DATA) public data: {nameList: string[], id: number, oldName: string}){}
+  constructor(private formBuilder: FormBuilder, private tagService: TagService, private toastr: ToastrService, @Inject(MAT_DIALOG_DATA) public data: {nameList: string[], id: number, oldName: string}){}
 
   ngOnInit(): void {
     this.updateTagForm.controls['name'].setValue(this.data.oldName)
@@ -44,7 +44,7 @@ export class UpdateTagComponent {
   updateTag(id: number){
     if(this.updateTagForm.valid){
       if(!this.checkNameExists()){
-        this.forAdminService.updateTag(this.updateTagForm.value,id).subscribe(
+        this.tagService.updateTag(this.updateTagForm.value,id).subscribe(
           response => {
             console.log(response);
             this.toastr.success('Cập nhật tên chủ đề thành công!')
