@@ -9,7 +9,7 @@ import com.SEP490_G9.entity.embeddable.ReportItemKey;
 public interface ReportService {
 	List<Report> getAllReport();
 
-	void saveReport(Report report);
+	Report saveReport(Report report);
 
 	void deleteReport(ReportItemKey id);
 

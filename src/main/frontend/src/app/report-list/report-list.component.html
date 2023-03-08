@@ -1,0 +1,27 @@
+<h2>Danh sách báo cáo</h2>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>
+                ID
+            </th>
+            <th>
+                Tên
+            </th>
+            <th>
+                Mô tả
+            </th>
+            <th>
+               Thông tin chi tiết
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor = "let report of reports">
+            <td>{{report.productId}}</td>
+            <td>sản phẩm {{report.userId}}</td>
+            <td>{{report.description}}</td>
+            <td><a href="abcaa">Chi tiết sản phẩm {{report.userId}}</a></td>
+        </tr>
+    </tbody>
+</table>

@@ -32,12 +32,57 @@ import com.SEP490_G9.service.ReportService;
 public class ReportController {
 	 @Autowired private ReportService reportService;  
 
+	@Autowired
+	ManageProductService manageProductService;
+
+	@Autowired
+	FileStorageService fileStorageService;
+
+	@GetMapping(value = "getCurrentUserInfo")
+	public ResponseEntity<?> getCurrentUserInfo() {
+		User user = manageProductService.getCurrentUserInfo();
+		User user2 = new User();
+		user2.setId(user.getId());
+		user2.setEnabled(user.isEnabled());
+		user2.setEmail(user.getEmail());
+		user2.setPassword(null);
+		user2.setUsername(user.getUsername());
+		return ResponseEntity.ok(user2);
+	}
+
+	@GetMapping(value = "getProductsByUser")
+	public ResponseEntity<?> getProductsByUser() {
+		List<Product> products = manageProductService.getProductsByUser();
+		return ResponseEntity.ok(products);
+	}
+
+	@PostMapping(value = "addProduct")
+	public ResponseEntity<?> addProduct(@RequestBody Product product) {
+		Product ret = manageProductService.addProduct(product);
+		return ResponseEntity.ok(ret);
+	}
+=======
 	  @RequestMapping(value= "/", method = RequestMethod.GET)  
 	  public ResponseEntity<?> index(Model model) {  
 	    List<Report> reports = reportService.getAllReport();  
+	    return ResponseEntity.ok(reports);  
+	  }  
 
-	    
-
+	  @RequestMapping(value = "/createreport", method = RequestMethod.POST)  
+	  public Report addReport(@RequestBody Report report) {  
+		  System.out.println(report.getReportKey().getProductId());
+		  System.out.println(report.getReportKey().getUserId());
+	    return reportService.saveReport(report);  
+	  }  
+	  
+	  @GetMapping("/reports")
+	    public List<Report> getAllEmployees() {
+	        return reportService.getAllReport();
+	    }
+      
+	  @RequestMapping(value= "/", method = RequestMethod.GET)  
+	  public ResponseEntity<?> index(Model model) {  
+	    List<Report> reports = reportService.getAllReport();  
 	    return ResponseEntity.ok(reports);  
 	  }  
 
@@ -49,7 +94,6 @@ public class ReportController {
 	    reportService.saveReport(report);
 	    return true;  
 	  }  
-
 	  @RequestMapping(value = "/edit", method = RequestMethod.POST)  
 	  public Report editUser(@RequestBody Report report) {  
 	    Report reportEdit = reportService.findReportById(report.getReportKey()).get();
@@ -72,5 +116,4 @@ public class ReportController {
 	    reportService.deleteReport(key);  
 	    return true; 
 	  }  
-
 }

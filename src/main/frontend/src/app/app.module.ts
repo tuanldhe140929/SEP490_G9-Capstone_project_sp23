@@ -25,10 +25,14 @@ import { ToastrModule } from 'ngx-toastr';
 import { timeout } from 'rxjs';
 import { MatSortModule } from '@angular/material/sort';
 import { DataTablesModule } from 'angular-datatables';
+import { ReportListComponent } from './report-list/report-list.component';
+import { CreateReportComponent } from './create-report/create-report.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+    ReportListComponent,
+    CreateReportComponent,
   ],
   imports: [
     BrowserModule,
