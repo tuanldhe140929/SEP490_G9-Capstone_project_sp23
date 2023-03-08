@@ -19,6 +19,10 @@ export class CartService {
     
   
   }
+  addToCart(productId: number): Observable<any> {
+    const url = `${baseUrl}/add/${productId}`;
+    return this.httpClient.post(url, {});
+  }
   
   constructor(private httpClient: HttpClient) {
 
