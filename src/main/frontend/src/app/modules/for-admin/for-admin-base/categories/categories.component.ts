@@ -6,7 +6,7 @@ import {MatTableDataSource} from '@angular/material/table';
 import { Subject } from 'rxjs';
 import { Account } from 'src/app/DTOS/Account';
 import { Category } from 'src/app/DTOS/Category';
-import { ForAdminService } from 'src/app/services/for-admin.service';
+import { CategoryService } from 'src/app/services/category.service';
 import { AddCategoryComponent } from './add-category/add-category.component';
 import { UpdateCategoryComponent } from './update-category/update-category.component';
 
@@ -25,8 +25,8 @@ export class CategoriesComponent implements AfterViewInit{
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private forAdminService: ForAdminService, private dialog: MatDialog) {
-    this.forAdminService.getAllCategories().subscribe(response => {
+  constructor(private categoryService: CategoryService, private dialog: MatDialog) {
+    this.categoryService.getAllCategories().subscribe(response => {
       this.dataSource = new MatTableDataSource(response);
       this.categoryList = response;
       this.dataSource.paginator = this.paginator;
@@ -82,7 +82,7 @@ export class CategoriesComponent implements AfterViewInit{
   }
 
   refresh() {
-    this.forAdminService.getAllCategories().subscribe((data: Category[]) => {
+    this.categoryService.getAllCategories().subscribe((data: Category[]) => {
       this.dataSource.data = data;
       this.nameList = [];
       for (let i = 0; i < data.length; i++) {

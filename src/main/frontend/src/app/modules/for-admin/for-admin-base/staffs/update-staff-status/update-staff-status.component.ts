@@ -1,7 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
-import { ForAdminService } from 'src/app/services/for-admin.service';
+import { AccountService } from 'src/app/services/account.service';
+
 
 @Component({
   selector: 'app-update-staff-status',
@@ -9,7 +10,7 @@ import { ForAdminService } from 'src/app/services/for-admin.service';
   styleUrls: ['./update-staff-status.component.css']
 })
 export class UpdateStaffStatusComponent implements OnInit{
-  constructor(@Inject(MAT_DIALOG_DATA) public data: {id: number, email: string, enabled: boolean}, private forAdminService: ForAdminService, private toastr: ToastrService){}
+  constructor(@Inject(MAT_DIALOG_DATA) public data: {id: number, email: string, enabled: boolean}, private accountService: AccountService, private toastr: ToastrService){}
 
   formerStatus: boolean = this.data.enabled;
 
@@ -18,7 +19,7 @@ export class UpdateStaffStatusComponent implements OnInit{
   }
 
   onUpdateStatus(){
-    this.forAdminService.updateStaffStatus(this.data.id).subscribe(
+    this.accountService.updateStaffStatus(this.data.id).subscribe(
       data => {
         console.log(data);
         if(this.formerStatus){

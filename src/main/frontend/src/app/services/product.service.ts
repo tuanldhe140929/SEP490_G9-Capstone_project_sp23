@@ -27,4 +27,11 @@ export class ProductService {
       }
     });
   }
+  public GetProductDetails(sellerId: number): Observable<Product[]>{
+    return this.httpClient.get<Product[]>(baseUrl+"/getProductDetails",{
+      params:{
+        sellerId: sellerId
+      }
+    })
+  }
 }

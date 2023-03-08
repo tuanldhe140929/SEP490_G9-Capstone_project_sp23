@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.SEP490_G9.dto.ProductDetailsDTO;
 import com.SEP490_G9.entity.ProductDetails;
-import com.SEP490_G9.entity.Seller;
 
 public interface ProductDetailsService {
 	//public ProductDetails getProductDetailsByProductId(Long productId);
@@ -21,5 +20,10 @@ public interface ProductDetailsService {
 
 	public ProductDetails updateProductDetailsStatus(ProductDetails edited);
 	
+	public List<ProductDetails> getByKeyword(String keyword);
+	
+	public List<ProductDetails> getAll();
+
 	public ProductDetails getActiveVersion(Long productId);
+
 }

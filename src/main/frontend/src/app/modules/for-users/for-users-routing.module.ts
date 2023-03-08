@@ -14,7 +14,7 @@ const routes: Routes = [
   component: HomepageComponent
 },
 {
-  path: 'shopping',
+  path: 'shopping/:keyword',
   component: ShoppingComponent
 },
 {

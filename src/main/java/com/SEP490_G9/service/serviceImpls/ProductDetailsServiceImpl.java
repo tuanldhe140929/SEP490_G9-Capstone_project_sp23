@@ -90,5 +90,16 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		return ret;
 	}
 
+	@Override
+	public List<ProductDetails> getByKeyword(String keyword) {
+		List<ProductDetails> searchResult = productDetailsRepo.findByNameContaining(keyword);
+		return searchResult;
+	}
+
+	@Override
+	public List<ProductDetails> getAll() {
+		List<ProductDetails> allProductDetails = productDetailsRepo.findAll();
+		return allProductDetails;
+	}
 
 }

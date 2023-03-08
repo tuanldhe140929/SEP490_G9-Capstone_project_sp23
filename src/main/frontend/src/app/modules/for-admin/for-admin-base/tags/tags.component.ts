@@ -3,10 +3,8 @@ import { MatDialog } from '@angular/material/dialog';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort, Sort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
-import { Subject } from 'rxjs';
-import { Account } from 'src/app/DTOS/Account';
 import { Tag } from 'src/app/DTOS/Tag';
-import { ForAdminService } from 'src/app/services/for-admin.service';
+import { TagService } from 'src/app/services/tag.service';
 import { AddTagComponent } from './add-tag/add-tag.component';
 import { UpdateTagComponent } from './update-tag/update-tag.component';
 
@@ -25,8 +23,8 @@ export class TagsComponent implements AfterViewInit{
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private forAdminService: ForAdminService, private dialog: MatDialog) {    
-    this.forAdminService.getAllTags().subscribe(response => {
+  constructor(private tagService: TagService, private dialog: MatDialog) {    
+    this.tagService.getAllTags().subscribe(response => {
       this.dataSource = new MatTableDataSource(response);
       this.tagList = response;
       this.dataSource.paginator = this.paginator;
@@ -82,7 +80,7 @@ export class TagsComponent implements AfterViewInit{
   }
 
   refresh() {
-    this.forAdminService.getAllTags().subscribe((data: Tag[]) => {
+    this.tagService.getAllTags().subscribe((data: Tag[]) => {
       this.dataSource.data = data;
       this.nameList = [];
       for (let i = 0; i < data.length; i++) {

@@ -120,6 +120,8 @@ public class ProductController {
 		ProductDetailsDTO dto = new ProductDetailsDTO(productDetails);
 		return ResponseEntity.ok(dto);
 	}
+	
+	
 
 	@GetMapping(value = "getPublishedProductsBySeller")
 	public ResponseEntity<?> getProductsBySeller() {
@@ -482,11 +484,51 @@ public class ProductController {
 		return savedProductDetails;
 	}
 
+	@GetMapping(value = "getProductDetails")
+	public ResponseEntity<?> getProductDetails(
+			@RequestParam(name = "sellerId", required = true) Long sellerId){
+		List<Product> p = new ArrayList<>();
+		p = this.productService.getProductsBySellerId(sellerId);
+		List<ProductDetails> pd = new ArrayList<>();
+		for(int i = 0; i < p.size(); i++) {
+			p.get(i).getActiveVersion();
+			ProductDetails pde = null;
+			pde = this.productDetailsService.getByIdAndVersion(p.get(i).getId(), p.get(i).getActiveVersion());
+			pd.add(pde);
+		}
+		List<ProductDetailsDTO> ret = new ArrayList<>();
+		for(int i = 0; i< pd.size(); i++) {
+			ProductDetailsDTO pdto = new ProductDetailsDTO(pd.get(i));
+			ret.add(pdto);
+		}
+		return ResponseEntity.ok(ret);
+	}
+
 	@GetMapping(value = "getProductsCountBySellerId")
 	public ResponseEntity<?> getProductsCountBySellerId(
 			@RequestParam(name = "sellerId", required = true) Long sellerId) {
 		List<Product> sellerProducts = this.productService.getProductsBySellerId(sellerId);
 		int count = sellerProducts.size();
 		return ResponseEntity.ok(count);
+	}
+	
+	@GetMapping(value = "getProductsByKeyword/{keyword}")
+	public ResponseEntity<?> getProductsByKeyword(@PathVariable(name = "keyword") String keyword){
+		List<ProductDetails> searchResult = this.productDetailsService.getByKeyword(keyword);
+		List<ProductDetailsDTO> searchResultDto = new ArrayList<>();
+		for(ProductDetails result: searchResult) {
+			searchResultDto.add(new ProductDetailsDTO(result));
+		}
+		return ResponseEntity.ok(searchResultDto);
+	}
+	
+	@GetMapping(value = "getAllProducts")
+	public ResponseEntity<?> getAllProducts(){
+		List<ProductDetails> allProducts = this.productDetailsService.getAll();
+		List<ProductDetailsDTO> allProductsDto = new ArrayList<>();
+		for(ProductDetails product: allProducts) {
+			allProductsDto.add(new ProductDetailsDTO(product));
+		}
+		return ResponseEntity.ok(allProductsDto);
 	}
 }

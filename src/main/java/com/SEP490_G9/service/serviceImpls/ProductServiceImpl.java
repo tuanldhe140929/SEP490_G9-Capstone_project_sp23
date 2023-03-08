@@ -70,4 +70,6 @@ public class ProductServiceImpl implements ProductService {
 		Product product = productRepository.findById(id).orElseThrow();
 		return product;
 	}
+
+
 }

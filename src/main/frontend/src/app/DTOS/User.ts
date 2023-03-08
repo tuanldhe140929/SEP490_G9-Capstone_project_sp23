@@ -29,8 +29,6 @@ export class User{
     this.enabled = true;
     this.role = [];
     this.username = "";
-    this.firstName = "";
-    this.lastName = "";
     this.emailVerified = false;
     this.avatar = "";
     this.userCreatedDate = new Date();
