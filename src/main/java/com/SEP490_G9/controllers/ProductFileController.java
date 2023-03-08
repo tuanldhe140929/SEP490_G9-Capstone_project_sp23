@@ -103,11 +103,11 @@ public class ProductFileController {
 
 		boolean isSafe;
 		File file = new File(tempFilePath.toString());
-//		isSafe = virusTotalService.scanFile(file);
-//		System.out.println("isSafe?" + isSafe);
+		isSafe = virusTotalService.scanFile(file);
+		System.out.println("isSafe?" + isSafe);
 
-//		if (isSafe) {
-		if (true) {
+		if (isSafe) {
+//		if (true) {
 			Files.deleteIfExists(tempFilePath);
 			String fileLocation = getProductFilesLocation(productDetails);
 			File fileDir = new File(storageUtil.getLocation() + fileLocation);

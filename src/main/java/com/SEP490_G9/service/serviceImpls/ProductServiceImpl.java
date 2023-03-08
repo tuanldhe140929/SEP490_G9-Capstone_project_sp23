@@ -3,10 +3,13 @@ package com.SEP490_G9.service.serviceImpls;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.SEP490_G9.entity.Account;
 import com.SEP490_G9.entity.Product;
 import com.SEP490_G9.entity.Seller;
+import com.SEP490_G9.entity.UserDetailsImpl;
 import com.SEP490_G9.exception.ResourceNotFoundException;
 import com.SEP490_G9.repository.ProductRepository;
 import com.SEP490_G9.service.ProductService;
@@ -24,6 +27,10 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public Product updateProduct(Product product) {
+//		Account account = ((UserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getAccount();
+//		if(product.getSeller().getId()!= account.getId()) {
+//			throw new Exception(); 
+//		}
 		return productRepository.save(product);
 	}
 

@@ -72,13 +72,6 @@ public class CommonExceptionHandler {
 		return errorResponse;
 	}
 
-	@ExceptionHandler(RefreshTokenException.class)
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	public ErrorResponse resolveException(RefreshTokenException exception) {
-		ErrorResponse errorResponse = exception.getErrorResponse();
-		return errorResponse;
-	}
-
 	@ExceptionHandler(EmailServiceException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public ErrorResponse resolveException(EmailServiceException exception) {

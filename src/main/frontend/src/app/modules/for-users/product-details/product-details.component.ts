@@ -289,15 +289,8 @@ export class ProductDetailsComponent implements OnInit{
       console.log(`Dialog result: ${result}`);
     });
   }
-
-
   redirectSellerPage() {
-    /*    let navigationExtras: NavigationExtras = {
-          
-          queryParams: { 'username': this.owner.username }
-        };
-        this.router.navigate(['/collection'], navigationExtras);
-      */
+    this.router.navigate(['collection/'+this.owner.username]);
   }
 
 }

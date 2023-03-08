@@ -24,6 +24,7 @@ import { VgControlsModule } from '@videogular/ngx-videogular/controls';
 import { VgOverlayPlayModule } from '@videogular/ngx-videogular/overlay-play';
 import { VgBufferingModule } from '@videogular/ngx-videogular/buffering';
 import { ReportProductComponent } from './product-details/report-product/report-product.component';
+import { DownloadComponent } from './download/download.component';
 
 
 @NgModule({
@@ -42,6 +43,7 @@ import { ReportProductComponent } from './product-details/report-product/report-
     CheckoutComponent,
     NotFoundComponent,
     ReportProductComponent,
+    DownloadComponent,
   ],
   imports: [
     CommonModule,
@@ -49,7 +51,7 @@ import { ReportProductComponent } from './product-details/report-product/report-
     VgCoreModule,
     VgControlsModule,
     VgOverlayPlayModule,
-    VgBufferingModule
+    VgBufferingModule,
     MatDialogModule,
     MatSelectModule,
     MatRadioModule,
