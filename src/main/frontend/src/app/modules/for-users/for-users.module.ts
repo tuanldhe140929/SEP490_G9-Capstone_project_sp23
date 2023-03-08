@@ -50,7 +50,7 @@ import { ReportProductComponent } from './product-details/report-product/report-
     VgCoreModule,
     VgControlsModule,
     VgOverlayPlayModule,
-    VgBufferingModule
+    VgBufferingModule,
     MatDialogModule,
     MatSelectModule,
     MatRadioModule,
