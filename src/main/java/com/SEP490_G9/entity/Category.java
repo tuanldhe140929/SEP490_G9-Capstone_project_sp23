@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.SEP490_G9.dto.CategoryDTO;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.*;
@@ -11,7 +12,7 @@ import jakarta.persistence.*;
 @JsonIgnoreProperties(value = { "productDetails" })
 @Entity
 @Table(name = "categories")
-public class Category implements Serializable{
+public class Category implements Serializable {
 	/**
 	 * 
 	 */
@@ -24,12 +25,13 @@ public class Category implements Serializable{
 	@Column(name = "name")
 	private String name;
 
-	@OneToMany(mappedBy="category")
+	@OneToMany(mappedBy = "category")
 	private List<ProductDetails> productDetails = new ArrayList<>();
 
 	public Category() {
 		// TODO Auto-generated constructor stub
 	}
+
 	public Category(int id, String name) {
 		this.id = id;
 		this.name = name;
@@ -40,17 +42,26 @@ public class Category implements Serializable{
 		this.id = id;
 		this.name = name;
 	}
+
+	public Category(CategoryDTO category) {
+		this.id = category.getId();
+		this.name = category.getName();
+	}
+
 	public int getId() {
 		return id;
 	}
+
 	public void setId(int id) {
 		this.id = id;
 	}
+
 	public String getName() {
 		return name;
 	}
+
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 }

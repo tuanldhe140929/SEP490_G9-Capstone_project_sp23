@@ -2,7 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
-import { ForAdminService } from 'src/app/services/for-admin.service';
+import { TagService } from 'src/app/services/tag.service';
 
 @Component({
   selector: 'app-add-tag',
@@ -10,7 +10,7 @@ import { ForAdminService } from 'src/app/services/for-admin.service';
   styleUrls: ['./add-tag.component.css']
 })
 export class AddTagComponent {
-  constructor(private formBuilder: FormBuilder, private forAdminService: ForAdminService, private toastr: ToastrService, @Inject(MAT_DIALOG_DATA) public data: {nameList: string[]}){}
+  constructor(private formBuilder: FormBuilder, private tagService: TagService, private toastr: ToastrService, @Inject(MAT_DIALOG_DATA) public data: {nameList: string[]}){}
 
   addTagForm = this.formBuilder.group({
     "name": ['',[Validators.required]]
@@ -36,7 +36,7 @@ export class AddTagComponent {
   addCategory(){
     if(this.addTagForm.valid){
       if(!this.checkNameExists()){
-        this.forAdminService.addTag(this.addTagForm.value).subscribe(
+        this.tagService.addTag(this.addTagForm.value).subscribe(
           data => {
             console.log(data);
             this.toastr.success('Thêm chủ đề thành công')

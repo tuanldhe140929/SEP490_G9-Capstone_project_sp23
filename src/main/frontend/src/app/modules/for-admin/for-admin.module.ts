@@ -13,6 +13,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
 import { MatSortModule } from '@angular/material/sort';
+import { MatMenu, MatMenuModule } from '@angular/material/menu';
 
 import { ForAdminRoutingModule } from './for-admin-routing.module';
 import { ForAdminBaseComponent } from './for-admin-base/for-admin-base.component';
@@ -58,7 +59,8 @@ import { UpdateTagComponent } from './for-admin-base/tags/update-tag/update-tag.
     MatFormFieldModule,
     MatPaginatorModule,
     MatInputModule,
-    MatSortModule
+    MatSortModule,
+    MatMenuModule
   ]
 })
 export class ForAdminModule { }

@@ -41,16 +41,13 @@ export class AuthService {
   constructor(private http: HttpClient) { }
 
   login(body: any): Observable<any> {
-    return this.http.post<any>('http://localhost:9000/account/login', body, httpOptions);
+    return this.http.post<any>(accountController+'/login', body, httpOptions);
   }
 
   register(body: any): Observable<string> {
-    return this.http.post<string>('http://localhost:9000/public/auth/register', body, {
-      headers: new HttpHeaders({
-        "Content-Type": "text"
-      }),
-      withCredentials: true
-    });
+
+    return this.http.post<string>(userController+"/register", body);
+
   }
 
   loginWithGoogle(body: any): Observable<any> {

@@ -34,7 +34,7 @@ public class CommonExceptionHandler {
 		for (FieldError error : fieldErrors) {
 			messages.add(error.getField() + " - " + error.getDefaultMessage());
 		}
-		System.out.println("Method argument");
+		System.out.println("Method argument " +ex.getMessage());
 		return new ErrorResponse(messages, HttpStatus.BAD_REQUEST);
 	}
 
@@ -68,13 +68,6 @@ public class CommonExceptionHandler {
 	@ExceptionHandler(DuplicateFieldException.class)
 	@ResponseStatus(HttpStatus.CONFLICT)
 	public ErrorResponse resolveException(DuplicateFieldException exception) {
-		ErrorResponse errorResponse = exception.getErrorResponse();
-		return errorResponse;
-	}
-
-	@ExceptionHandler(RefreshTokenException.class)
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	public ErrorResponse resolveException(RefreshTokenException exception) {
 		ErrorResponse errorResponse = exception.getErrorResponse();
 		return errorResponse;
 	}

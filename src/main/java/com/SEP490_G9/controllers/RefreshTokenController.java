@@ -14,6 +14,7 @@ import com.SEP490_G9.dto.AuthResponse;
 import com.SEP490_G9.entity.Account;
 import com.SEP490_G9.entity.RefreshToken;
 import com.SEP490_G9.exception.RefreshTokenException;
+import com.SEP490_G9.exception.ResourceNotFoundException;
 import com.SEP490_G9.service.AccountService;
 import com.SEP490_G9.service.authService.RefreshTokenService;
 import com.SEP490_G9.util.JwtTokenUtil;
@@ -41,7 +42,7 @@ public class RefreshTokenController {
 		boolean foundRefreshToken = false;
 
 		if (request.getCookies() == null) {
-			throw new RefreshTokenException(null, "Not found");
+			throw new ResourceNotFoundException("Cookie", "token", "");
 		} else {
 			for (Cookie cookie : request.getCookies()) {
 				if (cookie.getName().equals("refreshToken")) {
@@ -51,7 +52,7 @@ public class RefreshTokenController {
 				}
 			}
 			if (!foundRefreshToken) {
-				throw new RefreshTokenException(null, "Not found");
+				throw new ResourceNotFoundException("Refresh token", "token", "");
 			}
 		}
 
@@ -59,7 +60,7 @@ public class RefreshTokenController {
 
 	}
 	
-	AuthResponse validate(Cookie cookie) {
+	private AuthResponse validate(Cookie cookie) {
 		String token = cookie.getValue();
 		AuthResponse authResponse = refreshToken(token);
 		return authResponse;
@@ -67,11 +68,11 @@ public class RefreshTokenController {
 	
 	public AuthResponse refreshToken(String token) {
 		AuthResponse authResponse = new AuthResponse();
-		RefreshToken refreshToken = refreshTokenService.findByToken(token);
+		RefreshToken refreshToken = refreshTokenService.getByToken(token);
 		if (refreshTokenService.verifyExpiration(refreshToken)) {
-			throw new RefreshTokenException(token, "Expired");
+			throw new ResourceNotFoundException("refresh token", "token", token);
 		} else {
-			Account account = accountService.getByRefreshToken(refreshTokenService.findByToken(token));
+			Account account = accountService.getByRefreshToken(refreshTokenService.getByToken(token));
 			authResponse.setAccessToken(jwtUtil.generateToken(account.getEmail()));
 			authResponse.setEmail(account.getEmail());
 			Object[] authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities().toArray();

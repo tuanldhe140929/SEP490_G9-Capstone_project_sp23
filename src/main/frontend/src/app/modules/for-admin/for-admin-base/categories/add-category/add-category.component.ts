@@ -1,8 +1,8 @@
 import { Component, Inject } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { ForAdminService } from 'src/app/services/for-admin.service';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
+import { CategoryService } from 'src/app/services/category.service';
 
 @Component({
   selector: 'app-add-category',
@@ -11,7 +11,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class AddCategoryComponent {
 
-  constructor(private formBuilder: FormBuilder, private forAdminService: ForAdminService, private toastr: ToastrService, @Inject(MAT_DIALOG_DATA) public data: {nameList: string[]}){}
+  constructor(private formBuilder: FormBuilder, private categoryService: CategoryService, private toastr: ToastrService, @Inject(MAT_DIALOG_DATA) public data: {nameList: string[]}){}
 
   addCategoryForm = this.formBuilder.group({
     "name": ['',[Validators.required]]
@@ -37,7 +37,7 @@ export class AddCategoryComponent {
   addCategory(){
     if(this.addCategoryForm.valid){
       if(!this.checkNameExists()){
-        this.forAdminService.addCategory(this.addCategoryForm.value).subscribe(
+        this.categoryService.addCategory(this.addCategoryForm.value).subscribe(
           data => {
             console.log(data);
             this.toastr.success('Thêm phân loại thành công')

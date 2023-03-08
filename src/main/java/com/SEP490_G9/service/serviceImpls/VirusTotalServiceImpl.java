@@ -41,6 +41,7 @@ public class VirusTotalServiceImpl implements VirusTotalService {
 
 	@Override
 	public boolean scanFile(File file) throws IOException {
+		long startTime = System.currentTimeMillis();
 		List<byte[]> chunks = splitFileIntoChunks(file.getPath().toString());
 
 		List<Boolean> isChunksSafe = new ArrayList<>();
@@ -49,8 +50,15 @@ public class VirusTotalServiceImpl implements VirusTotalService {
 		ExecutorService executor = Executors.newFixedThreadPool(chunks.size());
 		for (byte[] chunk : chunks) {
 			Future<Boolean> future = executor.submit(() -> {
+				long uploadChunkStart = System.currentTimeMillis();
 				String analysisId = uploadChunk(UPLOAD_ENDPOINT, chunk);
+				long uploadChunkEnd = System.currentTimeMillis();
+				System.out.println("upload chunk "+(chunks.indexOf(chunk)+1) + " takes "+(uploadChunkEnd-uploadChunkStart)/1000+"s");
+				
 				boolean isChunkSafe = getAnalysis(analysisId, chunks.indexOf(chunk));
+				long analysisEnd = System.currentTimeMillis();
+				System.out.println("analysis chunk "+(chunks.indexOf(chunk)+1) + " takes "+(analysisEnd-uploadChunkEnd)/1000+"s");
+				
 				return isChunkSafe;
 			});
 
@@ -69,27 +77,28 @@ public class VirusTotalServiceImpl implements VirusTotalService {
 
 		boolean isMalicious = true;
 		for (boolean response : isChunksSafe) {
-			System.out.println("compare");
 			isMalicious = isMalicious && response;
 		}
 
+		long finishTime = System.currentTimeMillis();
+		System.out.println("total: " + (finishTime-startTime)/1000);
 		return isMalicious;
 	}
 
 	private boolean getAnalysis(String analysisId, int index) {
-		System.out.println("gettin analysis");
 		boolean isSafe = false;
 		OkHttpClient client = new OkHttpClient();
 		boolean notCompleted = true;
 		while (notCompleted) {
 			Request request = new Request.Builder().url(ANALYSIS_ENDPOINT + analysisId).get()
-					.addHeader("accept", "application/json").addHeader("x-apikey", virusTotalKey).build();
+					.addHeader("accept", "application/json")
+					.addHeader("x-apikey", virusTotalKey).build();
 
 			try {
 				Response response = client.newCall(request).execute();
 				ObjectMapper objectMapper = new ObjectMapper();
 				JsonNode rootNode = objectMapper.readTree(response.body().string());
-				System.out.println(rootNode.toPrettyString());
+				//System.out.println(rootNode.toPrettyString());
 				// Check if the analysis is completed
 				
 				
@@ -107,7 +116,6 @@ public class VirusTotalServiceImpl implements VirusTotalService {
 //					  }
 //					}
 				
-				
 				String status = rootNode.get("data").get("attributes").get("status").asText();
 				if (status.equals("completed")) {
 					// Print out the JSON object
@@ -121,7 +129,7 @@ public class VirusTotalServiceImpl implements VirusTotalService {
 					break;
 				}
 				// Wait for a few seconds before sending the next request
-				TimeUnit.SECONDS.sleep(2);
+				TimeUnit.SECONDS.sleep(40);
 			} catch (IOException | InterruptedException e) {
 				throw new FileUploadException("Error when get analysis result" + e.getMessage());
 			}
@@ -135,15 +143,18 @@ public class VirusTotalServiceImpl implements VirusTotalService {
 		builder.readTimeout(100, TimeUnit.SECONDS); 
 		builder.writeTimeout(100, TimeUnit.SECONDS); 
 		
+		
 		OkHttpClient client = new OkHttpClient();
 		client = builder.build();
 		
-		System.out.println("create request");
 		MediaType mediaType = MediaType.parse("multipart/form-data");
+		
+		
 		RequestBody requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM)
 				.addFormDataPart("file", "temp-file-" + UUID.randomUUID(), RequestBody.create(data, mediaType)).build();
 
-		Request request = new Request.Builder().url(url).post(requestBody).addHeader("accept", "application/json")
+		Request request = new Request.Builder().url(url).post(requestBody)
+				.addHeader("accept", "application/json")
 				.addHeader("x-apikey", virusTotalKey).build();
 		String id = "";
 		try {
@@ -178,7 +189,7 @@ public class VirusTotalServiceImpl implements VirusTotalService {
 				chunks.add(chunk);
 			}
 		}
-		System.out.println(chunks.size());
+		System.out.println("chunk: "+chunks.size());
 		return chunks;
 	}
 

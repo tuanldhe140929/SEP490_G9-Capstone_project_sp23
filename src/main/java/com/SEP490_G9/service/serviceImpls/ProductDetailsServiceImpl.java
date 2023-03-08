@@ -6,11 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.SEP490_G9.dto.ProductDetailsDTO;
+import com.SEP490_G9.entity.Product;
 import com.SEP490_G9.entity.ProductDetails;
 import com.SEP490_G9.entity.Seller;
 import com.SEP490_G9.exception.DuplicateFieldException;
 import com.SEP490_G9.exception.ResourceNotFoundException;
 import com.SEP490_G9.repository.ProductDetailsRepository;
+import com.SEP490_G9.repository.ProductRepository;
 import com.SEP490_G9.service.ProductDetailsService;
 
 @Service
@@ -18,16 +20,21 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 
 	@Autowired
 	ProductDetailsRepository productDetailsRepo;
-
+	
+	@Autowired
+	ProductRepository productRepo;
+	
+	
 	@Override
-	public ProductDetails getProductDetailsByProductId(Long productId) {
-		ProductDetails ret = productDetailsRepo.findFirstByProductIdOrderByLastModifiedDesc(productId);
-		if (ret == null) {
-			throw new ResourceNotFoundException("product details:", productId.toString(), "null");
+	public ProductDetails getActiveVersion(Long productId) {
+		Product product = productRepo.findById(productId).orElseThrow();
+		ProductDetails ret = productDetailsRepo.findByProductIdAndProductVersionKeyVersion(productId, product.getActiveVersion());
+		if(ret==null) {
+			throw new ResourceNotFoundException("Product details", "version", product.getActiveVersion());
 		}
 		return ret;
 	}
-
+	
 	@Override
 	public ProductDetails createProductDetails(ProductDetails productDetails) {
 		if (productDetailsRepo.existsByProductAndProductVersionKeyVersion(productDetails.getProduct(),
@@ -38,8 +45,8 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 	}
 
 	@Override
-	public ProductDetails getProductDetailsByProductIdAndVersionAndSeller(ProductDetailsDTO productDetailsDTO,
-			Seller seller) {
+	public ProductDetails getByProductIdAndVersion(ProductDetailsDTO productDetailsDTO) {
+		Seller seller = null;
 		ProductDetails ret = productDetailsRepo.findByProductIdAndProductVersionKeyVersion(productDetailsDTO.getId(),
 				productDetailsDTO.getVersion());
 		if (ret == null || ret.getProduct().getSeller() != seller) {
@@ -81,6 +88,18 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 			throw new ResourceNotFoundException("product details", "version", activeVersion);
 		}
 		return ret;
+	}
+
+	@Override
+	public List<ProductDetails> getByKeyword(String keyword) {
+		List<ProductDetails> searchResult = productDetailsRepo.findByNameContaining(keyword);
+		return searchResult;
+	}
+
+	@Override
+	public List<ProductDetails> getAll() {
+		List<ProductDetails> allProductDetails = productDetailsRepo.findAll();
+		return allProductDetails;
 	}
 
 }

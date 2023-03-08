@@ -1,0 +1,41 @@
+<div class="container-fluid grad">
+  <div class="row padded">
+    <div class="col-12 content">
+      <div class="row label">
+        <span style="font-size: 20px; font-weight: 600; color: #434343; margin-bottom:25px;">Tải xuống "{{product.name}}"</span>
+      </div>
+      <div class="row return_link_row" style="margin-bottom:25px;" (click)="redirectProductPage()">
+        <div class="return_link_div">
+          <a href="" routerLink="/products/{{product.id}}" class="return_link">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAXVBMVEX///8/Pz8zMzOpqak7Ozvq6upvb29zc3M4ODglJSXw8PB+fn40NDQtLS38/Pz19fXW1tZKSkpCQkJmZmazs7OIiIigoKDe3t7Ly8sqKiqQkJCXl5dgYGB4eHhSUlK7V+JlAAAB7ElEQVR4nO3dgU7CMBjEcQpVijAQQXGAvP9jGmNMhGEkY0vXu//vBfgutLeNkG40AgAAAAAAAAAAAAAAAAAAAAAAg7dcrXKP0Kvn+Tq9bLa5x+jP6yzFEGK1fsg9SU+mVfgW01PuWXrxOA4/0ib3MH34FTCE2S73ON07CxjGb7nn6dz0LGBI89wDde0ioF7Cy4Byq/TxMqBa0zQDpmnumTrVDBiD1BW/sQdDjFJ3bVcCBgKWRH6JXisZApZEPqBjycgHpEWLQsDSye9BxxYlYFHkS0Y+IC1aOseAWktUvmQIWDr5PejYogQsinzJyAekRUvnGFBricqXTDNgWEv9y+JKwLTfTobifXlvwOYe/Io4HowqTHoIOCz1xz0B99X/n5BdtW8fcFfnnv4mdft/CB4WuYe/yeLQOuEx5h7+JvHYOuGpkIQnvsM/6e9D/S7Vvx4a3NMM/760vve+1ODZwuD50OAZ3+B3GoPf2lwjqi1Ug7oxiOi5F4lYHBpVAREVGOxFz0Y1iKi2UA3qxiCi514kYnFoVAVEVGCwFz0bVS2iwV4kogIaVYFnRLWFKn9uosHZlwbnlxqcQWtwjrDBWdAG53kbnMlucK6+wbsRDN5vYfCOkpH+e2YAAAAAAAAAAAAAAAAAAAAAALD2CRNCIQY8zsQcAAAAAElFTkSuQmCC" style="height:20px;width:auto" />
+            Trang sản phẩm
+          </a>
+        </div>
+      </div>
+      <div class="row download" *ngFor="let file of product.files">
+        <div class="row downloader" style="display: flex;">
+          <div class="download_btn" style="width: auto; margin-right: 25px;">
+            <button>Tải xuống</button>
+          </div>
+          <div class="download_file" style="width: auto; padding: 5px; ">
+            <span style="font-weight:500; font-size:18px;padding-top:5px;">{{file.name}}</span>&nbsp;
+            <span style="font-weight: 500; font-size: 18px; padding-top: 5px; color: #606060;">{{getFileSize(file)}}</span>
+          </div>
+        </div>
+      </div>
+      <div class="row instruction" style="border-top: 1px solid; border-color: #dadada; margin-top:25px;">
+        <div class="instruction_label">
+          <span style="font-weight:500; font-size:16px;">Hướng dẫn tải và cài đặt</span>
+        </div>
+        <div class="instruction_details" style="padding:20px;" >
+          <span style="padding:10px;">{{product.instruction}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row padded">
+    <span style="font-size:20px;font-weight:600;padding:25px;">Các sản phẩm liên quan</span>
+    <div class="col-12 content"></div>
+  </div>
+</div>
+

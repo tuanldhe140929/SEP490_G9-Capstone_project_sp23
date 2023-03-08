@@ -17,7 +17,7 @@ export class Product {
   instruction: string;
   createdDate: Date
   lastModified: Date
- license: License;
+  license: License;
   draft: boolean;
   price: number;
   previewVideo: Preview;

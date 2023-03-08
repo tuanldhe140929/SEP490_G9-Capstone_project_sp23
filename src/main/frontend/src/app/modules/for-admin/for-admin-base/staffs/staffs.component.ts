@@ -5,7 +5,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Account } from 'src/app/DTOS/Account';
-import { ForAdminService } from 'src/app/services/for-admin.service';
+import { AccountService } from 'src/app/services/account.service';
 import { AddStaffComponent } from './add-staff/add-staff.component';
 import { UpdateStaffStatusComponent } from './update-staff-status/update-staff-status.component';
 
@@ -25,11 +25,11 @@ export class StaffsComponent implements AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private forAdminService: ForAdminService, private dialog: MatDialog) {
+  constructor(private accountService: AccountService, private dialog: MatDialog) {
 
 
     // Assign the data to the data source for the table to render
-    this.forAdminService.getAllStaffs().subscribe(
+    this.accountService.getAllStaffs().subscribe(
       response => {
         this.dataSource = new MatTableDataSource(response);
         this.staffList = response;
@@ -92,7 +92,7 @@ export class StaffsComponent implements AfterViewInit {
   }
 
   refresh() {
-    this.forAdminService.getAllStaffs().subscribe((data: any) => {
+    this.accountService.getAllStaffs().subscribe((data: any) => {
       this.dataSource.data = data;
       this.emailList = [];
       for (let i = 0; i < data.length; i++) {

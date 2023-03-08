@@ -53,7 +53,6 @@ public class ManageAccountInfoServiceImpl implements ManageAccountInfoService {
 		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getAccount();
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 		if(encoder.matches(oldPassword, account.getPassword())) {
-
 			String encodedPassword = encoder.encode(newPassword);
 			account.setPassword(encodedPassword);
 			accountRepo.save(account);
@@ -75,7 +74,7 @@ public class ManageAccountInfoServiceImpl implements ManageAccountInfoService {
 			File coverImageDir = new File(storageUtil.getLocation() + profileImageLocation);
 			coverImageDir.mkdirs();
 			fileIOService.store(profileImage, profileImageLocation);
-			user.setImage(profileImageLocation+ profileImage.getOriginalFilename());
+			user.setAvatar(profileImageLocation+ profileImage.getOriginalFilename());
 			userRepo.save(user);
 			return user.getAvatar();
 		}

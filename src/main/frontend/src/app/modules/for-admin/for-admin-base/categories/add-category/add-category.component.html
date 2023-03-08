@@ -6,16 +6,16 @@
             <label>Tên phân loại</label>
             <input type="text" class="form-control" formControlName="name" (change)="checkNameExists()">
             <div *ngIf="form.controls.name.invalid&&form.controls.name.touched; then nameNotOk else nameOk"></div>
-            <ng-template #nameNotOk><small>Tên không hợp lệ</small></ng-template>
+            <ng-template #nameNotOk><small>Tên phân loại không hợp lệ</small></ng-template>
             <ng-template #nameOk><small>
                 <div *ngIf="checkNameExists();then nameExists else nameNotExists"></div>
-                <ng-template #nameExists><small>Tên đã được sử dụng</small></ng-template>
+                <ng-template #nameExists><small>Tên phân loại đã được sử dụng</small></ng-template>
                 <ng-template #nameNotExists>&nbsp;</ng-template>
             </small></ng-template>
         </div>
         <div class="form-group" align="end">
             <button mat-dialog-close="false" class="btn btn-warning">Hủy</button>
-            <button type="submit" [mat-dialog-close]="false" [disabled]="addCategoryForm.invalid||checkNameExists()" class="btn btn-success">Thêm</button>
+            <button type="submit" [mat-dialog-close]="false" [disabled]="addCategoryForm.invalid||checkNameExists()" class="btn btn-success">Thêm phân loại</button>
         </div>
     </form>
 </mat-dialog-content>

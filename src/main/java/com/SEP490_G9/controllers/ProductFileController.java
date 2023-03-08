@@ -103,17 +103,17 @@ public class ProductFileController {
 
 		boolean isSafe;
 		File file = new File(tempFilePath.toString());
-//		isSafe = virusTotalService.scanFile(file);
-//		System.out.println("isSafe?" + isSafe);
+		isSafe = virusTotalService.scanFile(file);
+		System.out.println("isSafe?" + isSafe);
 
-//		if (isSafe) {
-		if (true) {
+		if (isSafe) {
+//		if (true) {
 			Files.deleteIfExists(tempFilePath);
 			String fileLocation = getProductFilesLocation(productDetails);
 			File fileDir = new File(storageUtil.getLocation() + fileLocation);
 			fileDir.mkdirs();
 			String storedPath = fileStorageService.storeV2(productFile, storageUtil.getLocation() + fileLocation);
-			ProductFile pf = new ProductFile(storedPath, productFile, productDetails);
+			ProductFile pf = new ProductFile(storedPath.replace(storageUtil.getLocation(), ""), productFile, productDetails);
 			ProductFile savedFile = productFileService.createProductFile(pf);
 			ret = new ProductFileDTO(savedFile);
 		} else {

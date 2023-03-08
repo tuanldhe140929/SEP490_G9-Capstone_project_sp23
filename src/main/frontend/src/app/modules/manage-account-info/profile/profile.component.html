@@ -33,7 +33,7 @@
                         <div class="form-group">
                             <div class="col-xs-6">
                                 <label for="first_name">
-                                    <h4>User Name</h4>
+                                    <h4>Tên người dùng</h4>
                                 </label>
                                 <input readonly [(ngModel)]="user.username" [ngModelOptions]="{standalone: true}"
                                     type="text" class="form-control" name="first_name" id="user_name"
@@ -43,7 +43,7 @@
                         <div class="form-group">
                             <div class="col-xs-6">
                                 <label for="first_name">
-                                    <h4>First Name</h4>
+                                    <h4>Tên</h4>
                                 </label>
                                 <input readonly [(ngModel)]="user.firstName" [ngModelOptions]="{standalone: true}"
                                     type="text" class="form-control" name="first_name" id="first_name"
@@ -53,7 +53,7 @@
                         <div class="form-group">
                             <div class="col-xs-6">
                                 <label for="first_name">
-                                    <h4>Last Name</h4>
+                                    <h4>Họ</h4>
                                 </label>
                                 <input readonly [(ngModel)]="user.lastName" [ngModelOptions]="{standalone: true}"
                                     type="text" class="form-control" id="last_name"
@@ -63,7 +63,7 @@
                         <div class="form-group">
                             <div class="col-xs-6">
                                 <label for="Join Date">
-                                    <h4>Created Date</h4>
+                                    <h4>Ngày khởi tạo</h4>
                                 </label>
                                 <input [value]="user.userCreatedDate" readonly type="text" class="form-control"
                                     name="CreatedDate" id="phone" placeholder="" title=".">
@@ -82,12 +82,12 @@
                             <div class="col-xs-12">
                                 <br>
                                 <button class="btn btn-lg btn-success" type="submit" [disabled]="Profileform.invalid"><i
-                                        class="glyphicon glyphicon-ok-sign"></i> Save</button>
+                                        class="glyphicon glyphicon-ok-sign"></i> Lưu</button>
                                 <button class="btn btn-lg" type="reset"><i class="glyphicon glyphicon-repeat"></i> <a
                                         routerLink="/changepassword" routerLinkActive="active"
-                                        ariaCurrentWhenActive="page"> Change password</a></button>
+                                        ariaCurrentWhenActive="page"> Đổi mật khẩu</a></button>
                                 <button (click)="UpdateInfo()" class="btn btn-lg btn-success" type="text">
-                                    Update</button>
+                                    Cập nhật thông tin</button>
                             </div>
                         </div>
                     </form>
