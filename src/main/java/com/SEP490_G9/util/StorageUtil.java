@@ -12,9 +12,8 @@ public class StorageUtil {
 	 */
 
 
-	private String location = "D:\\New folder (2)\\";
-
-
+	private String location = "C:\\Users\\ADMN\\eclipse-workspace\\SEP490_G9_Datas\\";
+  
 	public String getLocation() {
 		return location;
 	}

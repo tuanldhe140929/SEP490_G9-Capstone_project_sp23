@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.SEP490_G9.entity.Account;
 import com.SEP490_G9.entity.RefreshToken;
 import com.SEP490_G9.exception.RefreshTokenException;
+import com.SEP490_G9.exception.ResourceNotFoundException;
 import com.SEP490_G9.repository.RefreshTokenRepository;
 import com.SEP490_G9.repository.UserRepository;
 import com.SEP490_G9.service.authService.RefreshTokenService;
@@ -30,18 +31,18 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 	@Override
 	public RefreshToken getByToken(String token) {
 		RefreshToken refreshToken = refreshTokenRepository.findByToken(token);
-		if(refreshToken==null) {
-			throw new RefreshTokenException(token,"Not found");
+		if (refreshToken == null) {
+			throw new ResourceNotFoundException("refresh token", "token", token);
 		}
 		return refreshToken;
-		
+
 	}
 
 	@Override
 	public RefreshToken createRefreshToken(Account account) {
 		RefreshToken refreshToken;
 		refreshToken = refreshTokenRepository.findByAccount(account);
-		if(refreshToken == null) {
+		if (refreshToken == null) {
 			refreshToken = new RefreshToken();
 		}
 		refreshToken.setAccount(account);

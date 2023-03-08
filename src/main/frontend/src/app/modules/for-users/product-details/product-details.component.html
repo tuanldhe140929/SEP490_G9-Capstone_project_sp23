@@ -135,15 +135,15 @@
             <img style="width: 30px; height: 30px;" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQzbVmbfZ3BkG0VBARHNv5MFluIkXOUbLRLEw&usqp=CAU" />
           </div>
           <h4 class="title text-dark">{{product.name}}</h4>
-          <a [routerLink]="['/collection', owner.username]" style="text-decoration:none; color:black; display:block; width:fit-content;">
-            <div class="sellerInfo" style="height: 30px; min-height: 30px;width:fit-content; cursor: pointer" (click)="redirectSellerPage()">
+      
+            <div class="sellerInfo" style="height: 30px; min-height: 30px;width:fit-content; cursor: pointer">
 
-              <div style="display:flex;margin : 0;">
+              <div style="display:flex;margin : 0;" (click)="redirectSellerPage()">
                 <div id="sellerImage" style="width:30px; height:30px;"></div>
                 <div style="margin-left:4px; text-align:justify;"><p style="padding:4px;">{{owner.username}}</p></div>
               </div>
             </div>
-          </a>
+
           <div class="rating-wrap my-3">
             <ul class="rating-stars">
               <li style="width:80%" class="stars-active"> <img src="assets/images/misc/stars-active.svg" alt=""> </li>
@@ -189,14 +189,14 @@
                   <span class="details_value_hover">{{product.license.details}}</span>
                 </div>
                 <div *ngIf="product.license==null">
-                  <a class="details_value" >Không</a>
-              
+                  <a class="details_value">Không</a>
+
                 </div>
               </div>
             </div>
             <div class="row metadata_details">
-            <div class="col-5"><label>Game engine</label></div>
-            <div class="col-7">ABC Engine</div>
+              <div class="col-5"><label>Game engine</label></div>
+              <div class="col-7">ABC Engine</div>
             </div>
           </div>
 
