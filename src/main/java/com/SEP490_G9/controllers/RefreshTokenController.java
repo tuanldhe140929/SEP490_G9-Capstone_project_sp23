@@ -67,11 +67,11 @@ public class RefreshTokenController {
 	
 	public AuthResponse refreshToken(String token) {
 		AuthResponse authResponse = new AuthResponse();
-		RefreshToken refreshToken = refreshTokenService.findByToken(token);
+		RefreshToken refreshToken = refreshTokenService.getByToken(token);
 		if (refreshTokenService.verifyExpiration(refreshToken)) {
 			throw new RefreshTokenException(token, "Expired");
 		} else {
-			Account account = accountService.getByRefreshToken(refreshTokenService.findByToken(token));
+			Account account = accountService.getByRefreshToken(refreshTokenService.getByToken(token));
 			authResponse.setAccessToken(jwtUtil.generateToken(account.getEmail()));
 			authResponse.setEmail(account.getEmail());
 			Object[] authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities().toArray();

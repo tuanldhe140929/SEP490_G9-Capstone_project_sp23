@@ -34,7 +34,7 @@ public class CommonExceptionHandler {
 		for (FieldError error : fieldErrors) {
 			messages.add(error.getField() + " - " + error.getDefaultMessage());
 		}
-		System.out.println("Method argument");
+		System.out.println("Method argument " +ex.getMessage());
 		return new ErrorResponse(messages, HttpStatus.BAD_REQUEST);
 	}
 

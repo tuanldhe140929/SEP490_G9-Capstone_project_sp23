@@ -94,6 +94,7 @@ public class UserController {
 		User saved = userService.createUser(user);
 		Account account = accountService.getById(saved.getId());
 		RefreshToken refreshToken = refreshTokenService.createRefreshToken(account);
+		emailService.sendVerifyEmail(account.getEmail());
 		return ResponseEntity.ok(true);
 	}
 

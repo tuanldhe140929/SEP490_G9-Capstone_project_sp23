@@ -27,7 +27,6 @@ import com.SEP490_G9.repository.SellerRepository;
 import com.SEP490_G9.repository.TagRepository;
 import com.SEP490_G9.repository.UserRepository;
 import com.SEP490_G9.repository.ViolationTypeRepository;
-import com.SEP490_G9.service.ManageProductService;
 
 @Component
 public class TestDataInit implements ApplicationRunner {
@@ -51,6 +50,7 @@ public class TestDataInit implements ApplicationRunner {
 
 	@Autowired
 	private SellerRepository sellerRepository;
+
 
 	@Autowired
 	private ViolationTypeRepository violationTypeRepository;
