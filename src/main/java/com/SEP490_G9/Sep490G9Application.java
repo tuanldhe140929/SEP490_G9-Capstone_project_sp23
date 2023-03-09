@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import com.SEP490_G9.service.FileIOService;
 
-@EntityScan("com.SEP490_G9.entity")
+@EntityScan("com.SEP490_G9.entities")
 @ComponentScan(basePackages = "com.SEP490_G9")
 @EnableJpaRepositories("com.SEP490_G9.repository")
 @SpringBootApplication

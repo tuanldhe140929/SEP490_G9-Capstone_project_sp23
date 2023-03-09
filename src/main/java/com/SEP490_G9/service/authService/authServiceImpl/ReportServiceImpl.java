@@ -6,10 +6,10 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.SEP490_G9.entity.Product;
-import com.SEP490_G9.entity.Report;
-import com.SEP490_G9.entity.User;
-import com.SEP490_G9.entity.embeddable.ReportItemKey;
+import com.SEP490_G9.entities.Product;
+import com.SEP490_G9.entities.Report;
+import com.SEP490_G9.entities.User;
+import com.SEP490_G9.entities.embeddable.ReportItemKey;
 import com.SEP490_G9.repository.ProductRepository;
 import com.SEP490_G9.repository.ReportRepository;
 import com.SEP490_G9.repository.UserRepository;

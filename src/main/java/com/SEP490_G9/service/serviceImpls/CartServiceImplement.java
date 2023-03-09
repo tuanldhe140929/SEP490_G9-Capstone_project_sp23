@@ -4,18 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.SEP490_G9.dto.CartDTO;
-import com.SEP490_G9.entity.Account;
-import com.SEP490_G9.entity.Cart;
-import com.SEP490_G9.entity.CartItem;
-import com.SEP490_G9.entity.Product;
-import com.SEP490_G9.entity.Transaction;
-import com.SEP490_G9.entity.User;
-import com.SEP490_G9.entity.UserDetailsImpl;
+import com.SEP490_G9.entities.Account;
+import com.SEP490_G9.entities.Cart;
+import com.SEP490_G9.entities.CartItem;
+import com.SEP490_G9.entities.Transaction;
+import com.SEP490_G9.entities.User;
+import com.SEP490_G9.entities.UserDetailsImpl;
 import com.SEP490_G9.exception.ResourceNotFoundException;
 import com.SEP490_G9.repository.AccountRepository;
 import com.SEP490_G9.repository.CartItemRepository;
@@ -27,18 +25,8 @@ import com.SEP490_G9.repository.UserRepository;
 import com.SEP490_G9.service.CartService;
 
 
-import com.SEP490_G9.entity.Product;
-import com.SEP490_G9.entity.ProductDetails;
-import com.SEP490_G9.entity.Transaction;
-import com.SEP490_G9.entity.User;
-import com.SEP490_G9.repository.AccountRepository;
-import com.SEP490_G9.repository.CartItemRepository;
-import com.SEP490_G9.repository.CartRepository;
+import com.SEP490_G9.entities.ProductDetails;
 import com.SEP490_G9.repository.ProductDetailsRepository;
-import com.SEP490_G9.repository.ProductRepository;
-import com.SEP490_G9.repository.TransactionRepository;
-import com.SEP490_G9.repository.UserRepository;
-import com.SEP490_G9.service.CartService;
 
 @Service
 public class CartServiceImplement implements CartService {

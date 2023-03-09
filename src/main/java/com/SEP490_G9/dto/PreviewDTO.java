@@ -1,6 +1,6 @@
 package com.SEP490_G9.dto;
 
-import com.SEP490_G9.entity.Preview;
+import com.SEP490_G9.entities.Preview;
 
 public class PreviewDTO {
 	private Long id;

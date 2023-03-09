@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.SEP490_G9.dto.ProductDetailsDTO;
-import com.SEP490_G9.entity.Product;
-import com.SEP490_G9.entity.ProductDetails;
-import com.SEP490_G9.entity.Seller;
+import com.SEP490_G9.entities.Product;
+import com.SEP490_G9.entities.ProductDetails;
+import com.SEP490_G9.entities.Seller;
 import com.SEP490_G9.exception.DuplicateFieldException;
 import com.SEP490_G9.exception.ResourceNotFoundException;
 import com.SEP490_G9.repository.ProductDetailsRepository;

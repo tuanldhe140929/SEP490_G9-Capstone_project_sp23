@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.SEP490_G9.entity.Preview;
-import com.SEP490_G9.entity.ProductDetails;
+import com.SEP490_G9.entities.Preview;
+import com.SEP490_G9.entities.ProductDetails;
 import com.SEP490_G9.exception.ResourceNotFoundException;
 import com.SEP490_G9.repository.PreviewRepository;
 import com.SEP490_G9.service.PreviewService;

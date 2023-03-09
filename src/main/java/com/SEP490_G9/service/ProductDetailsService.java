@@ -3,7 +3,7 @@ package com.SEP490_G9.service;
 import java.util.List;
 
 import com.SEP490_G9.dto.ProductDetailsDTO;
-import com.SEP490_G9.entity.ProductDetails;
+import com.SEP490_G9.entities.ProductDetails;
 
 public interface ProductDetailsService {
 	//public ProductDetails getProductDetailsByProductId(Long productId);

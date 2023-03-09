@@ -17,12 +17,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.SEP490_G9.dto.PreviewDTO;
 import com.SEP490_G9.dto.ProductDetailsDTO;
-import com.SEP490_G9.entity.Account;
-import com.SEP490_G9.entity.Preview;
-import com.SEP490_G9.entity.Product;
-import com.SEP490_G9.entity.ProductDetails;
-import com.SEP490_G9.entity.Seller;
-import com.SEP490_G9.entity.UserDetailsImpl;
+import com.SEP490_G9.entities.Account;
+import com.SEP490_G9.entities.Preview;
+import com.SEP490_G9.entities.Product;
+import com.SEP490_G9.entities.ProductDetails;
+import com.SEP490_G9.entities.Seller;
+import com.SEP490_G9.entities.UserDetailsImpl;
 import com.SEP490_G9.exception.FileUploadException;
 import com.SEP490_G9.repository.PreviewRepository;
 import com.SEP490_G9.service.FileIOService;
@@ -30,7 +30,7 @@ import com.SEP490_G9.service.PreviewService;
 import com.SEP490_G9.service.ProductDetailsService;
 import com.SEP490_G9.service.ProductService;
 import com.SEP490_G9.service.SellerService;
-import com.SEP490_G9.util.StorageUtil;
+import com.SEP490_G9.common.StorageUtil;
 
 @RequestMapping(value = "/preview")
 @RestController

@@ -5,9 +5,9 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 
-import com.SEP490_G9.entity.Account;
-import com.SEP490_G9.entity.RefreshToken;
-import com.SEP490_G9.entity.User;
+import com.SEP490_G9.entities.Account;
+import com.SEP490_G9.entities.RefreshToken;
+import com.SEP490_G9.entities.User;
 
 
 public interface RefreshTokenRepository extends JpaRepository<RefreshToken,Long> {

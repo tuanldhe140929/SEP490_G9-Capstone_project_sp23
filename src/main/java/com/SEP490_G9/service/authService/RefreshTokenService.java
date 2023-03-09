@@ -2,8 +2,8 @@ package com.SEP490_G9.service.authService;
 
 import java.util.Optional;
 
-import com.SEP490_G9.entity.Account;
-import com.SEP490_G9.entity.RefreshToken;
+import com.SEP490_G9.entities.Account;
+import com.SEP490_G9.entities.RefreshToken;
 
 public interface RefreshTokenService {
 

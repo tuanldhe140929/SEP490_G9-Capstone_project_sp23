@@ -2,10 +2,10 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ForAdminBaseComponent } from './for-admin-base/for-admin-base.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { AuthGuard } from 'src/app/helpers/auth.guard';
+
 import { DashboardComponent } from './for-admin-base/dashboard/dashboard.component';
 import { StaffsComponent } from './for-admin-base/staffs/staffs.component';
-import { AdminGuard } from 'src/app/helpers/admin.guard';
+import { AdminGuard } from 'src/app/guards/admin.guard';
 import { CategoriesComponent } from './for-admin-base/categories/categories.component';
 import { TagsComponent } from './for-admin-base/tags/tags.component';
 

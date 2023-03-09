@@ -1,12 +1,11 @@
 
 package com.SEP490_G9.dto;
 
-import com.SEP490_G9.entity.ProductDetails;
 import com.SEP490_G9.repository.PreviewRepository;
-import com.SEP490_G9.entity.CartItem;
+import com.SEP490_G9.entities.CartItem;
 
 public class CartItemDTO {
-	
+
 	private ProductDetailsDTO product;
 	private Long cartId;
 
@@ -14,16 +13,15 @@ public class CartItemDTO {
 		super();
 
 		ProductDetailsDTO pdd = new ProductDetailsDTO(cartItem.getProductDetails());
-		this.product= pdd;
+		this.product = pdd;
 
-		this.cartId= cartItem.getCart().getId();
+		this.cartId = cartItem.getCart().getId();
 
 	}
 
 	public CartItemDTO() {
 
 	}
-
 
 	public ProductDetailsDTO getProduct() {
 		return product;

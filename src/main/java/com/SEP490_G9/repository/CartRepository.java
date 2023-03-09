@@ -6,9 +6,9 @@ import org.springframework.data.jpa.repository.Query;
 
 
 
-import com.SEP490_G9.entity.User;
+import com.SEP490_G9.entities.User;
 
-import com.SEP490_G9.entity.Cart;
+import com.SEP490_G9.entities.Cart;
 
 public interface CartRepository extends JpaRepository<Cart, Long> {
 //	public Cart findByUserId(Long userId);

@@ -2,7 +2,7 @@ package com.SEP490_G9.service;
 
 import java.util.List;
 
-import com.SEP490_G9.entity.Category;
+import com.SEP490_G9.entities.Category;
 
 
 

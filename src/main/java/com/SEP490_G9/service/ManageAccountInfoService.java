@@ -4,8 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.SEP490_G9.entity.Account;
-import com.SEP490_G9.entity.User;
+import com.SEP490_G9.entities.Account;
+import com.SEP490_G9.entities.User;
 
 public interface ManageAccountInfoService {
 	public User getUserInfo();

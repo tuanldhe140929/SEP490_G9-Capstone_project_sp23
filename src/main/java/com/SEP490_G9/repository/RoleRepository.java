@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.SEP490_G9.entity.Role;
+import com.SEP490_G9.entities.Role;
 
 public interface RoleRepository extends JpaRepository<Role, Integer> {
 	Role findById(int id);

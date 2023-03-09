@@ -2,8 +2,8 @@ package com.SEP490_G9.service;
 
 import java.util.List;
 
-import com.SEP490_G9.entity.Product;
-import com.SEP490_G9.entity.Seller;
+import com.SEP490_G9.entities.Product;
+import com.SEP490_G9.entities.Seller;
 
 public interface ProductService {
 	Product createProduct(Product product);
