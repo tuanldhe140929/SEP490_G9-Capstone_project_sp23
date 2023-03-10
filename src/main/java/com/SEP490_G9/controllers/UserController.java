@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -170,6 +171,12 @@ public class UserController {
 			userService.update(user);
 		}
 		return ResponseEntity.ok(ret);
+	}
+	
+	@GetMapping(value = "getUserById/{userid}")
+	public ResponseEntity<?> getUserById(@PathVariable(name = "userid", required = true) long userid){
+		User user = userService.getById(userid);
+		return ResponseEntity.ok(user);
 	}
 	
 //	@GetMapping(value = "getUserInfo")

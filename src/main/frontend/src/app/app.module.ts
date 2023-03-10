@@ -57,9 +57,6 @@ import { CommonViewsModule } from './modules/common-views/common-views.module';
     UserViewsModule,
     SellerViewsModule,
     CommonViewsModule,
-
-
-
   ],
   providers: [
     {
