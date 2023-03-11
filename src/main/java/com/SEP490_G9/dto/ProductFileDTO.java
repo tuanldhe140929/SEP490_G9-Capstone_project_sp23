@@ -5,7 +5,7 @@ import com.SEP490_G9.entity.ProductFile;
 public class ProductFileDTO {
 
 	public enum FileState {
-		UPLOADING, UPLOADED, SCANNING, ERROR, MALICIOUS
+		UPLOADING, STORED, SCANNING, ERROR, MALICIOUS
 	}
 
 	private Long id;
@@ -40,7 +40,7 @@ public class ProductFileDTO {
 		this.type = productFile.getType();
 		this.size = productFile.getSize();
 
-		this.fileState = FileState.UPLOADED;
+		this.fileState = FileState.STORED;
 	}
 
 	public Long getId() {

@@ -2,22 +2,25 @@ package com.SEP490_G9.service;
 
 import java.util.List;
 
-import com.SEP490_G9.entity.Product;
-import com.SEP490_G9.entity.Seller;
+
+import org.springframework.web.multipart.MultipartFile;
+
+import com.SEP490_G9.entities.Product;
+import com.SEP490_G9.entities.Seller;
 
 public interface ProductService {
 	Product createProduct(Product product);
 
 	Product updateProduct(Product product);
 
-	boolean deleteProductByIdAndSeller(Long id,Seller seller);
+	boolean deleteProductById(Long id);
 
-	Product getProductByIdAndSeller(Long productId, Seller currentSeller);
+	Product getProductById(Long productId);
 
 	List<Product> getProductsBySellerId(Long sellerId);
 
 	boolean setActiveVersion(Long productId, String version);
-	
-	Product getProductById(Long id);
-	
+
+	String uploadCoverImage(MultipartFile coverImage, Long productId, String version);
+
 }

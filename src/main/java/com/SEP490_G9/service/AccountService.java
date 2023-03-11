@@ -2,9 +2,10 @@ package com.SEP490_G9.service;
 
 import java.util.List;
 
-import com.SEP490_G9.entity.Account;
-import com.SEP490_G9.entity.RefreshToken;
 
+import com.SEP490_G9.dto.AuthRequest;
+import com.SEP490_G9.entities.Account;
+import com.SEP490_G9.entities.RefreshToken;
 public interface AccountService {
 
 	Account getByRefreshToken(RefreshToken findByToken);
@@ -16,8 +17,10 @@ public interface AccountService {
 	Account update(Account account);
 
 	List<Account> getAllStaffs();
-	
+
 	boolean addStaff(Account staff);
-	
+
 	boolean updateStaffStatus(Long id);
+
+	String resetPassword(Account account);
 }

@@ -1,21 +1,50 @@
 package com.SEP490_G9.service.serviceImpls;
 
+import java.io.File;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import com.SEP490_G9.entity.Preview;
-import com.SEP490_G9.entity.ProductDetails;
+
+import com.SEP490_G9.dto.PreviewDTO;
+import com.SEP490_G9.dto.ProductDetailsDTO;
+import com.SEP490_G9.entities.Preview;
+import com.SEP490_G9.entities.Product;
+import com.SEP490_G9.entities.ProductDetails;
+import com.SEP490_G9.entities.Seller;
+import com.SEP490_G9.exception.FileUploadException;
 import com.SEP490_G9.exception.ResourceNotFoundException;
 import com.SEP490_G9.repository.PreviewRepository;
+import com.SEP490_G9.repository.ProductDetailsRepository;
+import com.SEP490_G9.repository.ProductRepository;
+import com.SEP490_G9.service.FileIOService;
 import com.SEP490_G9.service.PreviewService;
+import com.SEP490_G9.service.ProductDetailsService;
+import com.SEP490_G9.service.ProductService;
 
 @Service
 public class PreviewServiceImpl implements PreviewService {
+	@Value("${root.location}")
+	private String ROOT_LOCATION;
+	final String PRODUCT_PREVIEWS_FOLDER_NAME = "previews";
+	final String[] VIDEO_EXTENSIONS = { "video/mp4", "video/x-matroska", "video/quicktime" };
+	final String[] IMAGE_EXTENSIONS = { "image/png", "image/jpeg", "image/svg+xml" };
+	final String PRODUCT_FOLDER_NAME = "products";
 
 	@Autowired
 	PreviewRepository previewRepository;
+
+	@Autowired
+	ProductDetailsRepository productDetailsRepo;
+
+	@Autowired
+	FileIOService fileIOService;
+
+	@Autowired
+	ProductRepository productRepo;
 
 	@Override
 	public List<Preview> getByProductDetailsAndType(ProductDetails pd, String type) {
@@ -47,7 +76,7 @@ public class PreviewServiceImpl implements PreviewService {
 
 	@Override
 	public boolean deletePreview(Preview preview) {
-		if(!previewRepository.existsById(preview.getId())) {
+		if (!previewRepository.existsById(preview.getId())) {
 			throw new ResourceNotFoundException("Preview video id", preview.getId().toString(), "");
 		}
 		previewRepository.deleteById(preview.getId());
@@ -57,7 +86,7 @@ public class PreviewServiceImpl implements PreviewService {
 	@Override
 	public List<Preview> createPreviews(List<Preview> previews) {
 		List<Preview> ret = null;
-		if(previews.size()>0) {
+		if (previews.size() > 0) {
 			ret = previewRepository.saveAll(previews);
 		}
 		return ret;
@@ -68,4 +97,90 @@ public class PreviewServiceImpl implements PreviewService {
 		return previewRepository.save(preview);
 	}
 
+	@Override
+	public boolean deleteVideoPreview(Long productId, String version) {
+		ProductDetails pd = productDetailsRepo.findByProductIdAndProductVersionKeyVersion(productId, version);
+		Preview preview = getByProductDetailsAndType(pd, "video").get(0);
+		deleteById(preview.getId());
+		return true;
+	}
+
+	@Override
+	public List<PreviewDTO> uploadPreviewPicture(Long productId, String version, MultipartFile previewPicture) {
+		List<PreviewDTO> ret = null;
+		if (!checkFileType(previewPicture, IMAGE_EXTENSIONS)) {
+			throw new FileUploadException(previewPicture.getContentType() + " file not accept");
+		} else {
+			Preview preview = new Preview();
+			ProductDetails productDetails = productDetailsRepo.findByProductIdAndProductVersionKeyVersion(productId,
+					version);
+
+			String previewPictureLocation = getPreviewsLocation(productDetails);
+			File previewPicturesDir = new File(ROOT_LOCATION + previewPictureLocation);
+			previewPicturesDir.mkdirs();
+
+			String storedPath = fileIOService.storeV2(previewPicture, ROOT_LOCATION + previewPictureLocation);
+
+			preview.setSource(storedPath.replace(ROOT_LOCATION, ""));
+			preview.setType("picture");
+			preview.setProductDetails(productDetails);
+			preview = createPreview(preview);
+			ProductDetailsDTO dto = new ProductDetailsDTO(productDetails);
+			ret = dto.getPreviewPictures();
+		}
+		return ret;
+	}
+
+	private String getPreviewsLocation(ProductDetails productDetails) {
+//		return getSellerProductsDataLocation(productDetails.getProduct().getSeller()) + "\\"
+//				+ productDetails.getProduct().getId() + "\\" + productDetails.getVersion() + "\\"
+//				+ PRODUCT_PREVIEWS_FOLDER_NAME + "\\";
+		return getSellerProductsDataLocation(productDetails.getProduct().getSeller()) + "\\"
+				+ productDetails.getProduct().getId() + "\\";
+	}
+
+	private String getSellerProductsDataLocation(Seller seller) {
+		return "account_id_" + seller.getId() + "\\" + PRODUCT_FOLDER_NAME;
+	}
+
+	@Override
+	public Preview uploadPreviewVideo(Long productId, String version, MultipartFile previewVideo) {
+		Preview preview = null;
+		if (!checkFileType(previewVideo, VIDEO_EXTENSIONS)) {
+			throw new FileUploadException(previewVideo.getContentType() + " file not accept");
+		} else {
+			Product product = productRepo.findById(productId).orElseThrow();
+
+			ProductDetails productDetails = productDetailsRepo.findByProductIdAndProductVersionKeyVersion(productId,
+					version);
+
+			String previewVideoLocation = getPreviewsLocation(productDetails);
+			File previewVideoDir = new File(ROOT_LOCATION + previewVideoLocation);
+			previewVideoDir.mkdirs();
+
+			String savedPath = fileIOService.storeV2(previewVideo, ROOT_LOCATION + previewVideoLocation);
+			List<Preview> previews = getByProductDetailsAndType(productDetails, "video");
+			if (previews.size() == 0) {
+				preview = new Preview();
+			} else {
+				preview = previews.get(0);
+			}
+//			preview.setSource(previewVideoLocation + previewVideo.getOriginalFilename());
+			preview.setSource(savedPath.replace(ROOT_LOCATION, ""));
+			preview.setType("video");
+			preview.setProductDetails(productDetails);
+			preview = createPreview(preview);
+
+		}
+		return preview;
+	}
+
+	private boolean checkFileType(MultipartFile file, String[] extensions) {
+		for (String extension : extensions) {
+			if (file.getContentType().endsWith(extension)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }
