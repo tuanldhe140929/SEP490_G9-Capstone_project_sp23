@@ -1,7 +1,8 @@
 package com.SEP490_G9.service.serviceImpls;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.List;import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import com.SEP490_G9.exception.ResourceNotFoundException;
 import com.SEP490_G9.repository.ProductDetailsRepository;
 import com.SEP490_G9.repository.ProductRepository;
 import com.SEP490_G9.service.ProductDetailsService;
+import com.SEP490_G9.service.ProductService;
 
 @Service
 public class ProductDetailsServiceImpl implements ProductDetailsService {
@@ -27,6 +29,8 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 	@Autowired
 	ProductRepository productRepo;
 	
+	@Autowired
+	ProductService productService;
 	
 	@Override
 	public ProductDetails getActiveVersion(Long productId) {
@@ -114,20 +118,8 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 	@Override
 	public List<ProductDetails> getByKeywordCategoryTags(String keyword, int categoryid, int min, int max){
 		List<ProductDetails> allProductDetails = productDetailsRepo.findAll();
-//		List<ProductDetails> getByKeyword = getByKeyword(keyword);
 		List<ProductDetails> searchResult = new ArrayList<>();
-//		List<List<Tag>> tagsOfKeyword = new ArrayList<>();
-//		List<List<Integer>> tagsIdOfKeyword = new ArrayList<>();
-//		for(ProductDetails pd: getByKeyword) {
-//			tagsOfKeyword.add(pd.getTags());
-//		}
-//		for(List<Tag> listOfTag: tagsOfKeyword) {
-//			List<Integer> accumulatedTag = new ArrayList<>();
-//			for(Tag tag: listOfTag) {
-//				accumulatedTag.add(tag.getId());
-//			}
-//			tagsIdOfKeyword.add(accumulatedTag);
-//		}
+		List<ProductDetails> searchResultLatestVersion = new ArrayList<>();
 		for(ProductDetails pd: allProductDetails) {
 			if(categoryid == 0) {
 				if(pd.getName().trim().toLowerCase().contains(keyword.trim().toLowerCase())  && pd.getPrice()>=min && pd.getPrice()<=max) {
@@ -139,7 +131,13 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 				}
 			}
 		}
-		return searchResult;
+		for(ProductDetails pd: searchResult) {
+			Product product = pd.getProduct();
+			String activeVersion = product.getActiveVersion();
+			searchResultLatestVersion.add(getByIdAndVersion(product.getId(), activeVersion));
+		}
+		List<ProductDetails> finalResult = searchResultLatestVersion.stream().distinct().collect(Collectors.toList());
+		return finalResult;
 	}
 
 }

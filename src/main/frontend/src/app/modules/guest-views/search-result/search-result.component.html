@@ -125,10 +125,10 @@
     
       <!-- ========= content items ========= -->
       <div class="row">
-        <div class="col-lg-4 col-md-6 col-sm-6" *ngFor="let result of resultList">
+        <div class="col-lg-4 col-md-6 col-sm-6" *ngFor="let result of resultList | paginate: {itemsPerPage: itemsPerPage, currentPage: p}">
           <figure class="card card-product-grid">
           <div class="img-wrap"> 
-            <img [src]="getCoverImage(result)||null"> 
+            <img [src]="getCoverImage(result)"> 
           </div>
           <figcaption class="info-wrap border-top">
             <div class="price-wrap">
@@ -147,7 +147,7 @@
       <hr>
   <footer class="d-flex mt-4">
                 
-                  <nav class="ms-3">
+                  <!-- <nav class="ms-3">
                       <ul class="pagination">
                       <li class="page-item"><a class="page-link" href="#">1</a></li>
                       <li class="page-item active" aria-current="page">
@@ -158,7 +158,10 @@
                           <a class="page-link" href="#">Next</a>
                       </li>
                       </ul>
-                  </nav>
+                  </nav> -->
+                  <div class="mt-8 py-5 flex justify-center items-center">
+                    <pagination-controls (pageChange)="p = $event"></pagination-controls>
+                  </div>
                   </footer>
                 
                   </main>

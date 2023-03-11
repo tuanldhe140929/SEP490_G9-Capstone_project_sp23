@@ -23,6 +23,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { ReportProductComponent } from './product-details/report-product/report-product.component';
 import { HomeComponent } from './home/home.component';
 import { SearchResultComponent } from './search-result/search-result.component';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 @NgModule({
   declarations: [
@@ -51,7 +52,8 @@ import { SearchResultComponent } from './search-result/search-result.component';
     MatRadioModule,
     MatAutocompleteModule,
     GuestViewsRoutingModule,
-    CommonViewsModule
+    CommonViewsModule,
+    NgxPaginationModule
   ]
 })
 export class GuestViewsModule { }

@@ -24,6 +24,9 @@ export class SearchResultComponent implements OnInit{
   maxprice: number = 10000000;
   chosenCategory: number = 0;
   chosenTags:number[] = [];
+  p:number = 1;
+  itemsPerPage: number = 9;
+  totalResult: any;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -53,6 +56,7 @@ export class SearchResultComponent implements OnInit{
     this.productService.getFilteredProducts(this.keyword,0,0,10000000).subscribe(
       data => {
         this.resultList = data;
+        this.totalResult = this.resultList.length;
       }
     )
   }
@@ -74,7 +78,13 @@ export class SearchResultComponent implements OnInit{
   }
 
   getCoverImage(product: Product): string{
-    return 'http://localhost:9000/public/serveMedia/image?source=' + product.coverImage.replace(/\\/g, '/');
+    console.log(product.coverImage==null);
+    if(product.coverImage!=null){
+      return 'http://localhost:9000/public/serveMedia/image?source=' + product.coverImage.replace(/\\/g, '/');
+    }else{
+      return 'assets/images/noimage.png'
+    }
+    
   }
   
   openDetails(id: number){
