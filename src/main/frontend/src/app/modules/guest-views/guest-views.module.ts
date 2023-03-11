@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgbRating } from '@ng-bootstrap/ng-bootstrap';
 
 import { GuestViewsRoutingModule } from './guest-views-routing.module';
 import { RegisterComponent } from './register/register.component';
@@ -20,6 +21,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { BrowserModule } from '@angular/platform-browser';
 import { ReportProductComponent } from './product-details/report-product/report-product.component';
+import { RateComponent } from './product-details/rate/rate.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +32,9 @@ import { ReportProductComponent } from './product-details/report-product/report-
     VerifyEmailComponent,
     SellerProductListComponent,
     ProductDetailsComponent,
-    ReportProductComponent
+    ReportProductComponent,
+    RateComponent
+    
   ],
   imports: [
     CommonModule,
@@ -45,7 +49,8 @@ import { ReportProductComponent } from './product-details/report-product/report-
     MatSelectModule,
     MatRadioModule,
     MatAutocompleteModule,
-    GuestViewsRoutingModule
+    GuestViewsRoutingModule,
+    NgbRating
   ]
 })
 export class GuestViewsModule { }
