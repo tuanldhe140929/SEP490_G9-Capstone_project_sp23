@@ -1,7 +1,9 @@
 package com.SEP490_G9.service.serviceImpls;
 
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
@@ -13,8 +15,10 @@ import org.springframework.stereotype.Service;
 import com.SEP490_G9.dto.ProductDetailsDTO;
 
 import com.SEP490_G9.entities.Category;
+import com.SEP490_G9.entities.Preview;
 import com.SEP490_G9.entities.Product;
 import com.SEP490_G9.entities.ProductDetails;
+import com.SEP490_G9.entities.ProductFile;
 import com.SEP490_G9.entities.Seller;
 import com.SEP490_G9.entities.Tag;
 import com.SEP490_G9.exception.DuplicateFieldException;
@@ -24,7 +28,6 @@ import com.SEP490_G9.repository.ProductFileRepository;
 import com.SEP490_G9.repository.ProductRepository;
 import com.SEP490_G9.service.PreviewService;
 import com.SEP490_G9.service.ProductDetailsService;
-\
 import com.SEP490_G9.service.ProductService;
 
 @Service
@@ -41,6 +44,12 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 	
 	@Autowired
 	ProductService productService;
+	
+	@Autowired 
+	PreviewService previewService;
+	
+	@Autowired
+	ProductFileRepository productFileRepo;
 	@Override
 	public ProductDetails getActiveVersion(Long productId) {
 		Product product = productRepo.findById(productId).orElseThrow();
@@ -131,7 +140,7 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		for(ProductDetails pd: searchResult) {
 			Product product = pd.getProduct();
 			String activeVersion = product.getActiveVersion();
-			searchResultLatestVersion.add(getByIdAndVersion(product.getId(), activeVersion));
+			searchResultLatestVersion.add(getByProductIdAndVersion(product.getId(), activeVersion));
 		}
 		List<ProductDetails> finalResult = searchResultLatestVersion.stream().distinct().collect(Collectors.toList());
 		return finalResult;

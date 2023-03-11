@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.SEP490_G9.dto.ProductFileDTO;
 import com.SEP490_G9.entities.ProductFile;
 
 

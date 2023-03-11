@@ -16,8 +16,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-
-
+import com.SEP490_G9.dto.ProductFileDTO;
+import com.SEP490_G9.entities.ProductDetails;
+import com.SEP490_G9.entities.ProductFile;
+import com.SEP490_G9.entities.Seller;
 import com.SEP490_G9.exception.DuplicateFieldException;
 import com.SEP490_G9.exception.FileUploadException;
 import com.SEP490_G9.exception.ResourceNotFoundException;
