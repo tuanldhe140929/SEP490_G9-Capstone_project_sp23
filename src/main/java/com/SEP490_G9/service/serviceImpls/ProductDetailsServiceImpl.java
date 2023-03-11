@@ -1,14 +1,17 @@
 package com.SEP490_G9.service.serviceImpls;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.SEP490_G9.dto.ProductDetailsDTO;
+import com.SEP490_G9.entities.Category;
 import com.SEP490_G9.entities.Product;
 import com.SEP490_G9.entities.ProductDetails;
 import com.SEP490_G9.entities.Seller;
+import com.SEP490_G9.entities.Tag;
 import com.SEP490_G9.exception.DuplicateFieldException;
 import com.SEP490_G9.exception.ResourceNotFoundException;
 import com.SEP490_G9.repository.ProductDetailsRepository;
@@ -92,7 +95,13 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 
 	@Override
 	public List<ProductDetails> getByKeyword(String keyword) {
-		List<ProductDetails> searchResult = productDetailsRepo.findByNameContaining(keyword);
+		List<ProductDetails> allProductDetails = productDetailsRepo.findAll();
+		List<ProductDetails> searchResult = new ArrayList<>();
+		for(ProductDetails pd: allProductDetails) {
+			if(pd.getName().trim().toLowerCase().contains(keyword.trim().toLowerCase())) {
+				searchResult.add(pd);
+			}
+		}
 		return searchResult;
 	}
 
@@ -100,6 +109,37 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 	public List<ProductDetails> getAll() {
 		List<ProductDetails> allProductDetails = productDetailsRepo.findAll();
 		return allProductDetails;
+	}
+	
+	@Override
+	public List<ProductDetails> getByKeywordCategoryTags(String keyword, int categoryid, int min, int max){
+		List<ProductDetails> allProductDetails = productDetailsRepo.findAll();
+//		List<ProductDetails> getByKeyword = getByKeyword(keyword);
+		List<ProductDetails> searchResult = new ArrayList<>();
+//		List<List<Tag>> tagsOfKeyword = new ArrayList<>();
+//		List<List<Integer>> tagsIdOfKeyword = new ArrayList<>();
+//		for(ProductDetails pd: getByKeyword) {
+//			tagsOfKeyword.add(pd.getTags());
+//		}
+//		for(List<Tag> listOfTag: tagsOfKeyword) {
+//			List<Integer> accumulatedTag = new ArrayList<>();
+//			for(Tag tag: listOfTag) {
+//				accumulatedTag.add(tag.getId());
+//			}
+//			tagsIdOfKeyword.add(accumulatedTag);
+//		}
+		for(ProductDetails pd: allProductDetails) {
+			if(categoryid == 0) {
+				if(pd.getName().trim().toLowerCase().contains(keyword.trim().toLowerCase())  && pd.getPrice()>=min && pd.getPrice()<=max) {
+					searchResult.add(pd);
+				}
+			}else {
+				if(pd.getName().trim().toLowerCase().contains(keyword.trim().toLowerCase())  && pd.getCategory().getId() == categoryid && pd.getPrice()>=min && pd.getPrice()<=max) {
+					searchResult.add(pd);
+				}
+			}
+		}
+		return searchResult;
 	}
 
 }

@@ -28,16 +28,21 @@
                 </div>
           </div> <!-- col end.// -->
           <div class="col-lg-5 col-md-12 col-12">
-            <form action="#" class="">
+            <form class="" (submit)="toSearchResult()">
                     <div class="input-group">
-                      <input type="search" class="form-control" style="width:55%" placeholder="Search">
-                      <select class="form-select">
+                      <input type="search" class="form-control" style="width:55%" placeholder="Search" [formControl]="myControl" [matAutocomplete]="auto" [(ngModel)]="keyword">
+                      <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" (optionSelected)="onOptionSelected($event)">
+                        <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                          {{option}}
+                        </mat-option>
+                      </mat-autocomplete>
+                      <!-- <select class="form-select">
                         <option value="">All type</option>
                         <option value="codex">Special</option>
                         <option value="comments">Only best</option>
                         <option value="content">Latest</option>
-                      </select>
-                      <button class="btn btn-primary">
+                      </select> -->
+                      <button class="btn btn-primary" type="submit">
                         <i class="fa fa-search"></i> 
                       </button>
                     </div> <!-- input-group end.// -->
@@ -88,3 +93,5 @@
       </div> <!-- container end.// -->
     </nav> <!-- navbar end.// -->
   </header> <!-- section-header end.// -->
+
+  

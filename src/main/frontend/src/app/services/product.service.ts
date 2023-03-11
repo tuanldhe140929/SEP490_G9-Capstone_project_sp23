@@ -34,4 +34,22 @@ export class ProductService {
       }
     })
   }
+
+  getAllProducts(): Observable<any>{
+    return this.httpClient.get<any>(baseUrl+'/getAllProducts');
+  }
+
+  getProductsByKeyword(keyword: string): Observable<any>{
+    return this.httpClient.get<any>(baseUrl+"/getProductsByKeyword/"+keyword);
+  }
+
+  getFilteredProducts(keyword: string, categoryid: number, min: number, max: number): Observable<any>{
+    const params = {
+      keyword: keyword,
+      categoryid: categoryid,
+      min: min,
+      max: max
+    }
+    return this.httpClient.get<any>("http://localhost:9000/productDetails/getFilteredProducts", {params});
+  }
 }

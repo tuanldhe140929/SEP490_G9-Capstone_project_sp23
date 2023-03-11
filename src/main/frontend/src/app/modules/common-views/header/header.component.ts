@@ -1,11 +1,17 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
+import { map, Observable, startWith } from 'rxjs';
+import { Product } from 'src/app/DTOS/Product';
 import { User } from 'src/app/DTOS/User';
 import { AuthService } from 'src/app/services/auth.service';
 import { ManageAccountInfoService } from 'src/app/services/manage-account-info.service';
+import { ProductService } from 'src/app/services/product.service';
 import { StorageService } from 'src/app/services/storage.service';
 import { UserService } from 'src/app/services/user.service';
+import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
+const removeMark = require("vietnamese-tonemarkless");
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
@@ -16,16 +22,34 @@ export class HeaderComponent implements OnInit{
   loginStatus: boolean;
   username: string;
   user: User;
+  productList: Product[] = [];
+  nameList: string[] = [];
+  filteredOptions: Observable<string[]>;
+  myControl = new FormControl('');
+  keyword: string;
 
   constructor(
     private storageService: StorageService, 
     private authService: AuthService, 
     private manageAccountInfoService: ManageAccountInfoService,
-    private router: Router){
+    private router: Router,
+    private productService: ProductService){
 
   }
   
   ngOnInit(): void {
+    this.productService.getAllProducts().subscribe(
+      data => {
+        this.productList = data;
+        for(let i=0;i<=this.productList.length;i++){
+          this.nameList.push(this.productList[i].name);
+        }
+      }
+    )
+    this.filteredOptions = this.myControl.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filter(value || '')),
+    );
     if(this.storageService.isLoggedIn()){
       this.loginStatus = true;
       this.manageAccountInfoService.getCurrentUserInfo().subscribe(
@@ -38,6 +62,11 @@ export class HeaderComponent implements OnInit{
     }
   }
 
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase().trim().replace(/\s+/g,' ');
+    return this.nameList.filter(option => option.toLowerCase().includes(filterValue));
+  }
+
   onLogout(){
     this.authService.logout().subscribe(
       data => {
@@ -45,5 +74,14 @@ export class HeaderComponent implements OnInit{
         this.router.navigate(['login']);
       }
     )
+  }
+
+  toSearchResult(){
+    this.router.navigate(['result',this.keyword])
+  }
+
+  onOptionSelected(event: MatAutocompleteSelectedEvent){
+    const selectedOption = event.option.value;
+    this.router.navigate(['/result', selectedOption]);
   }
 }

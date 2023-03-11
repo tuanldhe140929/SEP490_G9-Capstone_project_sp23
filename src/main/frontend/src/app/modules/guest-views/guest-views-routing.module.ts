@@ -49,7 +49,7 @@ const routes: Routes = [{
     component: ProductDetailsComponent,
     title: 'Chi tiết sản phẩm'
   }, {
-    path: 'result',
+    path: 'result/:keyword',
     component: SearchResultComponent,
   }
 ];
