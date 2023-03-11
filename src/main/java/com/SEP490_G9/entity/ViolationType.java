@@ -20,7 +20,7 @@ public class ViolationType {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@Column(name = "name", unique = true, nullable = false, insertable = true, updatable = false)
+	@Column(name = "name", unique = true)
 	private String name;
 
 	@OneToMany(mappedBy="violation_types")

@@ -3,7 +3,12 @@ package com.SEP490_G9.entity;
 import java.io.Serializable;
 import java.util.Date;
 
+<<<<<<< Updated upstream:src/main/java/com/SEP490_G9/entity/Report.java
 import com.SEP490_G9.entity.embeddable.ReportItemKey;
+=======
+import com.SEP490_G9.dto.ReportDTO;
+import com.SEP490_G9.entities.embeddable.ReportItemKey;
+>>>>>>> Stashed changes:src/main/java/com/SEP490_G9/entities/Report.java
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
@@ -45,6 +50,17 @@ public class Report{
 
 	public Report() {
 		
+	}
+
+	public Report(ReportDTO repo) {
+		ReportItemKey keyitem = new ReportItemKey();
+		keyitem.setUserId(repo.getUserId());
+		keyitem.setProductId(repo.getProductId());
+		this.reportKey=keyitem;
+		this.description = repo.getDescription();
+		this.created_date = repo.getCreated_date();
+		this.status = repo.getStatus();
+		this.violation_types = repo.getViolationtype();
 	}
 
 	public Report(ReportItemKey cartItemKey, User user, Product product, String description, Date created_date,

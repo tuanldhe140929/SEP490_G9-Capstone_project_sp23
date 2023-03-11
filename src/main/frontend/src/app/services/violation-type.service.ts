@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class ViolationTypeService {
 
-  getAllTypesUrl = "http://localhost:9000/public/violationTypes/allTypes";
+  getAllTypesUrl = "http://localhost:9000/violation/allTypes";
 
   constructor(private httpClient: HttpClient) { }
 

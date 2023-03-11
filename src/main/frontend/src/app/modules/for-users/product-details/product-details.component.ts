@@ -286,10 +286,20 @@ export class ProductDetailsComponent implements OnInit{
   }
 
   openReportModal() {
+<<<<<<< Updated upstream:src/main/frontend/src/app/modules/for-users/product-details/product-details.component.ts
     const dialogRef = this.dialog.open(ReportProductComponent,{
+=======
+    const data = {
+      productId: this.product.id,
+      userId: this.visitor.id
+    }
+    const dialogRef = this.dialog.open(ReportProductComponent, {
+>>>>>>> Stashed changes:src/main/frontend/src/app/modules/guest-views/product-details/product-details.component.ts
       height: '80%',
-      width: '50%'
+      width: '50%',
+      data:data
     });
+
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
     });

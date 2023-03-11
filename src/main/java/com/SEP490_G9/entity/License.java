@@ -3,11 +3,17 @@ package com.SEP490_G9.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+<<<<<<< Updated upstream:src/main/java/com/SEP490_G9/entity/License.java
 import com.SEP490_G9.dto.LicenseDTO;
+=======
+import com.SEP490_G9.entities.ProductDetails;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+>>>>>>> Stashed changes:src/main/java/com/SEP490_G9/entities/License.java
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 
+@JsonIgnoreProperties(value="productDetails")
 @Entity
 @Table(name = "license")
 public class License {

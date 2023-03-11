@@ -1,8 +1,12 @@
 package com.SEP490_G9.controllers;
 
+<<<<<<< Updated upstream
 import java.io.File;
 import java.io.IOException;
 import java.net.URLConnection;
+=======
+import java.util.Date;
+>>>>>>> Stashed changes
 import java.util.List;
 import java.util.Optional;
 
@@ -10,7 +14,11 @@ import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+<<<<<<< Updated upstream
 import org.springframework.stereotype.Controller;
+=======
+import org.springframework.security.core.context.SecurityContextHolder;
+>>>>>>> Stashed changes
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,10 +29,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+<<<<<<< Updated upstream
 import org.springframework.web.multipart.MultipartFile;
 
 import com.SEP490_G9.entity.Report;
 import com.SEP490_G9.entity.embeddable.ReportItemKey;
+=======
+
+import com.SEP490_G9.dto.ReportDTO;
+import com.SEP490_G9.entities.Account;
+import com.SEP490_G9.entities.Report;
+import com.SEP490_G9.entities.UserDetailsImpl;
+import com.SEP490_G9.entities.ViolationType;
+import com.SEP490_G9.entities.embeddable.ReportItemKey;
+import com.SEP490_G9.repository.ViolationTypeRepository;
+>>>>>>> Stashed changes
 import com.SEP490_G9.service.ReportService;
 
 @RequestMapping("private/manageReport")
@@ -56,10 +75,26 @@ public class ReportController {
 		return ResponseEntity.ok(products);
 	}
 
+<<<<<<< Updated upstream
 	@PostMapping(value = "addProduct")
 	public ResponseEntity<?> addProduct(@RequestBody Product product) {
 		Product ret = manageProductService.addProduct(product);
 		return ResponseEntity.ok(ret);
+=======
+	@RequestMapping(value = "/add", method = RequestMethod.POST)
+	public boolean addReport(@RequestBody ReportDTO report) {
+//		System.out.println(report.getReportKey().getProductId());
+//		System.out.println(report.getReportKey().getUserId());
+		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
+				.getAccount();
+		report.setUserId(account.getId());
+		Report reboost = new Report(report);
+		reboost.setCreated_date(new Date());
+		reboost.setStatus("Pending");
+		reportService.saveReport(reboost);
+		
+		return true;
+>>>>>>> Stashed changes
 	}
 =======
 	  @RequestMapping(value= "/", method = RequestMethod.GET)  

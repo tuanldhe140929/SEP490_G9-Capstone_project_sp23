@@ -4,7 +4,7 @@
         <b>Lựa chọn nội dung vi phạm</b>
         <div class="form-group">
             <div class="form-check" *ngFor="let type of vioTypeList">
-                <input class="form-check-input" type="radio" formControlName="violation_type_id" value={{type.id}} id={{type.id}}>
+                <input class="form-check-input" type="radio" formControlName="violationtype" [value]="type"  id={{type.id}}>
                 <label class="form-check-label">
                   {{type.name}}
                 </label>

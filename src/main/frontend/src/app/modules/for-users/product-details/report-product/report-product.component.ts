@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ViolationType } from 'src/app/DTOS/ViolationType';
 import { ReportService } from 'src/app/services/report.service';
 import { ViolationTypeService } from 'src/app/services/violation-type.service';
@@ -10,11 +11,15 @@ import { ViolationTypeService } from 'src/app/services/violation-type.service';
   styleUrls: ['./report-product.component.css']
 })
 export class ReportProductComponent implements OnInit{
-
+  
   constructor(
     private vioTypeService: ViolationTypeService,
     private reportService: ReportService,
-    private formBuilder: FormBuilder){}
+    private formBuilder: FormBuilder,
+    @Inject(MAT_DIALOG_DATA) public data: any){}
+
+    description: string;
+    violationId: number;
 
   vioTypeList: ViolationType[] = [];
 
@@ -23,7 +28,9 @@ export class ReportProductComponent implements OnInit{
   }
 
   addReportForm = this.formBuilder.group({
-    violation_type_id: ['',[Validators.required]],
+    productId:[this.data.productId],
+    userId:[this.data.userId],
+    violationtype: [new ViolationType,[Validators.required]],
     description: ['',[Validators.required]]
   })
 
@@ -35,12 +42,15 @@ export class ReportProductComponent implements OnInit{
     )
   }
 
+
   addReport(){
+    console.log(this.addReportForm.value);
+
     if(this.addReportForm.valid){
       this.reportService.addReport(this.addReportForm.value).subscribe(
-        data => {
-          console.log(data);
-        }
+        data => {console.log(data)
+        },error=>{console.log(error)}
+        
       )
     }
   }
