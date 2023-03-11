@@ -405,7 +405,7 @@ export class UpdateProductComponent implements OnInit {
             var productFile: ProductFile = this.product.files[i];
             var fileDisplay = new FileDisplay();
             fileDisplay.file = productFile;
-            fileDisplay.file.fileState = FileState.UPLOADED;
+            fileDisplay.file.fileState = FileState.STORED;
             this.fileDisplayList.push(fileDisplay);
           }
           console.log(this.fileDisplayList);
@@ -462,7 +462,7 @@ export class UpdateProductComponent implements OnInit {
             var productFile: ProductFile = this.product.files[i];
             var fileDisplay = new FileDisplay();
             fileDisplay.file = productFile;
-            fileDisplay.file.fileState = FileState.UPLOADED;
+            fileDisplay.file.fileState = FileState.STORED;
             this.fileDisplayList.push(fileDisplay);
           }
           console.log(this.fileDisplayList);
@@ -570,11 +570,13 @@ export class UpdateProductComponent implements OnInit {
         formData.append("version", this.product.version);
         const upload$ = this.manageProductService.uploadCoverImage(formData).subscribe(
           (data: string) => {
+			  this.CoverImageUploadBtn.value="";
             this.product.coverImage = data;
             console.log(this.product);
             this.loadCoverImage();
           },
           (error: any) => {
+			  this.CoverImageUploadBtn.value="";
             this.fileError = 'Tải lên hình ảnh không thành công';
             this.openFileSizeErrorModal();
           }
@@ -604,10 +606,12 @@ export class UpdateProductComponent implements OnInit {
         formData.append("version", this.product.version);
         const upload$ = this.previewService.uploadPreviewVideo(formData).subscribe(
           (data) => {
+			  this.PreviewUploadVideoBtn.value="";
             console.log(data);
             this.product.previewVideo = data;
           },
           (error) => {
+			  this.PreviewUploadVideoBtn.value="";
             this.fileError = 'Tải lên video không thành công';
             this.openFileSizeErrorModal();
           }
@@ -650,10 +654,12 @@ export class UpdateProductComponent implements OnInit {
           const upload$ = this.previewService.uploadPreviewPicture(formData).subscribe(
             (data) => {
               console.log(data);
+              this.PreviewUploadImageBtn.value="";
               this.product.previewPictures = data;
               this.percent = 'width:' + 100 / this.product.previewPictures.length + '%;';
             },
             (error) => {
+				this.PreviewUploadImageBtn.value="";
               this.fileError = 'Tải lên hình ảnh không thành công';
               this.openFileSizeErrorModal();
             }
@@ -1079,6 +1085,19 @@ export class UpdateProductComponent implements OnInit {
   get RemovePreviewPictureBtn() {
     return document.getElementById('remove_picture_btn') as HTMLButtonElement;
   }
+  
+  get PreviewUploadImageBtn(){
+	  return document.getElementById('previewUploadImage') as HTMLInputElement;
+  }
+  
+  get PreviewUploadVideoBtn(){
+	   return document.getElementById('previewUploadVideo') as HTMLInputElement;
+  }
+  
+  get CoverImageUploadBtn(){
+	   return document.getElementById('coverImageUpload') as HTMLInputElement;
+  }
+  
   moveFileUp(file: ProductFile) {
     var index = this.product.files.indexOf(file);
     if (index >= 1) {
