@@ -11,7 +11,7 @@ import { License } from '../DTOS/License';
 const baseUrl = 'http://localhost:9000/product';
 const serveMediaUrl = "http://localhost:9000/public/serveMedia";
 const licenseBaseUrl = "http://localhost:9000/license";
-
+const productDetailsUrl = "http://localhost:9000/productDetails"
 @Injectable({
   providedIn: 'root'
 })
@@ -38,7 +38,7 @@ export class ManageProductService {
   }
 
   getAllVersionOfProduct(productId: number): Observable<Product[]> {
-    return this.httpClient.get<Product[]>(baseUrl + '/getAllVersion', {
+    return this.httpClient.get<Product[]>(productDetailsUrl + '/getAllVersion', {
       params: {
         productId: productId
       }
@@ -57,7 +57,7 @@ export class ManageProductService {
   }
 
   getActiveVersionProductByIdAndSeller(productId: number): Observable<Product> {
-    return this.httpClient.get<Product>(baseUrl + '/getActiveVersionProductById?productId=' + productId);
+    return this.httpClient.get<Product>(productDetailsUrl + '/getActiveVersion?productId=' + productId);
    }
   /*  getCurrentUserInfo(email: string): Observable<User> {
       return this.httpClient.get<User>(baseUrl + '/getCurrentUserInfo?email=' + email);

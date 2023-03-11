@@ -93,7 +93,7 @@ public class ProductDetailsDTO {
 		this.category = productDetails.getCategory();
 		for (ProductFile file : productDetails.getFiles()) {
 			ProductFileDTO dto = new ProductFileDTO(file);
-			dto.setFileState(ProductFileDTO.FileState.UPLOADED);
+			dto.setFileState(ProductFileDTO.FileState.STORED);
 			this.files.add(dto);
 		}
 	}
@@ -112,6 +112,7 @@ public class ProductDetailsDTO {
 		for (Preview preview : productDetails.getPreviews()) {
 			if (preview.getType().equalsIgnoreCase("video"))
 				ret = preview;
+
 		return new PreviewDTO(ret);
 	}
 

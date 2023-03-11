@@ -49,12 +49,14 @@ public class EmailServiceImpl implements EmailService {
 					+ verifyLink + "'>Verify link</a>";
 			message.setText(html, "UTF-8", "html");
 		} catch (MessagingException e) {
+			System.out.println(e);
 			throw new EmailServiceException("Send email failed");
 		}
 
 		try {
 			javaMailSender.send(message);
 		} catch (MailException ex) {
+			System.out.println(ex);
 			throw new EmailServiceException("Send email failed");
 		}
 

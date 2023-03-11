@@ -13,6 +13,6 @@ export class LicenseService {
   constructor(private httpClient:HttpClient) { }
   
   public getAllLicense():Observable<License[]>{
-	  return this.httpClient.get<License[]>(baseUrl+'/getAll');
+	  return this.httpClient.get<License[]>(baseUrl+'/getLicense');
   }
 }
