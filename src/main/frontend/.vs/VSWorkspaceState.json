@@ -3,12 +3,14 @@
     "",
     "\\src",
     "\\src\\app",
-    "\\src\\app\\DTOS",
     "\\src\\app\\modules",
-    "\\src\\app\\modules\\basics",
-    "\\src\\app\\modules\\manage-product",
-    "\\src\\app\\modules\\manage-product\\new-product",
-    "\\src\\app\\services"
+    "\\src\\app\\modules\\for-users",
+    "\\src\\app\\modules\\for-users\\my-cart",
+    "\\src\\app\\modules\\guest-views",
+    "\\src\\app\\modules\\guest-views\\product-details",
+    "\\src\\app\\modules\\staff-views",
+    "\\src\\app\\modules\\user-views"
   ],
+  "SelectedNode": "\\src\\app\\modules\\staff-views",
   "PreviewInSolutionExplorer": false
 }

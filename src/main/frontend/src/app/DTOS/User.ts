@@ -5,8 +5,6 @@ export class User{
 
   id: number
   email: string;
-  accountCreatedDate: Date;
-  accountLastModified: Date;
   enabled: boolean;
   role: Role[];
   username: string;
@@ -14,24 +12,20 @@ export class User{
   lastName: string;
   emailVerified:boolean;
   avatar: string;
-  joinedDate: Date;
-  userCreatedDate: Date;
-  userLastModified: Date;
+  createdDate: Date;
+  lastModified: Date;
 
   constructor() {
     this.firstName ="";
     this.lastName ="";
-    this.userCreatedDate = new Date;
     this.id = -1;
     this.email = '';
-    this.accountCreatedDate = new Date;
-    this.accountLastModified = new Date;
     this.enabled = true;
     this.role = [];
     this.username = "";
     this.emailVerified = false;
     this.avatar = "";
-    this.userCreatedDate = new Date();
-    this.userLastModified = new Date();
+    this.createdDate = new Date;
+    this.lastModified = new Date;
   }
 } 

@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.SEP490_G9.exception.DuplicateFieldException;
-import com.SEP490_G9.entity.Tag;
+import com.SEP490_G9.entities.Tag;
 import com.SEP490_G9.repository.TagRepository;
 
 import com.SEP490_G9.service.TagService;

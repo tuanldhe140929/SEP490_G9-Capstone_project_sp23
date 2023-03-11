@@ -24,27 +24,25 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.SEP490_G9.common.JwtTokenUtil;
+import com.SEP490_G9.common.PasswordGenerator;
 import com.SEP490_G9.dto.AuthRequest;
 import com.SEP490_G9.dto.AuthResponse;
-import com.SEP490_G9.entity.Account;
-import com.SEP490_G9.entity.RefreshToken;
-import com.SEP490_G9.entity.User;
-import com.SEP490_G9.entity.UserDetailsImpl;
-import com.SEP490_G9.exception.RefreshTokenException;
+import com.SEP490_G9.entities.Account;
+import com.SEP490_G9.entities.RefreshToken;
+import com.SEP490_G9.entities.User;
+import com.SEP490_G9.entities.UserDetailsImpl;
 import com.SEP490_G9.exception.ResourceNotFoundException;
 import com.SEP490_G9.service.AccountService;
 import com.SEP490_G9.service.authService.EmailService;
 import com.SEP490_G9.service.authService.RefreshTokenService;
-import com.SEP490_G9.util.JwtTokenUtil;
-import com.SEP490_G9.util.PasswordGenerator;
-
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
-@RequestMapping(value="account")
+@RequestMapping(value = "account")
 @RestController
 public class AccountController {
 	@Autowired
@@ -58,20 +56,20 @@ public class AccountController {
 
 	@Autowired
 	JwtTokenUtil jwtUtil;
-	
+
 	@Autowired
 	RefreshTokenService refreshTokenService;
-	
+
 	@Autowired
 	AccountService accountService;
-	
+
 	@Autowired
 	PasswordGenerator passwordGenerator;
+
 	@RequestMapping(value = "login", method = RequestMethod.POST)
 	public ResponseEntity<?> login(@Valid @RequestBody AuthRequest authRequest, HttpServletResponse response) {
-		System.out.println("test tren");
 		AuthResponse authResponse = null;
-		
+
 		Authentication authentication = authenticationProvider.authenticate(
 				new UsernamePasswordAuthenticationToken(authRequest.getEmail().trim(), authRequest.getPassword()));
 
@@ -83,7 +81,7 @@ public class AccountController {
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
 				.getAccount();
-		
+
 		RefreshToken refreshToken = refreshTokenService.createRefreshToken(account);
 		Cookie cookie = new Cookie("refreshToken", refreshToken.getToken());
 		cookie.setMaxAge(REFRESH_TOKEN_VALIDITY);
@@ -94,16 +92,14 @@ public class AccountController {
 		response.addCookie(cookie);
 
 		String jwt = jwtUtil.generateToken(account.getEmail());
-		
+
 		Object[] authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities().toArray();
 		List<String> roles = new ArrayList<>();
 		for (Object authority : authorities) {
 			roles.add(authority.toString());
 		}
-		
+
 		authResponse = new AuthResponse(account.getEmail(), jwt, roles);
-		
-		System.out.println("test duoi");
 		return ResponseEntity.ok(authResponse);
 	}
 
@@ -125,32 +121,27 @@ public class AccountController {
 
 	@RequestMapping(value = "resetPassword", method = RequestMethod.POST)
 	public ResponseEntity<?> resetPassword(HttpServletRequest request, @RequestParam(required = true) String email) {
-	
-		Account account = accountService.getByEmail(email);
 
-//		String newPassword = passwordGenerator.generatePassword(8).toString();
-//		account.setPassword(new BCryptPasswordEncoder().encode(newPassword));
-//		account.setLastModified(new Date());
-//		accountService.update(account);
+		Account account = accountService.getByEmail(email);
 		String newPassword = accountService.resetPassword(account);
 		boolean ret = emailService.sendRecoveryPasswordToEmail(email, newPassword);
 		return ResponseEntity.ok(ret);
 	}
-	
+
 	@GetMapping("staffs")
-	public ResponseEntity<?> getAllStaffs(){
+	public ResponseEntity<?> getAllStaffs() {
 		List<Account> staffList = accountService.getAllStaffs();
 		return ResponseEntity.ok(staffList);
 	}
-	
+
 	@PostMapping("addStaff")
-	public ResponseEntity<?> addStaff(@RequestBody Account staff){
+	public ResponseEntity<?> addStaff(@RequestBody Account staff) {
 		boolean canAdd = accountService.addStaff(staff);
 		return ResponseEntity.ok(canAdd);
 	}
-	
+
 	@PutMapping("updateStaffStatus/{id}")
-	public ResponseEntity<?> updateStaffStatus(@PathVariable(name = "id") Long id){
+	public ResponseEntity<?> updateStaffStatus(@PathVariable(name = "id") Long id) {
 		boolean canUpdate = accountService.updateStaffStatus(id);
 		return ResponseEntity.ok(canUpdate);
 	}

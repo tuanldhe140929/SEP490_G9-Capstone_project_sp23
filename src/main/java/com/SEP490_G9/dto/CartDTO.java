@@ -2,18 +2,11 @@ package com.SEP490_G9.dto;
 
 import java.util.ArrayList;
 import java.util.List;
-
-
-import com.SEP490_G9.entity.Account;
-import com.SEP490_G9.entity.Cart;
-import com.SEP490_G9.entity.CartItem;
-import com.SEP490_G9.entity.User;
-
+import com.SEP490_G9.entities.Cart;
+import com.SEP490_G9.entities.CartItem;
+import com.SEP490_G9.entities.User;
 
 import com.SEP490_G9.repository.PreviewRepository;
-
-
-
 
 public class CartDTO {
 	private Long id;
@@ -42,12 +35,9 @@ public class CartDTO {
 			itemDtos.add(new CartItemDTO(item,previewRepository));
 		}
 		this.items = itemDtos;
-		
 		for (CartItem item : cart.getItems()) {
 	       this.totalPrice += item.getProductDetails().getPrice();
 	    }
-	    
-
 	}
 
 	public Long getId() {

@@ -1,17 +1,14 @@
 package com.SEP490_G9.controllers;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.security.sasl.AuthenticationException;
-
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -26,35 +23,29 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.SEP490_G9.dto.ProductDTO;
 import com.SEP490_G9.dto.ProductDetailsDTO;
-import com.SEP490_G9.dto.ProductFileDTO;
-import com.SEP490_G9.dto.TagDTO;
-import com.SEP490_G9.entity.Account;
-import com.SEP490_G9.entity.Category;
-import com.SEP490_G9.entity.License;
-import com.SEP490_G9.entity.Preview;
-import com.SEP490_G9.entity.Product;
-import com.SEP490_G9.entity.ProductDetails;
-import com.SEP490_G9.entity.ProductFile;
-import com.SEP490_G9.entity.Seller;
-import com.SEP490_G9.entity.Tag;
-import com.SEP490_G9.entity.UserDetailsImpl;
-import com.SEP490_G9.entity.embeddable.ProductVersionKey;
+
+import com.SEP490_G9.entities.Account;
+import com.SEP490_G9.entities.Category;
+import com.SEP490_G9.entities.License;
+import com.SEP490_G9.entities.Preview;
+import com.SEP490_G9.entities.Product;
+import com.SEP490_G9.entities.ProductDetails;
+import com.SEP490_G9.entities.ProductFile;
+import com.SEP490_G9.entities.Seller;
+import com.SEP490_G9.entities.Tag;
+import com.SEP490_G9.entities.UserDetailsImpl;
 import com.SEP490_G9.exception.DuplicateFieldException;
 import com.SEP490_G9.exception.FileUploadException;
 import com.SEP490_G9.exception.ResourceNotFoundException;
-import com.SEP490_G9.exception.StorageException;
 import com.SEP490_G9.repository.PreviewRepository;
 import com.SEP490_G9.repository.ProductDetailsRepository;
 import com.SEP490_G9.service.FileIOService;
+import com.SEP490_G9.service.LicenseService;
 import com.SEP490_G9.service.PreviewService;
 import com.SEP490_G9.service.ProductDetailsService;
 import com.SEP490_G9.service.ProductFileService;
 import com.SEP490_G9.service.ProductService;
 import com.SEP490_G9.service.SellerService;
-import com.SEP490_G9.util.ClamAVUtil;
-import com.SEP490_G9.util.StorageUtil;
-
-import fi.solita.clamav.ClamAVClient;
 import jakarta.validation.Valid;
 
 @RestController
@@ -76,6 +67,7 @@ public class ProductController {
 	ProductService productService;
 
 	@Autowired
+
 	ProductFileService productFileService;
 
 	@Autowired
@@ -83,6 +75,7 @@ public class ProductController {
 
 	@Autowired
 	ProductDetailsRepository productDetailsRepo;
+
 
 	@GetMapping("getLicense")
 	public ResponseEntity<?> getAllLicense() {
@@ -120,7 +113,6 @@ public class ProductController {
 				.findByProductIdAndProductVersionKeyVersion(productDetailsDTO.getId(), productDetailsDTO.getVersion());
 		notEdited.setLastModified(new Date());
 		Product product = notEdited.getProduct();
-
 		notEdited.setTags(productDetailsDTO.getTags());
 		notEdited.setCategory(productDetailsDTO.getCategory());
 		if (productDetailsDTO.getDescription() != null)
@@ -134,7 +126,7 @@ public class ProductController {
 			notEdited.setDetailDescription("");
 
 		if (productDetailsDTO.getLicense() != null)
-			notEdited.setLicense(new License(productDetailsDTO.getLicense()));
+			notEdited.setLicense(productDetailsDTO.getLicense());
 		else
 			notEdited.setLicense(null);
 
@@ -165,6 +157,7 @@ public class ProductController {
 			throws IOException {
 		String src = "";
 
+
 		src = productService.uploadCoverImage(coverImage, productId, version);
 
 		return ResponseEntity.ok(src);
@@ -178,12 +171,11 @@ public class ProductController {
 	}
 
 	@GetMapping(value = "getProductDetails")
-	public ResponseEntity<?> getProductDetails(
-			@RequestParam(name = "sellerId", required = true) Long sellerId){
+	public ResponseEntity<?> getProductDetails(@RequestParam(name = "sellerId", required = true) Long sellerId) {
 		List<Product> p = new ArrayList<>();
 		p = this.productService.getProductsBySellerId(sellerId);
 		List<ProductDetails> pd = new ArrayList<>();
-		for(int i = 0; i < p.size(); i++) {
+		for (int i = 0; i < p.size(); i++) {
 			p.get(i).getActiveVersion();
 			ProductDetails pde = null;
 			pde = this.productDetailsRepo.findByProductIdAndProductVersionKeyVersion(p.get(i).getId(),
@@ -191,7 +183,7 @@ public class ProductController {
 			pd.add(pde);
 		}
 		List<ProductDetailsDTO> ret = new ArrayList<>();
-		for(int i = 0; i< pd.size(); i++) {
+		for (int i = 0; i < pd.size(); i++) {
 			ProductDetailsDTO pdto = new ProductDetailsDTO(pd.get(i));
 			ret.add(pdto);
 		}

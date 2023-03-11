@@ -7,9 +7,9 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.SEP490_G9.entity.RefreshToken;
-import com.SEP490_G9.entity.Role;
-import com.SEP490_G9.entity.User;
+import com.SEP490_G9.entities.RefreshToken;
+import com.SEP490_G9.entities.Role;
+import com.SEP490_G9.entities.User;
 
 
 @Repository

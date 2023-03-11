@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { License } from '../DTOS/License';
 
 
-const baseUrl = "http://localhost:9000/license"
+const baseUrl = "http://localhost:9000/product"
 @Injectable({
   providedIn: 'root'
 })

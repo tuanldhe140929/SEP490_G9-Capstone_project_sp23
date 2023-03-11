@@ -8,15 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.SEP490_G9.entity.Account;
-import com.SEP490_G9.entity.RefreshToken;
-import com.SEP490_G9.entity.Role;
+import com.SEP490_G9.entities.Account;
+import com.SEP490_G9.entities.RefreshToken;
+import com.SEP490_G9.entities.Role;
 import com.SEP490_G9.exception.DuplicateFieldException;
 import com.SEP490_G9.exception.ResourceNotFoundException;
 import com.SEP490_G9.repository.AccountRepository;
 import com.SEP490_G9.repository.RoleRepository;
 import com.SEP490_G9.service.AccountService;
-import com.SEP490_G9.util.Constant;
+import com.SEP490_G9.common.Constant;
 
 @Service
 public class AccountServiceImpl implements AccountService {
@@ -76,7 +76,7 @@ public class AccountServiceImpl implements AccountService {
 		String encodedPassword = new BCryptPasswordEncoder().encode(staff.getPassword().trim());
 		staff.setPassword(encodedPassword);
 		Date date = new Date();
-		staff.setAccountCreatedDate(date);
+		staff.setCreatedDate(new Date());
 		List<Role> staffRoles = new ArrayList<>();
 		staffRoles.add(roleRepo.getReferenceById(Constant.STAFF_ROLE_ID));
 		staff.setRoles(staffRoles);

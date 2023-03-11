@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileUrlResource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.core.io.support.ResourceRegion;
@@ -13,13 +14,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.MediaTypeFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.SEP490_G9.repository.PreviewRepository;
 import com.SEP490_G9.repository.ProductRepository;
 import com.SEP490_G9.service.ServeMediaServiceImpl;
-import com.SEP490_G9.util.StorageUtil;
 
 @Service
 public class ServeMediaService implements ServeMediaServiceImpl {
@@ -28,9 +27,6 @@ public class ServeMediaService implements ServeMediaServiceImpl {
 	
 	@Autowired
 	ProductRepository productRepository;
-	
-	@Autowired
-	StorageUtil storageProperties;
 	
 	@Autowired
 	PreviewRepository previewRepository;
@@ -49,8 +45,6 @@ public class ServeMediaService implements ServeMediaServiceImpl {
 	}
 
 
-	
-	
 	private ResponseEntity<ResourceRegion> getVideoRegion(String rangeHeader, String directory) throws IOException {
 		FileUrlResource videoResource = new FileUrlResource(directory);
 		ResourceRegion resourceRegion = getResourceRegion(videoResource, rangeHeader);

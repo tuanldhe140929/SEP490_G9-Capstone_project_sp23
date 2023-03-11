@@ -3,8 +3,8 @@ package com.SEP490_G9.service;
 import org.springframework.stereotype.Service;
 
 import com.SEP490_G9.dto.CartDTO;
-import com.SEP490_G9.entity.Account;
-import com.SEP490_G9.entity.Cart;
+import com.SEP490_G9.entities.Account;
+import com.SEP490_G9.entities.Cart;
 
 @Service
 public interface CartService {

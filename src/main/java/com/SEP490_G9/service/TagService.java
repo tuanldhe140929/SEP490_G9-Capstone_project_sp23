@@ -2,7 +2,7 @@ package com.SEP490_G9.service;
 
 import java.util.List;
 
-import com.SEP490_G9.entity.Tag;
+import com.SEP490_G9.entities.Tag;
 
 public interface TagService {
 	public List<Tag> getAllTags();

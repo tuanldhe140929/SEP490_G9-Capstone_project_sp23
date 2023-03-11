@@ -13,6 +13,7 @@ import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,12 +23,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.SEP490_G9.dto.ProductFileDTO;
-import com.SEP490_G9.entity.Account;
-import com.SEP490_G9.entity.Product;
-import com.SEP490_G9.entity.ProductDetails;
-import com.SEP490_G9.entity.ProductFile;
-import com.SEP490_G9.entity.Seller;
-import com.SEP490_G9.entity.UserDetailsImpl;
+import com.SEP490_G9.entities.Account;
+import com.SEP490_G9.entities.Product;
+import com.SEP490_G9.entities.ProductDetails;
+import com.SEP490_G9.entities.ProductFile;
+import com.SEP490_G9.entities.Seller;
+import com.SEP490_G9.entities.UserDetailsImpl;
 import com.SEP490_G9.exception.FileUploadException;
 import com.SEP490_G9.service.FileIOService;
 import com.SEP490_G9.service.ProductDetailsService;
@@ -35,8 +36,6 @@ import com.SEP490_G9.service.ProductFileService;
 import com.SEP490_G9.service.ProductService;
 import com.SEP490_G9.service.SellerService;
 import com.SEP490_G9.service.VirusTotalService;
-import com.SEP490_G9.util.ClamAVUtil;
-import com.SEP490_G9.util.StorageUtil;
 
 @RequestMapping(value = "/productFile")
 @RestController
@@ -58,13 +57,10 @@ public class ProductFileController {
 	ProductDetailsService productDetailsService;
 
 	@Autowired
-	ClamAVUtil clamAVUtil;
-
-	@Autowired
 	SellerService sellerService;
 
-	@Autowired
-	StorageUtil storageUtil;
+	@Value("${root.location}")
+	String ROOT_LOCATION;
 
 	@Autowired
 	ProductFileService productFileService;

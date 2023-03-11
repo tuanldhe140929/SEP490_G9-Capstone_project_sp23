@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.SEP490_G9.service.serviceImpls.CustomUserDetailsServiceImpl;
-import com.SEP490_G9.util.JwtTokenUtil;
+import com.SEP490_G9.common.JwtTokenUtil;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;

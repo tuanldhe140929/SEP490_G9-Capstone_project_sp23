@@ -1,6 +1,6 @@
 package com.SEP490_G9.repository;
 
-import com.SEP490_G9.entity.ViolationType;
+import com.SEP490_G9.entities.ViolationType;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 

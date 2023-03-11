@@ -5,9 +5,9 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.SEP490_G9.dto.ProductDetailsDTO;
-import com.SEP490_G9.entity.Product;
-import com.SEP490_G9.entity.ProductDetails;
-import com.SEP490_G9.entity.embeddable.ProductVersionKey;
+import com.SEP490_G9.entities.Product;
+import com.SEP490_G9.entities.ProductDetails;
+import com.SEP490_G9.entities.embeddable.ProductVersionKey;
 
 
 public interface ProductDetailsRepository extends JpaRepository<ProductDetails, ProductVersionKey> {

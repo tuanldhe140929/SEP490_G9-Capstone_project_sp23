@@ -6,20 +6,15 @@ import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-
-import com.SEP490_G9.entity.Account;
+import com.SEP490_G9.entities.Account;
 import com.SEP490_G9.exception.EmailServiceException;
 import com.SEP490_G9.repository.AccountRepository;
 import com.SEP490_G9.repository.RefreshTokenRepository;
 import com.SEP490_G9.service.authService.EmailService;
-import com.SEP490_G9.util.VerifyLinkGenerator;
+import com.SEP490_G9.common.VerifyLinkGenerator;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 
 @Service
 public class EmailServiceImpl implements EmailService {
