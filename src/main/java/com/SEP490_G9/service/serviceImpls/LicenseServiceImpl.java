@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.SEP490_G9.entity.License;
+import com.SEP490_G9.entities.License;
 import com.SEP490_G9.repository.LicenseRepository;
 import com.SEP490_G9.service.LicenseService;
 

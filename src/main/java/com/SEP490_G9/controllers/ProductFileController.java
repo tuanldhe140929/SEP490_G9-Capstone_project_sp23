@@ -13,6 +13,7 @@ import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,12 +23,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.SEP490_G9.dto.ProductFileDTO;
-import com.SEP490_G9.entity.Account;
-import com.SEP490_G9.entity.Product;
-import com.SEP490_G9.entity.ProductDetails;
-import com.SEP490_G9.entity.ProductFile;
-import com.SEP490_G9.entity.Seller;
-import com.SEP490_G9.entity.UserDetailsImpl;
+import com.SEP490_G9.entities.Account;
+import com.SEP490_G9.entities.Product;
+import com.SEP490_G9.entities.ProductDetails;
+import com.SEP490_G9.entities.ProductFile;
+import com.SEP490_G9.entities.Seller;
+import com.SEP490_G9.entities.UserDetailsImpl;
 import com.SEP490_G9.exception.FileUploadException;
 import com.SEP490_G9.service.FileIOService;
 import com.SEP490_G9.service.ProductDetailsService;
@@ -35,8 +36,6 @@ import com.SEP490_G9.service.ProductFileService;
 import com.SEP490_G9.service.ProductService;
 import com.SEP490_G9.service.SellerService;
 import com.SEP490_G9.service.VirusTotalService;
-import com.SEP490_G9.util.ClamAVUtil;
-import com.SEP490_G9.util.StorageUtil;
 
 @RequestMapping(value = "/productFile")
 @RestController
@@ -58,13 +57,10 @@ public class ProductFileController {
 	ProductDetailsService productDetailsService;
 
 	@Autowired
-	ClamAVUtil clamAVUtil;
-
-	@Autowired
 	SellerService sellerService;
 
-	@Autowired
-	StorageUtil storageUtil;
+	@Value("${root.location}")
+	String ROOT_LOCATION;
 
 	@Autowired
 	ProductFileService productFileService;
@@ -110,10 +106,10 @@ public class ProductFileController {
 //		if (true) {
 			Files.deleteIfExists(tempFilePath);
 			String fileLocation = getProductFilesLocation(productDetails);
-			File fileDir = new File(storageUtil.getLocation() + fileLocation);
+			File fileDir = new File(ROOT_LOCATION + fileLocation);
 			fileDir.mkdirs();
-			String storedPath = fileStorageService.storeV2(productFile, storageUtil.getLocation() + fileLocation);
-			ProductFile pf = new ProductFile(storedPath.replace(storageUtil.getLocation(), ""), productFile, productDetails);
+			String storedPath = fileStorageService.storeV2(productFile, ROOT_LOCATION + fileLocation);
+			ProductFile pf = new ProductFile(storedPath.replace(ROOT_LOCATION, ""), productFile, productDetails);
 			ProductFile savedFile = productFileService.createProductFile(pf);
 			ret = new ProductFileDTO(savedFile);
 		} else {
@@ -124,9 +120,9 @@ public class ProductFileController {
 	}
 
 	private Path createTempFile(MultipartFile productFile) throws IOException {
-		new File(storageUtil.getLocation() + "\\" + "temp").mkdirs();
+		new File(ROOT_LOCATION + "\\" + "temp").mkdirs();
 		String fileName = UUID.randomUUID().toString();
-		Path tempFilePath = Paths.get(this.storageUtil.getLocation() + "/temp/" + fileName);
+		Path tempFilePath = Paths.get(this.ROOT_LOCATION + "/temp/" + fileName);
 		Files.createDirectories(tempFilePath.getParent());
 		Files.createFile(tempFilePath);
 
@@ -134,7 +130,7 @@ public class ProductFileController {
 		OutputStream os = null;
 		try {
 			is = productFile.getInputStream();
-			os = new FileOutputStream(this.storageUtil.getLocation() + "/temp/" + fileName);
+			os = new FileOutputStream(this.ROOT_LOCATION + "/temp/" + fileName);
 			byte[] buffer = new byte[1024];
 			int length;
 			while ((length = is.read(buffer)) > 0) {
@@ -162,7 +158,7 @@ public class ProductFileController {
 
 		productFileService.deleteById(fileId);
 
-		if (pd.getFiles().size()<= 0) {
+		if (pd.getFiles().size() <= 0) {
 			pd.setDraft(true);
 			dto.setLastFile(true);
 
@@ -196,11 +192,11 @@ public class ProductFileController {
 		String coverImageDestination = getCoverImageLocation(productDetails);
 		String filesDestination = getProductFilesLocation(productDetails);
 		String previewsDestinations = getPreviewsLocation(productDetails);
-		File folder = new File(storageUtil.getLocation() + coverImageDestination);
+		File folder = new File(ROOT_LOCATION + coverImageDestination);
 		folder.mkdirs();
-		folder = new File(storageUtil.getLocation() + filesDestination);
+		folder = new File(ROOT_LOCATION + filesDestination);
 		folder.mkdirs();
-		folder = new File(storageUtil.getLocation() + previewsDestinations);
+		folder = new File(ROOT_LOCATION + previewsDestinations);
 		folder.mkdirs();
 		return savedProductDetails;
 	}

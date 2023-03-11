@@ -1,16 +1,14 @@
 package com.SEP490_G9.repository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.SEP490_G9.entity.Account;
-import com.SEP490_G9.entity.RefreshToken;
-import com.SEP490_G9.entity.Role;
+import com.SEP490_G9.entities.Account;
+import com.SEP490_G9.entities.RefreshToken;
+import com.SEP490_G9.entities.Role;
 
 
 @Repository

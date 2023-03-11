@@ -4,22 +4,22 @@ import java.io.File;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.SEP490_G9.entity.Account;
-import com.SEP490_G9.entity.User;
-import com.SEP490_G9.entity.UserDetailsImpl;
+import com.SEP490_G9.entities.Account;
+import com.SEP490_G9.entities.User;
+import com.SEP490_G9.entities.UserDetailsImpl;
 import com.SEP490_G9.exception.FileUploadException;
 import com.SEP490_G9.exception.ResourceNotFoundException;
 import com.SEP490_G9.repository.AccountRepository;
 import com.SEP490_G9.repository.UserRepository;
 import com.SEP490_G9.service.FileIOService;
 import com.SEP490_G9.service.ManageAccountInfoService;
-import com.SEP490_G9.util.StorageUtil;
 
 @Service
 public class ManageAccountInfoServiceImpl implements ManageAccountInfoService {
@@ -27,8 +27,8 @@ public class ManageAccountInfoServiceImpl implements ManageAccountInfoService {
 	@Autowired
 	UserRepository userRepo;
 
-	@Autowired
-	StorageUtil storageUtil;
+	@Value("${root.location}")
+	String ROOT_LOCATION;
 	
 	@Autowired
 	FileIOService fileIOService;
@@ -71,9 +71,9 @@ public class ManageAccountInfoServiceImpl implements ManageAccountInfoService {
 		} else {
 			User user = getUserById();
 			String profileImageLocation =user.getUsername()+"\\profileImageFolder\\";
-			File coverImageDir = new File(storageUtil.getLocation() + profileImageLocation);
+			File coverImageDir = new File(ROOT_LOCATION + profileImageLocation);
 			coverImageDir.mkdirs();
-			fileIOService.store(profileImage, profileImageLocation);
+			fileIOService.storeV2(profileImage, profileImageLocation);
 			user.setAvatar(profileImageLocation+ profileImage.getOriginalFilename());
 			userRepo.save(user);
 			return user.getAvatar();
@@ -101,7 +101,7 @@ public class ManageAccountInfoServiceImpl implements ManageAccountInfoService {
 			throw new ResourceNotFoundException("Product id:",userId.toString(), "");
 		}
 
-		return serveMediaService.serveImage(storageUtil.getLocation() + user.getAvatar());
+		return serveMediaService.serveImage(ROOT_LOCATION + user.getAvatar());
 	}
 
 	@Override

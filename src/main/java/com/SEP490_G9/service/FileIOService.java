@@ -12,7 +12,7 @@ public interface FileIOService {
 
 	void init();
 
-	void store(MultipartFile file, String path);
+//	void store(MultipartFile file, String path);
 
 	String storeV2(MultipartFile file, String path);
 

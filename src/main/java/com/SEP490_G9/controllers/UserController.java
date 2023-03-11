@@ -14,40 +14,34 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
-import com.SEP490_G9.dto.AuthRequest;
+import com.SEP490_G9.common.Constant;
+import com.SEP490_G9.common.GoogleAPI;
+import com.SEP490_G9.common.JwtTokenUtil;
+import com.SEP490_G9.common.PasswordGenerator;
 import com.SEP490_G9.dto.AuthResponse;
-import com.SEP490_G9.entity.Account;
-import com.SEP490_G9.entity.RefreshToken;
-import com.SEP490_G9.entity.Role;
-import com.SEP490_G9.entity.User;
-import com.SEP490_G9.entity.UserDetailsImpl;
+import com.SEP490_G9.entities.Account;
+import com.SEP490_G9.entities.RefreshToken;
+import com.SEP490_G9.entities.Role;
+import com.SEP490_G9.entities.User;
+import com.SEP490_G9.entities.UserDetailsImpl;
 import com.SEP490_G9.exception.AuthRequestException;
-import com.SEP490_G9.exception.DuplicateFieldException;
-import com.SEP490_G9.exception.RefreshTokenException;
 import com.SEP490_G9.service.AccountService;
-import com.SEP490_G9.service.GoogleAuthService;
 import com.SEP490_G9.service.RoleService;
 import com.SEP490_G9.service.UserService;
 import com.SEP490_G9.service.authService.EmailService;
 import com.SEP490_G9.service.authService.RefreshTokenService;
-import com.SEP490_G9.util.Constant;
-import com.SEP490_G9.util.JwtTokenUtil;
-import com.SEP490_G9.util.PasswordGenerator;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Size;
 
 @RequestMapping(value = "user")
 @RestController
@@ -71,7 +65,7 @@ public class UserController {
 	RefreshTokenService refreshTokenService;
 
 	@Autowired
-	GoogleAuthService googleUtil;
+	GoogleAPI googleUtil;
 
 	@Autowired
 	PasswordGenerator passwordGenerator;
@@ -92,7 +86,7 @@ public class UserController {
 
 		String encodedPassword = new BCryptPasswordEncoder().encode(user.getPassword());
 		user.setPassword(encodedPassword);
-		user.setAccountCreatedDate(new Date());
+		user.setCreatedDate(new Date());
 		user.setRoles(userRoles);
 		User saved = userService.createUser(user);
 		Account account = accountService.getById(saved.getId());
@@ -110,8 +104,7 @@ public class UserController {
 		String encodedPassword = new BCryptPasswordEncoder().encode(randomPassword);
 		googleLoginUser.setPassword(encodedPassword);
 		googleLoginUser.setUsername(googleLoginUser.getEmail().substring(0, googleLoginUser.getEmail().indexOf("@")));
-		googleLoginUser.setAccountCreatedDate(new Date());
-		googleLoginUser.setUserCreatedDate(new Date());
+		googleLoginUser.setCreatedDate(new Date());
 		googleLoginUser.setEmailVerified(true);
 		googleLoginUser.setEnabled(true);
 		List<Role> userRoles = new ArrayList<>();
@@ -178,6 +171,12 @@ public class UserController {
 			userService.update(user);
 		}
 		return ResponseEntity.ok(ret);
+	}
+	
+	@GetMapping(value = "getUserById/{userid}")
+	public ResponseEntity<?> getUserById(@PathVariable(name = "userid", required = true) long userid){
+		User user = userService.getById(userid);
+		return ResponseEntity.ok(user);
 	}
 	
 //	@GetMapping(value = "getUserInfo")

@@ -6,11 +6,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.SEP490_G9.entity.Account;
-import com.SEP490_G9.entity.UserDetailsImpl;
+import com.SEP490_G9.entities.Account;
+import com.SEP490_G9.entities.UserDetailsImpl;
 import com.SEP490_G9.exception.AuthRequestException;
 import com.SEP490_G9.repository.AccountRepository;
-
 
 @Service
 public class CustomUserDetailsServiceImpl implements UserDetailsService {
@@ -25,7 +24,7 @@ public class CustomUserDetailsServiceImpl implements UserDetailsService {
 		if (accountRepository.existsByEmail(name)) {
 			account = accountRepository.findByEmail(name);
 		} else {
-			throw new AuthRequestException("Email: "+name+" not found.");
+			throw new AuthRequestException("Email: " + name + " not found.");
 		}
 		UserDetailsImpl customUserDetail = new UserDetailsImpl();
 		customUserDetail.setAccount(account);

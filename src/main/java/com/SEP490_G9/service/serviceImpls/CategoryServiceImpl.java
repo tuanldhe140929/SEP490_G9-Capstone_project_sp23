@@ -6,11 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
-import com.SEP490_G9.entity.Category;
+import com.SEP490_G9.entities.Category;
 import com.SEP490_G9.exception.DuplicateFieldException;
 import com.SEP490_G9.repository.CategoryRepository;
 import com.SEP490_G9.service.CategoryService;
-import com.SEP490_G9.entity.Category;
 
 @Service
 public class CategoryServiceImpl implements CategoryService{

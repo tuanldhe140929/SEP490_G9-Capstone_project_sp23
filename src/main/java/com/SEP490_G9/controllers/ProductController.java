@@ -1,17 +1,14 @@
 package com.SEP490_G9.controllers;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.security.sasl.AuthenticationException;
-
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -26,34 +23,28 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.SEP490_G9.dto.ProductDTO;
 import com.SEP490_G9.dto.ProductDetailsDTO;
-import com.SEP490_G9.dto.ProductFileDTO;
-import com.SEP490_G9.dto.TagDTO;
-import com.SEP490_G9.entity.Account;
-import com.SEP490_G9.entity.Category;
-import com.SEP490_G9.entity.License;
-import com.SEP490_G9.entity.Preview;
-import com.SEP490_G9.entity.Product;
-import com.SEP490_G9.entity.ProductDetails;
-import com.SEP490_G9.entity.ProductFile;
-import com.SEP490_G9.entity.Seller;
-import com.SEP490_G9.entity.Tag;
-import com.SEP490_G9.entity.UserDetailsImpl;
-import com.SEP490_G9.entity.embeddable.ProductVersionKey;
+
+import com.SEP490_G9.entities.Account;
+import com.SEP490_G9.entities.Category;
+import com.SEP490_G9.entities.License;
+import com.SEP490_G9.entities.Preview;
+import com.SEP490_G9.entities.Product;
+import com.SEP490_G9.entities.ProductDetails;
+import com.SEP490_G9.entities.ProductFile;
+import com.SEP490_G9.entities.Seller;
+import com.SEP490_G9.entities.Tag;
+import com.SEP490_G9.entities.UserDetailsImpl;
 import com.SEP490_G9.exception.DuplicateFieldException;
 import com.SEP490_G9.exception.FileUploadException;
 import com.SEP490_G9.exception.ResourceNotFoundException;
-import com.SEP490_G9.exception.StorageException;
 import com.SEP490_G9.repository.PreviewRepository;
 import com.SEP490_G9.service.FileIOService;
+import com.SEP490_G9.service.LicenseService;
 import com.SEP490_G9.service.PreviewService;
 import com.SEP490_G9.service.ProductDetailsService;
 import com.SEP490_G9.service.ProductFileService;
 import com.SEP490_G9.service.ProductService;
 import com.SEP490_G9.service.SellerService;
-import com.SEP490_G9.util.ClamAVUtil;
-import com.SEP490_G9.util.StorageUtil;
-
-import fi.solita.clamav.ClamAVClient;
 import jakarta.validation.Valid;
 
 @RestController
@@ -85,17 +76,23 @@ public class ProductController {
 	@Autowired
 	PreviewRepository previewRepository;
 
-	@Autowired
-	StorageUtil storageUtil;
+	@Value("${root.location}")
+	private String ROOT_LOCATION;
 
 	@Autowired
 	ProductFileService productFileService;
 
 	@Autowired
-	private ClamAVUtil clamAVUtil;
+	PreviewService previewService;
 
 	@Autowired
-	PreviewService previewService;
+	LicenseService licenseService;
+
+	@GetMapping("getAll")
+	public ResponseEntity<?> getAllLicense() {
+		List<License> licenses = licenseService.getAllLicense();
+		return ResponseEntity.ok(licenses);
+	}
 
 	@PostMapping(value = "activeVersion")
 	public ResponseEntity<?> activeVersion(@RequestParam(name = "productId") Long productId,
@@ -120,8 +117,6 @@ public class ProductController {
 		ProductDetailsDTO dto = new ProductDetailsDTO(productDetails);
 		return ResponseEntity.ok(dto);
 	}
-	
-	
 
 	@GetMapping(value = "getPublishedProductsBySeller")
 	public ResponseEntity<?> getProductsBySeller() {
@@ -164,8 +159,8 @@ public class ProductController {
 			String source = getProductVersionDataLocation(productDetails);
 			String dest = getProductVersionDataLocation(newPD);
 
-			File coppyFrom = new File(storageUtil.getLocation() + source);
-			File coppyTo = new File(storageUtil.getLocation() + dest);
+			File coppyFrom = new File(ROOT_LOCATION + source);
+			File coppyTo = new File(ROOT_LOCATION + dest);
 			FileUtils.copyDirectory(coppyFrom, coppyTo);
 
 			String newPDCoverImage = productDetails.getCoverImage().replace(source, dest);
@@ -311,7 +306,7 @@ public class ProductController {
 		product.setActiveVersion(FIRST_PRODUCT_VERSION);
 		Product createdProduct = productService.createProduct(product);
 
-		ProductDTO productDTO = new ProductDTO(createdProduct, previewRepository);
+		ProductDTO productDTO = new ProductDTO(createdProduct);
 		createProductDetails(createdProduct, FIRST_PRODUCT_VERSION);
 
 		return ResponseEntity.ok(productDTO);
@@ -328,19 +323,9 @@ public class ProductController {
 		notEdited.setLastModified(new Date());
 
 		Product product = notEdited.getProduct();
-		if (productDetailsDTO.getTags() != null) {
-			List<Tag> tags = new ArrayList<>();
-			for (TagDTO tag : productDetailsDTO.getTags()) {
-				tags.add(new Tag(tag));
-			}
-			notEdited.setTags(tags);
-		} else
-			notEdited.setTags(null);
 
-		if (productDetailsDTO.getCategory() != null)
-			notEdited.setCategory(new Category(productDetailsDTO.getCategory()));
-		else
-			notEdited.setCategory(null);
+		notEdited.setTags(productDetailsDTO.getTags());
+		notEdited.setCategory(productDetailsDTO.getCategory());
 
 		if (productDetailsDTO.getDescription() != null)
 			notEdited.setDescription(productDetailsDTO.getDescription().trim());
@@ -353,7 +338,7 @@ public class ProductController {
 			notEdited.setDetailDescription("");
 
 		if (productDetailsDTO.getLicense() != null)
-			notEdited.setLicense(new License(productDetailsDTO.getLicense()));
+			notEdited.setLicense(productDetailsDTO.getLicense());
 		else
 			notEdited.setLicense(null);
 
@@ -388,11 +373,11 @@ public class ProductController {
 			Product product = productService.getProductByIdAndSeller(productId, getCurrentSeller());
 			ProductDetails productDetails = checkVersion(product, version);
 			String coverImageLocation = getCoverImageLocation(productDetails);
-			File coverImageDir = new File(storageUtil.getLocation() + coverImageLocation);
+			File coverImageDir = new File(ROOT_LOCATION + coverImageLocation);
 			coverImageDir.mkdirs();
 
-			String storedPath = fileStorageService.storeV2(coverImage, storageUtil.getLocation() + coverImageLocation);
-			productDetails.setCoverImage(storedPath.replace(storageUtil.getLocation(), ""));
+			String storedPath = fileStorageService.storeV2(coverImage, ROOT_LOCATION + coverImageLocation);
+			productDetails.setCoverImage(storedPath.replace(ROOT_LOCATION, ""));
 			productService.updateProduct(product);
 			src = productDetails.getCoverImage();
 		}
@@ -475,29 +460,28 @@ public class ProductController {
 		String coverImageDestination = getCoverImageLocation(productDetails);
 		String filesDestination = getProductFilesLocation(productDetails);
 		String previewsDestinations = getPreviewsLocation(productDetails);
-		File folder = new File(storageUtil.getLocation() + coverImageDestination);
+		File folder = new File(ROOT_LOCATION + coverImageDestination);
 		folder.mkdirs();
-		folder = new File(storageUtil.getLocation() + filesDestination);
+		folder = new File(ROOT_LOCATION + filesDestination);
 		folder.mkdirs();
-		folder = new File(storageUtil.getLocation() + previewsDestinations);
+		folder = new File(ROOT_LOCATION + previewsDestinations);
 		folder.mkdirs();
 		return savedProductDetails;
 	}
 
 	@GetMapping(value = "getProductDetails")
-	public ResponseEntity<?> getProductDetails(
-			@RequestParam(name = "sellerId", required = true) Long sellerId){
+	public ResponseEntity<?> getProductDetails(@RequestParam(name = "sellerId", required = true) Long sellerId) {
 		List<Product> p = new ArrayList<>();
 		p = this.productService.getProductsBySellerId(sellerId);
 		List<ProductDetails> pd = new ArrayList<>();
-		for(int i = 0; i < p.size(); i++) {
+		for (int i = 0; i < p.size(); i++) {
 			p.get(i).getActiveVersion();
 			ProductDetails pde = null;
 			pde = this.productDetailsService.getByIdAndVersion(p.get(i).getId(), p.get(i).getActiveVersion());
 			pd.add(pde);
 		}
 		List<ProductDetailsDTO> ret = new ArrayList<>();
-		for(int i = 0; i< pd.size(); i++) {
+		for (int i = 0; i < pd.size(); i++) {
 			ProductDetailsDTO pdto = new ProductDetailsDTO(pd.get(i));
 			ret.add(pdto);
 		}
@@ -511,22 +495,22 @@ public class ProductController {
 		int count = sellerProducts.size();
 		return ResponseEntity.ok(count);
 	}
-	
+
 	@GetMapping(value = "getProductsByKeyword/{keyword}")
-	public ResponseEntity<?> getProductsByKeyword(@PathVariable(name = "keyword") String keyword){
+	public ResponseEntity<?> getProductsByKeyword(@PathVariable(name = "keyword") String keyword) {
 		List<ProductDetails> searchResult = this.productDetailsService.getByKeyword(keyword);
 		List<ProductDetailsDTO> searchResultDto = new ArrayList<>();
-		for(ProductDetails result: searchResult) {
+		for (ProductDetails result : searchResult) {
 			searchResultDto.add(new ProductDetailsDTO(result));
 		}
 		return ResponseEntity.ok(searchResultDto);
 	}
-	
+
 	@GetMapping(value = "getAllProducts")
-	public ResponseEntity<?> getAllProducts(){
+	public ResponseEntity<?> getAllProducts() {
 		List<ProductDetails> allProducts = this.productDetailsService.getAll();
 		List<ProductDetailsDTO> allProductsDto = new ArrayList<>();
-		for(ProductDetails product: allProducts) {
+		for (ProductDetails product : allProducts) {
 			allProductsDto.add(new ProductDetailsDTO(product));
 		}
 		return ResponseEntity.ok(allProductsDto);

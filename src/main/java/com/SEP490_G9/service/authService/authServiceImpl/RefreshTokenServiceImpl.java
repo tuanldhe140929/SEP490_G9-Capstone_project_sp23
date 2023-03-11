@@ -7,9 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.SEP490_G9.entity.Account;
-import com.SEP490_G9.entity.RefreshToken;
-import com.SEP490_G9.exception.RefreshTokenException;
+import com.SEP490_G9.entities.Account;
+import com.SEP490_G9.entities.RefreshToken;
 import com.SEP490_G9.exception.ResourceNotFoundException;
 import com.SEP490_G9.repository.RefreshTokenRepository;
 import com.SEP490_G9.repository.UserRepository;

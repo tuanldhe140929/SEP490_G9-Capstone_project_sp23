@@ -6,6 +6,7 @@ import { ProductFile } from "./ProductFile";
 import { Seller } from "./Seller";
 import { Category } from "./Category";
 import { Tag } from "./Tag";
+import { Engine } from "./Engine";
 
 export class Product {
   id: number;
@@ -19,6 +20,7 @@ export class Product {
   lastModified: Date
   license: License;
   draft: boolean;
+  engine:Engine;
   price: number;
   previewVideo: Preview;
   previewPictures: Preview[];
@@ -49,6 +51,6 @@ export class Product {
     this.instruction = "";
     this.createdDate = new Date();
     this.lastModified = new Date();
-
+	this.engine = new Engine();
   }
 }

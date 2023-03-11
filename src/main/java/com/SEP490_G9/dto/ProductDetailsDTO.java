@@ -3,19 +3,19 @@ package com.SEP490_G9.dto;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import com.SEP490_G9.entity.Preview;
-import com.SEP490_G9.entity.ProductDetails;
-import com.SEP490_G9.entity.ProductFile;
-import com.SEP490_G9.entity.Seller;
-import com.SEP490_G9.entity.Tag;
+
+import com.SEP490_G9.entities.Category;
+import com.SEP490_G9.entities.Engine;
+import com.SEP490_G9.entities.License;
+import com.SEP490_G9.entities.Preview;
+import com.SEP490_G9.entities.ProductDetails;
+import com.SEP490_G9.entities.ProductFile;
+import com.SEP490_G9.entities.Tag;
 import com.SEP490_G9.repository.PreviewRepository;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-
-import com.SEP490_G9.entity.Category;
-import com.SEP490_G9.entity.License;
 
 public class ProductDetailsDTO {
 
@@ -42,13 +42,13 @@ public class ProductDetailsDTO {
 
 	private Date lastModified = new Date();
 
-	private LicenseDTO license;
+	private License license;
 
 	private String activeVersion;
 
 	private boolean draft = true;
 
-	private EngineDTO engine;
+	private Engine engine;
 
 	private int price = 0;
 
@@ -56,12 +56,12 @@ public class ProductDetailsDTO {
 
 	private List<PreviewDTO> previewPictures = new ArrayList<>();
 
-	private Seller seller;
+	private SellerDTO seller;
 
-	private List<TagDTO> tags = new ArrayList<>();
+	private List<Tag> tags = new ArrayList<>();
 
 	@NotNull
-	private CategoryDTO category;
+	private Category category;
 
 	private List<ProductFileDTO> files = new ArrayList<ProductFileDTO>();
 
@@ -83,18 +83,14 @@ public class ProductDetailsDTO {
 		this.draft = productDetails.isDraft();
 		this.price = productDetails.getPrice();
 		this.activeVersion = productDetails.getProduct().getActiveVersion();
-		if (productDetails.getLicense() != null) {
-			this.license = new LicenseDTO(productDetails.getLicense());
-		}
-		this.engine = new EngineDTO(productDetails.getEngine());
+		this.license = productDetails.getLicense();
+		this.engine = productDetails.getEngine();
 		this.previewVideo = getPreviewVideoSource(productDetails);
 		this.previewPictures = getPreviewPicturesSource(productDetails);
-		this.seller = productDetails.getProduct().getSeller();
-		for (Tag tag : productDetails.getTags()) {
-			this.tags.add(new TagDTO(tag));
-		}
+		this.seller = new SellerDTO(productDetails.getProduct().getSeller());
+		tags = productDetails.getTags();
 
-		this.category = new CategoryDTO(productDetails.getCategory());
+		this.category = productDetails.getCategory();
 		for (ProductFile file : productDetails.getFiles()) {
 			ProductFileDTO dto = new ProductFileDTO(file);
 			dto.setFileState(ProductFileDTO.FileState.UPLOADED);
@@ -116,8 +112,6 @@ public class ProductDetailsDTO {
 		for (Preview preview : productDetails.getPreviews()) {
 			if (preview.getType().equalsIgnoreCase("video"))
 				ret = preview;
-		} 
-		if (ret==null) return null;
 		return new PreviewDTO(ret);
 	}
 
@@ -209,11 +203,11 @@ public class ProductDetailsDTO {
 		this.version = version;
 	}
 
-	public Seller getSeller() {
+	public SellerDTO getSeller() {
 		return seller;
 	}
 
-	public void setSeller(Seller seller) {
+	public void setSeller(SellerDTO seller) {
 		this.seller = seller;
 	}
 
@@ -233,36 +227,12 @@ public class ProductDetailsDTO {
 		this.previewPictures = previewPictures;
 	}
 
-	public List<TagDTO> getTags() {
-		return tags;
-	}
-
-	public void setTags(List<TagDTO> tags) {
-		this.tags = tags;
-	}
-
-	public CategoryDTO getCategory() {
-		return category;
-	}
-
-	public void setCategory(CategoryDTO category) {
-		this.category = category;
-	}
-
 	public List<ProductFileDTO> getFiles() {
 		return files;
 	}
 
 	public void setFiles(List<ProductFileDTO> files) {
 		this.files = files;
-	}
-
-	public LicenseDTO getLicense() {
-		return license;
-	}
-
-	public void setLicense(LicenseDTO license) {
-		this.license = license;
 	}
 
 	public String getActiveVersion() {
@@ -273,12 +243,36 @@ public class ProductDetailsDTO {
 		this.activeVersion = activeVersion;
 	}
 
-	public EngineDTO getEngine() {
+	public License getLicense() {
+		return license;
+	}
+
+	public void setLicense(License license) {
+		this.license = license;
+	}
+
+	public Engine getEngine() {
 		return engine;
 	}
 
-	public void setEngine(EngineDTO engine) {
+	public void setEngine(Engine engine) {
 		this.engine = engine;
+	}
+
+	public List<Tag> getTags() {
+		return tags;
+	}
+
+	public void setTags(List<Tag> tags) {
+		this.tags = tags;
+	}
+
+	public Category getCategory() {
+		return category;
+	}
+
+	public void setCategory(Category category) {
+		this.category = category;
 	}
 
 }

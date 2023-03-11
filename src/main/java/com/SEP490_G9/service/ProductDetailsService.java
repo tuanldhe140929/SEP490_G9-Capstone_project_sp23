@@ -3,7 +3,9 @@ package com.SEP490_G9.service;
 import java.util.List;
 
 import com.SEP490_G9.dto.ProductDetailsDTO;
-import com.SEP490_G9.entity.ProductDetails;
+import com.SEP490_G9.entities.Category;
+import com.SEP490_G9.entities.ProductDetails;
+import com.SEP490_G9.entities.Tag;
 
 public interface ProductDetailsService {
 	//public ProductDetails getProductDetailsByProductId(Long productId);
@@ -25,5 +27,7 @@ public interface ProductDetailsService {
 	public List<ProductDetails> getAll();
 
 	public ProductDetails getActiveVersion(Long productId);
+	
+	public List<ProductDetails> getByKeywordCategoryTags(String keyword, int categoryid, int min, int max);
 
 }

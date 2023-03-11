@@ -3,9 +3,9 @@ package com.SEP490_G9.dto;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.SEP490_G9.entity.Product;
-import com.SEP490_G9.entity.ProductDetails;
-import com.SEP490_G9.entity.Seller;
+import com.SEP490_G9.entities.Product;
+import com.SEP490_G9.entities.ProductDetails;
+import com.SEP490_G9.entities.Seller;
 import com.SEP490_G9.repository.PreviewRepository;
 
 public class ProductDTO {
@@ -18,7 +18,7 @@ public class ProductDTO {
 
 	private List<ProductDetailsDTO> productDetails = new ArrayList<>();
 
-	public ProductDTO(Product product, PreviewRepository previewRepository) {
+	public ProductDTO(Product product) {
 		this.id = product.getId();
 		this.enabled = product.isEnabled();
 		this.seller = product.getSeller();
