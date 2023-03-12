@@ -1,6 +1,6 @@
 export enum FileState {
   UPLOADING = "UPLOADING"
-  , UPLOADED = "UPLOADED", SCANNING = "SCANNING", ERROR = "ERROR",
+  , STORED = "STORED", SCANNING = "SCANNING", ERROR = "ERROR",
   ON_QUEUE = "ON_QUEUE",MALICIOUS = "MALICIOUS"
 }
 
@@ -17,7 +17,7 @@ export class ProductFile{
       this.type = "";
       this.lastFile = false;
       this.size = -1;
-      this.fileState = FileState.UPLOADED;
+      this.fileState = FileState.STORED;
     }
 
     public static fromFile(file: File): ProductFile {

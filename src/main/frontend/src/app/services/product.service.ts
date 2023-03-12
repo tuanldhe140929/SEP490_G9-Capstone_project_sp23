@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Product } from '../DTOS/Product';
 
-const baseUrl = "http://localhost:9000/product";
+const baseUrl = "http://localhost:9000/productDetails";
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +13,7 @@ export class ProductService {
   constructor(private httpClient: HttpClient) { }
 
   public getProductById(productId: number): Observable<Product> {
-    return this.httpClient.get<Product>(baseUrl + "/getActiveVersionProductById", {
+    return this.httpClient.get<Product>(baseUrl + "/getActiveVersion", {
       params: {
         productId: productId
       }

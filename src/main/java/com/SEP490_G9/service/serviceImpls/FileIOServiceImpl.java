@@ -72,6 +72,7 @@ public class FileIOServiceImpl implements FileIOService {
 		while (destFile.exists()) {
 			count++;
 			dest = path + "\\(" + count + ") " + file.getOriginalFilename();
+			System.out.println(count);
 			destFile = new File(dest);
 		}
 		try {
