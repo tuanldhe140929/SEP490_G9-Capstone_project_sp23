@@ -17,6 +17,7 @@ import com.SEP490_G9.exception.DuplicateFieldException;
 import com.SEP490_G9.exception.ResourceNotFoundException;
 import com.SEP490_G9.repository.ProductDetailsRepository;
 import com.SEP490_G9.repository.ProductRepository;
+import com.SEP490_G9.repository.SellerRepository;
 import com.SEP490_G9.service.ProductDetailsService;
 import com.SEP490_G9.service.ProductService;
 
@@ -28,6 +29,9 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 	
 	@Autowired
 	ProductRepository productRepo;
+	
+	@Autowired
+	SellerRepository sellerRepo;
 	
 	@Autowired
 	ProductService productService;
@@ -122,11 +126,11 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		List<ProductDetails> searchResultLatestVersion = new ArrayList<>();
 		for(ProductDetails pd: allProductDetails) {
 			if(categoryid == 0) {
-				if(pd.getName().trim().toLowerCase().contains(keyword.trim().toLowerCase())  && pd.getPrice()>=min && pd.getPrice()<=max) {
+				if(pd.getName().trim().toLowerCase().contains(keyword.trim().toLowerCase().replaceAll("\\s+", " "))  && pd.getPrice()>=min && pd.getPrice()<=max) {
 					searchResult.add(pd);
 				}
 			}else {
-				if(pd.getName().trim().toLowerCase().contains(keyword.trim().toLowerCase())  && pd.getCategory().getId() == categoryid && pd.getPrice()>=min && pd.getPrice()<=max) {
+				if(pd.getName().trim().toLowerCase().contains(keyword.trim().toLowerCase().replaceAll("\\s+", " "))  && pd.getCategory().getId() == categoryid && pd.getPrice()>=min && pd.getPrice()<=max) {
 					searchResult.add(pd);
 				}
 			}
@@ -138,6 +142,32 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		}
 		List<ProductDetails> finalResult = searchResultLatestVersion.stream().distinct().collect(Collectors.toList());
 		return finalResult;
+	}
+
+	@Override
+	public List<ProductDetails> getProductBySeller(long sellerid,String keyword, int categoryid, int min, int max) {
+		Seller seller = sellerRepo.findById(sellerid);
+		List<Product> productList = productRepo.findBySeller(seller);
+		List<ProductDetails> productDetailsList = new ArrayList<>();
+		List<ProductDetails> filteredList = new ArrayList<>();
+		for(Product pro: productList) {
+			String activeVersion = pro.getActiveVersion();
+			productDetailsList.add(getByIdAndVersion(pro.getId(), activeVersion));
+		}
+		List<ProductDetails> latestVersionWithoutDupList = productDetailsList.stream().distinct().collect(Collectors.toList());
+		for(ProductDetails pd: latestVersionWithoutDupList) {
+			if(categoryid == 0) {
+				if(pd.getName().trim().toLowerCase().replaceAll("\\s+", " ").contains(keyword.trim().toLowerCase().replaceAll("\\s+", " ")) && pd.getPrice()>=min && pd.getPrice()<=max) {
+					filteredList.add(pd);
+				}
+			}else {
+				if(pd.getName().trim().toLowerCase().replaceAll("\\s+", " ").contains(keyword.trim().toLowerCase().replaceAll("\\s+", " ")) &&pd.getCategory().getId() == categoryid && pd.getPrice()>=min && pd.getPrice()<=max) {
+					filteredList.add(pd);
+				}
+			}
+		}
+		return filteredList;
+		
 	}
 
 }

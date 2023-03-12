@@ -96,6 +96,14 @@ export class SearchResultComponent implements OnInit{
     console.log(this.chosenCategory)
   }
 
+  compareMinMax(): boolean{
+    if(this.minprice<=this.maxprice&&this.minprice!=null&&this.maxprice!=null){
+      return true;
+    }else{
+      return false;
+    }
+  }
+
   refresh(){
     this.productService.getFilteredProducts(this.keyword,this.chosenCategory,this.minprice,this.maxprice).subscribe(
       data => {
