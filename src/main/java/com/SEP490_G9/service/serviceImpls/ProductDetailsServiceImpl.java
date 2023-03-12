@@ -158,7 +158,7 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		List<ProductDetails> filteredList = new ArrayList<>();
 		for(Product pro: productList) {
 			String activeVersion = pro.getActiveVersion();
-			productDetailsList.add(getByIdAndVersion(pro.getId(), activeVersion));
+			productDetailsList.add(getByProductIdAndVersion(pro.getId(), activeVersion));
 		}
 		List<ProductDetails> latestVersionWithoutDupList = productDetailsList.stream().distinct().collect(Collectors.toList());
 		for(ProductDetails pd: latestVersionWithoutDupList) {

@@ -147,7 +147,12 @@
       <main class="col-lg-9">
         
       <header class="d-sm-flex align-items-center border-bottom mb-4 pb-3">
-        <strong class="d-block py-2">Tìm thấy {{productList.length}} sản phẩm</strong>
+        <div *ngIf="productList.length==0">
+          <strong class="d-block py-2">Không có kết quả</strong>
+        </div>
+        <div *ngIf="productList.length>0">
+          <strong class="d-block py-2">Tìm thấy {{productList.length}} sản phẩm</strong>
+        </div>
         <div class="ms-auto ">
           <!-- <select class="form-select d-inline-block w-auto me-1">
             <option value="0">Best match</option>
@@ -193,7 +198,7 @@
       <hr>
   <footer class="d-flex mt-4">
                 
-    <div class="mt-8 py-5 flex justify-center items-center">
+    <div class="mt-8 py-5 flex justify-center items-center" *ngIf="productList.length>0">
       <pagination-controls (pageChange)="p = $event"></pagination-controls>
     </div>
                   </footer>

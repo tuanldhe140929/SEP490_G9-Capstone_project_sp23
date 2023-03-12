@@ -106,7 +106,7 @@
           <strong class="d-block py-2">Không có kết quả</strong>
         </div>
         <div *ngIf="resultList.length>0">
-          <strong class="d-block py-2">Tìm thấy {{resultList.length}} sản phẩm"</strong>
+          <strong class="d-block py-2">Tìm thấy {{resultList.length}} sản phẩm</strong>
         </div>
         <div class="ms-auto ">
           <select class="form-select d-inline-block w-auto me-1">
@@ -162,7 +162,7 @@
                       </li>
                       </ul>
                   </nav> -->
-                  <div class="mt-8 py-5 flex justify-center items-center">
+                  <div class="mt-8 py-5 flex justify-center items-center" *ngIf="productList.length>0">
                     <pagination-controls (pageChange)="p = $event"></pagination-controls>
                   </div>
                   </footer>

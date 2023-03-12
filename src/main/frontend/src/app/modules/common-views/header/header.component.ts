@@ -77,7 +77,7 @@ export class HeaderComponent implements OnInit{
   }
 
   toSearchResult(){
-    this.router.navigate(['result',this.keyword])
+    this.router.navigate(['/result',this.keyword])
   }
 
   onOptionSelected(event: MatAutocompleteSelectedEvent){
