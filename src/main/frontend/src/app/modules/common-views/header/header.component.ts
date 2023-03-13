@@ -10,8 +10,10 @@ import { ProductService } from 'src/app/services/product.service';
 import { StorageService } from 'src/app/services/storage.service';
 import { UserService } from 'src/app/services/user.service';
 import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { Role } from '../../../DTOS/Role';
 
 const removeMark = require("vietnamese-tonemarkless");
+
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
@@ -21,7 +23,7 @@ export class HeaderComponent implements OnInit{
   
   loginStatus: boolean;
   username: string;
-  user: User;
+  user: User = new User;
   productList: Product[] = [];
   nameList: string[] = [];
   filteredOptions: Observable<string[]>;
@@ -35,6 +37,23 @@ export class HeaderComponent implements OnInit{
     private router: Router,
     private productService: ProductService){
 
+  }
+
+  isSeller(): boolean {
+
+    const sellerRoleId = 4;
+
+    if (this.user.id != -1) {
+      console.log(this.user);
+      for (let i = 0; i < this.user.roles.length; i++) {
+        if (this.user.roles[i].id == sellerRoleId)
+          return true;
+      }
+        return false;
+        return false;
+    } else {
+      return false;
+    }
   }
   
   ngOnInit(): void {
@@ -83,5 +102,9 @@ export class HeaderComponent implements OnInit{
   onOptionSelected(event: MatAutocompleteSelectedEvent){
     const selectedOption = event.option.value;
     this.router.navigate(['/result', selectedOption]);
+  }
+
+  redirectSellerPage() {
+    this.router.navigate(['collection/' + this.user.id]);
   }
 }

@@ -10,20 +10,18 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
-
-
 @Entity
-@Table(name="transactions")
+@Table(name = "transactions")
 public class Transaction {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	@ManyToOne
-    @JoinColumn(name = "cart_id", nullable = false)
+	@JoinColumn(name = "cart_id", nullable = false)
 	private Cart cart;
-	
+
 	private Date purchasedDate;
 
 	public Long getId() {
@@ -49,6 +47,5 @@ public class Transaction {
 	public void setPurchasedDate(Date purchasedDate) {
 		this.purchasedDate = purchasedDate;
 	}
-	
-}
 
+}

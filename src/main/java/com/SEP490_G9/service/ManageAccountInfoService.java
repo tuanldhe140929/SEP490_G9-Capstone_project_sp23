@@ -9,8 +9,12 @@ import com.SEP490_G9.entities.User;
 
 public interface ManageAccountInfoService {
 	public User getUserInfo();
-	public boolean changeAccountPassword(String newPassword, String oldPassword); 
+
+	public boolean changeAccountPassword(String newPassword, String oldPassword);
+
 	public User changeAccountInfo(String newUserName, String newFirstName, String newLastName);
+
 	public String uploadProfileImage(MultipartFile coverImage) throws IOException;
+
 	public File serveProfileImage(Long userId);
 }

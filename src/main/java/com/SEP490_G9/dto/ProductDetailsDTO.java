@@ -112,12 +112,11 @@ public class ProductDetailsDTO {
 		for (Preview preview : productDetails.getPreviews()) {
 			if (preview.getType().equalsIgnoreCase("video"))
 				ret = preview;
-		}if(ret==null) {
-			return null;
 		}
 		if (ret == null) {
 			return null;
 		}
+	
 		return new PreviewDTO(ret);
 	}
 

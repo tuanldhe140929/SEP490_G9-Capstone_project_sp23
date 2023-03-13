@@ -1,4 +1,4 @@
-import { HttpClient, HttpEvent } from '@angular/common/http';
+import { HttpClient, HttpEvent, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ProductFile } from '../DTOS/ProductFile';
@@ -24,5 +24,25 @@ export class ProductFileService {
     return this.httpClient.post<ProductFile>(baseUrl + '/deleteProductFile', data, {
 
     });
+  }
+
+  generateDownloadToken(userId: number, productId: number): Observable<string> {
+    return this.httpClient.post(baseUrl + "/generateDownloadToken/" + productId, null, {
+      responseType: 'text'
+    });
+  }
+
+
+  download(productId: number, token: string) {
+    return this.httpClient.get(baseUrl + "/download", {
+      params: {
+        productId:productId,
+        token: token
+      },
+      headers: {
+        "Content-Type": 'application/zip'
+      },
+      responseType: "blob"
+    })
   }
 }

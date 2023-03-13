@@ -21,11 +21,11 @@ public class SellerDTO {
 	private boolean emailVerified = false;
 	private String phoneNumber;
 	private boolean sellerEnabled;
-	
+
 	public SellerDTO() {
 		// TODO Auto-generated constructor stub
 	}
-	
+
 	public SellerDTO(Seller seller) {
 		this.id = seller.getId();
 		this.email = seller.getEmail();
@@ -144,6 +144,5 @@ public class SellerDTO {
 	public void setSellerEnabled(boolean sellerEnabled) {
 		this.sellerEnabled = sellerEnabled;
 	}
-	
-	
+
 }

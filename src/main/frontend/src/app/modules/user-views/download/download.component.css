@@ -25,6 +25,9 @@
   
 
 }
+span{
+   user-select:none;
+}
 
   .return_link_div:hover {
     background-color: #c1bfbf;
