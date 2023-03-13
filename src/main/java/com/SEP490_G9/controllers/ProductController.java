@@ -206,16 +206,7 @@ public class ProductController {
 //		}
 //		return ResponseEntity.ok(searchResultDto);
 //	}
-//
-//	@GetMapping(value = "getAllProducts")
-//	public ResponseEntity<?> getAllProducts() {
-//		List<ProductDetails> allProducts = this.productDetailsService.getAll();
-//		List<ProductDetailsDTO> allProductsDto = new ArrayList<>();
-//		for (ProductDetails product : allProducts) {
-//			allProductsDto.add(new ProductDetailsDTO(product));
-//		}
-//		return ResponseEntity.ok(allProductsDto);
-//	}
+
 
 //	@PostMapping(value = "createNewVersion")
 //	public ResponseEntity<?> createNewVersion(@RequestBody ProductDetailsDTO productDetailsDTO,

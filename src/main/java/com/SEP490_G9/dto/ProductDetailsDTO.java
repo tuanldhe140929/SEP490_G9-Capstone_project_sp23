@@ -116,9 +116,7 @@ public class ProductDetailsDTO {
 		if (ret == null) {
 			return null;
 		}
-		if (ret == null) {
-			return null;
-		}
+	
 		return new PreviewDTO(ret);
 	}
 

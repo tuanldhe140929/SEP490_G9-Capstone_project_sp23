@@ -167,10 +167,12 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 				.collect(Collectors.toList());
 		for (ProductDetails pd : latestVersionWithoutDupList) {
 			if (categoryid == 0) {
-				if (pd.getName().trim().toLowerCase().replaceAll("\\s+", " ")
-						.contains(keyword.trim().toLowerCase().replaceAll("\\s+", " ")) && pd.getPrice() >= min
-						&& pd.getPrice() <= max) {
-					filteredList.add(pd);
+				if (pd.getName() != null) {
+					if (pd.getName().trim().toLowerCase().replaceAll("\\s+", " ")
+							.contains(keyword.trim().toLowerCase().replaceAll("\\s+", " ")) && pd.getPrice() >= min
+							&& pd.getPrice() <= max) {
+						filteredList.add(pd);
+					}
 				}
 			} else {
 				if (pd.getName().trim().toLowerCase().replaceAll("\\s+", " ")

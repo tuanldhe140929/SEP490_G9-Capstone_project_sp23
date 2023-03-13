@@ -93,6 +93,8 @@ public class ProductServiceImpl implements ProductService {
 	public boolean deleteProductById(Long id) {
 		Seller seller = getCurrentSeller();
 		Product product = productRepository.findById(id).get();
+		product.setEnabled(false);
+		productRepository.save(product);
 		if (product == null || product.getSeller() != seller) {
 			throw new ResourceNotFoundException("product id", id.toString(), seller);
 		}

@@ -1,16 +1,19 @@
+import { style } from '@angular/animations';
 import { DecimalPipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { Seller } from 'src/app/DTOS/Seller';
 import { AuthResponse } from '../../../DTOS/AuthResponse';
 import { Preview } from '../../../DTOS/Preview';
 import { Product } from '../../../DTOS/Product';
+import { ProductFile } from '../../../DTOS/ProductFile';
 import { Tag } from '../../../DTOS/Tag';
 import { User } from '../../../DTOS/User';
 import { AuthService } from '../../../services/auth.service';
 import { CartService } from '../../../services/cart.service';
 import { CommonService } from '../../../services/common.service';
+import { ProductFileService } from '../../../services/product-file.service';
 import { ProductService } from '../../../services/product.service';
 import { StorageService } from '../../../services/storage.service';
 import { ReportProductComponent } from './report-product/report-product.component';
@@ -36,7 +39,10 @@ class DisplayPreview {
   }
 
   public static getSrc(source: string) {
-    return 'http://localhost:9000/public/serveMedia/image?source=' + source.replace(/\\/g, '/');
+    const encodedSource = encodeURIComponent(source.replace(/\\/g, '/').replace('//', '/').replace(/\(/g, '%28').replace(/\)/g, '%29'));
+    return 'http://localhost:9000/public/serveMedia/image?source=' + encodedSource;
+
+
   }
 
 }
@@ -69,7 +75,8 @@ export class ProductDetailsComponent implements OnInit {
     private decimalPipe: DecimalPipe,
     private dialog: MatDialog,
     private productService: ProductService,
-    private cartService: CartService) {
+    private cartService: CartService,
+    private productFileService: ProductFileService) {
 
   }
 
@@ -93,13 +100,12 @@ export class ProductDetailsComponent implements OnInit {
     for (let i = 0; i < this.displayPreviews.length; i++) {
       if (preview == this.displayPreviews[i]) {
         index = i;
-        console.log(index);
         break;
       }
     }
 
     for (let i = 0; i < this.BlackThumbs.length; i++) {
-      this.BlackThumbs.item(i)?.setAttribute("style", "border-radius: 4px; position: absolute; top: 0; right: 9px; bottom: 0; left: 0; background: #000; opacity: .6;");
+      this.BlackThumbs.item(i)?.setAttribute("style", "border-radius: 4px; position: absolute; top: 0; right: 9px; bottom: 0; left: 0; background: #000; opacity: .3;");
     }
 
     if (index != -1) {
@@ -141,6 +147,8 @@ export class ProductDetailsComponent implements OnInit {
 
   }
 
+  src = 'http://localhost:9000/public/serveMedia/image?source=account_id_2%2Fproducts%2F2%2FDatabase%20V2.drawio%20(2).png';
+
   getProduct() {
     var productIdAndName = this.activatedRoute.snapshot.paramMap.get('productId');
     if (productIdAndName) {
@@ -149,7 +157,6 @@ export class ProductDetailsComponent implements OnInit {
       this.productService.getProductById(+productId).subscribe(
         data => {
           this.product = data;
-          console.log(this.product);
           if (this.DescriptionTab) {
             this.DescriptionTab.innerHTML = this.product.details;
           }
@@ -161,12 +168,13 @@ export class ProductDetailsComponent implements OnInit {
 
           if (this.product.previewPictures != null)
             for (let i = 0; i < this.product.previewPictures.length; i++) {
-              this.displayPreviews.push(DisplayPreview.fromPreview(this.product.previewPictures[i]));
+              var a = DisplayPreview.fromPreview(this.product.previewPictures[i]);
+              this.displayPreviews.push(a);
+              console.log(a);
             }
 
           if (this.BlackThumbs.length > 0)
             this.BlackThumbs.item(0)?.setAttribute("style", "border-radius: 4px; position: absolute; top: 0; right: 9px; bottom: 0; left: 0; background: #000; opacity: 0;");
-
 
         },
         error => {
@@ -184,6 +192,9 @@ export class ProductDetailsComponent implements OnInit {
 
   }
 
+  getSrc(p: DisplayPreview) {
+
+  }
 
 
   hasPreviewPictures(): boolean {
@@ -281,6 +292,8 @@ export class ProductDetailsComponent implements OnInit {
     return document.getElementsByClassName('thumb_column_black');
   }
 
+
+
   get Price() {
     return this.getFormattedValue(this.product.price);
   }
@@ -314,6 +327,18 @@ export class ProductDetailsComponent implements OnInit {
         alert('Đã có lỗi xảy ra, vui lòng thử lại sau.');
       }
     );
+  }
+
+  generateDownloadToken() {
+    var token = "";
+    this.productFileService.generateDownloadToken(0, this.product.id).subscribe(
+      (data: string) => {
+        console.log(data);
+        token = data;
+        this.router.navigate(['/download', this.product.id], { queryParams: { token: token } });
+      }
+    );
+
   }
 
 }

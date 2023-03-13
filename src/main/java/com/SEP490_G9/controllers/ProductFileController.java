@@ -14,8 +14,14 @@ import java.util.concurrent.ExecutionException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -86,4 +92,28 @@ public class ProductFileController {
 		dto = productFileService.deleteById(fileId);
 		return ResponseEntity.ok(dto);
 	}
+
+	@PostMapping("generateDownloadToken/{productId}")
+	public ResponseEntity<String> generateDownloadToken(@PathVariable Long productId) {
+		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
+				.getAccount();
+		String token = productFileService.generateDownloadToken(account.getId(), productId);
+		System.out.println(token);
+		return ResponseEntity.ok(token);
+		// redirect to download page, display a download button, list of files,
+		// click the download button call the below endpoint to serve file for download
+	}
+
+	@GetMapping("download")
+	public ResponseEntity<ByteArrayResource> downloadProduct(@RequestParam(name="productId",required=true) Long productId, @RequestParam(name="token",required = true) String token) {
+		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
+				.getAccount();
+		System.out.println("recieving"+token);
+		ByteArrayResource resource = productFileService.downloadFile(account.getId(), productId, token);
+		byte[] data = resource.getByteArray();
+		
+		return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=product.zip")
+				.contentType(MediaType.APPLICATION_OCTET_STREAM).contentLength(data.length).body(resource);
+	}
+
 }
