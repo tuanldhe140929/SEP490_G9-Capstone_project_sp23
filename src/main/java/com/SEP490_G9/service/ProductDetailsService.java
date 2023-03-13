@@ -16,13 +16,13 @@ public interface ProductDetailsService {
 	public ProductDetails updateProductDetails(ProductDetails notEdited);
 
 	public ProductDetails getActiveVersion(Long productId);
-	
+
 	public List<ProductDetails> getByKeywordCategoryTags(String keyword, int categoryid, int min, int max);
-	
+
 	public List<ProductDetails> getProductBySeller(long sellerid, String keyword, int categoryid, int min, int max);
 
 	public ProductDetails createNewVersion(Long id, String newVersion);
-	
+
 	public ProductDetails getByProductIdAndVersion(Long productId, String version);
 
 	public List<ProductDetails> getBySellerIdAndIsDraft(Long sellerId, boolean isDraft);
@@ -34,6 +34,5 @@ public interface ProductDetailsService {
 	public List<ProductDetails> getAll();
 
 	public boolean existByProductIdAndVersion(Long productId, String version);
-
 
 }

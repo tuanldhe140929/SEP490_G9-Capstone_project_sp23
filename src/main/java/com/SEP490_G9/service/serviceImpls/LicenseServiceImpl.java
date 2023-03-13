@@ -14,7 +14,7 @@ public class LicenseServiceImpl implements LicenseService {
 
 	@Autowired
 	LicenseRepository licenseRepo;
-	
+
 	@Override
 	public List<License> getAllLicense() {
 		return licenseRepo.findAll();

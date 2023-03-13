@@ -29,40 +29,40 @@ public class ManageAccountInfoServiceImpl implements ManageAccountInfoService {
 
 	@Value("${root.location}")
 	String ROOT_LOCATION;
-	
+
 	@Autowired
 	FileIOService fileIOService;
-	
+
 	@Autowired
 	ServeMediaService serveMediaService;
-	
+
 	@Autowired
 	AccountRepository accountRepo;
-	
+
 	@Override
 
 	public User getUserInfo() {
-		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getAccount();
+		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
+				.getAccount();
 		User user = userRepo.findById(account.getId()).get();
 		return user;
 
 	}
 
 	@Override
-	public boolean changeAccountPassword(String newPassword,String oldPassword) {
-		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getAccount();
+	public boolean changeAccountPassword(String newPassword, String oldPassword) {
+		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
+				.getAccount();
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-		if(encoder.matches(oldPassword, account.getPassword())) {
+		if (encoder.matches(oldPassword, account.getPassword())) {
 			String encodedPassword = encoder.encode(newPassword);
 			account.setPassword(encodedPassword);
 			accountRepo.save(account);
-		}else {
+		} else {
 			return false;
-		}	
+		}
 		return true;
 	}
-
-	
 
 	@Override
 	public String uploadProfileImage(MultipartFile profileImage) throws IOException {
@@ -70,15 +70,16 @@ public class ManageAccountInfoServiceImpl implements ManageAccountInfoService {
 			throw new FileUploadException(profileImage.getContentType() + " file not accept");
 		} else {
 			User user = getUserById();
-			String profileImageLocation =user.getUsername()+"\\profileImageFolder\\";
+			String profileImageLocation = user.getUsername() + "\\profileImageFolder\\";
 			File coverImageDir = new File(ROOT_LOCATION + profileImageLocation);
 			coverImageDir.mkdirs();
 			fileIOService.storeV2(profileImage, profileImageLocation);
-			user.setAvatar(profileImageLocation+ profileImage.getOriginalFilename());
+			user.setAvatar(profileImageLocation + profileImage.getOriginalFilename());
 			userRepo.save(user);
 			return user.getAvatar();
 		}
 	}
+
 	private boolean checkFileType(MultipartFile file, String... extensions) {
 		for (String extension : extensions) {
 			if (file.getContentType().endsWith(extension)) {
@@ -87,8 +88,10 @@ public class ManageAccountInfoServiceImpl implements ManageAccountInfoService {
 		}
 		return false;
 	}
+
 	private User getUserById() {
-		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getAccount();	
+		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
+				.getAccount();
 		User user = userRepo.getReferenceById(account.getId());
 		return user;
 	}
@@ -98,7 +101,7 @@ public class ManageAccountInfoServiceImpl implements ManageAccountInfoService {
 		User user = userRepo.getReferenceById(userId);
 
 		if (user == null) {
-			throw new ResourceNotFoundException("Product id:",userId.toString(), "");
+			throw new ResourceNotFoundException("Product id:", userId.toString(), "");
 		}
 
 		return serveMediaService.serveImage(ROOT_LOCATION + user.getAvatar());
@@ -106,7 +109,8 @@ public class ManageAccountInfoServiceImpl implements ManageAccountInfoService {
 
 	@Override
 	public User changeAccountInfo(String newUserName, String newFirstName, String newLastName) {
-		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getAccount();
+		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
+				.getAccount();
 		User user = userRepo.findById(account.getId()).get();
 		user.setFirstName(newFirstName);
 		user.setUsername(newUserName);

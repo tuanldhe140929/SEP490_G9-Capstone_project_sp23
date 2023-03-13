@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.*;
 
-@JsonIgnoreProperties(value="products")
+@JsonIgnoreProperties(value = "products")
 @Entity
 @Table(name = "sellers")
 @Inheritance(strategy = InheritanceType.JOINED)

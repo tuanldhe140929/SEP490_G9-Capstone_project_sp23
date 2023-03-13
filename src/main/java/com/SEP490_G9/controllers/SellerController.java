@@ -13,12 +13,12 @@ import com.SEP490_G9.service.SellerService;
 @RestController
 @RequestMapping("/seller")
 public class SellerController {
-	
+
 	@Autowired
 	SellerService sellerService;
-	
+
 	@GetMapping("/getSeller")
-	public ResponseEntity<?> getSellerById(@RequestParam("sellerid") long sellerid){
+	public ResponseEntity<?> getSellerById(@RequestParam("sellerid") long sellerid) {
 		Seller seller = sellerService.getSellerById(sellerid);
 		return ResponseEntity.ok(seller);
 	}

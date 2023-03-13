@@ -16,30 +16,27 @@ import com.SEP490_G9.entities.Category;
 
 import com.SEP490_G9.service.CategoryService;
 
-
-
-
 @RequestMapping("private/manageCategory")
 @RestController
 public class CategoryController {
 
 	@Autowired
 	CategoryService manageCategoryService;
-	
+
 	@GetMapping("categories")
-	public ResponseEntity<?> getAllCategories(){
+	public ResponseEntity<?> getAllCategories() {
 		List<Category> catList = manageCategoryService.getAllCategories();
 		return ResponseEntity.ok(catList);
 	}
-	
+
 	@PostMapping("addCategory")
-	public ResponseEntity<?> addCategory(@RequestBody Category category){
+	public ResponseEntity<?> addCategory(@RequestBody Category category) {
 		boolean canAdd = manageCategoryService.addCategory(category);
 		return ResponseEntity.ok(canAdd);
 	}
-	
+
 	@PutMapping("updateCategory/{id}")
-	public ResponseEntity<?> updateCategory(@RequestBody Category category, @PathVariable("id") int id){
+	public ResponseEntity<?> updateCategory(@RequestBody Category category, @PathVariable("id") int id) {
 		boolean canUpdate = manageCategoryService.updateCategory(category, id);
 		return ResponseEntity.ok(canUpdate);
 	}

@@ -36,17 +36,18 @@ public class ProductDetailsController {
 		return ResponseEntity.ok(filteredProductsDto);
 	}
 
-	
 	@GetMapping(value = "/getProductsBySeller")
-	public ResponseEntity<?> getProductsBySeller(@RequestParam("sellerid") long sellerid, @RequestParam("keyword") String keyword, @RequestParam("categoryid") int categoryid, @RequestParam("min") int min, @RequestParam("max") int max){
-		List<ProductDetails> finalList = productDetailsService.getProductBySeller(sellerid,keyword,categoryid, min, max);
+	public ResponseEntity<?> getProductsBySeller(@RequestParam("sellerid") long sellerid,
+			@RequestParam("keyword") String keyword, @RequestParam("categoryid") int categoryid,
+			@RequestParam("min") int min, @RequestParam("max") int max) {
+		List<ProductDetails> finalList = productDetailsService.getProductBySeller(sellerid, keyword, categoryid, min,
+				max);
 		List<ProductDetailsDTO> finalListDto = new ArrayList<>();
-		for(ProductDetails result: finalList) {
+		for (ProductDetails result : finalList) {
 			finalListDto.add(new ProductDetailsDTO(result));
 		}
 		return ResponseEntity.ok(finalListDto);
 	}
-
 
 	@GetMapping(value = "getPublishedProductsBySeller")
 	public ResponseEntity<?> getProductsBySeller(@RequestParam(name = "sellerId") Long sellerId) {

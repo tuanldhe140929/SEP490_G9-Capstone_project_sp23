@@ -2,12 +2,10 @@ package com.SEP490_G9.service;
 
 import java.util.List;
 
-
 import org.springframework.web.multipart.MultipartFile;
 
 import com.SEP490_G9.dto.ProductFileDTO;
 import com.SEP490_G9.entities.ProductFile;
-
 
 public interface ProductFileService {
 	public ProductFile createProductFile(ProductFile productFile);

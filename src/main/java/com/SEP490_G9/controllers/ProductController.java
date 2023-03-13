@@ -76,12 +76,12 @@ public class ProductController {
 	@Autowired
 	ProductDetailsRepository productDetailsRepo;
 
-
 	@GetMapping("getLicense")
 	public ResponseEntity<?> getAllLicense() {
 		List<License> licenses = licenseService.getAllLicense();
 		return ResponseEntity.ok(licenses);
 	}
+
 	// create new Product
 	@PostMapping(value = "createNewProduct")
 	public ResponseEntity<?> createNewProduct() {
@@ -156,7 +156,6 @@ public class ProductController {
 			@RequestParam(name = "coverImage") MultipartFile coverImage, @RequestParam(name = "version") String version)
 			throws IOException {
 		String src = "";
-
 
 		src = productService.uploadCoverImage(coverImage, productId, version);
 

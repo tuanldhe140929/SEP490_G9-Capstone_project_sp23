@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 
-@JsonIgnoreProperties(value= {"productDetails"})
+@JsonIgnoreProperties(value = { "productDetails" })
 @Entity
 @Table(name = "license")
 public class License {

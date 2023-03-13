@@ -13,12 +13,12 @@ public class SellerServiceImpl implements SellerService {
 
 	@Autowired
 	SellerRepository sellerRepository;
-	
+
 	@Override
 	public Seller getSellerById(Long sellerId) {
 		Seller seller = sellerRepository.findById(sellerId).get();
-		if(seller==null) {
-			throw new ResourceNotFoundException("seller",sellerId.toString(),"null");
+		if (seller == null) {
+			throw new ResourceNotFoundException("seller", sellerId.toString(), "null");
 		}
 		return seller;
 	}

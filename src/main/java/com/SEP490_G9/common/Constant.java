@@ -1,6 +1,5 @@
 package com.SEP490_G9.common;
 
-
 public class Constant {
 	public static String GOOGLE_CLIENT_ID = "1090876037699-6spfc0lk141gc1jo3fba602913bcu4h7";
 	public static String GOOGLE_CLIENT_SECRET = "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";

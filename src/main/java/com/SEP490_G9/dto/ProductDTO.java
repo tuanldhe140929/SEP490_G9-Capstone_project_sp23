@@ -22,7 +22,7 @@ public class ProductDTO {
 		this.id = product.getId();
 		this.enabled = product.isEnabled();
 		this.seller = product.getSeller();
-		if (product.getProductDetails()!=null & product.getProductDetails().size() >0) {
+		if (product.getProductDetails() != null & product.getProductDetails().size() > 0) {
 			for (ProductDetails pd : product.getProductDetails()) {
 				this.productDetails.add(new ProductDetailsDTO(pd));
 			}

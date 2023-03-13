@@ -81,7 +81,7 @@ public class PreviewController {
 			@RequestParam(name = "version") String version) {
 		System.out.println(previewPicture.getOriginalFilename());
 		List<PreviewDTO> previews = previewService.uploadPreviewPicture(productId, version, previewPicture);
-		
+
 		return ResponseEntity.ok(previews);
 	}
 

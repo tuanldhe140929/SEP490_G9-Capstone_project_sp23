@@ -12,7 +12,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-
 import com.SEP490_G9.entities.Account;
 import com.SEP490_G9.entities.Product;
 import com.SEP490_G9.entities.ProductDetails;

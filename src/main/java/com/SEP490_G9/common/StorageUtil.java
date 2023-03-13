@@ -11,8 +11,6 @@ public class StorageUtil {
 	 * Folder location for storing files
 	 */
 
-
-
 	private String location = "C:\\Users\\ADMN\\eclipse-workspace\\SEP490_G9_Datas\\";
 
 	public String getLocation() {

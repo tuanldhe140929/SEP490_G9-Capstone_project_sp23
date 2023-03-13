@@ -1,4 +1,5 @@
 package com.SEP490_G9.entities;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,13 +22,13 @@ public class Role implements Serializable {
 	@Column(name = "name", unique = true, nullable = false, insertable = true, updatable = false)
 	private String name;
 
-	@ManyToMany(mappedBy="roles")
-    private List<Account> accounts = new ArrayList<>();
+	@ManyToMany(mappedBy = "roles")
+	private List<Account> accounts = new ArrayList<>();
 
 	public Role() {
 		// TODO Auto-generated constructor stub
 	}
-	
+
 	public Role(int id, String name) {
 		super();
 		this.id = id;
