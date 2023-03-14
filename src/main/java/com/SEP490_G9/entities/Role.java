@@ -10,7 +10,7 @@ import jakarta.persistence.*;
 
 @JsonIgnoreProperties(value = { "accounts" })
 @Entity
-@Table(name = "role")
+@Table(name = "roles")
 public class Role implements Serializable {
 	/**
 	 * 

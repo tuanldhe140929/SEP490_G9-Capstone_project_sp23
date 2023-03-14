@@ -30,7 +30,9 @@ public class Product implements Serializable {
 
 	@Column(name = "enabled")
 	private boolean enabled = true;
-
+	
+	private boolean approved = false;
+	
 	@ManyToOne
 	@JoinColumn(name = "seller_id", nullable = false)
 	private Seller seller;
@@ -113,5 +115,13 @@ public class Product implements Serializable {
 	public void setRates(List<Rate> rates) {
         this.rates = rates;
     }
+
+	public boolean isApproved() {
+		return approved;
+	}
+
+	public void setApproved(boolean approved) {
+		this.approved = approved;
+	}
 
 }
