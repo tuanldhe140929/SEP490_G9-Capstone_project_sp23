@@ -36,6 +36,15 @@ public class ProductDetailsController {
 		return ResponseEntity.ok(filteredProductsDto);
 	}
 
+	@GetMapping(value = "/getAllProducts")
+	public ResponseEntity<?> getAllProducts(){
+		List<ProductDetails> allProducts = productDetailsService.getAllProducts();
+		List<ProductDetailsDTO> allProductsDto = new ArrayList<>();
+		for(ProductDetails product: allProducts) {
+			allProductsDto.add(new ProductDetailsDTO(product));
+		}
+		return ResponseEntity.ok(allProductsDto);
+	}
 	
 	@GetMapping(value = "/getProductsBySeller")
 	public ResponseEntity<?> getProductsBySeller(@RequestParam("sellerid") long sellerid, @RequestParam("keyword") String keyword, @RequestParam("categoryid") int categoryid, @RequestParam("min") int min, @RequestParam("max") int max){
