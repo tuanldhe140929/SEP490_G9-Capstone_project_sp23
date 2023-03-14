@@ -20,6 +20,8 @@ public interface ProductDetailsService {
 	public List<ProductDetails> getByKeywordCategoryTags(String keyword, int categoryid, int min, int max);
 
 	public List<ProductDetails> getProductBySeller(long sellerid, String keyword, int categoryid, int min, int max);
+	
+	public List<ProductDetails> getAllProducts();
 
 	public ProductDetails createNewVersion(Long id, String newVersion);
 

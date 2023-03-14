@@ -322,4 +322,17 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		return "account_id_" + seller.getId() + "\\" + PRODUCT_FOLDER_NAME;
 	}
 
+	@Override
+	public List<ProductDetails> getAllProducts() {
+		List<ProductDetails> allProductsWithDuplication = productDetailsRepo.findAll();
+		List<ProductDetails> allProductsWithoutDuplication = new ArrayList<>();
+		for(ProductDetails pd: allProductsWithDuplication) {
+			Product product = pd.getProduct();
+			String activeVersion = product.getActiveVersion();
+			allProductsWithoutDuplication.add(getByProductIdAndVersion(product.getId(), activeVersion));
+		}
+		List<ProductDetails> allDistinctProducts = allProductsWithoutDuplication.stream().distinct().collect(Collectors.toList());
+		return allDistinctProducts;
+	}
+
 }
