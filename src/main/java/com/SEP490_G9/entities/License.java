@@ -89,4 +89,11 @@ public class License  {
 	public void setReferenceLink(String referenceLink) {
 		this.referenceLink = referenceLink;
 	}
+
+	@Override
+	public String toString() {
+		return "License [id=" + id + ", name=" + name + ", acrynosm=" + acrynosm + ", details=" + details
+				+ ", referenceLink=" + referenceLink + ", productDetails=" + productDetails + "]";
+	}
+	
 }
