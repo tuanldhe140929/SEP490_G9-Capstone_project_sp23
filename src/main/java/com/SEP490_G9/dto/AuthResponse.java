@@ -26,7 +26,6 @@ public class AuthResponse implements Serializable {
 		this.accessToken = accessToken;
 	}
 
-
 	public String getEmail() {
 		return email;
 	}

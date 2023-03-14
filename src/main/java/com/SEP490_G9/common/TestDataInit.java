@@ -29,7 +29,7 @@ import com.SEP490_G9.repository.UserRepository;
 import com.SEP490_G9.repository.ViolationTypeRepository;
 
 @Component
-public class TestDataInit implements ApplicationRunner {
+public class TestDataInit {
 	@Autowired
 	private AccountRepository accountRepository;
 
@@ -58,7 +58,7 @@ public class TestDataInit implements ApplicationRunner {
 	private LicenseRepository licenseRepo;
 
 
-	@Override
+
 	public void run(ApplicationArguments args) throws Exception {
 
 		roleRepository.save(new Role(Constant.ADMIN_ROLE_ID, "ROLE_ADMIN"));
@@ -153,13 +153,11 @@ public class TestDataInit implements ApplicationRunner {
 		categoryRepository.save(new Category(12, "Lore"));
 		categoryRepository.save(new Category(13, "Others"));
 
-//		violationTypeRepository.save(new ViolationType("Kích động thù ghét"));
-//		violationTypeRepository.save(new ViolationType("Thông tin sai sự thật"));
-//		violationTypeRepository.save(new ViolationType("Nội dung phản cảm"));
-//		violationTypeRepository.save(new ViolationType("Nội dung nguy hiểm"));
-//		violationTypeRepository.save(new ViolationType("Lừa đảo"));
-//		violationTypeRepository.save(new ViolationType("Spam"));
-//		violationTypeRepository.save(new ViolationType("Vi phạm bản quyền"));
+		violationTypeRepository.save(new ViolationType(1, "Spam"));
+		violationTypeRepository.save(new ViolationType(2, "Lừa đảo"));
+		violationTypeRepository.save(new ViolationType(3, "Đạo nhái sản phẩm"));
+		violationTypeRepository.save(new ViolationType(4, "Nội dung không lành mạnh"));
+		violationTypeRepository.save(new ViolationType(5, "Kích động thù ghét"));
 
 		License license2 = new License();
 		license2.setId(1);

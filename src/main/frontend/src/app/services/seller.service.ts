@@ -10,7 +10,14 @@ export class SellerService {
 
   constructor(private httpClient: HttpClient) { }
 
-  getTotalProductCount(sellerId: number): Observable<number> {
+  // getTotalProductCount(sellerId: number): Observable<number> {
    
+  // }
+
+  getSellerById(sellerid: number): Observable<any>{
+    const params = {
+      sellerid: sellerid
+    }
+    return this.httpClient.get<any>(baseUrl+'/getSeller', {params})
   }
 }

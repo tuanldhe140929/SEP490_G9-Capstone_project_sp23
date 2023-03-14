@@ -24,9 +24,9 @@ public class EmailServiceImpl implements EmailService {
 
 	@Autowired
 	private VerifyLinkGenerator verifyLinkGenerator;
-	
-	@Value("${spring.mail.username}")
-	private String sender;
+
+//	@Value("${spring.mail.username}")
+//	private String sender;
 	@Autowired
 	AccountRepository accountRepository;
 	@Autowired
@@ -41,7 +41,7 @@ public class EmailServiceImpl implements EmailService {
 
 		try {
 			helper = new MimeMessageHelper(message, true);
-			helper.setFrom(sender);
+			helper.setFrom("DPM Sytem");
 			helper.setTo(toEmail);
 
 			message.setSubject("DPM System mail verify");
@@ -70,7 +70,7 @@ public class EmailServiceImpl implements EmailService {
 
 		try {
 			helper = new MimeMessageHelper(message, true);
-			helper.setFrom(sender);
+			helper.setFrom("DPM System");
 			helper.setTo(toEmail);
 
 			message.setSubject("DPM System mail reset password");

@@ -37,11 +37,10 @@ public class TrimmedHttpServletRequest extends HttpServletRequestWrapper {
 		return values;
 	}
 
-	 @Override
-	    public BufferedReader getReader() throws IOException {
-	        return new BufferedReader(new InputStreamReader(getInputStream()));
-	    }
-
+	@Override
+	public BufferedReader getReader() throws IOException {
+		return new BufferedReader(new InputStreamReader(getInputStream()));
+	}
 
 	private String getRequestJson(BufferedReader reader) throws IOException {
 		StringBuilder json = new StringBuilder();

@@ -14,43 +14,41 @@ public class ErrorResponse implements Serializable {
 	private HttpStatus status;
 	private List<String> messages;
 	private Instant timestamp;
-	 
-public ErrorResponse() {
-	// TODO Auto-generated constructor stub
-}
 
-public ErrorResponse(List<String> messages, HttpStatus status) {
-	super();
+	public ErrorResponse() {
+		// TODO Auto-generated constructor stub
+	}
 
-	this.status = status;
-	this.messages = messages;
-	this.timestamp = Instant.now();
-}
+	public ErrorResponse(List<String> messages, HttpStatus status) {
+		super();
 
+		this.status = status;
+		this.messages = messages;
+		this.timestamp = Instant.now();
+	}
 
-public HttpStatus getStatus() {
-	return status;
-}
+	public HttpStatus getStatus() {
+		return status;
+	}
 
-public void setStatus(HttpStatus status) {
-	this.status = status;
-}
+	public void setStatus(HttpStatus status) {
+		this.status = status;
+	}
 
-public List<String> getMessages() {
-	return messages;
-}
+	public List<String> getMessages() {
+		return messages;
+	}
 
-public void setMessages(List<String> messages) {
-	this.messages = messages;
-}
+	public void setMessages(List<String> messages) {
+		this.messages = messages;
+	}
 
-public Instant getTimestamp() {
-	return timestamp;
-}
+	public Instant getTimestamp() {
+		return timestamp;
+	}
 
-public void setTimestamp(Instant timestamp) {
-	this.timestamp = timestamp;
-}
+	public void setTimestamp(Instant timestamp) {
+		this.timestamp = timestamp;
+	}
 
-	
 }

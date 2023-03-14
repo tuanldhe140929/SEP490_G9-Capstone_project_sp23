@@ -19,21 +19,21 @@ import com.SEP490_G9.service.TagService;
 public class TagController {
 	@Autowired
 	TagService manageTagService;
-	
+
 	@GetMapping("tags")
-	public ResponseEntity<?> getAllTags(){
+	public ResponseEntity<?> getAllTags() {
 		List<Tag> tagList = manageTagService.getAllTags();
 		return ResponseEntity.ok(tagList);
 	}
-	
+
 	@PostMapping("addTag")
-	public ResponseEntity<?> addTag(@RequestBody Tag tag){
+	public ResponseEntity<?> addTag(@RequestBody Tag tag) {
 		boolean canAdd = manageTagService.addTag(tag);
 		return ResponseEntity.ok(canAdd);
 	}
-	
+
 	@PutMapping("updateTag/{id}")
-	public ResponseEntity<?> updateTag(@RequestBody Tag tag, @PathVariable("id") int id){
+	public ResponseEntity<?> updateTag(@RequestBody Tag tag, @PathVariable("id") int id) {
 		boolean canUpdate = manageTagService.updateTag(tag, id);
 		return ResponseEntity.ok(canUpdate);
 	}

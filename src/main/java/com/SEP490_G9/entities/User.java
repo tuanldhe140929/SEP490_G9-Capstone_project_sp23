@@ -4,19 +4,16 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
-
 @Entity
 @Table(name = "users")
 @Inheritance(strategy = InheritanceType.JOINED)
-@PrimaryKeyJoinColumn(name="account_id")
-public class User extends Account implements Serializable{
+@PrimaryKeyJoinColumn(name = "account_id")
+public class User extends Account implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -24,27 +21,27 @@ public class User extends Account implements Serializable{
 	@Column(name = "username", nullable = false, unique = true)
 	@Size(min = 3, max = 30)
 	private String username;
-	
-	@Column(name="first_name")
+
+	@Column(name = "first_name")
 	private String firstName;
-	
-	@Column(name="last_name")
+
+	@Column(name = "last_name")
 	private String lastName;
-	
+
 	@Column(name = "avatar")
 	private String avatar;
-	
+
 	@Column(name = "email_verified")
 	private boolean emailVerified = false;
 
 	@OneToOne(cascade = CascadeType.ALL)
 	private Cart cart;
-	
+
 	public User() {
 	}
-	
+
 	public User(Account account) {
-		
+
 	}
 
 	public User(@NotBlank(message = "username can't be blank") @Size(min = 3, max = 30) String username,
@@ -56,7 +53,7 @@ public class User extends Account implements Serializable{
 		this.avatar = avatar;
 		this.emailVerified = emailVerified;
 	}
-	
+
 	public User(Long id, @Email(message = "invalid format") @NotBlank(message = "email can't be blank") String email,
 			@NotBlank(message = "password can't be blank") @Size(min = 8, max = 100) String password,
 			Date accountCreatedDate, Date accountLastModifed, boolean enabled, List<Role> roles,

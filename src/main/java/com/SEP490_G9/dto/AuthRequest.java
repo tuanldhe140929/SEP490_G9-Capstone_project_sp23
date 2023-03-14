@@ -3,7 +3,7 @@ package com.SEP490_G9.dto;
 import java.io.Serializable;
 import jakarta.validation.constraints.*;
 
-public class AuthRequest implements Serializable  {
+public class AuthRequest implements Serializable {
 
 	/**
 	 * 
@@ -14,11 +14,10 @@ public class AuthRequest implements Serializable  {
 	@NotBlank(message = "email can't be blank")
 	@Size(min = 5, max = 100)
 	private String email;
-	
+
 	@NotBlank(message = "email can't be blank")
 	@Size(min = 8, max = 100)
 	private String password;
-	
 
 	public AuthRequest() {
 		// TODO Auto-generated constructor stub
@@ -50,5 +49,5 @@ public class AuthRequest implements Serializable  {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
+
 }

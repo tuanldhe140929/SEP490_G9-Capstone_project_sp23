@@ -28,7 +28,7 @@ import com.SEP490_G9.repository.ViolationTypeRepository;
 
 import com.SEP490_G9.service.ReportService;
 
-@RequestMapping("private/manageReport")
+@RequestMapping("private/report")
 @RestController
 public class ReportController {
 	@Autowired

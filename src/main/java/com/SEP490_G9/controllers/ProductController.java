@@ -76,12 +76,12 @@ public class ProductController {
 	@Autowired
 	ProductDetailsRepository productDetailsRepo;
 
-
 	@GetMapping("getLicense")
 	public ResponseEntity<?> getAllLicense() {
 		List<License> licenses = licenseService.getAllLicense();
 		return ResponseEntity.ok(licenses);
 	}
+
 	// create new Product
 	@PostMapping(value = "createNewProduct")
 	public ResponseEntity<?> createNewProduct() {
@@ -157,7 +157,6 @@ public class ProductController {
 			throws IOException {
 		String src = "";
 
-
 		src = productService.uploadCoverImage(coverImage, productId, version);
 
 		return ResponseEntity.ok(src);
@@ -207,16 +206,7 @@ public class ProductController {
 //		}
 //		return ResponseEntity.ok(searchResultDto);
 //	}
-//
-//	@GetMapping(value = "getAllProducts")
-//	public ResponseEntity<?> getAllProducts() {
-//		List<ProductDetails> allProducts = this.productDetailsService.getAll();
-//		List<ProductDetailsDTO> allProductsDto = new ArrayList<>();
-//		for (ProductDetails product : allProducts) {
-//			allProductsDto.add(new ProductDetailsDTO(product));
-//		}
-//		return ResponseEntity.ok(allProductsDto);
-//	}
+
 
 //	@PostMapping(value = "createNewVersion")
 //	public ResponseEntity<?> createNewVersion(@RequestBody ProductDetailsDTO productDetailsDTO,

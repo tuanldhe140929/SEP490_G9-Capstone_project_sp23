@@ -3,7 +3,6 @@ package com.SEP490_G9.controllers;
 import java.io.File;
 import java.io.IOException;
 import java.net.URLConnection;
-import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 
 import org.apache.commons.io.FileUtils;
@@ -23,9 +22,6 @@ import org.springframework.web.util.UriUtils;
 import com.SEP490_G9.entities.Preview;
 import com.SEP490_G9.entities.ProductDetails;
 import com.SEP490_G9.entities.User;
-import com.SEP490_G9.exception.ResourceNotFoundException;
-import com.SEP490_G9.service.FileIOService;
-import com.SEP490_G9.service.ManageAccountInfoService;
 import com.SEP490_G9.service.PreviewService;
 import com.SEP490_G9.service.ProductDetailsService;
 import com.SEP490_G9.service.UserService;
@@ -34,9 +30,6 @@ import com.SEP490_G9.service.serviceImpls.ServeMediaService;
 @RequestMapping(value = "public/serveMedia")
 @RestController
 public class ServeMediaController {
-
-	@Autowired
-	ManageAccountInfoService manageAccountInfoService;
 
 	@Autowired
 	ProductDetailsService productDetailsService;

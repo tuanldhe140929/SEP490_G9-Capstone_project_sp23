@@ -81,7 +81,7 @@ export class LoginComponent implements OnInit {
 
   public loginWithGoogle() {
     window.location.href = "https://accounts.google.com/o/oauth2/auth?scope=email&redirect_uri="
-      + "http://localhost:4200/auth/loginWithGoogle&response_type=code&client_id=1090876037699-6spfc0lk141gc1jo3fba602913bcu4h7.apps.googleusercontent.com&approval_promt=force";
+      + "http://localhost:4200/auth/login-with-google&response_type=code&client_id=1090876037699-6spfc0lk141gc1jo3fba602913bcu4h7.apps.googleusercontent.com&approval_promt=force";
   }
   public logOut() {
     console.log('loginout');

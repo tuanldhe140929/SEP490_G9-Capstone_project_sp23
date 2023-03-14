@@ -85,8 +85,11 @@
           <label for="max" class="form-label">Max</label>
           <input class="form-control" id="max" min="0" max="10000000" placeholder="Max" type="number" [(ngModel)]="maxprice">
           </div> <!-- col end.// -->
+          <div *ngIf="!compareMinMax()">
+            <small style="color: red">Khoảng giá không hợp lệ</small>
+          </div>
         </div> <!-- row end.// -->
-        <button class="btn btn-light w-100" (click)="refresh()">Áp dụng</button>
+        <button class="btn btn-light w-100" (click)="refresh()" [disabled]="!compareMinMax()">Áp dụng</button>
         </div> <!-- card-body.// -->
       </div> <!-- collapse.// -->
       </article> <!-- filter-group // -->
@@ -103,7 +106,7 @@
           <strong class="d-block py-2">Không có kết quả</strong>
         </div>
         <div *ngIf="resultList.length>0">
-          <strong class="d-block py-2">Tìm thấy {{resultList.length}} sản phẩm"</strong>
+          <strong class="d-block py-2">Tìm thấy {{resultList.length}} sản phẩm</strong>
         </div>
         <div class="ms-auto ">
           <select class="form-select d-inline-block w-auto me-1">
@@ -159,7 +162,7 @@
                       </li>
                       </ul>
                   </nav> -->
-                  <div class="mt-8 py-5 flex justify-center items-center">
+                  <div class="mt-8 py-5 flex justify-center items-center" *ngIf="productList.length>0">
                     <pagination-controls (pageChange)="p = $event"></pagination-controls>
                   </div>
                   </footer>

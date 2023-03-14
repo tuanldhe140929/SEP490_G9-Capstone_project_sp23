@@ -28,14 +28,7 @@ export class ManageProductService {
     }
     );
   }
-  getProductByIdAndVersionAndSeller(productId: number, version: string): Observable<Product> {
-    return this.httpClient.post<Product>(baseUrl + '/chooseVersion', null, {
-      params: {
-        productId: productId,
-        version: version
-      }
-    });
-  }
+
 
   getAllVersionOfProduct(productId: number): Observable<Product[]> {
     return this.httpClient.get<Product[]>(productDetailsUrl + '/getAllVersion', {
@@ -47,14 +40,6 @@ export class ManageProductService {
 
   constructor(private httpClient: HttpClient) { }
 
-  createNewVersion(product: Product, newVersion: string): Observable<Product> {
-    return this.httpClient.post<Product>(baseUrl + '/createNewVersionV2', product, {
-      params: {
-        newVersion: newVersion
-      }
-    }
-    )
-  }
 
   getActiveVersionProductByIdAndSeller(productId: number): Observable<Product> {
     return this.httpClient.get<Product>(productDetailsUrl + '/getActiveVersion?productId=' + productId);

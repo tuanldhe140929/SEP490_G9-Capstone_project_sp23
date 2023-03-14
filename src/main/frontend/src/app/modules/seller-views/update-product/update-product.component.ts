@@ -22,6 +22,7 @@ import { License } from 'src/app/DTOS/License';
 import { LicenseService } from 'src/app/services/license.service';
 import { CategoryService } from 'src/app/services/category.service';
 import { TagService } from 'src/app/services/tag.service';
+import { ProductService } from '../../../services/product.service';
 
 
 const MSG100 = 'Tên sản phẩm không được để trống';
@@ -92,7 +93,8 @@ export class UpdateProductComponent implements OnInit {
     private productFileService: ProductFileService,
     private licenseService: LicenseService,
     private categoryService: CategoryService,
-    private tagService: TagService) { }
+    private tagService: TagService,
+    private productService: ProductService) { }
 
   product: Product = new Product;
   typeList: Category[] = [];
@@ -337,7 +339,7 @@ export class UpdateProductComponent implements OnInit {
 
   getByProductIdAndVersion(productId: string | null, version: string) {
     if (productId && version) {
-      this.manageProductService.getProductByIdAndVersionAndSeller(+productId, version).subscribe(
+      this.productService.getProductByIdAndVersion(+productId, version).subscribe(
         (data) => {
 
           this.product = data;
@@ -949,7 +951,7 @@ export class UpdateProductComponent implements OnInit {
       this.openFileSizeErrorModal();
     }
     else {
-      this.manageProductService.createNewVersion(this.product, newVersion).subscribe(
+      this.productService.createNewVersion(this.product, newVersion).subscribe(
         data => {
           console.log(data);
           window.location.href = 'http://localhost:4200/product/update/1/' + newVersion;
@@ -987,7 +989,11 @@ export class UpdateProductComponent implements OnInit {
 
   get LicenseReferenceLink() {
     if (this.productLicense >= 1) {
-      return this.licenseList[this.productLicense - 1].referenceLink;
+      if (this.licenseList[this.productLicense - 1] != null) {
+        return this.licenseList[this.productLicense - 1].referenceLink;
+      }
+      else
+        return "";
     }
     else {
       return "";

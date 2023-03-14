@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-
 import com.SEP490_G9.dto.PreviewDTO;
 import com.SEP490_G9.dto.ProductDetailsDTO;
 import com.SEP490_G9.entities.Preview;
@@ -27,24 +26,31 @@ import com.SEP490_G9.service.ProductService;
 
 @Service
 public class PreviewServiceImpl implements PreviewService {
-	@Value("${root.location}")
-	private String ROOT_LOCATION;
+
+	private String ROOT_LOCATION = "C:/Users/ADMN/eclipse-workspace/SEP490_G9_Datas/";
 	final String PRODUCT_PREVIEWS_FOLDER_NAME = "previews";
 	final String[] VIDEO_EXTENSIONS = { "video/mp4", "video/x-matroska", "video/quicktime" };
 	final String[] IMAGE_EXTENSIONS = { "image/png", "image/jpeg", "image/svg+xml" };
 	final String PRODUCT_FOLDER_NAME = "products";
 
-	@Autowired
 	PreviewRepository previewRepository;
 
-	@Autowired
 	ProductDetailsRepository productDetailsRepo;
 
-	@Autowired
 	FileIOService fileIOService;
 
-	@Autowired
 	ProductRepository productRepo;
+
+	@Autowired
+	public PreviewServiceImpl(FileIOService fileIOService, PreviewRepository previewRepository,
+			ProductDetailsRepository productDetailsRepo, ProductRepository productRepo,
+			@Value("${root.location}") String ROOT_LOCATION) {
+		this.fileIOService = fileIOService;
+		this.previewRepository = previewRepository;
+		this.productDetailsRepo = productDetailsRepo;
+		this.productRepo = productRepo;
+		this.ROOT_LOCATION = "C:/Users/ADMN/eclipse-workspace/SEP490_G9_Datas/";
+	}
 
 	@Override
 	public List<Preview> getByProductDetailsAndType(ProductDetails pd, String type) {
@@ -94,6 +100,7 @@ public class PreviewServiceImpl implements PreviewService {
 
 	@Override
 	public Preview createPreview(Preview preview) {
+
 		return previewRepository.save(preview);
 	}
 
@@ -120,7 +127,6 @@ public class PreviewServiceImpl implements PreviewService {
 			previewPicturesDir.mkdirs();
 
 			String storedPath = fileIOService.storeV2(previewPicture, ROOT_LOCATION + previewPictureLocation);
-
 			preview.setSource(storedPath.replace(ROOT_LOCATION, ""));
 			preview.setType("picture");
 			preview.setProductDetails(productDetails);
@@ -155,24 +161,20 @@ public class PreviewServiceImpl implements PreviewService {
 					version);
 
 			String previewVideoLocation = getPreviewsLocation(productDetails);
-			File previewVideoDir = new File(ROOT_LOCATION + previewVideoLocation);
+			File previewVideoDir = new File("C:/Users/ADMN/eclipse-workspace/SEP490_G9_Datas/" + previewVideoLocation);
 			previewVideoDir.mkdirs();
 
-			String savedPath = fileIOService.storeV2(previewVideo, ROOT_LOCATION + previewVideoLocation);
-			List<Preview> previews = getByProductDetailsAndType(productDetails, "video");
-			if (previews.size() == 0) {
-				preview = new Preview();
-			} else {
-				preview = previews.get(0);
-			}
+			String savedPath = fileIOService.storeV2(previewVideo,
+					"C:/Users/ADMN/eclipse-workspace/SEP490_G9_Datas/" + previewVideoLocation);
+
+			preview = new Preview();
 //			preview.setSource(previewVideoLocation + previewVideo.getOriginalFilename());
-			preview.setSource(savedPath.replace(ROOT_LOCATION, ""));
+			preview.setSource(savedPath.replace("C:/Users/ADMN/eclipse-workspace/SEP490_G9_Datas/", ""));
 			preview.setType("video");
 			preview.setProductDetails(productDetails);
-			preview = createPreview(preview);
+			return previewRepository.save(preview);
 
 		}
-		return preview;
 	}
 
 	private boolean checkFileType(MultipartFile file, String[] extensions) {

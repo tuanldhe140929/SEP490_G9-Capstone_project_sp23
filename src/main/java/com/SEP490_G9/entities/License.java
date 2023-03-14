@@ -11,11 +11,10 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 
 
-@JsonIgnoreProperties(value= {"productDetails"})
-
+@JsonIgnoreProperties(value = { "productDetails" })
 @Entity
 @Table(name = "license")
-public class License {
+public class License  {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
@@ -93,4 +92,11 @@ public class License {
 	public void setReferenceLink(String referenceLink) {
 		this.referenceLink = referenceLink;
 	}
+
+	@Override
+	public String toString() {
+		return "License [id=" + id + ", name=" + name + ", acrynosm=" + acrynosm + ", details=" + details
+				+ ", referenceLink=" + referenceLink + ", productDetails=" + productDetails + "]";
+	}
+	
 }

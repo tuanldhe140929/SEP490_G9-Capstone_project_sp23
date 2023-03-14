@@ -22,49 +22,46 @@ import org.springframework.web.cors.CorsConfiguration;
 
 import com.SEP490_G9.config.filter.JwtRequestFilter;
 
-
 @Configuration
 @Component
 @EnableWebSecurity(debug = true)
 public class SecurityConfiguration {
-@Autowired
-JwtAuthenticationEntryPoint authenEntryPoint;
-	
+	@Autowired
+	JwtAuthenticationEntryPoint authenEntryPoint;
+
 	@Value("${spring.websecurity.debug:false}")
 	boolean webSecurityDebug;
 
 	@Autowired
 	AuthenticationProvider authProvider;
-	
+
 	@Autowired
 	JwtRequestFilter filter;
+
 	@Bean
 	public SecurityFilterChain setfilterChains(HttpSecurity http) throws Exception {
 
-		http.cors().configurationSource(request ->{
+		http.cors().configurationSource(request -> {
 			CorsConfiguration configuration = new CorsConfiguration();
 			configuration.setAllowedOrigins(List.of("http://localhost:4200"));
 			configuration.setAllowCredentials(true);
-			configuration.setAllowedMethods(List.of("HEAD","GET","POST","PUT","DELETE","PATCH","OPTIONS"));
+			configuration.setAllowedMethods(List.of("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
 			configuration.addExposedHeader("Message");
-			configuration.setAllowedHeaders(List.of("Authorization","Cache-Control","Content-Type"));
+			configuration.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));
 			return configuration;
 		}).and().csrf().disable();
-		
+
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED);
-	
-		http.authorizeHttpRequests()
-		.requestMatchers("/**").permitAll()
+
+		http.authorizeHttpRequests().requestMatchers("/**").permitAll()
 //		.authorizeHttpRequests().requestMatchers("/home").hasAnyRole("USER","ADMIN","STAFF")
 //		//.and().authorizeHttpRequests().requestMatchers("/private/api/cart").hasAnyRole("USER")
 //		.and().authorizeHttpRequests().requestMatchers("/private/**").hasAnyRole("USER","ADMIN","STAFF")
-		.and().httpBasic().authenticationEntryPoint(authenEntryPoint)
-		.and().authorizeHttpRequests().anyRequest().authenticated()
-		.and().authenticationProvider(authProvider)
-		.logout().logoutRequestMatcher(new AntPathRequestMatcher("public/auth/logout"))
-		.and().addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
-		
-		
+				.and().httpBasic().authenticationEntryPoint(authenEntryPoint).and().authorizeHttpRequests().anyRequest()
+				.authenticated().and().authenticationProvider(authProvider).logout()
+				.logoutRequestMatcher(new AntPathRequestMatcher("public/auth/logout")).and()
+				.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
+
 		return http.build();
 	}
 
@@ -78,18 +75,17 @@ JwtAuthenticationEntryPoint authenEntryPoint;
 //			}
 //		};
 //	}
-	
+
 	@Bean
 	public WebSecurityCustomizer webSecurityCustomizer() {
 		return (web) -> web.debug(webSecurityDebug);
 	}
 
-	
 	@Bean
 	public SessionRegistry sessionRegistry() {
 		return new SessionRegistryImpl();
 	}
-	
+
 	@Bean
 	public HttpSessionEventPublisher httpSessionEventPublisher() {
 		return new HttpSessionEventPublisher();
