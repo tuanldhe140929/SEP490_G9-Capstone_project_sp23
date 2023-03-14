@@ -13,7 +13,7 @@ import jakarta.validation.constraints.Size;
 
 @JsonIgnoreProperties(value = { "productDetails" })
 @Entity
-@Table(name = "license")
+@Table(name = "licenses")
 public class License  {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

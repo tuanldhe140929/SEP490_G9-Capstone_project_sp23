@@ -175,14 +175,5 @@ public class TestDataInit {
 				"Others are allowed to use, distribute, and build upon the licensed work for non-commercial purposes, as long as they give appropriate credit to the original creator. However, if someone wants to use the work for commercial purposes, they must first obtain permission from the copyright holder");
 		licenseRepo.save(license);
 
-		ViolationType violation = new ViolationType();
-		violation.setId((long) 1);
-		violation.setName("xxxxxxxxxxxxxx");
-		violationTypeRepository.save(violation);
-		
-		ViolationType violation2 = new ViolationType();
-		violation2.setId((long) 2);
-		violation2.setName("xxxx2222222222");
-		violationTypeRepository.save(violation2);
 	}
 }
