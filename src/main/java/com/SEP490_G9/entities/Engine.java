@@ -1,6 +1,5 @@
 package com.SEP490_G9.entities;
 
-
 import jakarta.persistence.*;
 
 @Entity

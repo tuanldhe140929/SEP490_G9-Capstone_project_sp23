@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -171,37 +172,4 @@ public class UserController {
 		}
 		return ResponseEntity.ok(ret);
 	}
-	
-//	@GetMapping(value = "getUserInfo")
-//	public ResponseEntity<?> getUserInfo() {
-//		User user;
-//		user = manageAccountInfoService.getUserInfo();
-//		return ResponseEntity.ok(user);
-//	}
-//
-//	@PostMapping(value = "changeAccountPassword")
-//	public ResponseEntity<?> changeAccountPassword(
-//			@Valid @RequestParam(name = "newPassword", required = true) @Size(min = 8, max = 30) String newPassword,
-//			@Valid @RequestParam(name = "oldPassword", required = true) @Size(min = 8, max = 30) String oldPassword) {
-//		User user;
-//		boolean ret = manageAccountInfoService.changeAccountPassword(newPassword, oldPassword);
-//		return ResponseEntity.ok(ret);
-//	}
-//
-//	@PostMapping(value = "uploadProfileImage")
-//	public ResponseEntity<?> uploadProfileImage(@RequestParam(name = "profileImage") MultipartFile profileImage)
-//			throws IOException {
-//		String src = manageAccountInfoService.uploadProfileImage(profileImage);
-//		return ResponseEntity.ok(src);
-//	}
-//
-//	@PostMapping(value = "changeAccountInfo")
-//	public ResponseEntity<?> changeAccountInfo(
-//			@Valid @RequestParam(name="newUserName", required = true) @Size(min = 3, max = 30) String newUserName,
-//			@Valid @RequestParam(name="newFirstName", required = true) @Size(min = 3, max = 30) String newFirstName,
-//			@Valid @RequestParam(name="newLastName", required = true) @Size(min = 3, max = 30) String newLastName){
-//		User user;
-//		user = manageAccountInfoService.changeAccountInfo(newUserName, newFirstName, newLastName);
-//		return ResponseEntity.ok(user);
-//	}
 }

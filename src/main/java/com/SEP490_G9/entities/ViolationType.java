@@ -23,38 +23,44 @@ public class ViolationType {
 	@Column(name = "name", unique = true, nullable = false, insertable = true, updatable = false)
 	private String name;
 
-	@OneToMany(mappedBy="violation_types")
-    private List<Report> reports;
+	@OneToMany(mappedBy = "violation_types")
+	private List<Report> reports;
 
 	public ViolationType() {
 
 	}
-	
+
 	public ViolationType(String name) {
 		this.name = name;
 	}
-	
+
 	public ViolationType(String name, List<Report> report) {
 		this.name = name;
 		this.reports = report;
 	}
+
 	public Long getId() {
 		return id;
 	}
+
 	public void setId(Long id) {
 		this.id = id;
 	}
+
 	public String getName() {
 		return name;
 	}
+
 	public void setName(String name) {
 		this.name = name;
 	}
+
 	public List<Report> getReports() {
 		return reports;
 	}
+
 	public void setReports(List<Report> reports) {
 		this.reports = reports;
 	}
-	
+
 }

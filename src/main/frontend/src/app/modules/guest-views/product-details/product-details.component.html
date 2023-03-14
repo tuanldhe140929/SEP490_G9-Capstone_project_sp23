@@ -1,3 +1,4 @@
+<app-header></app-header>
 
 <section class="bg-primary padding-y-sm">
   <div class="container">
@@ -53,8 +54,9 @@
               <div class="thumbs_row">
                 <div class="thumb_column" *ngFor="let pic of displayPreviews; index as i" (click)="onChoosePreview(pic)">
                   <div class="thumb_column_black" *ngIf="i==0" style="opacity:0"></div>
-                  <div class="thumb_column_black" *ngIf="i!=0" style="opacity:.6"></div>
-                  <div class="thumb_content" style="background-image:url({{pic.thumb}});"></div>
+                  <div class="thumb_column_black" *ngIf="i!=0" style="opacity:.3"></div>
+                  <div class="thumb_content" [style.background-image]="'url(' + pic.thumb + ')'"></div>
+
                 </div>
               </div>
               <div>
@@ -253,3 +255,4 @@
 <!-- ============== SECTION  ============== -->
 <!-- =============== SECTION  END// ============== -->
 
+<app-footer></app-footer>

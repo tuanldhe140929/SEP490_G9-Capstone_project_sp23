@@ -45,6 +45,6 @@ public class ResourceNotFoundException extends RuntimeException {
 		String message = String.format("%s not found with %s: '%s'", resourceName, fieldName, fieldValue);
 		List<String> msgs = new ArrayList<String>();
 		msgs.add(message);
-		this.errorResponse = new ErrorResponse(msgs,HttpStatus.NOT_FOUND);
+		this.errorResponse = new ErrorResponse(msgs, HttpStatus.NOT_FOUND);
 	}
 }

@@ -29,10 +29,9 @@ import com.SEP490_G9.common.StorageUtil;
 public class FileIOServiceImpl implements FileIOService {
 
 	private Path rootLocation;
-	
+
 	@Value("${root.location}")
 	String ROOT_LOCATION;
-
 
 	@Override
 	public void init() {
@@ -69,9 +68,11 @@ public class FileIOServiceImpl implements FileIOService {
 		String dest = path + "\\" + file.getOriginalFilename();
 		File destFile = new File(dest);
 		int count = 0;
+		System.out.println(dest);
 		while (destFile.exists()) {
 			count++;
 			dest = path + "\\(" + count + ") " + file.getOriginalFilename();
+			System.out.println(count);
 			destFile = new File(dest);
 		}
 		try {
@@ -82,7 +83,7 @@ public class FileIOServiceImpl implements FileIOService {
 			while ((length = is.read(buffer)) > 0) {
 				os.write(buffer, 0, length);
 			}
-			
+
 			return dest;
 		} catch (IOException e) {
 			throw new StorageException("Failed to store file.", e);

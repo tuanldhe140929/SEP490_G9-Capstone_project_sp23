@@ -15,16 +15,18 @@ import com.SEP490_G9.repository.ReportRepository;
 import com.SEP490_G9.repository.UserRepository;
 import com.SEP490_G9.service.ReportService;
 
-
-
 @Service
-public class ReportServiceImpl implements ReportService{
+public class ReportServiceImpl implements ReportService {
 
-	@Autowired private ReportRepository reportRepository;
-	
-	@Autowired private UserRepository userRepository;
-	
-	@Autowired private ProductRepository productRepository;
+	@Autowired
+	private ReportRepository reportRepository;
+
+	@Autowired
+	private UserRepository userRepository;
+
+	@Autowired
+	private ProductRepository productRepository;
+
 	@Override
 	public List<Report> getAllReport() {
 		// TODO Auto-generated method stub
@@ -43,7 +45,8 @@ public class ReportServiceImpl implements ReportService{
 	@Override
 	public void deleteReport(ReportItemKey id) {
 		// TODO Auto-generated method stub
-		reportRepository.deleteById(id);;
+		reportRepository.deleteById(id);
+		;
 	}
 
 	@Override
@@ -54,7 +57,7 @@ public class ReportServiceImpl implements ReportService{
 
 	@Override
 	public void saveEditedReport(Report reportEdit) {
-		 reportRepository.save(reportEdit);
+		reportRepository.save(reportEdit);
 	}
 
 }

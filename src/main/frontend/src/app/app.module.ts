@@ -23,6 +23,7 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { UserViewsModule } from './modules/user-views/user-views.module';
 import { SellerViewsModule } from './modules/seller-views/seller-views.module';
 import { CommonViewsModule } from './modules/common-views/common-views.module';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 @NgModule({
   declarations: [
@@ -57,9 +58,7 @@ import { CommonViewsModule } from './modules/common-views/common-views.module';
     UserViewsModule,
     SellerViewsModule,
     CommonViewsModule,
-
-
-
+    NgxPaginationModule
   ],
   providers: [
     {

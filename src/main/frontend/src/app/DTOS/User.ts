@@ -6,7 +6,7 @@ export class User{
   id: number
   email: string;
   enabled: boolean;
-  role: Role[];
+  roles: Role[];
   username: string;
   firstName: string;
   lastName: string;
@@ -21,7 +21,7 @@ export class User{
     this.id = -1;
     this.email = '';
     this.enabled = true;
-    this.role = [];
+    this.roles = [];
     this.username = "";
     this.emailVerified = false;
     this.avatar = "";

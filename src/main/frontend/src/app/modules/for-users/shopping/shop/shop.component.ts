@@ -14,6 +14,7 @@ import { TagService } from 'src/app/services/tag.service';
 })
 export class ShopComponent implements OnInit{
 
+
   categoryList: Category[] = [];
   tagList: Tag[] = [];
   productList: Product[] = [];

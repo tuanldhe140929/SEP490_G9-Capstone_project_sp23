@@ -11,8 +11,8 @@ import com.SEP490_G9.entities.ProductFile;
 @Repository
 public interface ProductFileRepository extends JpaRepository<ProductFile, Long> {
 	Boolean existsByName(String name);
-	
+
 	List<ProductFile> findByProductDetails(ProductDetails productDetails);
 
-	boolean existsByNameAndProductDetails(String name,ProductDetails productDetails);
+	boolean existsByNameAndProductDetails(String name, ProductDetails productDetails);
 }

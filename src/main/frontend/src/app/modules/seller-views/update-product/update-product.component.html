@@ -136,7 +136,7 @@
               </div>
             </div>
             <section class="upload_editor">
-              <h2>Uploads</h2>
+              <h2>Tệp có thể tải xuống</h2>
               <div class="upload_drop">
                 <div class="game_edit_upload_list_widget">
                   <div class="file_list has_files">
@@ -144,8 +144,8 @@
                       <div *ngIf="file.file.fileState==FileState.UPLOADING" class="upload_tools">
                         <button class="delete_btn" type="button" (click)="cancelUpload(file)">Cancel</button>
                       </div>
-                      <div *ngIf="file.file.fileState==FileState.UPLOADED" class="upload_tools">
-                        <button class="delete_btn" type="button" (click)="deleteFile(file.file)">Delete file</button>
+                      <div *ngIf="file.file.fileState==FileState.STORED" class="upload_tools">
+                        <button class="delete_btn" type="button" (click)="deleteFile(file.file)">Gỡ tệp</button>
                       </div>
                       <div class="upload_content" style="margin:12px;">
                         <div class="upload_title" style="margin-bottom:5px;">
@@ -154,7 +154,7 @@
                         <div class="meta_data">
                           <span class="file_size">{{formatFileSize(file.file.size)}}</span>
                         </div>
-                        <div *ngIf="file.file.fileState!=FileState.UPLOADED" class="progress">
+                        <div *ngIf="file.file.fileState!=FileState.STORED" class="progress">
                           <div class="progress-bar progress-bar-striped progress-bar-animated"
                                role="progressbar"
                                attr.aria-valuenow="{{ file.process.progress }}"
@@ -189,11 +189,11 @@
 
               <div class="add_file_btn_outer upload_buttons">
                 <div class="button add_file_btn has_multi_upload" (click)="fileUpload.click()">
-                  Upload files
+                  Thêm tệp
                 </div>
                 <input type="file" class="file-input" (change)="onFileUpload($event)" multiple="multiple" #fileUpload>
               </div>
-              <p class="upload_limit">File size limit: 1GB</p>
+              <p class="upload_limit">Giới hạn độ lớn tệp: 1GB</p>
             </section>
             <h2>Details</h2>
             <div class="input_row">
@@ -231,7 +231,7 @@
                     <div class="button add_file_btn has_multi_upload" (click)="coverImageUpload.click()">
                       Tải lên
                     </div>
-                    <input type="file" class="file-input" (input)="onCoverImageUpload($event)" #coverImageUpload>
+                    <input id="coverImageUpload" type="file" class="file-input" (input)="onCoverImageUpload($event)" #coverImageUpload>
                   </div>
                 </div>
               </div>
@@ -256,7 +256,7 @@
                       <div class="button add_file_btn has_multi_upload" (click)="previewVideoUpload.click()">
                         Tải lên
                       </div>
-                      <input type="file" class="file-input" (input)="onPreviewVideoUpload($event)" #previewVideoUpload>
+                      <input id="previewUploadVideo" type="file" class="file-input" (input)="onPreviewVideoUpload($event)" #previewVideoUpload>
                     </div>
                   </div>
                 </ng-template>
@@ -300,7 +300,7 @@
     </form>
   </div>
 </div>
-<input type="file" class="file-input" (input)="onPreviewPicturesUpload($event)" multiple="multiple" #previewPicturesUpload>
+<input id="previewUploadImage" type="file" class="file-input" (input)="onPreviewPicturesUpload($event)" multiple="multiple" #previewPicturesUpload>
 <div id="editor"></div>
 
 

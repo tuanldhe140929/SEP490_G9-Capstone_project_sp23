@@ -22,6 +22,7 @@ import { License } from 'src/app/DTOS/License';
 import { LicenseService } from 'src/app/services/license.service';
 import { CategoryService } from 'src/app/services/category.service';
 import { TagService } from 'src/app/services/tag.service';
+import { ProductService } from '../../../services/product.service';
 
 
 const MSG100 = 'Tên sản phẩm không được để trống';
@@ -92,7 +93,8 @@ export class UpdateProductComponent implements OnInit {
     private productFileService: ProductFileService,
     private licenseService: LicenseService,
     private categoryService: CategoryService,
-    private tagService: TagService) { }
+    private tagService: TagService,
+    private productService: ProductService) { }
 
   product: Product = new Product;
   typeList: Category[] = [];
@@ -337,7 +339,7 @@ export class UpdateProductComponent implements OnInit {
 
   getByProductIdAndVersion(productId: string | null, version: string) {
     if (productId && version) {
-      this.manageProductService.getProductByIdAndVersionAndSeller(+productId, version).subscribe(
+      this.productService.getProductByIdAndVersion(+productId, version).subscribe(
         (data) => {
 
           this.product = data;
@@ -405,7 +407,7 @@ export class UpdateProductComponent implements OnInit {
             var productFile: ProductFile = this.product.files[i];
             var fileDisplay = new FileDisplay();
             fileDisplay.file = productFile;
-            fileDisplay.file.fileState = FileState.UPLOADED;
+            fileDisplay.file.fileState = FileState.STORED;
             this.fileDisplayList.push(fileDisplay);
           }
           console.log(this.fileDisplayList);
@@ -462,7 +464,7 @@ export class UpdateProductComponent implements OnInit {
             var productFile: ProductFile = this.product.files[i];
             var fileDisplay = new FileDisplay();
             fileDisplay.file = productFile;
-            fileDisplay.file.fileState = FileState.UPLOADED;
+            fileDisplay.file.fileState = FileState.STORED;
             this.fileDisplayList.push(fileDisplay);
           }
           console.log(this.fileDisplayList);
@@ -570,11 +572,13 @@ export class UpdateProductComponent implements OnInit {
         formData.append("version", this.product.version);
         const upload$ = this.manageProductService.uploadCoverImage(formData).subscribe(
           (data: string) => {
+			  this.CoverImageUploadBtn.value="";
             this.product.coverImage = data;
             console.log(this.product);
             this.loadCoverImage();
           },
           (error: any) => {
+			  this.CoverImageUploadBtn.value="";
             this.fileError = 'Tải lên hình ảnh không thành công';
             this.openFileSizeErrorModal();
           }
@@ -604,10 +608,12 @@ export class UpdateProductComponent implements OnInit {
         formData.append("version", this.product.version);
         const upload$ = this.previewService.uploadPreviewVideo(formData).subscribe(
           (data) => {
+			  this.PreviewUploadVideoBtn.value="";
             console.log(data);
             this.product.previewVideo = data;
           },
           (error) => {
+			  this.PreviewUploadVideoBtn.value="";
             this.fileError = 'Tải lên video không thành công';
             this.openFileSizeErrorModal();
           }
@@ -650,10 +656,12 @@ export class UpdateProductComponent implements OnInit {
           const upload$ = this.previewService.uploadPreviewPicture(formData).subscribe(
             (data) => {
               console.log(data);
+              this.PreviewUploadImageBtn.value="";
               this.product.previewPictures = data;
               this.percent = 'width:' + 100 / this.product.previewPictures.length + '%;';
             },
             (error) => {
+				this.PreviewUploadImageBtn.value="";
               this.fileError = 'Tải lên hình ảnh không thành công';
               this.openFileSizeErrorModal();
             }
@@ -943,7 +951,7 @@ export class UpdateProductComponent implements OnInit {
       this.openFileSizeErrorModal();
     }
     else {
-      this.manageProductService.createNewVersion(this.product, newVersion).subscribe(
+      this.productService.createNewVersion(this.product, newVersion).subscribe(
         data => {
           console.log(data);
           window.location.href = 'http://localhost:4200/product/update/1/' + newVersion;
@@ -981,7 +989,11 @@ export class UpdateProductComponent implements OnInit {
 
   get LicenseReferenceLink() {
     if (this.productLicense >= 1) {
-      return this.licenseList[this.productLicense - 1].referenceLink;
+      if (this.licenseList[this.productLicense - 1] != null) {
+        return this.licenseList[this.productLicense - 1].referenceLink;
+      }
+      else
+        return "";
     }
     else {
       return "";
@@ -1079,6 +1091,19 @@ export class UpdateProductComponent implements OnInit {
   get RemovePreviewPictureBtn() {
     return document.getElementById('remove_picture_btn') as HTMLButtonElement;
   }
+  
+  get PreviewUploadImageBtn(){
+	  return document.getElementById('previewUploadImage') as HTMLInputElement;
+  }
+  
+  get PreviewUploadVideoBtn(){
+	   return document.getElementById('previewUploadVideo') as HTMLInputElement;
+  }
+  
+  get CoverImageUploadBtn(){
+	   return document.getElementById('coverImageUpload') as HTMLInputElement;
+  }
+  
   moveFileUp(file: ProductFile) {
     var index = this.product.files.indexOf(file);
     if (index >= 1) {

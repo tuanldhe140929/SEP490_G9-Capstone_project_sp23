@@ -123,10 +123,7 @@ public class AccountController {
 	public ResponseEntity<?> resetPassword(HttpServletRequest request, @RequestParam(required = true) String email) {
 
 		Account account = accountService.getByEmail(email);
-		String newPassword = passwordGenerator.generatePassword(8).toString();
-		account.setPassword(new BCryptPasswordEncoder().encode(newPassword));
-		account.setLastModified(new Date());
-		accountService.update(account);
+		String newPassword = accountService.resetPassword(account);
 		boolean ret = emailService.sendRecoveryPasswordToEmail(email, newPassword);
 		return ResponseEntity.ok(ret);
 	}
