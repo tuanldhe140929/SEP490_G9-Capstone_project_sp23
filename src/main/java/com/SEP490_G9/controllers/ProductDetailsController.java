@@ -106,13 +106,13 @@ public class ProductDetailsController {
 		return ResponseEntity.ok(dto);
 	}
 	
-	@GetMapping(value = "getAllProducts")
-	public ResponseEntity<?> getAllProducts() {
-		List<ProductDetails> allProducts = this.productDetailsService.getAll();
-		List<ProductDetailsDTO> allProductsDto = new ArrayList<>();
-		for (ProductDetails product : allProducts) {
-			allProductsDto.add(new ProductDetailsDTO(product));
-		}
-		return ResponseEntity.ok(allProductsDto);
-	}
+//	@GetMapping(value = "getAllProducts")
+//	public ResponseEntity<?> getAllProducts() {
+//		List<ProductDetails> allProducts = this.productDetailsService.getAll();
+//		List<ProductDetailsDTO> allProductsDto = new ArrayList<>();
+//		for (ProductDetails product : allProducts) {
+//			allProductsDto.add(new ProductDetailsDTO(product));
+//		}
+//		return ResponseEntity.ok(allProductsDto);
+//	}
 }

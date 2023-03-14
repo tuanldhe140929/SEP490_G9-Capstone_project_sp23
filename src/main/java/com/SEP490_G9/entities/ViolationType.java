@@ -19,7 +19,7 @@ public class ViolationType {
 	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private int id;
 	@Column(name = "name", unique = true, nullable = false, insertable = true, updatable = false)
 	private String name;
 
@@ -30,7 +30,8 @@ public class ViolationType {
 
 	}
 
-	public ViolationType(String name) {
+	public ViolationType(int id, String name) {
+		this.id = id;
 		this.name = name;
 	}
 
@@ -39,11 +40,11 @@ public class ViolationType {
 		this.reports = report;
 	}
 
-	public Long getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 

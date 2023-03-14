@@ -43,10 +43,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
     SellerProductListComponent,
     ProductDetailsComponent,
     ReportProductComponent,
-
-    RateComponent
-    
-=======
+    RateComponent,
     HomeComponent,
     SearchResultComponent,
 
@@ -65,9 +62,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
     MatRadioModule,
     MatAutocompleteModule,
     GuestViewsRoutingModule,
-
-    NgbRating
-
+    NgbRating,
     CommonViewsModule,
     NgxPaginationModule
 
