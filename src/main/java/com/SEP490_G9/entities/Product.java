@@ -22,6 +22,12 @@ public class Product implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
+	@Override
+	public String toString() {
+		return "Product [id=" + id + ", enabled=" + enabled + ", seller=" + seller + ", activeVersion=" + activeVersion
+				+ ", productDetails=" + productDetails + ", reports=" + reports + "]";
+	}
+
 	@Column(name = "enabled")
 	private boolean enabled = true;
 

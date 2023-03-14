@@ -19,8 +19,8 @@ const removeMark = require("vietnamese-tonemarkless");
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
-export class HeaderComponent implements OnInit{
-  
+export class HeaderComponent implements OnInit {
+
   loginStatus: boolean;
   username: string;
   user: User = new User;
@@ -31,11 +31,11 @@ export class HeaderComponent implements OnInit{
   keyword: string;
 
   constructor(
-    private storageService: StorageService, 
-    private authService: AuthService, 
+    private storageService: StorageService,
+    private authService: AuthService,
     private manageAccountInfoService: ManageAccountInfoService,
     private router: Router,
-    private productService: ProductService){
+    private productService: ProductService) {
 
   }
 
@@ -49,18 +49,17 @@ export class HeaderComponent implements OnInit{
         if (this.user.roles[i].id == sellerRoleId)
           return true;
       }
-        return false;
-        return false;
+      return false;
     } else {
       return false;
     }
   }
-  
+
   ngOnInit(): void {
     this.productService.getAllProducts().subscribe(
       data => {
         this.productList = data;
-        for(let i=0;i<=this.productList.length;i++){
+        for (let i = 0; i <= this.productList.length; i++) {
           this.nameList.push(this.productList[i].name);
         }
       }
@@ -69,24 +68,24 @@ export class HeaderComponent implements OnInit{
       startWith(''),
       map(value => this._filter(value || '')),
     );
-    if(this.storageService.isLoggedIn()){
+    if (this.storageService.isLoggedIn()) {
       this.loginStatus = true;
       this.manageAccountInfoService.getCurrentUserInfo().subscribe(
         data => {
           this.user = data;
         }
       )
-    }else{
+    } else {
       this.loginStatus = false;
     }
   }
 
   private _filter(value: string): string[] {
-    const filterValue = value.toLowerCase().trim().replace(/\s+/g,' ');
+    const filterValue = value.toLowerCase().trim().replace(/\s+/g, ' ');
     return this.nameList.filter(option => option.toLowerCase().includes(filterValue));
   }
 
-  onLogout(){
+  onLogout() {
     this.authService.logout().subscribe(
       data => {
         console.log('Logged out');
@@ -95,11 +94,11 @@ export class HeaderComponent implements OnInit{
     )
   }
 
-  toSearchResult(){
-    this.router.navigate(['/result',this.keyword])
+  toSearchResult() {
+    this.router.navigate(['/result', this.keyword])
   }
 
-  onOptionSelected(event: MatAutocompleteSelectedEvent){
+  onOptionSelected(event: MatAutocompleteSelectedEvent) {
     const selectedOption = event.option.value;
     this.router.navigate(['/result', selectedOption]);
   }

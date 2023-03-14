@@ -1,5 +1,10 @@
 package com.SEP490_G9.service;
 
+import java.io.File;
+import java.io.IOException;
+
+import org.springframework.web.multipart.MultipartFile;
+
 import com.SEP490_G9.entities.User;
 
 import jakarta.validation.Valid;
@@ -12,5 +17,15 @@ public interface UserService {
 	User getByEmail(String email);
 
 	User update(User user);
+
+	public User getUserInfo();
+
+	public boolean changePassword(String newPassword, String oldPassword);
+
+	public User updateUser(String newUserName, String newFirstName, String newLastName);
+
+	public String uploadAvatar(MultipartFile coverImage) throws IOException;
+
+	public File serveAvatar(Long userId);
 
 }
