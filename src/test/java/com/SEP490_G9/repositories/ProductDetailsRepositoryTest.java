@@ -58,5 +58,6 @@ class ProductDetailsRepositoryTest {
 
 		assertThat(result).isEqualTo(pd);
 	}
+	
 
 }
