@@ -20,6 +20,16 @@ public class ProductDetails implements Serializable {
 	@EmbeddedId
 	private ProductVersionKey productVersionKey = new ProductVersionKey();
 
+	@Override
+	public String toString() {
+		return "ProductDetails [productVersionKey=" + productVersionKey + ", product=" + product + ", name=" + name
+				+ ", description=" + description + ", coverImage=" + coverImage + ", detailDescription="
+				+ detailDescription + ", price=" + price + ", instruction=" + instruction + ", draft=" + draft
+				+ ", createdDate=" + createdDate + ", lastModified=" + lastModified + ", license=" + license
+				+ ", category=" + category + ", tags=" + tags + ", previews=" + previews + ", files=" + files
+				+ ", cartItems=" + cartItems + ", engine=" + engine + "]";
+	}
+
 	@MapsId("productId")
 	@ManyToOne
 	@JoinColumn(name = "product_id", referencedColumnName = "id", columnDefinition = "bigint")
