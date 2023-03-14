@@ -105,5 +105,4 @@ public class ProductDetailsController {
 		ProductDetailsDTO dto = new ProductDetailsDTO(newPD);
 		return ResponseEntity.ok(dto);
 	}
-
 }
