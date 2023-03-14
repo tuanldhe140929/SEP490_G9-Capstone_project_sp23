@@ -98,7 +98,7 @@ public class UserController {
 	@RequestMapping(value = "loginWithGoogle", method = RequestMethod.POST)
 	public ResponseEntity<?> loginWithGoogle(@RequestBody final String code, HttpServletResponse response)
 			throws ClientProtocolException, IOException {
-
+		System.out.println(code);
 		User googleLoginUser = googleUtil.getUserInfo(code);
 		String randomPassword = passwordGenerator.generatePassword(8).toString();
 		String encodedPassword = new BCryptPasswordEncoder().encode(randomPassword);

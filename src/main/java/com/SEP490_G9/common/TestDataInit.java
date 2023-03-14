@@ -29,7 +29,7 @@ import com.SEP490_G9.repository.UserRepository;
 import com.SEP490_G9.repository.ViolationTypeRepository;
 
 @Component
-public class TestDataInit implements ApplicationRunner {
+public class TestDataInit {
 	@Autowired
 	private AccountRepository accountRepository;
 
@@ -57,7 +57,7 @@ public class TestDataInit implements ApplicationRunner {
 	@Autowired
 	private LicenseRepository licenseRepo;
 
-	@Override
+
 	public void run(ApplicationArguments args) throws Exception {
 
 		roleRepository.save(new Role(Constant.ADMIN_ROLE_ID, "ROLE_ADMIN"));
