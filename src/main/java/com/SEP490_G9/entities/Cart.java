@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.*;
 
-@JsonIgnoreProperties(value="user")
+@JsonIgnoreProperties(value = "user")
 @Entity
 @Table(name = "carts")
 public class Cart {
@@ -16,16 +16,17 @@ public class Cart {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@OneToMany(mappedBy="cart", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "cart", fetch = FetchType.EAGER)
 	private List<CartItem> items = new ArrayList<CartItem>();
-	
+
 	@ManyToOne
-	@JoinColumn(name="account_id", nullable=false)
+	@JoinColumn(name = "account_id", nullable = false)
 	private User user;
-	
+
 	public Cart() {
 		// TODO Auto-generated constructor stub
 	}
+
 	public Cart(User user) {
 		this.user = user;
 	}
@@ -53,23 +54,21 @@ public class Cart {
 		this.items = items;
 	}
 
-
-	
-	
-	
 	public User getUser() {
 		return user;
 
 	}
+
 	public void setUser(User user) {
 		this.user = user;
 	}
+
 	public void addItem(CartItem newItem) {
 		this.items.add(newItem);
 	}
+
 	public Cart createCart() {
 		return new Cart();
-    }
-
+	}
 
 }

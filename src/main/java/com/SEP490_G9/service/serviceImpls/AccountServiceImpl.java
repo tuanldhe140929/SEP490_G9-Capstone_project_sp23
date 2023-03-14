@@ -23,14 +23,14 @@ public class AccountServiceImpl implements AccountService {
 
 	@Autowired
 	AccountRepository accountRepo;
-	
+
 	@Autowired
 	RoleRepository roleRepo;
-	
+
 	@Override
 	public Account getByRefreshToken(RefreshToken findByToken) {
 		Account ret = accountRepo.findByRefreshToken(findByToken);
-		if(ret==null) {
+		if (ret == null) {
 			throw new ResourceNotFoundException("account", "refresh token", findByToken.getToken());
 		}
 		return ret;
@@ -39,7 +39,7 @@ public class AccountServiceImpl implements AccountService {
 	@Override
 	public Account getById(Long id) {
 		Account ret = accountRepo.findById(id).get();
-		if(ret==null) {
+		if (ret == null) {
 			throw new ResourceNotFoundException("account", "id", id);
 		}
 		return ret;
@@ -48,7 +48,7 @@ public class AccountServiceImpl implements AccountService {
 	@Override
 	public Account getByEmail(String email) {
 		Account ret = accountRepo.findByEmail(email);
-		if(ret==null) {
+		if (ret == null) {
 			throw new ResourceNotFoundException("account", "email", email);
 		}
 		return ret;
@@ -59,18 +59,19 @@ public class AccountServiceImpl implements AccountService {
 		Account saved = accountRepo.save(account);
 		return saved;
 	}
-	
+
 	@Override
 	public List<Account> getAllStaffs() {
 		List<Role> staffRoles = new ArrayList<>();
 		staffRoles.add(roleRepo.findById(Constant.STAFF_ROLE_ID));
+		
 		List<Account> staffList = accountRepo.findByRolesIn(staffRoles);
 		return staffList;
 	}
 
 	@Override
 	public boolean addStaff(Account staff) {
-		if(accountRepo.existsByEmail(staff.getEmail())) {
+		if (accountRepo.existsByEmail(staff.getEmail())) {
 			throw new DuplicateFieldException("email", staff.getEmail());
 		}
 		String encodedPassword = new BCryptPasswordEncoder().encode(staff.getPassword().trim());
@@ -87,9 +88,9 @@ public class AccountServiceImpl implements AccountService {
 	@Override
 	public boolean updateStaffStatus(Long id) {
 		Account staff = accountRepo.findById(id).get();
-		if(staff.isEnabled()) {
+		if (staff.isEnabled()) {
 			staff.setEnabled(false);
-		}else {
+		} else {
 			staff.setEnabled(true);
 		}
 		accountRepo.save(staff);

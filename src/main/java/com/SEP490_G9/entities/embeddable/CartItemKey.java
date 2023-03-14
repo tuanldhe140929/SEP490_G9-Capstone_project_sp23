@@ -8,7 +8,7 @@ import jakarta.persistence.Embeddable;
 public class CartItemKey implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private Long cartId;
 	private ProductVersionKey productVersionKey;
 

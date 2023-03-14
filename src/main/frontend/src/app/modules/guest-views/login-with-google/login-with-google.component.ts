@@ -15,7 +15,8 @@ export class LoginWithGoogleComponent implements OnInit {
 
   ngOnInit(): void {
     var code = this.route.snapshot.queryParamMap.get('code');
-    if (code != null) {
+    console.log(code);
+    /*if (code != null) {
       this.authService.loginWithGoogle(code).subscribe(
         (response) => {
           this.router.navigate(['login']);
@@ -26,6 +27,6 @@ export class LoginWithGoogleComponent implements OnInit {
           console.log(error);
         }
       );
-    }
+    }*/
   }
 }

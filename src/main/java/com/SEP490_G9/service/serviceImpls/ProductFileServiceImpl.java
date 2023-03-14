@@ -1,6 +1,8 @@
 package com.SEP490_G9.service.serviceImpls;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,23 +10,33 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.SEP490_G9.common.Md5Hash;
 import com.SEP490_G9.dto.ProductFileDTO;
+import com.SEP490_G9.entities.CartItem;
+import com.SEP490_G9.entities.Product;
 import com.SEP490_G9.entities.ProductDetails;
 import com.SEP490_G9.entities.ProductFile;
 import com.SEP490_G9.entities.Seller;
+import com.SEP490_G9.entities.Transaction;
 import com.SEP490_G9.exception.DuplicateFieldException;
 import com.SEP490_G9.exception.FileUploadException;
 import com.SEP490_G9.exception.ResourceNotFoundException;
 import com.SEP490_G9.repository.ProductFileRepository;
 import com.SEP490_G9.repository.ProductRepository;
+import com.SEP490_G9.repository.TransactionRepository;
 import com.SEP490_G9.service.FileIOService;
 import com.SEP490_G9.service.ProductDetailsService;
 import com.SEP490_G9.service.ProductFileService;
@@ -46,6 +58,15 @@ public class ProductFileServiceImpl implements ProductFileService {
 
 	@Autowired
 	FileIOService fileIOService;
+
+	@Autowired
+	TransactionRepository transactionRepo;
+
+	@Autowired
+	ProductRepository productRepo;
+
+	@Autowired
+	Md5Hash downloadTokenUtil;
 
 	@Override
 	public ProductFile createProductFile(ProductFile productFile) {
@@ -207,5 +228,90 @@ public class ProductFileServiceImpl implements ProductFileService {
 
 	private String getSellerProductsDataLocation(Seller seller) {
 		return "account_id_" + seller.getId() + "\\" + PRODUCT_FOLDER_NAME;
+	}
+
+	@Override
+	public ByteArrayResource downloadFile(Long userId, Long productId, String token) {
+		System.out.println("download");
+		if (!downloadTokenUtil.validateToken(userId, productId, token)) {
+			System.out.println("not pass");
+		}
+		System.out.println("pass");
+
+		List<File> productFiles = new ArrayList<>();
+
+		ProductDetails activeVersion = null;
+		Product p = productRepo.findById(productId).orElseThrow();
+
+		for (ProductDetails pd : p.getProductDetails()) {
+			if (pd.getVersion().equalsIgnoreCase(p.getActiveVersion())) {
+				activeVersion = pd;
+				break;
+			}
+		}
+		List<ProductFile> pfs = activeVersion.getFiles();
+		for (ProductFile pf : pfs) {
+			System.out.println(pf.getSource());
+			productFiles.add(new File(ROOT_LOCATION + pf.getSource()));
+		}
+
+		// Compress the files into a zip archive
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		ZipOutputStream zos = new ZipOutputStream(baos);
+		
+		try {
+			ZipEntry zipEntry = new ZipEntry(activeVersion.getName());
+		    zos.putNextEntry(zipEntry);
+			for (File file : productFiles) {
+				ZipEntry entry = new ZipEntry(file.getName());
+				zos.putNextEntry(entry);
+				FileInputStream fis = new FileInputStream(file);
+				byte[] buffer = new byte[1024];
+				int len;
+				while ((len = fis.read(buffer)) > 0) {
+					zos.write(buffer, 0, len);
+				}
+				fis.close();
+				zos.closeEntry();
+			}
+		} catch (IOException e) {
+
+		} finally {
+			try {
+				zos.close();
+				baos.close();
+			} catch (IOException e) {
+
+			}
+		}
+		ByteArrayResource resource = new ByteArrayResource(baos.toByteArray()){
+		    @Override
+		    public String getFilename() {
+		        return "product.zip";
+		    }
+		};
+		return resource;
+	}
+
+	@Override
+	public String generateDownloadToken(Long userId, Long productId) {
+		String token = "";
+		boolean isPurchased = checkIfPurchased(userId, productId);
+		if (isPurchased) {
+			token = downloadTokenUtil.generateToken(userId, productId);
+		}
+		return token;
+	}
+
+	private boolean checkIfPurchased(Long userId, Long productId) {
+//		List<Transaction> transactions = transactionRepo.findByUserIdAndStatus(userId,"purchased");
+//		for(Transaction transaction:transactions) {
+//			for(CartItem item: transaction.getCart().getItems()) {
+//				if(item.getCartItemKey().getProductVersionKey().getProductId() == productId) {
+//					return true;
+//				}
+//			}
+//		}
+		return true;
 	}
 }

@@ -16,7 +16,7 @@ public class RoleServiceImpl implements RoleService {
 	@Override
 	public Role getRoleById(int roleId) {
 		Role role = roleRepo.findById(roleId);
-		if(role==null) {
+		if (role == null) {
 			throw new ResourceNotFoundException("Role", "role id", roleId);
 		}
 		return role;
@@ -25,7 +25,7 @@ public class RoleServiceImpl implements RoleService {
 	@Override
 	public Role getRoleByName(String roleName) {
 		Role role = roleRepo.findByName(roleName);
-		if(role==null) {
+		if (role == null) {
 			throw new ResourceNotFoundException("Role", "role name", roleName);
 		}
 		return role;

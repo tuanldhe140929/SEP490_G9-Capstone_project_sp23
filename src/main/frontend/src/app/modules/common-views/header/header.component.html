@@ -4,20 +4,23 @@
         <div class="row gy-3 align-items-center">
           <div class="col-lg-2 col-sm-4 col-4">
             <a routerLink="/homepage" class="navbar-brand">
-              Digital Product Marketplace
+              DPM
             </a> <!-- brand end.// -->
           </div>
           <div class="order-lg-last col-lg-5 col-sm-8 col-8">
             <div class="float-end">
               <div *ngIf="loginStatus">
-                <a data-bs-toggle="offcanvas" href="#offcanvas_cart" class="btn btn-light"> 
-                  <i class="fa fa-shopping-cart"></i> <span class="ms-1">Giỏ hàng</span> 
+                <a *ngIf="isSeller()" data-bs-toggle="offcanvas" (click)="redirectSellerPage()" class="btn btn-light">
+                  <i class="fa fa-product-hunt"></i> <span class="ms-1">Cửa hàng</span>
                 </a>
-                <a routerLink="/profile" class="btn btn-light"> 
-                  <i class="fa fa-user"></i>  <span class="ms-1 d-none d-sm-inline-block">{{user.username}}</span> 
+                <a data-bs-toggle="offcanvas" href="#offcanvas_cart" class="btn btn-light">
+                  <i class="fa fa-shopping-cart"></i> <span class="ms-1">Giỏ hàng</span>
                 </a>
-                <a (click)="onLogout()" class="btn btn-light"> 
-                  <i class="fa fa-sign-out"></i>  <span class="ms-1 d-none d-sm-inline-block">Đăng xuất</span> 
+                <a routerLink="/profile" class="btn btn-light">
+                  <i class="fa fa-user"></i>  <span class="ms-1 d-none d-sm-inline-block" *ngIf="user.id!=-1">{{user.username}}</span>
+                </a>
+                <a (click)="onLogout()" class="btn btn-light">
+                  <i class="fa fa-sign-out"></i>  <span class="ms-1 d-none d-sm-inline-block">Đăng xuất</span>
                 </a>
               </div>
               <div *ngIf="!loginStatus">
@@ -94,4 +97,3 @@
     </nav> <!-- navbar end.// -->
   </header> <!-- section-header end.// -->
 
-  

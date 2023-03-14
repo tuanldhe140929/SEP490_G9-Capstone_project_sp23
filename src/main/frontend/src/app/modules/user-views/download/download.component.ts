@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { Product } from '../../../DTOS/Product';
 import { ProductFile } from '../../../DTOS/ProductFile';
+import { ProductFileService } from '../../../services/product-file.service';
 import { ProductService } from '../../../services/product.service';
 
 @Component({
@@ -13,15 +14,20 @@ import { ProductService } from '../../../services/product.service';
 export class DownloadComponent implements OnInit {
 
   product: Product;
-
+  token: string = "";
   constructor(private activatedRoute: ActivatedRoute,
     private productService: ProductService,
-private router:Router  ) {
+    private productFileService: ProductFileService,
+    private router: Router) {
 
   }
 
   ngOnInit(): void {
     var productIdAndName = this.activatedRoute.snapshot.paramMap.get('productId');
+    var tokenParam = this.activatedRoute.snapshot.queryParamMap.get('token');
+    if (tokenParam) {
+      this.token = tokenParam;
+    }
     console.log(productIdAndName);
     if (productIdAndName) {
       var productId = Number.parseInt(productIdAndName.split('-')[0]);
@@ -52,6 +58,32 @@ private router:Router  ) {
 
   redirectProductPage() {
     this.router.navigate(['products/' + this.product.id]);
+  }
+
+  download() {
+    this.productFileService.download(this.product.id, this.token).subscribe(
+      response => {
+        console.log(response);
+
+        const blob = new Blob([response], { type: 'application/zip' }); // create a Blob object from the response
+        const url = window.URL.createObjectURL(blob); // create a URL object from the Blob
+
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = this.product.name+".zip"; // set the desired file name here
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+
+
+
+        //window.open(url); // open the URL in a new tab to initiate the download
+      },
+      error => {
+        console.log(error);
+      }
+    )
   }
 }
 

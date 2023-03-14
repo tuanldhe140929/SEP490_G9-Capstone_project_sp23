@@ -19,42 +19,51 @@ public class ViolationType {
 	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+
 	private Long id;
 	@Column(name = "name", unique = true)
+
 	private String name;
 
-	@OneToMany(mappedBy="violation_types")
-    private List<Report> reports;
+	@OneToMany(mappedBy = "violation_types")
+	private List<Report> reports;
 
 	public ViolationType() {
 
 	}
-	
-	public ViolationType(String name) {
+
+	public ViolationType(int id, String name) {
+		this.id = id;
 		this.name = name;
 	}
-	
+
 	public ViolationType(String name, List<Report> report) {
 		this.name = name;
 		this.reports = report;
 	}
-	public Long getId() {
+
+	public int getId() {
 		return id;
 	}
-	public void setId(Long id) {
+
+	public void setId(int id) {
 		this.id = id;
 	}
+
 	public String getName() {
 		return name;
 	}
+
 	public void setName(String name) {
 		this.name = name;
 	}
+
 	public List<Report> getReports() {
 		return reports;
 	}
+
 	public void setReports(List<Report> reports) {
 		this.reports = reports;
 	}
-	
+
 }

@@ -1,10 +1,10 @@
 package com.SEP490_G9.service.serviceImpls;
 
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;import java.util.stream.Collector;
+import java.util.List;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +26,7 @@ import com.SEP490_G9.exception.ResourceNotFoundException;
 import com.SEP490_G9.repository.ProductDetailsRepository;
 import com.SEP490_G9.repository.ProductFileRepository;
 import com.SEP490_G9.repository.ProductRepository;
+import com.SEP490_G9.repository.SellerRepository;
 import com.SEP490_G9.service.PreviewService;
 import com.SEP490_G9.service.ProductDetailsService;
 import com.SEP490_G9.service.ProductService;
@@ -41,15 +42,19 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 
 	@Autowired
 	ProductRepository productRepo;
-	
+
+	@Autowired
+	SellerRepository sellerRepo;
+
 	@Autowired
 	ProductService productService;
-	
-	@Autowired 
+
+	@Autowired
 	PreviewService previewService;
-	
+
 	@Autowired
 	ProductFileRepository productFileRepo;
+
 	@Override
 	public ProductDetails getActiveVersion(Long productId) {
 		Product product = productRepo.findById(productId).orElseThrow();
@@ -107,8 +112,8 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 	public List<ProductDetails> getByKeyword(String keyword) {
 		List<ProductDetails> allProductDetails = productDetailsRepo.findAll();
 		List<ProductDetails> searchResult = new ArrayList<>();
-		for(ProductDetails pd: allProductDetails) {
-			if(pd.getName().trim().toLowerCase().contains(keyword.trim().toLowerCase())) {
+		for (ProductDetails pd : allProductDetails) {
+			if (pd.getName().trim().toLowerCase().contains(keyword.trim().toLowerCase())) {
 				searchResult.add(pd);
 			}
 		}
@@ -120,24 +125,26 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		List<ProductDetails> allProductDetails = productDetailsRepo.findAll();
 		return allProductDetails;
 	}
-	
+
 	@Override
-	public List<ProductDetails> getByKeywordCategoryTags(String keyword, int categoryid, int min, int max){
+	public List<ProductDetails> getByKeywordCategoryTags(String keyword, int categoryid, int min, int max) {
 		List<ProductDetails> allProductDetails = productDetailsRepo.findAll();
 		List<ProductDetails> searchResult = new ArrayList<>();
 		List<ProductDetails> searchResultLatestVersion = new ArrayList<>();
-		for(ProductDetails pd: allProductDetails) {
-			if(categoryid == 0) {
-				if(pd.getName().trim().toLowerCase().contains(keyword.trim().toLowerCase())  && pd.getPrice()>=min && pd.getPrice()<=max) {
+		for (ProductDetails pd : allProductDetails) {
+			if (categoryid == 0) {
+				if (pd.getName().trim().toLowerCase().contains(keyword.trim().toLowerCase().replaceAll("\\s+", " "))
+						&& pd.getPrice() >= min && pd.getPrice() <= max) {
 					searchResult.add(pd);
 				}
-			}else {
-				if(pd.getName().trim().toLowerCase().contains(keyword.trim().toLowerCase())  && pd.getCategory().getId() == categoryid && pd.getPrice()>=min && pd.getPrice()<=max) {
+			} else {
+				if (pd.getName().trim().toLowerCase().contains(keyword.trim().toLowerCase().replaceAll("\\s+", " "))
+						&& pd.getCategory().getId() == categoryid && pd.getPrice() >= min && pd.getPrice() <= max) {
 					searchResult.add(pd);
 				}
 			}
 		}
-		for(ProductDetails pd: searchResult) {
+		for (ProductDetails pd : searchResult) {
 			Product product = pd.getProduct();
 			String activeVersion = product.getActiveVersion();
 			searchResultLatestVersion.add(getByProductIdAndVersion(product.getId(), activeVersion));
@@ -147,6 +154,37 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 	}
 
 	@Override
+	public List<ProductDetails> getProductBySeller(long sellerid, String keyword, int categoryid, int min, int max) {
+		Seller seller = sellerRepo.findById(sellerid);
+		List<Product> productList = productRepo.findBySeller(seller);
+		List<ProductDetails> productDetailsList = new ArrayList<>();
+		List<ProductDetails> filteredList = new ArrayList<>();
+		for (Product pro : productList) {
+			String activeVersion = pro.getActiveVersion();
+			productDetailsList.add(getByProductIdAndVersion(pro.getId(), activeVersion));
+		}
+		List<ProductDetails> latestVersionWithoutDupList = productDetailsList.stream().distinct()
+				.collect(Collectors.toList());
+		for (ProductDetails pd : latestVersionWithoutDupList) {
+			if (categoryid == 0) {
+				if (pd.getName() != null) {
+					if (pd.getName().trim().toLowerCase().replaceAll("\\s+", " ")
+							.contains(keyword.trim().toLowerCase().replaceAll("\\s+", " ")) && pd.getPrice() >= min
+							&& pd.getPrice() <= max) {
+						filteredList.add(pd);
+					}
+				}
+			} else {
+				if (pd.getName().trim().toLowerCase().replaceAll("\\s+", " ")
+						.contains(keyword.trim().toLowerCase().replaceAll("\\s+", " "))
+						&& pd.getCategory().getId() == categoryid && pd.getPrice() >= min && pd.getPrice() <= max) {
+					filteredList.add(pd);
+				}
+			}
+		}
+		return filteredList;
+	}
+
 	public ProductDetails createNewVersion(Long id, String newVersion) {
 		if (productDetailsRepo.existsByProductIdAndProductVersionKeyVersion(id, newVersion)) {
 			throw new DuplicateFieldException("version", newVersion);
@@ -282,6 +320,19 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 
 	private String getSellerProductsDataLocation(Seller seller) {
 		return "account_id_" + seller.getId() + "\\" + PRODUCT_FOLDER_NAME;
+	}
+
+	@Override
+	public List<ProductDetails> getAllProducts() {
+		List<ProductDetails> allProductsWithDuplication = productDetailsRepo.findAll();
+		List<ProductDetails> allProductsWithoutDuplication = new ArrayList<>();
+		for(ProductDetails pd: allProductsWithDuplication) {
+			Product product = pd.getProduct();
+			String activeVersion = product.getActiveVersion();
+			allProductsWithoutDuplication.add(getByProductIdAndVersion(product.getId(), activeVersion));
+		}
+		List<ProductDetails> allDistinctProducts = allProductsWithoutDuplication.stream().distinct().collect(Collectors.toList());
+		return allDistinctProducts;
 	}
 
 }

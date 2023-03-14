@@ -65,4 +65,11 @@ public class Preview {
 		this.productDetails = productDetails;
 	}
 
+	@Override
+	public String toString() {
+		return "Preview [id=" + id + ", source=" + source + ", type=" + type + ", productDetails=" + productDetails
+				+ "]";
+	}
+
+	
 }

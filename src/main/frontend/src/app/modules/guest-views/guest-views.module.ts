@@ -1,6 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+
+import { NgbRating } from '@ng-bootstrap/ng-bootstrap';
+
 import { CommonViewsModule } from '../common-views/common-views.module';
+
 
 import { GuestViewsRoutingModule } from './guest-views-routing.module';
 import { RegisterComponent } from './register/register.component';
@@ -21,10 +25,14 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { BrowserModule } from '@angular/platform-browser';
 import { ReportProductComponent } from './product-details/report-product/report-product.component';
+
+
+
 import { HomeComponent } from './home/home.component';
 import { SearchResultComponent } from './search-result/search-result.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { PopUpComponent } from './product-details/report-product/pop-up/pop-up.component';
+
 
 @NgModule({
   declarations: [
@@ -36,9 +44,10 @@ import { PopUpComponent } from './product-details/report-product/pop-up/pop-up.c
     SellerProductListComponent,
     ProductDetailsComponent,
     ReportProductComponent,
+    
     HomeComponent,
     SearchResultComponent,
-    PopUpComponent,
+    PopUpComponent
   ],
   imports: [
     CommonModule,
@@ -54,8 +63,10 @@ import { PopUpComponent } from './product-details/report-product/pop-up/pop-up.c
     MatRadioModule,
     MatAutocompleteModule,
     GuestViewsRoutingModule,
+    NgbRating,
     CommonViewsModule,
     NgxPaginationModule
+
   ]
 })
 export class GuestViewsModule { }

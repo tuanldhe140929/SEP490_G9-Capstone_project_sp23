@@ -13,9 +13,11 @@ public class DuplicateFieldException extends RuntimeException {
 	private String fieldName;
 	private String fieldValue;
 	private ErrorResponse errorResponse;
+
 	public DuplicateFieldException() {
 		// TODO Auto-generated constructor stub
 	}
+
 	public DuplicateFieldException(String fieldName, String fieldValue) {
 		super();
 		this.fieldName = fieldName;
@@ -26,31 +28,36 @@ public class DuplicateFieldException extends RuntimeException {
 	public String getFieldName() {
 		return fieldName;
 	}
+
 	public void setFieldName(String fieldName) {
 		this.fieldName = fieldName;
 	}
+
 	public String getFieldValue() {
 		return fieldValue;
 	}
+
 	public void setFieldValue(String fieldValue) {
 		this.fieldValue = fieldValue;
 	}
+
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
+
 	public void setErrorResponse(ErrorResponse errorResponse) {
 		this.errorResponse = errorResponse;
 	}
+
 	public ErrorResponse getErrorResponse() {
 		return errorResponse;
 	}
+
 	public void setErrorResponse() {
-		String message = String.format("Field: %s with value: %s exist'", this.fieldName,this.fieldValue);
+		String message = String.format("Field: %s with value: %s exist'", this.fieldName, this.fieldValue);
 		List<String> msgs = new ArrayList<String>();
 		msgs.add(message);
-		this.errorResponse = new ErrorResponse(msgs,HttpStatus.CONFLICT);
+		this.errorResponse = new ErrorResponse(msgs, HttpStatus.CONFLICT);
 	}
-	
-	
 
 }

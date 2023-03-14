@@ -15,46 +15,24 @@ import com.SEP490_G9.repository.ReportRepository;
 import com.SEP490_G9.repository.UserRepository;
 import com.SEP490_G9.service.ReportService;
 
-
-
 @Service
-public class ReportServiceImpl implements ReportService{
+public class ReportServiceImpl implements ReportService {
 
-	@Autowired private ReportRepository reportRepository;
-	
-	@Autowired private UserRepository userRepository;
-	
-	@Autowired private ProductRepository productRepository;
-	@Override
-	public List<Report> getAllReport() {
-		// TODO Auto-generated method stub
-		return (List<Report>) reportRepository.findAll();
-	}
+	@Autowired
+	private ReportRepository reportRepository;
+
+	@Autowired
+	private UserRepository userRepository;
+
+	@Autowired
+	private ProductRepository productRepository;
 
 	@Override
-	public void saveReport(Report report) {
-		User user = userRepository.findById(report.getReportKey().getUserId()).get();
-		Product product = productRepository.findById(report.getReportKey().getProductId()).get();
-		report.setUser(user);
-		report.setProduct(product);
+	public boolean addReport(Report report) {
 		reportRepository.save(report);
+		return true;
 	}
 
-	@Override
-	public void deleteReport(ReportItemKey id) {
-		// TODO Auto-generated method stub
-		reportRepository.deleteById(id);;
-	}
 
-	@Override
-	public Optional<Report> findReportById(ReportItemKey id) {
-		// TODO Auto-generated method stub
-		return reportRepository.findById(id);
-	}
-
-	@Override
-	public void saveEditedReport(Report reportEdit) {
-		 reportRepository.save(reportEdit);
-	}
 
 }

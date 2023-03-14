@@ -12,7 +12,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-
 import com.SEP490_G9.entities.Account;
 import com.SEP490_G9.entities.Product;
 import com.SEP490_G9.entities.ProductDetails;
@@ -94,6 +93,8 @@ public class ProductServiceImpl implements ProductService {
 	public boolean deleteProductById(Long id) {
 		Seller seller = getCurrentSeller();
 		Product product = productRepository.findById(id).get();
+		product.setEnabled(false);
+		productRepository.save(product);
 		if (product == null || product.getSeller() != seller) {
 			throw new ResourceNotFoundException("product id", id.toString(), seller);
 		}
