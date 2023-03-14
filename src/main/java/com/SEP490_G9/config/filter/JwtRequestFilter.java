@@ -34,7 +34,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 			throws ServletException, IOException {
 
 		final String requestTokenHeader = request.getHeader("Authorization");
-		//final String refreshToken = request.getAttribute("refreshToken").
+		// final String refreshToken = request.getAttribute("refreshToken").
 		String username = null;
 		String jwtToken = null;
 		// JWT Token is in the form "Bearer token". Remove Bearer word and get
@@ -51,9 +51,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 		} else {
 			logger.warn("JWT Token does not begin with Bearer String");
 		}
-		
+
 		// Once we get the token validate it.
-		if (username != null && SecurityContextHolder.getContext().getAuthentication()==null) {
+		if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 			UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
 
 			// if token is valid configure Spring Security to manually set

@@ -8,9 +8,8 @@ import org.springframework.stereotype.Repository;
 import com.SEP490_G9.entities.Product;
 import com.SEP490_G9.entities.Seller;
 
-
 @Repository
-public interface ProductRepository extends JpaRepository<Product,Long> {
+public interface ProductRepository extends JpaRepository<Product, Long> {
 
 	public List<Product> findBySeller(Seller user);
 

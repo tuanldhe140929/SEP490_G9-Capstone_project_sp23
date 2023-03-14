@@ -3,10 +3,10 @@ package com.SEP490_G9.common;
 
 import org.springframework.stereotype.Component;
 
-
 @Component
 public class VerifyLinkGenerator {
 	final int LINK_LENGHT = 16;
+
 	public String generate() {
 		String AlphaNumericString = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "0123456789" + "abcdefghijklmnopqrstuvxyz";
 

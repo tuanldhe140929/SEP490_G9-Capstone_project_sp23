@@ -15,36 +15,36 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "reports")
-public class Report{
+public class Report {
 	private static final long serialVersionUID = 1L;
-	
+
 	@EmbeddedId
 	private ReportItemKey reportKey = new ReportItemKey();
-	
+
 	@MapsId("userId")
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "account_id",referencedColumnName = "account_id")
+	@JoinColumn(name = "account_id", referencedColumnName = "account_id")
 	private User user;
 
 	@MapsId("productId")
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "product_id",referencedColumnName = "id")
+	@JoinColumn(name = "product_id", referencedColumnName = "id")
 	private Product product;
-	
+
 	@Column(name = "description", unique = false, nullable = false, insertable = true)
 	private String description;
-	
+
 	@Column(name = "created_date", unique = false, nullable = false, insertable = true)
 	private Date created_date = new Date();
 	@Column(name = "status", unique = false, nullable = false, insertable = true)
 	private String status;
-	
+
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "violation_type_id", unique = false, nullable = true)//sual lai la false
+	@JoinColumn(name = "violation_type_id", unique = false, nullable = true) // sual lai la false
 	private ViolationType violation_types;
 
 	public Report() {
-		
+
 	}
 
 	public Report(ReportItemKey cartItemKey, User user, Product product, String description, Date created_date,
@@ -113,5 +113,5 @@ public class Report{
 	public void setViolation_types(ViolationType violation_types) {
 		this.violation_types = violation_types;
 	}
-	
+
 }

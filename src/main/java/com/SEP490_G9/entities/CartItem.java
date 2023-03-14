@@ -12,7 +12,6 @@ import jakarta.persistence.Table;
 
 import java.io.Serializable;
 
-
 import com.SEP490_G9.entities.embeddable.CartItemKey;
 import com.SEP490_G9.entities.embeddable.ProductVersionKey;
 import com.SEP490_G9.entities.ProductDetails;
@@ -46,7 +45,7 @@ public class CartItem implements Serializable {
 	public CartItem(Cart cart, ProductDetails productDetails) {
 		super();
 		ProductVersionKey key = productDetails.getProductVersionKey();
-		this.cartItemKey = new CartItemKey(cart.getId(),productDetails.getProductVersionKey());
+		this.cartItemKey = new CartItemKey(cart.getId(), productDetails.getProductVersionKey());
 		this.cart = cart;
 		this.productDetails = productDetails;
 	}

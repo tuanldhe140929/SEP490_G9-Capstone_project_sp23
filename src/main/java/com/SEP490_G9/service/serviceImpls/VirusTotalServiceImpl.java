@@ -53,12 +53,14 @@ public class VirusTotalServiceImpl implements VirusTotalService {
 				long uploadChunkStart = System.currentTimeMillis();
 				String analysisId = uploadChunk(UPLOAD_ENDPOINT, chunk);
 				long uploadChunkEnd = System.currentTimeMillis();
-				System.out.println("upload chunk "+(chunks.indexOf(chunk)+1) + " takes "+(uploadChunkEnd-uploadChunkStart)/1000+"s");
-				
+				System.out.println("upload chunk " + (chunks.indexOf(chunk) + 1) + " takes "
+						+ (uploadChunkEnd - uploadChunkStart) / 1000 + "s");
+
 				boolean isChunkSafe = getAnalysis(analysisId, chunks.indexOf(chunk));
 				long analysisEnd = System.currentTimeMillis();
-				System.out.println("analysis chunk "+(chunks.indexOf(chunk)+1) + " takes "+(analysisEnd-uploadChunkEnd)/1000+"s");
-				
+				System.out.println("analysis chunk " + (chunks.indexOf(chunk) + 1) + " takes "
+						+ (analysisEnd - uploadChunkEnd) / 1000 + "s");
+
 				return isChunkSafe;
 			});
 
@@ -81,7 +83,7 @@ public class VirusTotalServiceImpl implements VirusTotalService {
 		}
 
 		long finishTime = System.currentTimeMillis();
-		System.out.println("total: " + (finishTime-startTime)/1000);
+		System.out.println("total: " + (finishTime - startTime) / 1000);
 		return isMalicious;
 	}
 
@@ -91,17 +93,15 @@ public class VirusTotalServiceImpl implements VirusTotalService {
 		boolean notCompleted = true;
 		while (notCompleted) {
 			Request request = new Request.Builder().url(ANALYSIS_ENDPOINT + analysisId).get()
-					.addHeader("accept", "application/json")
-					.addHeader("x-apikey", virusTotalKey).build();
+					.addHeader("accept", "application/json").addHeader("x-apikey", virusTotalKey).build();
 
 			try {
 				Response response = client.newCall(request).execute();
 				ObjectMapper objectMapper = new ObjectMapper();
 				JsonNode rootNode = objectMapper.readTree(response.body().string());
-				//System.out.println(rootNode.toPrettyString());
+				// System.out.println(rootNode.toPrettyString());
 				// Check if the analysis is completed
-				
-				
+
 //				{
 //					  "error" : {
 //					    "message" : "Quota exceeded",
@@ -115,13 +115,13 @@ public class VirusTotalServiceImpl implements VirusTotalService {
 //					    "code" : "QuotaExceededError"
 //					  }
 //					}
-				
+
 				String status = rootNode.get("data").get("attributes").get("status").asText();
 				if (status.equals("completed")) {
 					// Print out the JSON object
 					notCompleted = false;
 					System.out.println(index);
-					
+
 					int malicious = rootNode.get("data").get("attributes").get("stats").get("malicious").asInt();
 					if (malicious == 0) {
 						isSafe = true;
@@ -139,22 +139,19 @@ public class VirusTotalServiceImpl implements VirusTotalService {
 
 	public String uploadChunk(String url, byte[] data) {
 		OkHttpClient.Builder builder = new OkHttpClient.Builder();
-		builder.connectTimeout(100, TimeUnit.SECONDS); 
-		builder.readTimeout(100, TimeUnit.SECONDS); 
-		builder.writeTimeout(100, TimeUnit.SECONDS); 
-		
-		
+		builder.connectTimeout(100, TimeUnit.SECONDS);
+		builder.readTimeout(100, TimeUnit.SECONDS);
+		builder.writeTimeout(100, TimeUnit.SECONDS);
+
 		OkHttpClient client = new OkHttpClient();
 		client = builder.build();
-		
+
 		MediaType mediaType = MediaType.parse("multipart/form-data");
-		
-		
+
 		RequestBody requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM)
 				.addFormDataPart("file", "temp-file-" + UUID.randomUUID(), RequestBody.create(data, mediaType)).build();
 
-		Request request = new Request.Builder().url(url).post(requestBody)
-				.addHeader("accept", "application/json")
+		Request request = new Request.Builder().url(url).post(requestBody).addHeader("accept", "application/json")
 				.addHeader("x-apikey", virusTotalKey).build();
 		String id = "";
 		try {
@@ -167,7 +164,8 @@ public class VirusTotalServiceImpl implements VirusTotalService {
 			id = rootNode.get("data").get("id").asText();
 		} catch (IOException e) {
 			e.printStackTrace();
-			//throw new FileUploadException("Error when upload chunks \n" + e.getMessage());
+			// throw new FileUploadException("Error when upload chunks \n" +
+			// e.getMessage());
 		}
 		return id;
 
@@ -189,7 +187,7 @@ public class VirusTotalServiceImpl implements VirusTotalService {
 				chunks.add(chunk);
 			}
 		}
-		System.out.println("chunk: "+chunks.size());
+		System.out.println("chunk: " + chunks.size());
 		return chunks;
 	}
 

@@ -14,7 +14,6 @@ public class CartDTO {
 	private List<CartItemDTO> items;
 	private int totalPrice;
 
-
 	public CartDTO(Long id, User user, List<CartItemDTO> items, int totalPrice) {
 		super();
 		this.id = id;
@@ -31,13 +30,13 @@ public class CartDTO {
 		this.id = cart.getId();
 		this.user = cart.getUser();
 		List<CartItemDTO> itemDtos = new ArrayList<>();
-		for(CartItem item: cart.getItems()) {
-			itemDtos.add(new CartItemDTO(item,previewRepository));
+		for (CartItem item : cart.getItems()) {
+			itemDtos.add(new CartItemDTO(item, previewRepository));
 		}
 		this.items = itemDtos;
 		for (CartItem item : cart.getItems()) {
-	       this.totalPrice += item.getProductDetails().getPrice();
-	    }
+			this.totalPrice += item.getProductDetails().getPrice();
+		}
 	}
 
 	public Long getId() {
@@ -71,8 +70,5 @@ public class CartDTO {
 	public void setTotalPrice(int totalPrice) {
 		this.totalPrice = totalPrice;
 	}
-
-
-
 
 }

@@ -3,14 +3,14 @@
     "",
     "\\src",
     "\\src\\app",
+    "\\src\\app\\DTOS",
     "\\src\\app\\modules",
-    "\\src\\app\\modules\\for-users",
-    "\\src\\app\\modules\\for-users\\my-cart",
     "\\src\\app\\modules\\guest-views",
-    "\\src\\app\\modules\\guest-views\\product-details",
-    "\\src\\app\\modules\\staff-views",
-    "\\src\\app\\modules\\user-views"
+    "\\src\\app\\modules\\user-views",
+    "\\src\\app\\modules\\user-views\\download",
+    "\\src\\app\\modules\\user-views\\thank-you",
+    "\\src\\app\\services"
   ],
-  "SelectedNode": "\\src\\app\\modules\\staff-views",
+  "SelectedNode": "\\src\\app\\modules\\user-views\\download\\download.component.ts",
   "PreviewInSolutionExplorer": false
 }

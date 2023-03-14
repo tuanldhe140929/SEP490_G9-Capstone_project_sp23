@@ -54,9 +54,9 @@ public class ManageAccountInfoController {
 
 	@PostMapping(value = "changeAccountInfo")
 	public ResponseEntity<?> changeAccountInfo(
-			@Valid @RequestParam(name="newUserName", required = true) @Size(min = 3, max = 30) String newUserName,
-			@Valid @RequestParam(name="newFirstName", required = true) @Size(min = 3, max = 30) String newFirstName,
-			@Valid @RequestParam(name="newLastName", required = true) @Size(min = 3, max = 30) String newLastName){
+			@Valid @RequestParam(name = "newUserName", required = true) @Size(min = 3, max = 30) String newUserName,
+			@Valid @RequestParam(name = "newFirstName", required = true) @Size(min = 3, max = 30) String newFirstName,
+			@Valid @RequestParam(name = "newLastName", required = true) @Size(min = 3, max = 30) String newLastName) {
 		User user;
 		user = manageAccountInfoService.changeAccountInfo(newUserName, newFirstName, newLastName);
 		return ResponseEntity.ok(user);

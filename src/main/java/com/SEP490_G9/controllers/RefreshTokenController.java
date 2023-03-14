@@ -21,18 +21,18 @@ import com.SEP490_G9.common.JwtTokenUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 
-@RequestMapping(value="refreshToken")
+@RequestMapping(value = "refreshToken")
 @RestController
 public class RefreshTokenController {
 	@Autowired
 	RefreshTokenService refreshTokenService;
-	
+
 	@Autowired
 	AccountService accountService;
-	
+
 	@Autowired
 	JwtTokenUtil jwtUtil;
-	
+
 	@RequestMapping(value = "refresh", method = RequestMethod.POST)
 	public ResponseEntity<?> refreshToken(HttpServletRequest request) {
 		AuthResponse auth = null;
@@ -58,13 +58,13 @@ public class RefreshTokenController {
 		return ResponseEntity.ok(auth);
 
 	}
-	
+
 	private AuthResponse validate(Cookie cookie) {
 		String token = cookie.getValue();
 		AuthResponse authResponse = refreshToken(token);
 		return authResponse;
 	}
-	
+
 	public AuthResponse refreshToken(String token) {
 		AuthResponse authResponse = new AuthResponse();
 		RefreshToken refreshToken = refreshTokenService.getByToken(token);

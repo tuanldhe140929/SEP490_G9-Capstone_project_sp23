@@ -24,7 +24,7 @@ public class EmailServiceImpl implements EmailService {
 
 	@Autowired
 	private VerifyLinkGenerator verifyLinkGenerator;
-	
+
 	@Value("${spring.mail.username}")
 	private String sender;
 	@Autowired

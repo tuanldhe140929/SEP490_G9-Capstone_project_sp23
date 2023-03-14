@@ -8,11 +8,11 @@ public class PreviewDTO {
 	private String source;
 
 	private String type;
-	
+
 	public PreviewDTO() {
 		// TODO Auto-generated constructor stub
 	}
-	
+
 	public PreviewDTO(Preview preview) {
 		this.id = preview.getId();
 		this.source = preview.getSource();
