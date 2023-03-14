@@ -19,8 +19,8 @@ public class ViolationType {
 	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
-	@Column(name = "name", unique = true, nullable = false, insertable = true, updatable = false)
+	private Long id;
+	@Column(name = "name", unique = true)
 	private String name;
 
 	@OneToMany(mappedBy = "violation_types")

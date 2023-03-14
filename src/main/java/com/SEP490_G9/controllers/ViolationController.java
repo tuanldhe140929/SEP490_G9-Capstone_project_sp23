@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.SEP490_G9.entities.ViolationType;
 import com.SEP490_G9.repository.ViolationTypeRepository;
 
-@RequestMapping(value = "violationType")
+
+@RequestMapping(value = "violation")
 @RestController
 public class ViolationController {
 	@Autowired

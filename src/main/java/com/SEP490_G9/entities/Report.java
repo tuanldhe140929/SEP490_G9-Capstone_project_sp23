@@ -3,6 +3,7 @@ package com.SEP490_G9.entities;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.SEP490_G9.dto.ReportDTO;
 import com.SEP490_G9.entities.embeddable.ReportItemKey;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
@@ -36,15 +37,27 @@ public class Report {
 
 	@Column(name = "created_date", unique = false, nullable = false, insertable = true)
 	private Date created_date = new Date();
+	
 	@Column(name = "status", unique = false, nullable = false, insertable = true)
 	private String status;
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "violation_type_id", unique = false, nullable = true) // sual lai la false
+	@JoinColumn(name = "violation_type_id", unique = false, nullable = false)//sual lai la false
 	private ViolationType violation_types;
 
 	public Report() {
 
+	}
+
+	public Report(ReportDTO repo) {
+		ReportItemKey keyitem = new ReportItemKey();
+		keyitem.setUserId(repo.getUserId());
+		keyitem.setProductId(repo.getProductId());
+		this.reportKey=keyitem;
+		this.description = repo.getDescription();
+		this.created_date = repo.getCreated_date();
+		this.status = repo.getStatus();
+		this.violation_types = repo.getViolationtype();
 	}
 
 	public Report(ReportItemKey cartItemKey, User user, Product product, String description, Date created_date,
