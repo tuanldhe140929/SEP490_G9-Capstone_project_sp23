@@ -64,6 +64,7 @@ public class AccountServiceImpl implements AccountService {
 	public List<Account> getAllStaffs() {
 		List<Role> staffRoles = new ArrayList<>();
 		staffRoles.add(roleRepo.findById(Constant.STAFF_ROLE_ID));
+		
 		List<Account> staffList = accountRepo.findByRolesIn(staffRoles);
 		return staffList;
 	}

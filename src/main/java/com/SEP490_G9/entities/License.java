@@ -11,7 +11,6 @@ import jakarta.validation.constraints.Size;
 @JsonIgnoreProperties(value = { "productDetails" })
 @Entity
 @Table(name = "license")
-@JsonIgnoreProperties(value= "ProductDetails")
 public class License  {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -90,4 +89,11 @@ public class License  {
 	public void setReferenceLink(String referenceLink) {
 		this.referenceLink = referenceLink;
 	}
+
+	@Override
+	public String toString() {
+		return "License [id=" + id + ", name=" + name + ", acrynosm=" + acrynosm + ", details=" + details
+				+ ", referenceLink=" + referenceLink + ", productDetails=" + productDetails + "]";
+	}
+	
 }

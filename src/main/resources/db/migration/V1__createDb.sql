@@ -23,6 +23,9 @@
  create table tags (id serial not null, name varchar(255), primary key (id));
  create table transactions (id bigserial not null, purchased_date timestamp(6), cart_id bigint not null, primary key (id));
  create table users (avatar varchar(255), email_verified boolean, first_name varchar(255), last_name varchar(255), username varchar(30) not null, account_id bigint not null, cart_id bigint, primary key (account_id));
+ create table rate (account_id bigint not null, product_id bigint not null, date date, stars integer, primary key (account_id, product_id));
+ alter table if exists rate add constraint FKkiwnrvd09n4d8d81hjbwl41xv foreign key (product_id) references products;
+ alter table if exists rate add constraint FKbvjnid289x18balux0uumuh7f foreign key (account_id) references users;
  create table violation_types (id bigserial not null, name varchar(255) not null, primary key (id));
  alter table if exists accounts add constraint UK_n7ihswpy07ci568w34q0oi8he unique (email);
  alter table if exists refresh_token add constraint UK_r4k4edos30bx9neoq81mdvwph unique (token);

@@ -17,7 +17,8 @@ public class LicenseServiceImpl implements LicenseService {
 
 	@Override
 	public List<License> getAllLicense() {
-		return licenseRepo.findAll();
+		List<License> ret =  licenseRepo.findAll();
+		return ret;
 	}
 
 }
