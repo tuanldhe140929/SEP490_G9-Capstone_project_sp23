@@ -5,13 +5,15 @@ import { ViolationType } from 'src/app/DTOS/ViolationType';
 import { ReportService } from 'src/app/services/report.service';
 import { ViolationTypeService } from 'src/app/services/violation-type.service';
 
+
 @Component({
   selector: 'app-report-product',
   templateUrl: './report-product.component.html',
   styleUrls: ['./report-product.component.css']
 })
 export class ReportProductComponent implements OnInit{
-  
+  dialog: any;
+  showMessage = false;
   constructor(
     private vioTypeService: ViolationTypeService,
     private reportService: ReportService,
@@ -54,4 +56,13 @@ export class ReportProductComponent implements OnInit{
       )
     }
   }
+  openSuccess(){
+    this.showMessage = true;
+
+    // Hide the message after a few seconds
+    setTimeout(() => {
+      this.showMessage = false;
+    }, 1500);
+  }
+ 
 }

@@ -3,8 +3,7 @@ package com.SEP490_G9.entities;
 import java.io.Serializable;
 import java.util.Date;
 
-
-
+import com.SEP490_G9.dto.ReportDTO;
 import com.SEP490_G9.entities.embeddable.ReportItemKey;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
@@ -38,11 +37,12 @@ public class Report{
 	
 	@Column(name = "created_date", unique = false, nullable = false, insertable = true)
 	private Date created_date = new Date();
+	
 	@Column(name = "status", unique = false, nullable = false, insertable = true)
 	private String status;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "violation_type_id", unique = false, nullable = true)//sual lai la false
+	@JoinColumn(name = "violation_type_id", unique = false, nullable = false)//sual lai la false
 	private ViolationType violation_types;
 
 	public Report() {

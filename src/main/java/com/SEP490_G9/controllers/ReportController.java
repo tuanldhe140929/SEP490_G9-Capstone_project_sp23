@@ -1,14 +1,12 @@
 package com.SEP490_G9.controllers;
 
-
 import java.util.Date;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-
 
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,9 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import com.SEP490_G9.entity.Report;
-import com.SEP490_G9.entity.embeddable.ReportItemKey;
-
 import com.SEP490_G9.dto.ReportDTO;
 import com.SEP490_G9.entities.Account;
 import com.SEP490_G9.entities.Report;
@@ -31,10 +26,6 @@ import com.SEP490_G9.entities.ViolationType;
 import com.SEP490_G9.entities.embeddable.ReportItemKey;
 import com.SEP490_G9.repository.ViolationTypeRepository;
 
-import com.SEP490_G9.entities.Report;
-import com.SEP490_G9.entities.ViolationType;
-import com.SEP490_G9.entities.embeddable.ReportItemKey;
-import com.SEP490_G9.repository.ViolationTypeRepository;
 import com.SEP490_G9.service.ReportService;
 
 @RequestMapping("private/manageReport")
@@ -54,32 +45,20 @@ public class ReportController {
 		return ResponseEntity.ok(reports);
 	}
 
-	@PostMapping(value = "addProduct")
-	public ResponseEntity<?> addProduct(@RequestBody Product product) {
-		Product ret = manageProductService.addProduct(product);
-		return ResponseEntity.ok(ret);
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public boolean addReport(@RequestBody ReportDTO report) {
-//		System.out.println(report.getReportKey().getProductId());
-//		System.out.println(report.getReportKey().getUserId());
-		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
-				.getAccount();
-		report.setUserId(account.getId());
-		Report reboost = new Report(report);
-		reboost.setCreated_date(new Date());
-		reboost.setStatus("Pending");
-		reportService.saveReport(reboost);
-		
-		return true;
-
-	@RequestMapping(value = "/add", method = RequestMethod.POST)
-	public boolean addReport(@RequestBody Report report) {
-		System.out.println(report.getReportKey().getProductId());
-		System.out.println(report.getReportKey().getUserId());
-
-		reportService.saveReport(report);
-		return true;
-	}
+//			System.out.println(report.getReportKey().getProductId());
+//			System.out.println(report.getReportKey().getUserId());
+			Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
+					.getAccount();
+			report.setUserId(account.getId());
+			Report reboost = new Report(report);
+			reboost.setCreated_date(new Date());
+			reboost.setStatus("Pending");
+			reportService.saveReport(reboost);
+			
+			return true;
+		}
 
 //	@RequestMapping(value = "/createreport", method = RequestMethod.POST)
 //	public Report addReport(@RequestBody Report report) {

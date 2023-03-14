@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Report } from '../modules/report/report/report.component';
+import { Report } from 'src/app/DTOS/Report';
 
 @Component({
   selector: 'app-create-report',

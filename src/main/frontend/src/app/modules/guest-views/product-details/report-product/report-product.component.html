@@ -18,7 +18,8 @@
         </div>
         <div class="form-group" align="end">
             <button class="btn btn-warning" mat-dialog-close="">Hủy</button>
-            <button class="btn btn-primary" type="submit">Gửi báo cáo</button>
+            <button class="btn btn-primary" type="submit" (click)="openSuccess()">Gửi báo cáo</button>
+            <app-pop-up *ngIf="showMessage"></app-pop-up>
         </div>
         
     </form>
