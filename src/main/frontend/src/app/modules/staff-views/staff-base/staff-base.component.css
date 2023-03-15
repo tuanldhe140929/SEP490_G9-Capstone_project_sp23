@@ -1,0 +1,27 @@
+mat-sidenav-container{
+    height: 100%;
+}
+mat-sidenav{
+    height: 100%;
+    background-color: #031530;
+    width: 250px;
+}
+mat-sidenav-content{
+    background-color: white;
+    color: black;
+}
+mat-toolbar{
+    background-color: #031530;
+}
+.outletContent{
+    padding: 10px;
+}
+.example-spacer {
+    flex: 1 1 auto;
+}
+mat-list-item:hover{
+    background-color: #7da7e7;
+}
+.chosenTab{
+    background-color: #2d5da5;
+}

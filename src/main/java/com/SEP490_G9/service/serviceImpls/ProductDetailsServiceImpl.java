@@ -335,4 +335,17 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		return allDistinctProducts;
 	}
 
+	@Override
+	public List<ProductDetails> getAllPendingProducts() {
+		List<ProductDetails> allProducts = getAllProducts();
+		List<ProductDetails> allPendingProducts = new ArrayList<>();
+		for(ProductDetails pd: allProducts) {
+			Product product = pd.getProduct();
+			if(product.isApproved().equalsIgnoreCase("PENDING")) {
+				allPendingProducts.add(pd);
+			}
+		}
+		return allPendingProducts;
+	}
+
 }

@@ -1,0 +1,25 @@
+<mat-toolbar>
+    <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon" (click)="sidebar.toggle()">
+     <mat-icon>menu</mat-icon>
+   </button>
+   <span>Hệ thống quản lý DPM dành cho Quản trị viên</span>
+   <span class="example-spacer"></span>
+   <span>
+   <button mat-button (click)="logout()">
+     Đăng xuất
+   </button>
+   </span>
+ </mat-toolbar>
+<mat-sidenav-container>
+    <mat-sidenav #sidebar mode="side">
+        <mat-list>
+            <mat-list-item><a>Danh sách sản phẩm</a></mat-list-item>
+            <mat-list-item><a>Danh sách báo cáo</a></mat-list-item>
+        </mat-list>
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <div class="outletContent">
+            <router-outlet></router-outlet>
+        </div>
+    </mat-sidenav-content>
+</mat-sidenav-container>

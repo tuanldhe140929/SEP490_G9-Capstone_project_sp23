@@ -4,7 +4,7 @@ import org.junit.platform.suite.api.SelectClasses;
 import org.junit.platform.suite.api.Suite;
 
 @Suite
-@SelectClasses({ ProductDetailsRepositoryTest.class, ProductRepositoryTest.class })
+@SelectClasses({ CategoryRepositoryTest.class , TagRepositoryTest.class})
 public class RepositoryTests {
 
 }
