@@ -15,3 +15,5 @@ CREATE EXTENSION IF NOT EXISTS pgcrypto;
  insert into account_role (account_id, role_id) values (3, 2);
  insert into accounts (created_date, email, enabled, last_modified, password, id) values (CURRENT_DATE, 'admin@gmail.com', true, null, crypt('admin1234', gen_salt('bf')), 4);
  insert into account_role (account_id, role_id) values (4, 1);
+ insert into carts (id,account_id) VALUES (1,1);
+ insert into carts (id,account_id) values (2,2);

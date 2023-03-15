@@ -58,9 +58,6 @@ public class CartServiceImplement implements CartService {
 	public CartDTO addProduct(Long productId) {
 		ProductDetails productDetails = productDetailsRepository.findFirstByProductIdOrderByCreatedDateDesc(productId);
 		Cart cart = getCurrentCart();
-
-		// cart
-		//
 		CartItem item = new CartItem(cart, productDetails);
 		cart.addItem(item);
 		cartItemRepository.save(item);

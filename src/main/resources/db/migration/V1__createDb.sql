@@ -27,9 +27,7 @@
  alter table if exists rate add constraint FKkiwnrvd09n4d8d81hjbwl41xv foreign key (product_id) references products;
  alter table if exists rate add constraint FKbvjnid289x18balux0uumuh7f foreign key (account_id) references users;
  create table violation_types (id bigserial not null, name varchar(255) not null, primary key (id));
- alter table if exists accounts add constraint UK_n7ihswpy07ci568w34q0oi8he unique (email);create table rate (account_id bigint not null, product_id bigint not null, date date, stars integer, primary key (account_id, product_id));
- alter table if exists rate add constraint FKkiwnrvd09n4d8d81hjbwl41xv foreign key (product_id) references products;
- alter table if exists rate add constraint FKbvjnid289x18balux0uumuh7f foreign key (account_id) references users;
+ alter table if exists accounts add constraint UK_n7ihswpy07ci568w34q0oi8he unique (email);
  alter table if exists refresh_token add constraint UK_r4k4edos30bx9neoq81mdvwph unique (token);
  alter table if exists refresh_token add constraint UK_1gnoedr4u8s5p7ccdkftq38bh unique (account_id);
  alter table if exists role add constraint UK_8sewwnpamngi6b1dwaa88askk unique (name);
