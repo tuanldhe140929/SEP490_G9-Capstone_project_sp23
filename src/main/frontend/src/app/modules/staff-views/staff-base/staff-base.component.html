@@ -13,13 +13,13 @@
 <mat-sidenav-container>
     <mat-sidenav #sidebar mode="side">
         <mat-list>
-            <mat-list-item><a>Danh sách sản phẩm</a></mat-list-item>
+            <mat-list-item><a (click)="openProductApproval()">Danh sách sản phẩm</a></mat-list-item>
             <mat-list-item><a>Danh sách báo cáo</a></mat-list-item>
         </mat-list>
     </mat-sidenav>
     <mat-sidenav-content>
         <div class="outletContent">
-            <router-outlet></router-outlet>
+            <router-outlet [name]="routerName"></router-outlet>
         </div>
     </mat-sidenav-content>
 </mat-sidenav-container>

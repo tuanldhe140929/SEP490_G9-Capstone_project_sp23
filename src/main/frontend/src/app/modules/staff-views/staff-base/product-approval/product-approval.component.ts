@@ -8,6 +8,5 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./product-approval.component.css']
 })
 export class ProductApprovalComponent {
-
-
+  
 }

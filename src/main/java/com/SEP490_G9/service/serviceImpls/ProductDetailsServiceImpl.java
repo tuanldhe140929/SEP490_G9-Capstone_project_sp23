@@ -348,4 +348,30 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		return allPendingProducts;
 	}
 
+	@Override
+	public List<ProductDetails> getAllApprovedProducts() {
+		List<ProductDetails> allProducts = getAllProducts();
+		List<ProductDetails> allPendingProducts = new ArrayList<>();
+		for(ProductDetails pd: allProducts) {
+			Product product = pd.getProduct();
+			if(product.isApproved().equalsIgnoreCase("PENDING")) {
+				allPendingProducts.add(pd);
+			}
+		}
+		return allPendingProducts;
+	}
+
+	@Override
+	public List<ProductDetails> getAllRejectedProducts() {
+		List<ProductDetails> allProducts = getAllProducts();
+		List<ProductDetails> allPendingProducts = new ArrayList<>();
+		for(ProductDetails pd: allProducts) {
+			Product product = pd.getProduct();
+			if(product.isApproved().equalsIgnoreCase("PENDING")) {
+				allPendingProducts.add(pd);
+			}
+		}
+		return allPendingProducts;
+	}
+
 }

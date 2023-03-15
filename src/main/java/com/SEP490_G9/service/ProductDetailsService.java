@@ -38,5 +38,9 @@ public interface ProductDetailsService {
 	public boolean existByProductIdAndVersion(Long productId, String version);
 	
 	public List<ProductDetails> getAllPendingProducts();
+	
+	public List<ProductDetails> getAllApprovedProducts();
+	
+	public List<ProductDetails> getAllRejectedProducts();
 
 }
