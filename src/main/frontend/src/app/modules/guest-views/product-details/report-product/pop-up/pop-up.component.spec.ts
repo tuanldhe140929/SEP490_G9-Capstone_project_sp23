@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ReportProductComponent } from './report-product.component';
+import { PopUpComponent } from './pop-up.component';
 
-describe('ReportProductComponent', () => {
-  let component: ReportProductComponent;
-  let fixture: ComponentFixture<ReportProductComponent>;
+describe('PopUpComponent', () => {
+  let component: PopUpComponent;
+  let fixture: ComponentFixture<PopUpComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ReportProductComponent ]
+      declarations: [ PopUpComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ReportProductComponent);
+    fixture = TestBed.createComponent(PopUpComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -21,7 +21,3 @@ describe('ReportProductComponent', () => {
     expect(component).toBeTruthy();
   });
 });
-
-
-
-

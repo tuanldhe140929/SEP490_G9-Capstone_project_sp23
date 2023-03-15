@@ -58,6 +58,7 @@ public class TestDataInit {
 	private LicenseRepository licenseRepo;
 
 
+
 	public void run(ApplicationArguments args) throws Exception {
 
 		roleRepository.save(new Role(Constant.ADMIN_ROLE_ID, "ROLE_ADMIN"));

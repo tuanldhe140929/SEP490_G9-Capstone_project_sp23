@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ReportProductComponent } from './report-product.component';
+import { CreateReportComponent } from './create-report.component';
 
-describe('ReportProductComponent', () => {
-  let component: ReportProductComponent;
-  let fixture: ComponentFixture<ReportProductComponent>;
+describe('CreateReportComponent', () => {
+  let component: CreateReportComponent;
+  let fixture: ComponentFixture<CreateReportComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ReportProductComponent ]
+      declarations: [ CreateReportComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ReportProductComponent);
+    fixture = TestBed.createComponent(CreateReportComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -21,7 +21,3 @@ describe('ReportProductComponent', () => {
     expect(component).toBeTruthy();
   });
 });
-
-
-
-

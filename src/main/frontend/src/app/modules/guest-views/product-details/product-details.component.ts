@@ -299,10 +299,18 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   openReportModal() {
+
+    const data = {
+      productId: this.product.id,
+      userId: this.visitor.id
+    }
     const dialogRef = this.dialog.open(ReportProductComponent, {
+
       height: '80%',
-      width: '50%'
+      width: '50%',
+      data:data
     });
+
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
     });
