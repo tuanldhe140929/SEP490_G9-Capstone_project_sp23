@@ -53,10 +53,10 @@
  insert into engines(id, name) VALUES(3,'Godot');
  insert into engines(id, name) VALUES(4,'Cocos');
   
- insert into products (id, active_version, enabled, approved, seller_id) VALUES(1,'1.0.0',true,true,2);
- insert into products (id, active_version, enabled, approved, seller_id) VALUES(2,'1.0.0',true,true,2);
- insert into products (id, active_version, enabled, approved, seller_id) VALUES(3,'1.0.0',true,false,2);
- insert into products (id, active_version, enabled, approved, seller_id) VALUES(4,'1.0.0',true,true,2);
+ insert into products (id, active_version, enabled, approved, seller_id) VALUES(1,'1.0.0',true,'APPROVED',2);
+ insert into products (id, active_version, enabled, approved, seller_id) VALUES(2,'1.0.0',true,'APPROVED',2);
+ insert into products (id, active_version, enabled, approved, seller_id) VALUES(3,'1.0.0',true,'REJECTED',2);
+ insert into products (id, active_version, enabled, approved, seller_id) VALUES(4,'1.0.0',true,'APPROVED',2);
  
  insert into product_details (product_id, version, cover_image, upload_date, description, detail_description, draft, instruction, last_update, name, price, category_id, engine_id, license_id)
  VALUES(1,'1.0.0',null,CURRENT_DATE,'TEST VERSION','TEST VERSION',true,'TEST VERSION', CURRENT_DATE, 'TEST VERSION', 13000, 1,1,2);

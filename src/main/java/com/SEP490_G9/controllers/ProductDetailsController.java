@@ -105,4 +105,14 @@ public class ProductDetailsController {
 		ProductDetailsDTO dto = new ProductDetailsDTO(newPD);
 		return ResponseEntity.ok(dto);
 	}
+	
+	@GetMapping(value = "allPendingProducts")
+	public ResponseEntity<?> getAllPendingProducts(){
+		List<ProductDetails> productDetails = productDetailsService.getAllPendingProducts();
+		List<ProductDetailsDTO> productDetailsDto = new ArrayList<>();
+		for(ProductDetails pd: productDetails) {
+			productDetailsDto.add(new ProductDetailsDTO(pd));
+		}
+		return ResponseEntity.ok(productDetailsDto);
+	}
 }

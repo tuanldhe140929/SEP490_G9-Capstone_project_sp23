@@ -3,6 +3,7 @@ import { DecimalPipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { Seller } from 'src/app/DTOS/Seller';
 import { AuthResponse } from '../../../DTOS/AuthResponse';
 import { Preview } from '../../../DTOS/Preview';
@@ -76,7 +77,8 @@ export class ProductDetailsComponent implements OnInit {
     private dialog: MatDialog,
     private productService: ProductService,
     private cartService: CartService,
-    private productFileService: ProductFileService) {
+    private productFileService: ProductFileService,
+    private toastr: ToastrService) {
 
   }
 
@@ -328,10 +330,12 @@ export class ProductDetailsComponent implements OnInit {
     this.cartService.addToCart(this.product.id).subscribe(
       () => {
         // Success, show a message to the user
+        // this.toastr.success('Sản phẩm đã được thêm vào giỏ hàng.')
         alert('Sản phẩm đã được thêm vào giỏ hàng.');
       },
       () => {
         // Error, show an error message to the user
+        // this.toastr.error('Đã có lỗi xảy ra, vui lòng thử lại sau.')
         alert('Đã có lỗi xảy ra, vui lòng thử lại sau.');
       }
     );
