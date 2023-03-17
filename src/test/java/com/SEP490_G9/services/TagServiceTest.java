@@ -2,6 +2,7 @@ package com.SEP490_G9.services;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,15 +39,10 @@ class TagServiceTest {
 	
 	@Test
 	void testGetAllTags() {
-		Tag tag1 = new Tag(1, "Family");
-		Tag tag2 = new Tag(2, "Horror");
-		Tag tag3 = new Tag(3, "Action");
 		List<Tag> expected = new ArrayList<>();
-		expected.add(tag1);
-		expected.add(tag2);
-		expected.add(tag3);
+		when(tagRepo.findAll()).thenReturn(expected);
 		List<Tag> result = tagService.getAllTags();
-		assertThat(result).isEqualTo(expected);
+		assertEquals(expected, result);
 	}
 	
 	@Test
