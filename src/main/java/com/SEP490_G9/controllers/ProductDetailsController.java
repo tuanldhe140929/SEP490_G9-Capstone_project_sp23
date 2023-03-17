@@ -48,18 +48,30 @@ public class ProductDetailsController {
 	}
 	
 
-//	@GetMapping(value = "/getProductsBySeller")
-//	public ResponseEntity<?> getProductsBySeller(@RequestParam("sellerid") Long sellerid,
-//			@RequestParam("keyword") String keyword, @RequestParam("categoryid") int categoryid,
-//			@RequestParam("min") int min, @RequestParam("max") int max) {
-//		List<ProductDetails> finalList = productDetailsService.getProductBySeller(sellerid, keyword, categoryid, min,
-//				max);
-//		List<ProductDetailsDTO> finalListDto = new ArrayList<>();
-//		for (ProductDetails result : finalList) {
-//			finalListDto.add(new ProductDetailsDTO(result));
-//		}
-//		return ResponseEntity.ok(finalListDto);
-//	}
+	@GetMapping(value = "/getProductsBySellerForSeller")
+	public ResponseEntity<?> getProductsBySellerForSeller(@RequestParam("sellerid") Long sellerid,
+			@RequestParam("keyword") String keyword, @RequestParam("categoryid") int categoryid,
+			@RequestParam("min") int min, @RequestParam("max") int max) {
+		List<ProductDetails> finalList = productDetailsService.getProductBySellerForSeller(sellerid, keyword, categoryid, min,
+				max);
+		List<ProductDetailsDTO> finalListDto = new ArrayList<>();
+		for (ProductDetails result : finalList) {
+			finalListDto.add(new ProductDetailsDTO(result));
+		}
+		return ResponseEntity.ok(finalListDto);
+	}
+	
+	@GetMapping(value = "/getProductsBySellerForUser")
+	public ResponseEntity<?> getProductsBySellerForUser(@RequestParam("sellerid") Long sellerid,
+			@RequestParam("keyword") String keyword, @RequestParam("categoryid") int categoryid,
+			@RequestParam("min") int min, @RequestParam("max") int max){
+		List<ProductDetails> finalList = productDetailsService.getProductBySellerForUser(sellerid, keyword, categoryid, min, max);
+		List<ProductDetailsDTO> finalListDto = new ArrayList<>();
+		for(ProductDetails result: finalList) {
+			finalListDto.add(new ProductDetailsDTO(result));
+		}
+		return ResponseEntity.ok(finalListDto);
+	}
 
 	@GetMapping(value = "getPublishedProductsBySeller")
 	public ResponseEntity<?> getProductsBySeller(@RequestParam(name = "sellerId") Long sellerId) {
@@ -105,6 +117,8 @@ public class ProductDetailsController {
 		ProductDetailsDTO dto = new ProductDetailsDTO(newPD);
 		return ResponseEntity.ok(dto);
 	}
+	
+	
 	
 //	@GetMapping(value = "allPendingProducts")
 //	public ResponseEntity<?> getAllPendingProducts(){

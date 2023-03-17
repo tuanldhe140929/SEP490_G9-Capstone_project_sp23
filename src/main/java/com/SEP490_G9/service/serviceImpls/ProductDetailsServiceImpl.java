@@ -170,13 +170,17 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 
 	@Override
 	public List<ProductDetails> getByKeyword(List<ProductDetails> listPd, String keyword) {
-		List<ProductDetails> pdByKeyword = new ArrayList<>();
-		for(ProductDetails pd: listPd) {
-			if(pd.getName().trim().replaceAll("\\s+", " ").toLowerCase().contains(keyword.trim().toLowerCase().replaceAll("\\s+", " "))) {
-				pdByKeyword.add(pd);
+		if(keyword.trim().isEmpty()) {
+			return listPd;
+		}else {
+			List<ProductDetails> pdByKeyword = new ArrayList<>();
+			for(ProductDetails pd: listPd) {
+				if(pd.getName().trim().replaceAll("\\s+", " ").toLowerCase().contains(keyword.trim().toLowerCase().replaceAll("\\s+", " "))) {
+					pdByKeyword.add(pd);
+				}
 			}
+			return pdByKeyword;
 		}
-		return pdByKeyword;
 	}
 
 	@Override
@@ -405,6 +409,7 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 	
 	// By Quan Nguyen
 	
+	//hien san pham theo tu khoa
 	@Override
 	public List<ProductDetails> getProductForSearching(String keyword, int categoryid, int min, int max) {
 		List<ProductDetails> allPd = getAll();
@@ -418,18 +423,35 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		return finalResult;
 	}
 
+	//hien san pham nguoi dung cho chinh no
 	@Override
 	public List<ProductDetails> getProductBySellerForSeller(long sellerId, String keyword, int categoryId, int min,
 			int max) {
-		// TODO Auto-generated method stub
-		return null;
+		List<ProductDetails> allPd = getAll();
+		List<ProductDetails> allEnabledPd = getByEnabled(allPd);
+		List<ProductDetails> allLatestPd = getByLatestVer(allEnabledPd);
+		List<ProductDetails> allKeywordPd = getByKeyword(allLatestPd, keyword);
+		List<ProductDetails> allCategoryPd = getByCategory(allKeywordPd, categoryId);
+		List<ProductDetails> allPricePd = getByPriceRange(allCategoryPd, min, max);
+		List<ProductDetails> allSellerPd = getBySeller(allPricePd, sellerId);
+		return allSellerPd;
 	}
 
+	//hien san pham nguoi dung cho nguoi khac
 	@Override
 	public List<ProductDetails> getProductBySellerForUser(long sellerId, String keyword, int categoryId, int min,
 			int max) {
-		// TODO Auto-generated method stub
-		return null;
+		List<ProductDetails> allPd = getAll();
+		List<ProductDetails> allApprovedPd = getByApproved(allPd);
+		List<ProductDetails> allEnabledPd = getByEnabled(allApprovedPd);
+		List<ProductDetails> allPublishedPd = getByPublished(allEnabledPd);
+		List<ProductDetails> allLatestPd = getByLatestVer(allPublishedPd);
+		List<ProductDetails> allKeywordPd = getByKeyword(allLatestPd, keyword);
+		List<ProductDetails> allCategoryPd = getByCategory(allKeywordPd, categoryId);
+		List<ProductDetails> allPricePd = getByPriceRange(allCategoryPd, min, max);
+		List<ProductDetails> allSellerPd = getBySeller(allPricePd, sellerId);
+		return allSellerPd;
+
 	}
 
 	
