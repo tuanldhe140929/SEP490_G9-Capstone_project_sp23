@@ -8,6 +8,9 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./staff-base.component.css']
 })
 export class StaffBaseComponent {
+
+  routerName = 'productApproval';
+
   constructor(
     private authService: AuthService,
     private router: Router
@@ -20,5 +23,9 @@ export class StaffBaseComponent {
         this.router.navigate(['login']);
       }
     )
+  }
+
+  openProductApproval(){
+
   }
 }

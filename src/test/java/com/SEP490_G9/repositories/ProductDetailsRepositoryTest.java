@@ -45,6 +45,7 @@ public class ProductDetailsRepositoryTest {
 		assertNull(result);
 	}
 
+
 	@Test
 	public void testFindByProductIdN() {
 		List<ProductDetails> result = pdRepo.findByProductId(1L);
@@ -79,7 +80,6 @@ public class ProductDetailsRepositoryTest {
 		boolean expected = true;
 		assertThat(result).isEqualTo(expected);
 	}
-	
 	@Test
 	public void testExistByIdAndVersionA() {
 		Long existPid = -1L;

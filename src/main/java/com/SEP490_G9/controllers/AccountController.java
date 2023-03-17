@@ -136,13 +136,13 @@ public class AccountController {
 
 	@PostMapping("addStaff")
 	public ResponseEntity<?> addStaff(@RequestBody Account staff) {
-		boolean canAdd = accountService.addStaff(staff);
-		return ResponseEntity.ok(canAdd);
+		Account addedStaff = accountService.addStaff(staff);
+		return ResponseEntity.ok(addedStaff);
 	}
 
-	@PutMapping("updateStaffStatus/{id}")
+	@PutMapping("updateStaffStatus")
 	public ResponseEntity<?> updateStaffStatus(@PathVariable(name = "id") Long id) {
-		boolean canUpdate = accountService.updateStaffStatus(id);
-		return ResponseEntity.ok(canUpdate);
+		Account updatedStaff = accountService.updateStaffStatus(id);
+		return ResponseEntity.ok(updatedStaff);
 	}
 }

@@ -2,6 +2,8 @@ package com.SEP490_G9.services;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,16 +38,27 @@ class CategoryServiceTest {
 	CategoryServiceImpl categoryService;
 	
 	@Test
-	void testGetAllCategoriesN() {
-		Category cat1 = new Category(1, "Sprite");
-		Category cat2 = new Category(2, "Music");
-		Category cat3 = new Category(3, "Sound Effect");
+	void testGetAllCategories() {
 		List<Category> expected = new ArrayList<>();
+		Category cat1 = new Category();
+		cat1.setId(1);
+		cat1.setName("Name");
+		
+		Category cat2 = new Category();
+		cat2.setId(2);
+		cat2.setName("Name");
+		
+		categoryRepo.save(cat1);
+		categoryRepo.save(cat2);
+		
+		when(categoryRepo.findAll()).thenReturn(expected);
 		expected.add(cat1);
 		expected.add(cat2);
-		expected.add(cat3);
+		
 		List<Category> result = categoryService.getAllCategories();
-		assertThat(result).isEqualTo(expected);
+		assertNotEquals(expected, null);
+		assertEquals(expected, result);
+		assertEquals(expected.size(), 2);
 	}
 	
 	
