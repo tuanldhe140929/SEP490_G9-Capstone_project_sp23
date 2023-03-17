@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.SEP490_G9.common.Md5Hash;
+import com.SEP490_G9.common.VirusTotalAPI;
 import com.SEP490_G9.dto.ProductFileDTO;
 import com.SEP490_G9.entities.CartItem;
 import com.SEP490_G9.entities.Product;
@@ -67,6 +68,9 @@ public class ProductFileServiceImpl implements ProductFileService {
 
 	@Autowired
 	Md5Hash downloadTokenUtil;
+
+	@Autowired
+	VirusTotalAPI virusTotalApi;
 
 	@Override
 	public ProductFile createProductFile(ProductFile productFile) {
@@ -155,12 +159,13 @@ public class ProductFileServiceImpl implements ProductFileService {
 
 		Path tempFilePath = createTempFile(productFile);
 
-		boolean isSafe;
+		boolean isSafe = false;
 		File file = new File(tempFilePath.toString());
-//		isSafe = VirusTotalAPI.scanFile(file);
-//		System.out.println("isSafe?" + isSafe);
-
-//		if (isSafe) {
+//		try {
+//			isSafe = virusTotalApi.scanFile(file);
+//		} catch (IOException e1) {
+//			throw new FileUploadException("Cannot scan file");
+//		}
 		if (true) {
 			try {
 				Files.deleteIfExists(tempFilePath);
@@ -172,6 +177,7 @@ public class ProductFileServiceImpl implements ProductFileService {
 			fileDir.mkdirs();
 			String storedPath = fileIOService.storeV2(productFile, ROOT_LOCATION + fileLocation);
 			ProductFile pf = new ProductFile(storedPath.replace(ROOT_LOCATION, ""), productFile, productDetails);
+			System.out.println(pf.getName());
 			ProductFile savedFile = createProductFile(pf);
 			ret = new ProductFileDTO(savedFile);
 		} else {
@@ -258,10 +264,10 @@ public class ProductFileServiceImpl implements ProductFileService {
 		// Compress the files into a zip archive
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		ZipOutputStream zos = new ZipOutputStream(baos);
-		
+
 		try {
 			ZipEntry zipEntry = new ZipEntry(activeVersion.getName());
-		    zos.putNextEntry(zipEntry);
+			zos.putNextEntry(zipEntry);
 			for (File file : productFiles) {
 				ZipEntry entry = new ZipEntry(file.getName());
 				zos.putNextEntry(entry);
@@ -284,11 +290,11 @@ public class ProductFileServiceImpl implements ProductFileService {
 
 			}
 		}
-		ByteArrayResource resource = new ByteArrayResource(baos.toByteArray()){
-		    @Override
-		    public String getFilename() {
-		        return "product.zip";
-		    }
+		ByteArrayResource resource = new ByteArrayResource(baos.toByteArray()) {
+			@Override
+			public String getFilename() {
+				return "product.zip";
+			}
 		};
 		return resource;
 	}
@@ -313,5 +319,13 @@ public class ProductFileServiceImpl implements ProductFileService {
 //			}
 //		}
 		return true;
+	}
+
+	public String getROOT_LOCATION() {
+		return ROOT_LOCATION;
+	}
+
+	public void setROOT_LOCATION(String rOOT_LOCATION) {
+		ROOT_LOCATION = rOOT_LOCATION;
 	}
 }

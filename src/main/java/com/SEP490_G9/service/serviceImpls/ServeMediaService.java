@@ -45,7 +45,7 @@ public class ServeMediaService implements ServeMediaServiceImpl {
 	}
 
 
-	private ResponseEntity<ResourceRegion> getVideoRegion(String rangeHeader, String directory) throws IOException {
+	public ResponseEntity<ResourceRegion> getVideoRegion(String rangeHeader, String directory) throws IOException {
 		FileUrlResource videoResource = new FileUrlResource(directory);
 		ResourceRegion resourceRegion = getResourceRegion(videoResource, rangeHeader);
 
@@ -54,7 +54,8 @@ public class ServeMediaService implements ServeMediaServiceImpl {
 				.body(resourceRegion);
 	}
 
-	private ResourceRegion getResourceRegion(UrlResource video, String httpHeaders) throws IOException {
+	@Override
+	public ResourceRegion getResourceRegion(UrlResource video, String httpHeaders) throws IOException {
 		ResourceRegion resourceRegion = null;
 		long contentLength = video.contentLength();
 		int fromRange = 0;

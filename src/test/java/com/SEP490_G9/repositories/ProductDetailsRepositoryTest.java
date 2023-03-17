@@ -1,6 +1,7 @@
 package com.SEP490_G9.repositories;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
@@ -28,18 +29,32 @@ public class ProductDetailsRepositoryTest {
 	ProductDetailsRepository pdRepo;
 
 	@Test
-	public void testFindByProductIdAndVersion() {
+	public void testFindByProductIdAndVersionN() {
 		Long expectedId = 1L;
 		String expectedVersion = "1.0.0";
 		ProductDetails result = pdRepo.findByProductIdAndProductVersionKeyVersion(expectedId, expectedVersion);
 		assertThat(result.getProduct().getId()).isEqualTo(expectedId);
 		assertThat(result.getVersion()).isEqualTo(expectedVersion);
 	}
+	
+	@Test
+	public void testFindByProductIdAndVersionB() {
+		Long expectedId = 1L;
+		String expectedVersion = "1";
+		ProductDetails result = pdRepo.findByProductIdAndProductVersionKeyVersion(expectedId, expectedVersion);
+		assertNull(result);
+	}
 
 	@Test
-	public void testFindByProductId() {
+	public void testFindByProductIdN() {
 		List<ProductDetails> result = pdRepo.findByProductId(1L);
 		assertThat(result.get(0).getProduct().getId()).isEqualTo(1L);
+	}
+	
+	@Test
+	public void testFindByProductIdA() {
+		List<ProductDetails> result = pdRepo.findByProductId(-99L);
+		assertThat(result.size()).isEqualTo(0);
 	}
 
 	@Test
@@ -48,13 +63,29 @@ public class ProductDetailsRepositoryTest {
 		List<ProductDetails> result = pdRepo.findByNameContaining(searchString);
 		assertTrue(result.get(0).getName().contains(searchString));
 	}
+	
+	@Test
+	public void testFindByNameContainingB() {
+		String searchString = "";
+		List<ProductDetails> result = pdRepo.findByNameContaining(searchString);
+		assertTrue(result.get(0).getName().contains(searchString));
+	}
 
 	@Test
-	public void test1() {
+	public void testExistByIdAndVersionN() {
 		Long existPid = 1L;
 		String existVersion = "1.0.0";
 		boolean result = pdRepo.existsByProductIdAndProductVersionKeyVersion(existPid, existVersion);
 		boolean expected = true;
+		assertThat(result).isEqualTo(expected);
+	}
+	
+	@Test
+	public void testExistByIdAndVersionA() {
+		Long existPid = -1L;
+		String existVersion = "1.0.0";
+		boolean result = pdRepo.existsByProductIdAndProductVersionKeyVersion(existPid, existVersion);
+		boolean expected = false;
 		assertThat(result).isEqualTo(expected);
 	}
 }

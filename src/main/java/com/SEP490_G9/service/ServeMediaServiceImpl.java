@@ -13,4 +13,6 @@ public interface ServeMediaServiceImpl {
 
 	ResponseEntity<ResourceRegion> serveVideo(String dir, String rangeHeader) throws IOException;
 
+	ResourceRegion getResourceRegion(Object any, Object any2);
+
 }

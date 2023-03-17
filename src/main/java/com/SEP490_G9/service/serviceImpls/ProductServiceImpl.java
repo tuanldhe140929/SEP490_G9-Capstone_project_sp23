@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.SEP490_G9.entities.Account;
+import com.SEP490_G9.entities.License;
 import com.SEP490_G9.entities.Product;
 import com.SEP490_G9.entities.ProductDetails;
 import com.SEP490_G9.entities.Seller;
@@ -23,6 +24,7 @@ import com.SEP490_G9.exception.FileUploadException;
 import com.SEP490_G9.entities.Product;
 import com.SEP490_G9.entities.Seller;
 import com.SEP490_G9.exception.ResourceNotFoundException;
+import com.SEP490_G9.repository.LicenseRepository;
 import com.SEP490_G9.repository.ProductDetailsRepository;
 import com.SEP490_G9.repository.ProductRepository;
 import com.SEP490_G9.service.FileIOService;
@@ -50,6 +52,9 @@ public class ProductServiceImpl implements ProductService {
 
 	@Autowired
 	SellerService sellerService;
+	
+	@Autowired
+	LicenseRepository licenseRepository;
 
 	@Override
 	public Product createProduct(Product product) {
@@ -93,7 +98,7 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public boolean deleteProductById(Long id) {
 		Seller seller = getCurrentSeller();
-		Product product = productRepository.findById(id).get();
+		Product product = productRepository.findById(id).orElseThrow();
 		product.setEnabled(false);
 		productRepository.save(product);
 		if (product == null || product.getSeller() != seller) {
@@ -102,7 +107,7 @@ public class ProductServiceImpl implements ProductService {
 		return true;
 	}
 
-	private Seller getCurrentSeller() {
+	public Seller getCurrentSeller() {
 		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
 				.getAccount();
 		Seller seller = sellerService.getSellerById(account.getId());
@@ -111,7 +116,7 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public Product getProductById(Long productId) {
-		Product product = productRepository.findById(productId).get();
+		Product product = productRepository.findById(productId).orElseThrow();
 		if (product == null) {
 			throw new ResourceNotFoundException("product", "id", productId);
 		}
@@ -133,7 +138,7 @@ public class ProductServiceImpl implements ProductService {
 
 	}
 
-	private String getCoverImageLocation(ProductDetails productDetails) {
+	public String getCoverImageLocation(ProductDetails productDetails) {
 //		return getSellerProductsDataLocation(productDetails.getProduct().getSeller()) + "\\"
 //				+ productDetails.getProduct().getId() + "\\" + productDetails.getVersion() + "\\"
 //				+ PRODUCT_COVER_IMAGE_FOLDER_NAME + "\\";
@@ -141,7 +146,7 @@ public class ProductServiceImpl implements ProductService {
 				+ productDetails.getProduct().getId() + "\\";
 	}
 
-	private String getProductFilesLocation(ProductDetails productDetails) {
+	public String getProductFilesLocation(ProductDetails productDetails) {
 //		return getSellerProductsDataLocation(productDetails.getProduct().getSeller()) + "\\"
 //				+ productDetails.getProduct().getId() + "\\" + productDetails.getVersion() + "\\"
 //				+ PRODUCT_FILES_FOLDER_NAME + "\\";
@@ -149,7 +154,7 @@ public class ProductServiceImpl implements ProductService {
 				+ productDetails.getProduct().getId() + "\\";
 	}
 
-	private String getPreviewsLocation(ProductDetails productDetails) {
+	public String getPreviewsLocation(ProductDetails productDetails) {
 //		return getSellerProductsDataLocation(productDetails.getProduct().getSeller()) + "\\"
 //				+ productDetails.getProduct().getId() + "\\" + productDetails.getVersion() + "\\"
 //				+ PRODUCT_PREVIEWS_FOLDER_NAME + "\\";
@@ -157,7 +162,7 @@ public class ProductServiceImpl implements ProductService {
 				+ productDetails.getProduct().getId() + "\\";
 	}
 
-	private String getSellerProductsDataLocation(Seller seller) {
+	public String getSellerProductsDataLocation(Seller seller) {
 		return "account_id_" + seller.getId() + "\\" + PRODUCT_FOLDER_NAME;
 	}
 
@@ -219,6 +224,19 @@ public class ProductServiceImpl implements ProductService {
 			productRepository.save(product);
 			return "REJECTED";
 		}
+	}
+
+	@Override
+	public List<License> getAllLicense() {
+	return licenseRepository.findAll();
+	}
+
+	public String getROOT_LOCATION() {
+		return ROOT_LOCATION;
+	}
+
+	public void setROOT_LOCATION(String rOOT_LOCATION) {
+		ROOT_LOCATION = rOOT_LOCATION;
 	}
 	
 

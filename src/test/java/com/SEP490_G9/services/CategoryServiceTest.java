@@ -36,7 +36,7 @@ class CategoryServiceTest {
 	CategoryServiceImpl categoryService;
 	
 	@Test
-	void testGetAllCategories() {
+	void testGetAllCategoriesN() {
 		Category cat1 = new Category(1, "Sprite");
 		Category cat2 = new Category(2, "Music");
 		Category cat3 = new Category(3, "Sound Effect");
@@ -48,8 +48,9 @@ class CategoryServiceTest {
 		assertThat(result).isEqualTo(expected);
 	}
 	
+	
 	@Test
-	void testAddCategory() {
+	void testAddCategoryN() {
 		boolean expected = true;
 		Category category = new Category(50, "Story");
 		Mockito.when(categoryRepo.save(category)).thenReturn(category);

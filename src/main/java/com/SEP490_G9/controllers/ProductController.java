@@ -40,7 +40,6 @@ import com.SEP490_G9.exception.ResourceNotFoundException;
 import com.SEP490_G9.repository.PreviewRepository;
 import com.SEP490_G9.repository.ProductDetailsRepository;
 import com.SEP490_G9.service.FileIOService;
-import com.SEP490_G9.service.LicenseService;
 import com.SEP490_G9.service.PreviewService;
 import com.SEP490_G9.service.ProductDetailsService;
 import com.SEP490_G9.service.ProductFileService;
@@ -71,14 +70,11 @@ public class ProductController {
 	ProductFileService productFileService;
 
 	@Autowired
-	LicenseService licenseService;
-
-	@Autowired
 	ProductDetailsRepository productDetailsRepo;
 
 	@GetMapping("getLicense")
 	public ResponseEntity<?> getAllLicense() {
-		List<License> licenses = licenseService.getAllLicense();
+		List<License> licenses = productService.getAllLicense();
 		return ResponseEntity.ok(licenses);
 	}
 
