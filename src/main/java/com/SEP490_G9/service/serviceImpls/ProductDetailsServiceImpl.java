@@ -22,6 +22,7 @@ import com.SEP490_G9.entities.ProductFile;
 import com.SEP490_G9.entities.Seller;
 import com.SEP490_G9.entities.Tag;
 import com.SEP490_G9.exception.DuplicateFieldException;
+import com.SEP490_G9.exception.NumberException;
 import com.SEP490_G9.exception.ResourceNotFoundException;
 import com.SEP490_G9.repository.ProductDetailsRepository;
 import com.SEP490_G9.repository.ProductFileRepository;
@@ -206,6 +207,12 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 
 	@Override
 	public List<ProductDetails> getByPriceRange(List<ProductDetails> listPd, int min, int max) {
+		if(min > max) {
+			throw new NumberException("Min cannot be greater than max");
+		}
+		if(min < 0 || max < 0) {
+			throw new NumberException("Min or max cannot be negative");
+		}
 		List<ProductDetails> pdByPriceRange = new ArrayList<>();
 		for(ProductDetails pd: listPd) {
 			if(pd.getPrice()>=min&&pd.getPrice()<=max) {
@@ -220,8 +227,12 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 	@Override
 	public ProductDetails getActiveVersion(Long productId) {
 		Product product = productRepo.findById(productId).orElseThrow();
-		ProductDetails ret = productDetailsRepo.findByProductIdAndProductVersionKeyVersion(productId,
-				product.getActiveVersion());
+		ProductDetails ret = null;
+		for(ProductDetails pd: product.getProductDetails()) {
+			if(pd.getVersion().equals(product.getActiveVersion())) {
+				ret = pd;
+			}
+		}
 		if (ret == null) {
 			throw new ResourceNotFoundException("Product details", "version", product.getActiveVersion());
 		}
