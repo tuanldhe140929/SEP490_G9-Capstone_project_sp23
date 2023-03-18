@@ -17,11 +17,14 @@ public class ProductDTO {
 	private Seller seller;
 
 	private List<ProductDetailsDTO> productDetails = new ArrayList<>();
-
+	
+	private boolean draft;
+	
 	public ProductDTO(Product product) {
 		this.id = product.getId();
 		this.enabled = product.isEnabled();
 		this.seller = product.getSeller();
+		this.draft = product.isDraft();
 		if (product.getProductDetails() != null & product.getProductDetails().size() > 0) {
 			for (ProductDetails pd : product.getProductDetails()) {
 				this.productDetails.add(new ProductDetailsDTO(pd));

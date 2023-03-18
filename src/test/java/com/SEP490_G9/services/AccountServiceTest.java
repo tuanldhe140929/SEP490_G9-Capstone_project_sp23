@@ -126,7 +126,6 @@ class AccountServiceTest {
 		Account account = new Account();
 		account.setId(1L);
 		account.setPassword("asdasdasd");
-
 		when(accountRepo.save(account)).thenReturn(account);
 
 		Account result = accountServiceImpl.update(account);

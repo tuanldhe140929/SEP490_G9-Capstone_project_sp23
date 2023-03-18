@@ -22,18 +22,9 @@ public class Product implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@Override
-	public String toString() {
-		return "Product [id=" + id + ", enabled=" + enabled + ", seller=" + seller + ", activeVersion=" + activeVersion
-				+ ", productDetails=" + productDetails + ", reports=" + reports + "]";
-	}
-
 	@Column(name = "enabled")
 	private boolean enabled = true;
-	
-	@Column(name = "approved")
-	private String approved = "PENDING";
-	
+
 	@ManyToOne
 	@JoinColumn(name = "seller_id", nullable = false)
 	private Seller seller;
@@ -44,10 +35,14 @@ public class Product implements Serializable {
 	@OneToMany(mappedBy = "product")
 	private List<ProductDetails> productDetails = new ArrayList<>();
 
+	@Column(name = "draft")
+	private boolean draft;
+
 	@OneToMany(mappedBy = "product")
 	private List<Report> reports = new ArrayList<>();
 	@OneToMany(mappedBy = "product")
-    private List<Rate> rates = new ArrayList<>();
+	private List<Rate> rates = new ArrayList<>();
+
 	public Product() {
 	}
 
@@ -110,19 +105,22 @@ public class Product implements Serializable {
 	public void setActiveVersion(String activeVersion) {
 		this.activeVersion = activeVersion;
 	}
+
 	public List<Rate> getRates() {
-        return rates;
-    }
+		return rates;
+	}
+
 	public void setRates(List<Rate> rates) {
-        this.rates = rates;
-    }
-
-	public String isApproved() {
-		return approved;
+		this.rates = rates;
+	}
+	
+	public boolean isDraft() {
+		return draft;
 	}
 
-	public void setApproved(String approved) {
-		this.approved = approved;
+	public void setDraft(boolean draft) {
+		this.draft = draft;
 	}
+
 
 }

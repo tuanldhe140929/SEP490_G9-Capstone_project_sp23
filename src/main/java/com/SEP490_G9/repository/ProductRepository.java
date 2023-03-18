@@ -20,8 +20,4 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
 	public List<Product> findByEnabled(boolean enabled);
 
-	public List<Product> findByApproved(boolean b);
-
-	public List<Product> findBySellerIdAndApproved(Long id, boolean b);
-
 }

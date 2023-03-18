@@ -5,10 +5,10 @@ import java.util.Date;
 import java.util.List;
 
 import com.SEP490_G9.entities.Category;
-import com.SEP490_G9.entities.Engine;
 import com.SEP490_G9.entities.License;
 import com.SEP490_G9.entities.Preview;
 import com.SEP490_G9.entities.ProductDetails;
+import com.SEP490_G9.entities.ProductDetails.Status;
 import com.SEP490_G9.entities.ProductFile;
 import com.SEP490_G9.entities.Tag;
 import com.SEP490_G9.repository.PreviewRepository;
@@ -48,8 +48,6 @@ public class ProductDetailsDTO {
 
 	private boolean draft = true;
 
-	private Engine engine;
-
 	private int price = 0;
 
 	private PreviewDTO previewVideo;
@@ -59,7 +57,9 @@ public class ProductDetailsDTO {
 	private SellerDTO seller;
 
 	private List<Tag> tags = new ArrayList<>();
-
+	
+	private Status approved;
+	
 	@NotNull
 	private Category category;
 
@@ -79,12 +79,12 @@ public class ProductDetailsDTO {
 		this.details = productDetails.getDetailDescription();
 		this.instruction = productDetails.getInstruction();
 		this.createdDate = productDetails.getCreatedDate();
+		this.approved = productDetails.getApproved();
 		this.lastModified = productDetails.getLastModified();
-		this.draft = productDetails.isDraft();
+		this.draft = productDetails.getProduct().isDraft();
 		this.price = productDetails.getPrice();
 		this.activeVersion = productDetails.getProduct().getActiveVersion();
 		this.license = productDetails.getLicense();
-		this.engine = productDetails.getEngine();
 		this.previewVideo = getPreviewVideoSource(productDetails);
 		this.previewPictures = getPreviewPicturesSource(productDetails);
 		this.seller = new SellerDTO(productDetails.getProduct().getSeller());
@@ -255,14 +255,6 @@ public class ProductDetailsDTO {
 		this.license = license;
 	}
 
-	public Engine getEngine() {
-		return engine;
-	}
-
-	public void setEngine(Engine engine) {
-		this.engine = engine;
-	}
-
 	public List<Tag> getTags() {
 		return tags;
 	}
@@ -277,6 +269,14 @@ public class ProductDetailsDTO {
 
 	public void setCategory(Category category) {
 		this.category = category;
+	}
+
+	public Status getApproved() {
+		return approved;
+	}
+
+	public void setApproved(Status approved) {
+		this.approved = approved;
 	}
 
 }

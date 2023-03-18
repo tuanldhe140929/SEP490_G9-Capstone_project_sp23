@@ -9,9 +9,8 @@ import com.SEP490_G9.entities.Preview;
 import com.SEP490_G9.entities.ProductDetails;
 
 public interface PreviewService {
+	
 	List<Preview> getByProductDetailsAndType(ProductDetails productDetails, String type);
-
-	boolean deletePreview(Preview preview);
 
 	Preview getById(Long previewId);
 
@@ -19,9 +18,7 @@ public interface PreviewService {
 
 	List<Preview> createPreviews(List<Preview> previews);
 
-	Preview createPreview(Preview preview);
-
-	boolean deleteVideoPreview(Long productId, String version);
+	boolean deletePreviewVideo(Long productId, String version);
 
 	List<PreviewDTO> uploadPreviewPicture(Long productId, String version, MultipartFile previewPicture);
 

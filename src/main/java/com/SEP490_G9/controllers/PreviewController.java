@@ -57,7 +57,7 @@ public class PreviewController {
 	@DeleteMapping(value = "deletePreviewVideo")
 	public ResponseEntity<?> removePreviewVideo(@RequestParam(name = "productId", required = true) Long productId,
 			@RequestParam(name = "version", required = true) String version) throws IOException {
-		boolean ret = previewService.deleteVideoPreview(productId, version);
+		boolean ret = previewService.deletePreviewVideo(productId, version);
 		return ResponseEntity.ok(ret);
 
 	}

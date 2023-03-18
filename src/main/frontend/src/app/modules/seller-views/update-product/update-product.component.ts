@@ -572,6 +572,7 @@ export class UpdateProductComponent implements OnInit {
         formData.append("version", this.product.version);
         const upload$ = this.manageProductService.uploadCoverImage(formData).subscribe(
           (data: string) => {
+			  console.log(this.product);
 			  this.CoverImageUploadBtn.value="";
             this.product.coverImage = data;
             console.log(this.product);
@@ -954,7 +955,7 @@ export class UpdateProductComponent implements OnInit {
       this.productService.createNewVersion(this.product, newVersion).subscribe(
         data => {
           console.log(data);
-          window.location.href = 'http://localhost:4200/product/update/1/' + newVersion;
+          window.location.href = 'http://localhost:4200/product/update/'+this.product.id+'/' + newVersion;
         },
         error => {
           console.log(error);
@@ -1188,8 +1189,13 @@ export class UpdateProductComponent implements OnInit {
     const $request = this.manageProductService.activeVersion(version);
     $request.subscribe(
       (data) => {
-        if (data)
+       
+        if(data==true)
           this.product.activeVersion = version.version;
+          else{
+			     this.fileError = "Phiên bản mục tiêu không có tệp nào để dowload, không thể sử dụng phiên bản này";
+        this.openFileSizeErrorModal();
+		  }
       },
       (error) => {
         this.fileError = "Thay đổi phiên bản sản phảm không thành công";

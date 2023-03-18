@@ -36,25 +36,50 @@ class ProductFileRepositoryTest {
 	}
 
 	@Test
-	void testFindByProductIdAndVersion() {
+	void testFindByProductIdAndVersionN() {
 		ProductDetails pd = new ProductDetails();
 		pd.setProductVersionKey(new ProductVersionKey(1L, "1.0.0"));
 		List<ProductFile> results = productFileRepository.findByProductDetails(pd);
 		assertNotNull(results);
 	}
+	
+	@Test
+	void testFindByProductIdAndVersionA() {
+		ProductDetails pd = new ProductDetails();
+		pd.setProductVersionKey(new ProductVersionKey(0L, "1.0.000000"));
+		List<ProductFile> results = productFileRepository.findByProductDetails(pd);
+		assertEquals(results.size(),0);
+	}
 
 	@Test
-	void testExistByNameAndProductDetails() {
+	void testExistByNameAndProductDetailsN() {
 		ProductDetails pd = new ProductDetails();
 		pd.setProductVersionKey(new ProductVersionKey(1L, "1.0.0"));
 		String existName = "Database V2.drawio.png";
 		boolean result = productFileRepository.existsByNameAndProductDetails(existName, pd);
 		assertTrue(result);
 	}
+	
+	@Test
+	void testExistByNameAndProductDetailsA() {
+		ProductDetails pd = new ProductDetails();
+		pd.setProductVersionKey(new ProductVersionKey(-1L, "1.0.0000000"));
+		String existName = "Database V2.drawio.png";
+		boolean result = productFileRepository.existsByNameAndProductDetails(existName, pd);
+		assertFalse(result);
+	}
 
 	@Test
-	void testDeleteById() {
+	void testDeleteByIdN() {
 		Long id = 2L;
+		assertTrue(productFileRepository.existsById(id));
+		productFileRepository.deleteById(id);
+		assertTrue(!productFileRepository.existsById(id));
+	}
+	
+	@Test
+	void testDeleteByIdB() {
+		Long id = 1L;
 		assertTrue(productFileRepository.existsById(id));
 		productFileRepository.deleteById(id);
 		assertTrue(!productFileRepository.existsById(id));

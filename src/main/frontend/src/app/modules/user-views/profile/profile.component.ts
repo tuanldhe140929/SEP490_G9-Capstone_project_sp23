@@ -76,7 +76,7 @@ export class ProfileComponent implements OnInit {
         if (this.user.avatar == "" || this.user.avatar == null) {  
             this.ProfileImage.setAttribute('src',"http://ssl.gstatic.com/accounts/ui/avatar_2x.png") ;
         } else {
-         this.ProfileImage.setAttribute('src',"http://localhost:9000/public/serveMedia/serveProfileImage?userId=" + this.user.id) ;
+         this.ProfileImage.setAttribute('src',"http://localhost:9000/public/serveMedia/image?source=" + this.getEncodedUrl(this.user.avatar)) ;
         }
         
         console.log(data)
@@ -85,6 +85,11 @@ export class ProfileComponent implements OnInit {
         console.log(error)
       }
     )
+  }
+  
+  getEncodedUrl(source:string){
+	  const encodedSource = encodeURIComponent(source.replace(/\\/g, '/').replace('//', '/').replace(/\(/g, '%28').replace(/\)/g, '%29'));
+	  return encodedSource;
   }
   UpdateInfo() {
     if (this.UsernameInput != null && this.FirstNameInput != null && this.LastNameInput != null) {
