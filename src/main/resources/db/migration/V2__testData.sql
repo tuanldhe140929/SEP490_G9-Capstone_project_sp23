@@ -98,6 +98,8 @@
  
 
 
+ insert into refresh_token(id, expiry_date, token, account_id) values (1, CURRENT_DATE, 'abcd', 1);
+ insert into refresh_token(id, expiry_date, token, account_id) values (2, CURRENT_DATE, 'abcdef', 2);
   
  
  

@@ -17,15 +17,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 	public User findByEmail(String email);
 
-	public List<User> findByRolesIn(Role... roles);
-
-	public User findByRefreshToken(RefreshToken refreshToken);
-
 	Boolean existsByEmail(String email);
 
 	Boolean existsByUsername(String username);
 
 	public List<User> findByEnabled(boolean enabled);
 
-	public User getReferenceById(Long id);
 }
