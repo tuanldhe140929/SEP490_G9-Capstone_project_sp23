@@ -20,4 +20,6 @@ public interface ProductService {
 
 	String uploadCoverImage(MultipartFile coverImage, Long productId, String version);
 
+	String updateProductApprovalStatus(long productId, boolean status);
+	
 }

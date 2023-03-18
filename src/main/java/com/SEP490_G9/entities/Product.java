@@ -31,7 +31,8 @@ public class Product implements Serializable {
 	@Column(name = "enabled")
 	private boolean enabled = true;
 	
-	private boolean approved = false;
+	@Column(name = "approved")
+	private String approved = "PENDING";
 	
 	@ManyToOne
 	@JoinColumn(name = "seller_id", nullable = false)
@@ -116,11 +117,11 @@ public class Product implements Serializable {
         this.rates = rates;
     }
 
-	public boolean isApproved() {
+	public String isApproved() {
 		return approved;
 	}
 
-	public void setApproved(boolean approved) {
+	public void setApproved(String approved) {
 		this.approved = approved;
 	}
 

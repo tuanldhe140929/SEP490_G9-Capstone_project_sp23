@@ -15,7 +15,7 @@
  create table previews (id bigint not null, source varchar(255), type varchar(255), product_id bigint not null, version varchar(255) not null, primary key (id));
  create table product_details (product_id bigint not null, version varchar(255) not null, cover_image varchar(255), upload_date timestamp(6), description varchar(100), detail_description varchar(255), draft boolean, instruction varchar(255), last_update timestamp(6), name varchar(30), price integer, category_id integer, engine_id integer, license_id integer, primary key (product_id, version));
  create table product_details_tag (product_id bigint not null, version varchar(255) not null, tag_id integer not null);
- create table products (id bigint not null, active_version varchar(255), enabled boolean,approved boolean, seller_id bigint not null, primary key (id));
+ create table products (id bigint not null, active_version varchar(255), enabled boolean,approved varchar(255), seller_id bigint not null, primary key (id));
  create table refresh_token (id bigint not null, expiry_date timestamp(6) with time zone not null, token varchar(255) not null, account_id bigint not null, primary key (id));
  create table reports (product_id bigint not null, account_id bigint not null, created_date timestamp(6) not null, description varchar(255) not null, status varchar(255) not null, violation_type_id bigint, primary key (product_id, account_id));
  create table roles (id serial not null, name varchar(255) not null, primary key (id));

@@ -80,7 +80,7 @@ export class ProductService {
     return this.httpClient.get<any>("http://localhost:9000/productDetails/getFilteredProducts", {params});
   }
 
-  getProductsBySeller(sellerid: number, keyword: string,categoryid: number, min: number, max: number): Observable<any>{
+  getProductsBySellerForSeller(sellerid: number, keyword: string,categoryid: number, min: number, max: number): Observable<any>{
     const params = {
       sellerid: sellerid,
       keyword: keyword,
@@ -88,6 +88,17 @@ export class ProductService {
       min: min,
       max: max
     }
-    return this.httpClient.get<any>("http://localhost:9000/productDetails/getProductsBySeller", {params});
+    return this.httpClient.get<any>("http://localhost:9000/productDetails/getProductsBySellerForSeller", {params});
+  }
+
+  getProductsBySellerForUser(sellerid: number, keyword: string,categoryid: number, min: number, max: number): Observable<any>{
+    const params = {
+      sellerid: sellerid,
+      keyword: keyword,
+      categoryid: categoryid,
+      min: min,
+      max: max
+    }
+    return this.httpClient.get<any>("http://localhost:9000/productDetails/getProductsBySellerForUser", {params});
   }
 }

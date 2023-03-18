@@ -5,6 +5,8 @@ import { StaffGuard } from 'src/app/guards/staff.guard';
 import { StaffsComponent } from '../for-admin/for-admin-base/staffs/staffs.component';
 import { CreateReportComponent } from '../user-views/create-report/create-report.component';
 import { ReportedProductListComponent } from './reported-product-list/reported-product-list.component';
+import { ProductApprovalComponent } from './staff-base/product-approval/product-approval.component';
+import { StaffBaseComponent } from './staff-base/staff-base.component';
 
 const routes: Routes = [  
   {
@@ -17,6 +19,19 @@ const routes: Routes = [
   path: 'reportlist',
   component: ReportedProductListComponent,
   title: "",
+  canActivate: [StaffGuard]
+},
+{
+  path: 'staff',
+  component: StaffBaseComponent,
+  children: [
+    {
+      path: '',
+      outlet: 'productApproval',
+      component: ProductApprovalComponent,
+      pathMatch: 'full'
+    },
+  ],
   canActivate: [StaffGuard]
 }];
 

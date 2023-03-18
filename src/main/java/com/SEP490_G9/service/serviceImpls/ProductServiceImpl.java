@@ -3,6 +3,7 @@ package com.SEP490_G9.service.serviceImpls;
 import java.io.File;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import javax.security.sasl.AuthenticationException;
 
@@ -205,4 +206,20 @@ public class ProductServiceImpl implements ProductService {
 		}
 		return false;
 	}
+
+	@Override
+	public String updateProductApprovalStatus(long productId, boolean status) {
+		Product product = productRepository.findById(productId).get();
+		if(status) {
+			product.setApproved("APPROVED");
+			productRepository.save(product);
+			return "APPROVED";
+		}else {
+			product.setApproved("REJECTED");
+			productRepository.save(product);
+			return "REJECTED";
+		}
+	}
+	
+
 }

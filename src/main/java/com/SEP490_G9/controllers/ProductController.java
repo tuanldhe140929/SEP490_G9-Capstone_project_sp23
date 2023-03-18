@@ -196,6 +196,12 @@ public class ProductController {
 		int count = sellerProducts.size();
 		return ResponseEntity.ok(count);
 	}
+	
+	@PostMapping(value = "updateProductApprovalStatus")
+	public ResponseEntity<?> updateProductApprovalStatus(@RequestParam(name = "productId") long productId, @RequestParam(name = "status") boolean status){
+		productService.updateProductApprovalStatus(productId, status);
+		return ResponseEntity.ok(status);
+	}
 
 //	@GetMapping(value = "getProductsByKeyword/{keyword}")
 //	public ResponseEntity<?> getProductsByKeyword(@PathVariable(name = "keyword") String keyword) {
