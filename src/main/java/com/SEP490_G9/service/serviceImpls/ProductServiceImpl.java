@@ -17,6 +17,7 @@ import com.SEP490_G9.entities.Account;
 import com.SEP490_G9.entities.License;
 import com.SEP490_G9.entities.Product;
 import com.SEP490_G9.entities.ProductDetails;
+import com.SEP490_G9.entities.ProductDetails.Status;
 import com.SEP490_G9.entities.Seller;
 import com.SEP490_G9.entities.UserDetailsImpl;
 import com.SEP490_G9.exception.FileUploadException;
@@ -58,7 +59,11 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public Product createProduct(Product product) {
+		Seller seller = getCurrentSeller();
+		product.setSeller(seller);
 		Product createdProduct = productRepository.save(product);
+		List<ProductDetails> ps = productDetailsRepo.findByApproved(Status.NEW);
+		System.out.println(ps.size());
 		createdProduct.getProductDetails().add(createProductDetails(createdProduct, FIRST_PRODUCT_VERSION));
 		return createdProduct;
 
@@ -70,9 +75,9 @@ public class ProductServiceImpl implements ProductService {
 		productDetails.setVersion(version);
 		productDetails.setCreatedDate(new Date());
 		productDetails.setLastModified(new Date());
-		productDetails.setDraft(true);
+		productDetails.setApproved(Status.NEW);
 		ProductDetails savedProductDetails = productDetailsRepo.save(productDetails);
-
+		
 		String coverImageDestination = getCoverImageLocation(productDetails);
 		String filesDestination = getProductFilesLocation(productDetails);
 		String previewsDestinations = getPreviewsLocation(productDetails);
@@ -131,33 +136,31 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public boolean setActiveVersion(Long productId, String version) {
 		Product product = productRepository.findById(productId).orElseThrow();
-		if (productDetailsRepo.existsByProductIdAndProductVersionKeyVersion(productId, version))
+		ProductDetails pd = productDetailsRepo.findByProductIdAndProductVersionKeyVersion(productId, version);
+		if(pd==null){
+			throw new ResourceNotFoundException("product details","id and version",productId + " "+ version);
+		}
+		if(pd.getFiles().size()>0) {
 			product.setActiveVersion(version);
-		productRepository.save(product);
-		return true;
+			productRepository.save(product);
+			return true;
+		}else {
+			return false;
+		}
 
 	}
 
 	public String getCoverImageLocation(ProductDetails productDetails) {
-//		return getSellerProductsDataLocation(productDetails.getProduct().getSeller()) + "\\"
-//				+ productDetails.getProduct().getId() + "\\" + productDetails.getVersion() + "\\"
-//				+ PRODUCT_COVER_IMAGE_FOLDER_NAME + "\\";
 		return getSellerProductsDataLocation(productDetails.getProduct().getSeller()) + "\\"
 				+ productDetails.getProduct().getId() + "\\";
 	}
 
 	public String getProductFilesLocation(ProductDetails productDetails) {
-//		return getSellerProductsDataLocation(productDetails.getProduct().getSeller()) + "\\"
-//				+ productDetails.getProduct().getId() + "\\" + productDetails.getVersion() + "\\"
-//				+ PRODUCT_FILES_FOLDER_NAME + "\\";
 		return getSellerProductsDataLocation(productDetails.getProduct().getSeller()) + "\\"
 				+ productDetails.getProduct().getId() + "\\";
 	}
 
 	public String getPreviewsLocation(ProductDetails productDetails) {
-//		return getSellerProductsDataLocation(productDetails.getProduct().getSeller()) + "\\"
-//				+ productDetails.getProduct().getId() + "\\" + productDetails.getVersion() + "\\"
-//				+ PRODUCT_PREVIEWS_FOLDER_NAME + "\\";
 		return getSellerProductsDataLocation(productDetails.getProduct().getSeller()) + "\\"
 				+ productDetails.getProduct().getId() + "\\";
 	}
@@ -165,13 +168,6 @@ public class ProductServiceImpl implements ProductService {
 	public String getSellerProductsDataLocation(Seller seller) {
 		return "account_id_" + seller.getId() + "\\" + PRODUCT_FOLDER_NAME;
 	}
-
-	// danh cho V2
-//	private String getProductVersionDataLocation(ProductDetails pd) {
-////		return getSellerProductsDataLocation(pd.getProduct().getSeller()) + "\\" + pd.getProduct().getId() + "\\"
-////				+ pd.getVersion() + "\\";
-//		return getSellerProductsDataLocation(pd.getProduct().getSeller()) + "\\" + pd.getProduct().getId() + "\\";
-//	}
 
 	@Override
 	public String uploadCoverImage(MultipartFile coverImage, Long productId, String version) {
@@ -183,7 +179,7 @@ public class ProductServiceImpl implements ProductService {
 
 			ProductDetails productDetails = null;
 			for (ProductDetails pd : product.getProductDetails()) {
-				if (pd.getVersion().equalsIgnoreCase(product.getActiveVersion())) {
+				if (pd.getVersion().equalsIgnoreCase(version)) {
 					productDetails = pd;
 					break;
 				}
@@ -214,16 +210,17 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public String updateProductApprovalStatus(long productId, boolean status) {
-		Product product = productRepository.findById(productId).get();
-		if(status) {
-			product.setApproved("APPROVED");
-			productRepository.save(product);
-			return "APPROVED";
-		}else {
-			product.setApproved("REJECTED");
-			productRepository.save(product);
-			return "REJECTED";
-		}
+//		Product product = productRepository.findById(productId).get();
+//		if(status) {
+//			product.setApproved("APPROVED");
+//			productRepository.save(product);
+//			return "APPROVED";
+//		}else {
+//			product.setApproved("REJECTED");
+//			productRepository.save(product);
+//			return "REJECTED";
+//		}
+		return "";
 	}
 
 	@Override

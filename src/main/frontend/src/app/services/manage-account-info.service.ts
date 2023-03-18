@@ -6,7 +6,7 @@ import { User } from '../DTOS/User';
 
 const changePasswordUrl = "http://localhost:9000/private/profile/changeAccountPassword";
 const ChangeInfoUrl = "http://localhost:9000/private/profile/changeAccountInfo";
-const baseUrl = "http://localhost:9000/private/profile"
+const baseUrl = "http://localhost:9000/user"
 @Injectable({
   providedIn: 'root'
 })
@@ -16,7 +16,7 @@ export class ManageAccountInfoService {
   constructor(private httpClient: HttpClient) { }
 
   getCurrentUserInfo(): Observable<User> {
-    return this.httpClient.get<User>("http://localhost:9000/private/profile/getUserInfo");
+    return this.httpClient.get<User>(baseUrl+'/getUserInfo');
   }
 
   onChangePassword(data: any) {

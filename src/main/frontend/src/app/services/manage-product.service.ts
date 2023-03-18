@@ -62,7 +62,7 @@ export class ManageProductService {
 
   updateProduct(data: any, instructionDetail: string): Observable<Product> {
     console.log(data);
-    return this.httpClient.post<Product>(baseUrl + '/updateProduct', data, {
+    return this.httpClient.post<Product>(productDetailsUrl + '/updateProduct', data, {
       params: {
         instruction: instructionDetail
       }

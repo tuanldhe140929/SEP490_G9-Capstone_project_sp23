@@ -113,18 +113,20 @@ public class ProductFileServiceImpl implements ProductFileService {
 		}
 
 		ProductFile pf = getById(fileId);
-		String version = pf.getProductDetails().getVersion();
+		
 		long id = pf.getProductDetails().getProduct().getId();
-		ProductDetails pd = productDetailsService.getByProductIdAndVersion(id, version);
-		pd.getFiles().remove(pf);
+		int filesSize = pf.getProductDetails().getFiles().size();
+		String version = pf.getProductDetails().getVersion();
 		ProductFileDTO dto = new ProductFileDTO(pf, false);
-
+		
+		ProductDetails pd = productDetailsService.getByProductIdAndVersion(id, version);
 		productFileRepo.deleteById(fileId);
-
-		if (pd.getFiles().size() <= 0) {
-			pd.setDraft(true);
+		filesSize--;
+		Product product = productRepo.findById(id).orElseThrow();
+		if (filesSize <= 0 && pd.getVersion().equalsIgnoreCase(product.getActiveVersion())) {
+			product.setDraft(true);
 			dto.setLastFile(true);
-			productDetailsService.updateProductDetails(pd);
+			productRepo.save(product);
 		}
 		return dto;
 	}

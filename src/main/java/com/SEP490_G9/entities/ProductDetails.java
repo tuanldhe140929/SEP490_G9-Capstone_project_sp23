@@ -11,24 +11,19 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.*;
 
+
+
 @JsonIgnoreProperties(value = { "product", "cartItems" })
 @Entity
 @Table(name = "product_details", uniqueConstraints = {
 		@UniqueConstraint(name = "uk_product_version", columnNames = { "product_id", "version" }) })
 public class ProductDetails implements Serializable {
+	public enum Status {
+		NEW,PENDING,APPROVED,REJECTED
+	}
 
 	@EmbeddedId
 	private ProductVersionKey productVersionKey = new ProductVersionKey();
-
-	@Override
-	public String toString() {
-		return "ProductDetails [productVersionKey=" + productVersionKey + ", product=" + product + ", name=" + name
-				+ ", description=" + description + ", coverImage=" + coverImage + ", detailDescription="
-				+ detailDescription + ", price=" + price + ", instruction=" + instruction + ", draft=" + draft
-				+ ", createdDate=" + createdDate + ", lastModified=" + lastModified + ", license=" + license
-				+ ", category=" + category + ", tags=" + tags + ", previews=" + previews + ", files=" + files
-				+ ", cartItems=" + cartItems + ", engine=" + engine + "]";
-	}
 
 	@MapsId("productId")
 	@ManyToOne
@@ -53,9 +48,6 @@ public class ProductDetails implements Serializable {
 	@Column(name = "instruction")
 	private String instruction;
 
-	@Column(name = "draft")
-	private boolean draft;
-
 	@Column(name = "upload_date")
 	private Date createdDate;
 
@@ -66,6 +58,10 @@ public class ProductDetails implements Serializable {
 	@JoinColumn(name = "license_id")
 	private License license;
 
+	@Enumerated(EnumType.STRING)
+	@Column(name="status")
+	private Status approved = Status.NEW;
+	
 	@ManyToOne
 	@JoinColumn(name = "category_id")
 	private Category category;
@@ -84,10 +80,6 @@ public class ProductDetails implements Serializable {
 
 	@OneToMany(mappedBy = "productDetails", fetch = FetchType.EAGER)
 	private List<CartItem> cartItems = new ArrayList<>();
-
-	@ManyToOne
-	@JoinColumn(name = "engine_id")
-	private Engine engine;
 
 	public ProductDetails() {
 		// TODO Auto-generated constructor stub
@@ -243,20 +235,12 @@ public class ProductDetails implements Serializable {
 		this.cartItems = cartItems;
 	}
 
-	public boolean isDraft() {
-		return draft;
+	public Status getApproved() {
+		return approved;
 	}
 
-	public void setDraft(boolean draft) {
-		this.draft = draft;
-	}
-
-	public Engine getEngine() {
-		return engine;
-	}
-
-	public void setEngine(Engine engine) {
-		this.engine = engine;
+	public void setApproved(Status approved) {
+		this.approved = Status.valueOf(approved.toString().toUpperCase());
 	}
 
 }
