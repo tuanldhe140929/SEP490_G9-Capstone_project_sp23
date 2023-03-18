@@ -30,7 +30,20 @@ class CartRepositoryTest {
 	private CartRepository cartRepository;
 
 	@Test
-	void testfindById() {
+	void testfindByIdN() {
+		User user = new User();
+		user.setId(2L);
+
+		Cart cart1 = new Cart();
+		cart1.setUser(user);
+		cart1.setId(2L);
+
+		Cart result = cartRepository.findById(cart1.getId()).orElseThrow();
+		assertThat(result.getUser().getId()).isEqualTo(user.getId());
+
+	}
+	@Test
+	void testfindByIdB() {
 		User user = new User();
 		user.setId(1L);
 
@@ -40,11 +53,11 @@ class CartRepositoryTest {
 
 		Cart result = cartRepository.findById(cart1.getId()).orElseThrow();
 		assertThat(result.getUser().getId()).isEqualTo(user.getId());
-		
+
 	}
 
 	@Test
-	void testfindFirstByUserOrderByIdDesc() {
+	void testfindFirstByUserOrderByIdDescN() {
 		User user1 = new User();
 		user1.setId(2L);
 
@@ -54,5 +67,29 @@ class CartRepositoryTest {
 		assertThat(result.getId()).isEqualTo(expectedCartId);
 		assertThat(result.getUser().getId()).isEqualTo(expectedUserId);
 	}
-	
+	@Test
+	void testfindFirstByUserOrderByIdDescB() {
+		User user1 = new User();
+		user1.setId(1L);
+
+		Cart result = cartRepository.findFirstByUserOrderByIdDesc(user1);
+		long expectedUserId = 1l;
+		long expectedCartId = 1l;
+		assertThat(result.getId()).isEqualTo(expectedCartId);
+		assertThat(result.getUser().getId()).isEqualTo(expectedUserId);
+	}
+
+	@Test
+	void testSaveCartN() {
+		 	User user = new User();
+		    user.setId(1L);
+
+		    Cart cart = new Cart(user);
+		    cart.setId(1l);
+		    Cart result  = cartRepository.save(cart);
+		    
+		    assertNotNull(result.getId());
+		    assertThat(result.getUser().getId()).isEqualTo(user.getId());
+	}
+
 }
