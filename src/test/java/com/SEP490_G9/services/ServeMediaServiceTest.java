@@ -29,7 +29,7 @@ import org.springframework.http.MediaTypeFactory;
 import org.springframework.http.ResponseEntity;
 
 import com.SEP490_G9.configs.TestConfig;
-import com.SEP490_G9.service.ServeMediaServiceImpl;
+import com.SEP490_G9.service.serviceImpls.ServeMediaServiceImpl;
 
 
 @RunWith(PowerMockRunner.class)

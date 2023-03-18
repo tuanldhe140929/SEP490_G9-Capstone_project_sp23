@@ -53,7 +53,7 @@
  insert into engines(id, name) VALUES(3,'Godot');
  insert into engines(id, name) VALUES(4,'Cocos');
   
- insert into products (id, active_version, enabled, approved, seller_id) VALUES(1,'1.0.0',true,'APPROVED',2);
+ /*insert into products (id, active_version, enabled, approved, seller_id) VALUES(1,'1.0.0',true,'APPROVED',2);
  insert into products (id, active_version, enabled, approved, seller_id) VALUES(2,'1.0.0',true,'APPROVED',2);
  insert into products (id, active_version, enabled, approved, seller_id) VALUES(3,'1.0.0',true,'REJECTED',2);
  insert into products (id, active_version, enabled, approved, seller_id) VALUES(4,'1.0.0',true,'REJECTED',2);

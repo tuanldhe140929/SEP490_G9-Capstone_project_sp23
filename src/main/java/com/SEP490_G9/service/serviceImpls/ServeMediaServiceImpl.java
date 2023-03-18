@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileUrlResource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.core.io.support.ResourceRegion;
@@ -18,10 +17,10 @@ import org.springframework.stereotype.Service;
 
 import com.SEP490_G9.repository.PreviewRepository;
 import com.SEP490_G9.repository.ProductRepository;
-import com.SEP490_G9.service.ServeMediaServiceImpl;
+import com.SEP490_G9.service.ServeMediaService;
 
 @Service
-public class ServeMediaService implements ServeMediaServiceImpl {
+public class ServeMediaServiceImpl implements ServeMediaService {
 	
 	private static final long CHUNK_SIZE = 1000000L;
 	
@@ -80,5 +79,6 @@ public class ServeMediaService implements ServeMediaServiceImpl {
 
 		return resourceRegion;
 	}
+
 	
 }
