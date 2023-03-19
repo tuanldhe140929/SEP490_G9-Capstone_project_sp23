@@ -45,6 +45,7 @@ class CartItemRepositoryTest {
 		
 		Cart cart = new Cart(user);
 		cart.setId(1l);
+		
 		ProductVersionKey key = new ProductVersionKey();
 		key.setProductId(1l);
 		key.setVersion("1.0.0");

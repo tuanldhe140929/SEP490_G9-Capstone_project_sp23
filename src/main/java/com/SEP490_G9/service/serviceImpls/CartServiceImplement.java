@@ -1,6 +1,7 @@
 package com.SEP490_G9.service.serviceImpls;
 
 import java.util.ArrayList;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,7 +81,7 @@ public class CartServiceImplement implements CartService {
 			cart.getItems().remove(itemToRemove);
 			cartItemRepository.delete(itemToRemove);
 		} else {
-			throw new ResourceNotFoundException("product")
+			throw new ResourceNotFoundException("product");
 		}
 		CartDTO cartDto = new CartDTO(getCurrentCart(), previewRepo);
 		return cartDto;

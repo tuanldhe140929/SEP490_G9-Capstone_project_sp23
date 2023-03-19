@@ -88,15 +88,7 @@
  insert into product_details_tag VALUES(4,'1.0.0',1);
  
 
- insert into carts (id,account_id) VALUES (1,1);
- insert into carts (id,account_id) values (2,2);
- 
- insert into cart_items (cart_id,product_id,version) values(1,1,'1.0.0');
- insert into cart_items (cart_id,product_id,version) values(1,2,'1.0.0');
- insert into cart_items (cart_id,product_id,version) values(2,1,'1.0.0');
- 
- insert into transactions (id, puchased_date,cart_id) values (1,CURRENT_DATE,1)
- insert into transactions (id, puchased_date,cart_id) values (1,CURRENT_DATE,2)
+
 
  insert into previews (id, source, type,product_id, version) VALUES(1,'account_id_2\products\1\(1) file_example_MOV_1920_2_2MB.mov','video',1,'1.0.0');
  insert into previews (id, source, type,product_id, version) VALUES(2,'account_id_2\products\1\Database V2.drawio.png','picture',1,'1.0.0');
@@ -116,8 +108,16 @@
  insert into files (id, name, size, source, type, product_id, version) VALUES(6,'Overall Architecture.drawio (3).png',100,'account_id_2\products\1\Overall Architecture.drawio (3).png','image/png',3,'1.0.0');
  insert into files (id, name, size, source, type, product_id, version) VALUES(7,'Untitled Diagram.drawio.png',100,'account_id_2\products\1\Untitled Diagram.drawio.png','image/png',4,'1.0.0');
  
-
-
+ insert into carts (id,account_id) VALUES (1,1);
+ insert into carts (id,account_id) values (2,2);
+ 
+ insert into cart_items (cart_id,product_id,version) values(1,1,'1.0.0');
+ insert into cart_items (cart_id,product_id,version) values(1,2,'1.0.0');
+ insert into cart_items (cart_id,product_id,version) values(2,1,'1.0.0');
+ 
+ insert into transactions (id,purchased_date,cart_id) values (1,CURRENT_DATE,1);
+ insert into transactions (id,purchased_date,cart_id) values (2,CURRENT_DATE,1);
+ insert into transactions (id,purchased_date,cart_id) values (3,CURRENT_DATE,2);
   
  
  
