@@ -1,5 +1,6 @@
 package com.SEP490_G9.service.authService.authServiceImpl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -50,6 +51,42 @@ public class ReportServiceImpl implements ReportService {
 		return report;
 	}
 
+	@Override
+	public List<Report> getAllReports() {
+		List<Report> allReports = reportRepository.findAll();
+		return allReports;
+	}
+	
+	@Override
+	public List<Report> getByProduct(List<Report> reportList, Product product) {
+		List<Report> reportsByProduct = new ArrayList<>();
+		for(Report report: reportList) {
+			if(report.getProduct().equals(product)) {
+				reportsByProduct.add(report);
+			}
+		}
+		return reportsByProduct;
+	}
 
+	@Override
+	public List<Report> getByUser(List<Report> reportList, User user) {
+		List<Report> reportsByUser = new ArrayList<>();
+		for(Report report: reportList) {
+			if(report.getUser().equals(user)) {
+				reportsByUser.add(report);
+			}
+		}
+		return reportsByUser;
+	}
+
+	@Override
+	public List<Report> getByProductAndUser(long productId, long userId) {
+		Product product = productRepository.findById(productId).get();
+		User user = userRepository.findById(userId).get();
+		List<Report> allReports = getAllReports();
+		List<Report> reportsByProduct = getByProduct(allReports, product);
+		List<Report> reportsByUser = getByUser(reportsByProduct, user);
+		return reportsByUser;
+	}
 
 }

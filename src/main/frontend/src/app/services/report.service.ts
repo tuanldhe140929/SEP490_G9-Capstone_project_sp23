@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class ReportService {
 
-  sendReportUrl = "http://localhost:9000/report/sendReport";
+  BaseUrl = "http://localhost:9000/report";
 
   constructor(private httpClient: HttpClient) { }
 
@@ -18,6 +18,14 @@ export class ReportService {
       description: description,
       violationTypeId: violationTypeId
     }
-    return this.httpClient.post<any>(this.sendReportUrl, null, {params});
+    return this.httpClient.post<any>(this.BaseUrl+"/sendReport", null, {params});
+  }
+
+  getReportByProductAndUser(productId: number, accountId: number): Observable<any>{
+    const params = {
+      productId: productId,
+      accountId: accountId
+    }
+    return this.httpClient.get<any>(this.BaseUrl+"/getByProductAndUser",{params});
   }
 }
