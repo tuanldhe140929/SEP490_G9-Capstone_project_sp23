@@ -5,9 +5,9 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { User } from 'src/app/DTOS/User';
 import { ViolationType } from 'src/app/DTOS/ViolationType';
-import { ManageAccountInfoService } from 'src/app/services/manage-account-info.service';
 import { ReportService } from 'src/app/services/report.service';
 import { StorageService } from 'src/app/services/storage.service';
+import { UserService } from 'src/app/services/user.service';
 import { ViolationTypeService } from 'src/app/services/violation-type.service';
 
 
@@ -27,9 +27,9 @@ export class ReportProductComponent implements OnInit{
     private reportService: ReportService,
     private formBuilder: FormBuilder,
     private storageService: StorageService,
+    private userService: UserService,
     private router: Router,
     private toastr: ToastrService,
-    private manageAccountInfoService: ManageAccountInfoService,
     @Inject(MAT_DIALOG_DATA) public data: any){}
 
     violationTypeId: number;
@@ -43,19 +43,15 @@ export class ReportProductComponent implements OnInit{
   ngOnInit(): void {
     this.getAllVioTypes();
     this.productId = this.data.productId;
-    this.userId = this.data.userId;
+    this.userService.getCurrentUserInfo().subscribe(
+      data => {
+        this.user = data;
+        this.userId = data.id;
+      }
+    )
     this.description = "";
     this.violationTypeId = 0;
-    if (this.storageService.isLoggedIn()) {
-      this.loginStatus = true;
-      this.manageAccountInfoService.getCurrentUserInfo().subscribe(
-        data => {
-          this.user = data;
-        }
-      )
-    } else {
-      this.loginStatus = false;
-    }
+
   }
 
   addReportForm = this.formBuilder.group({
@@ -88,7 +84,7 @@ export class ReportProductComponent implements OnInit{
   }
 
   toSendReport(){
-      this.reportService.sendReport(this.data.productId, this.user.id, this.description, this.violationTypeId).subscribe(
+      this.reportService.sendReport(this.data.productId, this.userId, this.description, this.violationTypeId).subscribe(
         data =>{
           console.log(data);
         }
