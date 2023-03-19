@@ -20,6 +20,7 @@ import com.SEP490_G9.entities.Product;
 import com.SEP490_G9.entities.ProductDetails;
 import com.SEP490_G9.entities.ProductDetails.Status;
 import com.SEP490_G9.entities.ProductFile;
+import com.SEP490_G9.entities.Report;
 import com.SEP490_G9.entities.Seller;
 import com.SEP490_G9.entities.Tag;
 import com.SEP490_G9.exception.DuplicateFieldException;
@@ -28,6 +29,7 @@ import com.SEP490_G9.exception.ResourceNotFoundException;
 import com.SEP490_G9.repository.ProductDetailsRepository;
 import com.SEP490_G9.repository.ProductFileRepository;
 import com.SEP490_G9.repository.ProductRepository;
+import com.SEP490_G9.repository.ReportRepository;
 import com.SEP490_G9.repository.SellerRepository;
 import com.SEP490_G9.service.PreviewService;
 import com.SEP490_G9.service.ProductDetailsService;
@@ -57,6 +59,9 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 
 	@Autowired
 	ProductFileRepository productFileRepo;
+	
+	@Autowired
+	ReportRepository reportRepo;
 
 	//Supporting methods
 	
@@ -442,7 +447,24 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		List<ProductDetails> allPricePd = getByPriceRange(allCategoryPd, min, max);
 		List<ProductDetails> allSellerPd = getBySeller(allPricePd, sellerId);
 		return allSellerPd;
+	}
 
+	//hien san pham cho nhan vien dua theo trang thai bao cao
+	@Override
+	public List<ProductDetails> getProductsByReportStatus(String status) {
+		List<ProductDetails> allPd = getAll();
+		List<ProductDetails> latestVer = getByLatestVer(allPd);
+		List<ProductDetails> allPdByReportStatus = new ArrayList<>();
+		for(ProductDetails pd: latestVer) {
+			Product product = pd.getProduct();
+			List<Report> reportList = reportRepo.findAll();
+			for(Report report: reportList) {
+				if(report.getProduct().equals(product)&&report.getStatus().equalsIgnoreCase(status)) {
+					allPdByReportStatus.add(pd);
+				}
+			}
+		}
+		return allPdByReportStatus;
 	}
 
 	

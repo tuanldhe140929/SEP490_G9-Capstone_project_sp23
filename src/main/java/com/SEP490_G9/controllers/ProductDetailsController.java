@@ -168,6 +168,11 @@ public class ProductDetailsController {
 		return ResponseEntity.ok(ret);
 	}
 
+	@GetMapping(value = "getProductsByReportStatus")
+	public ResponseEntity<?> getProductsByReportStatus(@RequestParam(name = "status") String status){
+		List<ProductDetails> reportList = productDetailsService.getProductsByReportStatus(status);
+		return ResponseEntity.ok(reportList);
+	}
 	
 //	@GetMapping(value = "allPendingProducts")
 //	public ResponseEntity<?> getAllPendingProducts(){

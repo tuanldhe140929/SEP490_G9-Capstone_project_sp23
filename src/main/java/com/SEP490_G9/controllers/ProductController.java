@@ -147,14 +147,14 @@ public class ProductController {
 		return ResponseEntity.ok(status);
 	}
 
-//	@GetMapping(value = "getProductsByKeyword/{keyword}")
-//	public ResponseEntity<?> getProductsByKeyword(@PathVariable(name = "keyword") String keyword) {
-//		List<ProductDetails> searchResult = this.productDetailsService.getByKeyword(keyword);
-//		List<ProductDetailsDTO> searchResultDto = new ArrayList<>();
-//		for (ProductDetails result : searchResult) {
-//			searchResultDto.add(new ProductDetailsDTO(result));
-//		}
-//		return ResponseEntity.ok(searchResultDto);
-//	}
+	@GetMapping(value = "getProductsByReportStatus")
+	public ResponseEntity<?> getProductsByReportStatus(@RequestParam(name = "reportStatus") String reportStatus){
+		List<Product> allProductsByStatus = productService.getAllProductsByReportStatus(reportStatus);
+		List<Product> allDtoProducts = new ArrayList<>();
+		for(Product product: allProductsByStatus) {
+			allDtoProducts.add(product);
+		}
+		return ResponseEntity.ok(allDtoProducts);
+	}
 
 }
