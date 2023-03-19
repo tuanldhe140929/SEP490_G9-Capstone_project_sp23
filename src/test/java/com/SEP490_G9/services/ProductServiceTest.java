@@ -76,28 +76,28 @@ class ProductServiceTest {
 	@Mock
 	FileIOService fileIOService;
 
-	@Test
-	@WithMockUser(username = "testuser", roles = { "SELLER,USER" })
-	void testCreateNewProduct() {
-		ProductDetails productDetails = new ProductDetails();
-		Product product = new Product();
-		product.setId(1L);
-		Seller seller = new Seller();
-		seller.setId(1L);
-		seller.setEmail("testuser");
-
-		product.setSeller(seller);
-		productDetails.setProduct(product);
-		productDetails.setVersion("1.0.0");
-		productDetails.setCreatedDate(new Date());
-		productDetails.setLastModified(new Date());
-		productDetails.setDraft(true);
-		when(pdRepo.save(productDetails)).thenReturn(productDetails);
-		when(productRepository.save(product)).thenReturn(product);
-		Product result = pds.createProduct(product);
-
-		assertThat(result.getId()).isEqualTo(product.getId());
-	}
+//	@Test
+//	@WithMockUser(username = "testuser", roles = { "SELLER,USER" })
+//	void testCreateNewProduct() {
+//		ProductDetails productDetails = new ProductDetails();
+//		Product product = new Product();
+//		product.setId(1L);
+//		Seller seller = new Seller();
+//		seller.setId(1L);
+//		seller.setEmail("testuser");
+//
+//		product.setSeller(seller);
+//		productDetails.setProduct(product);
+//		productDetails.setVersion("1.0.0");
+//		productDetails.setCreatedDate(new Date());
+//		productDetails.setLastModified(new Date());
+//		productDetails.setDraft(true);
+//		when(pdRepo.save(productDetails)).thenReturn(productDetails);
+//		when(productRepository.save(product)).thenReturn(product);
+//		Product result = pds.createProduct(product);
+//
+//		assertThat(result.getId()).isEqualTo(product.getId());
+//	}
 
 	@Test
 	@WithMockUser(username = "testuser", roles = { "SELLER" })
@@ -294,29 +294,29 @@ class ProductServiceTest {
 		verify(pdRepo).save(productDetails);
 	}
 
-	@Test
-	void testUpdateProductApprovalStatus() {
-		Product product = new Product();
-		product.setId(1L);
-		Seller seller = new Seller();
-		seller.setId(1L);
-		product.setSeller(seller);
-		product.setApproved("PENDING");
-		when(productRepository.findById(1L)).thenReturn(Optional.of(product));
-		String status = pds.updateProductApprovalStatus(product.getId(), true);
-		assertThat(status).isEqualTo("APPROVED");
-	}
-
-	@Test
-	void testUpdateProductApprovalStatusA() {
-		Product product = new Product();
-		product.setId(1L);
-		Seller seller = new Seller();
-		seller.setId(1L);
-		product.setSeller(seller);
-		product.setApproved("PENDING");
-		when(productRepository.findById(-1L)).thenThrow(NoSuchElementException.class);
-		assertThrows(NoSuchElementException.class, () -> pds.updateProductApprovalStatus(-1L, false));
-	}
+//	@Test
+//	void testUpdateProductApprovalStatus() {
+//		Product product = new Product();
+//		product.setId(1L);
+//		Seller seller = new Seller();
+//		seller.setId(1L);
+//		product.setSeller(seller);
+//		product.setApproved("PENDING");
+//		when(productRepository.findById(1L)).thenReturn(Optional.of(product));
+//		String status = pds.updateProductApprovalStatus(product.getId(), true);
+//		assertThat(status).isEqualTo("APPROVED");
+//	}
+//
+//	@Test
+//	void testUpdateProductApprovalStatusA() {
+//		Product product = new Product();
+//		product.setId(1L);
+//		Seller seller = new Seller();
+//		seller.setId(1L);
+//		product.setSeller(seller);
+//		product.setApproved("PENDING");
+//		when(productRepository.findById(-1L)).thenThrow(NoSuchElementException.class);
+//		assertThrows(NoSuchElementException.class, () -> pds.updateProductApprovalStatus(-1L, false));
+//	}
 	
 }

@@ -23,6 +23,7 @@ import com.SEP490_G9.configs.TestConfig;
 import com.SEP490_G9.entities.Category;
 import com.SEP490_G9.entities.Product;
 import com.SEP490_G9.entities.ProductDetails;
+import com.SEP490_G9.entities.ProductDetails.Status;
 import com.SEP490_G9.entities.Seller;
 import com.SEP490_G9.exception.NumberException;
 import com.SEP490_G9.repository.ProductDetailsRepository;
@@ -255,24 +256,24 @@ class ProductDetailsServiceTest {
 	void testGetByPending() {
 		Product p1 = new Product();
 		p1.setId(1L);
-		p1.setApproved("APPROVED");
 		
 		Product p2 = new Product();
 		p2.setId(2L);
-		p2.setApproved("REJECTED");
 		
 		Product p3 = new Product();
 		p3.setId(3L);
-		p3.setApproved("PENDING");
 		
 		ProductDetails pd1 = new ProductDetails();
 		pd1.setProduct(p1);
+		pd1.setApproved(Status.APPROVED);
 		
 		ProductDetails pd2 = new ProductDetails();
 		pd2.setProduct(p2);
+		pd2.setApproved(Status.REJECTED);
 		
 		ProductDetails pd3 = new ProductDetails();
 		pd3.setProduct(p3);
+		pd3.setApproved(Status.PENDING);
 		
 		List<ProductDetails> allPd = new ArrayList<>();
 		allPd.add(pd1);
@@ -294,24 +295,24 @@ class ProductDetailsServiceTest {
 	void testGetByApproved() {
 		Product p1 = new Product();
 		p1.setId(1L);
-		p1.setApproved("APPROVED");
 		
 		Product p2 = new Product();
 		p2.setId(2L);
-		p2.setApproved("REJECTED");
 		
 		Product p3 = new Product();
 		p3.setId(3L);
-		p3.setApproved("PENDING");
 		
 		ProductDetails pd1 = new ProductDetails();
 		pd1.setProduct(p1);
+		pd1.setApproved(Status.APPROVED);
 		
 		ProductDetails pd2 = new ProductDetails();
 		pd2.setProduct(p2);
+		pd2.setApproved(Status.REJECTED);
 		
 		ProductDetails pd3 = new ProductDetails();
 		pd3.setProduct(p3);
+		pd3.setApproved(Status.PENDING);
 		
 		List<ProductDetails> allPd = new ArrayList<>();
 		allPd.add(pd1);
@@ -333,24 +334,24 @@ class ProductDetailsServiceTest {
 	void testGetByRejected() {
 		Product p1 = new Product();
 		p1.setId(1L);
-		p1.setApproved("APPROVED");
 		
 		Product p2 = new Product();
 		p2.setId(2L);
-		p2.setApproved("REJECTED");
 		
 		Product p3 = new Product();
 		p3.setId(3L);
-		p3.setApproved("PENDING");
 		
 		ProductDetails pd1 = new ProductDetails();
 		pd1.setProduct(p1);
+		pd1.setApproved(Status.APPROVED);
 		
 		ProductDetails pd2 = new ProductDetails();
 		pd2.setProduct(p2);
+		pd2.setApproved(Status.REJECTED);
 		
 		ProductDetails pd3 = new ProductDetails();
 		pd3.setProduct(p3);
+		pd3.setApproved(Status.PENDING);
 		
 		List<ProductDetails> allPd = new ArrayList<>();
 		allPd.add(pd1);
@@ -372,25 +373,23 @@ class ProductDetailsServiceTest {
 	void testGetByDrafted() {
 		Product p1 = new Product();
 		p1.setId(1L);
+		p1.setDraft(true);
 		
 		Product p2 = new Product();
 		p2.setId(2L);
+		p2.setDraft(false);
 		
 		ProductDetails pd1 = new ProductDetails();
 		pd1.setProduct(p1);
-		pd1.setDraft(false);
 		
 		ProductDetails pd2 = new ProductDetails();
 		pd2.setProduct(p1);
-		pd2.setDraft(true);
 		
 		ProductDetails pd3 = new ProductDetails();
 		pd3.setProduct(p2);
-		pd3.setDraft(false);
 		
 		ProductDetails pd4 = new ProductDetails();
 		pd4.setProduct(p2);
-		pd4.setDraft(false);
 		
 		List<ProductDetails> allPd = new ArrayList<>();
 		allPd.add(pd1);
@@ -399,6 +398,7 @@ class ProductDetailsServiceTest {
 		allPd.add(pd4);
 		
 		List<ProductDetails> expected = new ArrayList<>();
+		expected.add(pd1);
 		expected.add(pd2);
 		
 		when(productDetailsRepo.findAll()).thenReturn(allPd);
@@ -414,25 +414,23 @@ class ProductDetailsServiceTest {
 	void testGetByPublished() {
 		Product p1 = new Product();
 		p1.setId(1L);
+		p1.setDraft(true);
 		
 		Product p2 = new Product();
 		p2.setId(2L);
+		p2.setDraft(false);
 		
 		ProductDetails pd1 = new ProductDetails();
 		pd1.setProduct(p1);
-		pd1.setDraft(false);
 		
 		ProductDetails pd2 = new ProductDetails();
 		pd2.setProduct(p1);
-		pd2.setDraft(true);
 		
 		ProductDetails pd3 = new ProductDetails();
 		pd3.setProduct(p2);
-		pd3.setDraft(false);
 		
 		ProductDetails pd4 = new ProductDetails();
 		pd4.setProduct(p2);
-		pd4.setDraft(false);
 		
 		List<ProductDetails> allPd = new ArrayList<>();
 		allPd.add(pd1);
@@ -441,7 +439,6 @@ class ProductDetailsServiceTest {
 		allPd.add(pd4);
 		
 		List<ProductDetails> expected = new ArrayList<>();
-		expected.add(pd1);
 		expected.add(pd3);
 		expected.add(pd4);
 		
@@ -466,19 +463,15 @@ class ProductDetailsServiceTest {
 		
 		ProductDetails pd1 = new ProductDetails();
 		pd1.setProduct(p1);
-		pd1.setDraft(false);
 		
 		ProductDetails pd2 = new ProductDetails();
 		pd2.setProduct(p1);
-		pd2.setDraft(true);
 		
 		ProductDetails pd3 = new ProductDetails();
 		pd3.setProduct(p2);
-		pd3.setDraft(false);
 		
 		ProductDetails pd4 = new ProductDetails();
 		pd4.setProduct(p2);
-		pd4.setDraft(false);
 		
 		List<ProductDetails> allPd = new ArrayList<>();
 		allPd.add(pd1);
@@ -510,19 +503,15 @@ class ProductDetailsServiceTest {
 		
 		ProductDetails pd1 = new ProductDetails();
 		pd1.setProduct(p1);
-		pd1.setDraft(false);
 		
 		ProductDetails pd2 = new ProductDetails();
 		pd2.setProduct(p1);
-		pd2.setDraft(true);
 		
 		ProductDetails pd3 = new ProductDetails();
 		pd3.setProduct(p2);
-		pd3.setDraft(false);
 		
 		ProductDetails pd4 = new ProductDetails();
 		pd4.setProduct(p2);
-		pd4.setDraft(false);
 		
 		List<ProductDetails> allPd = new ArrayList<>();
 		allPd.add(pd1);
