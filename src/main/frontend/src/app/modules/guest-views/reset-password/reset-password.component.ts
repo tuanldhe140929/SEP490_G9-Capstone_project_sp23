@@ -3,8 +3,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { AuthService } from 'src/app/services/auth.service';
-
+import { AccountService } from 'src/app/services/account.service';
 @Component({
   selector: 'app-reset-password',
   templateUrl: './reset-password.component.html',
@@ -29,7 +28,7 @@ export class ResetPasswordComponent implements OnInit {
 
   constructor(private http: HttpClient,
     private formBuilder: FormBuilder,
-    private authService: AuthService,
+    private accountService: AccountService,
     private router: Router,
     private modalService: NgbModal) {
 
@@ -49,7 +48,7 @@ export class ResetPasswordComponent implements OnInit {
     if (this.resetPasswordRequestForm.valid) {
       if (this.resetPasswordRequestForm.value.email != null) {
         this.email = this.resetPasswordRequestForm.value.email.toString();
-        this.authService.resetPassword(this.resetPasswordRequestForm.value.email.toString()).subscribe(
+        this.accountService.resetPassword(this.resetPasswordRequestForm.value.email.toString()).subscribe(
           data => {
             this.message = "Đặt lại password thành công, hãy kiểm tra email";
           },

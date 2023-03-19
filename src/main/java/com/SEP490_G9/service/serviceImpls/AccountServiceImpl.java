@@ -12,6 +12,7 @@ import com.SEP490_G9.entities.Account;
 import com.SEP490_G9.entities.RefreshToken;
 import com.SEP490_G9.entities.Role;
 import com.SEP490_G9.exception.DuplicateFieldException;
+import com.SEP490_G9.exception.EmailServiceException;
 import com.SEP490_G9.exception.ResourceNotFoundException;
 import com.SEP490_G9.repository.AccountRepository;
 import com.SEP490_G9.repository.RoleRepository;
@@ -70,9 +71,12 @@ public class AccountServiceImpl implements AccountService {
 	}
 
 	@Override
-	public boolean addStaff(Account staff) {
+	public Account addStaff(Account staff) {
 		if (accountRepo.existsByEmail(staff.getEmail())) {
 			throw new DuplicateFieldException("email", staff.getEmail());
+		}
+		if(!staff.getEmail().matches("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")) {
+			throw new EmailServiceException("Not a valid email");
 		}
 		String encodedPassword = new BCryptPasswordEncoder().encode(staff.getPassword().trim());
 		staff.setPassword(encodedPassword);
@@ -82,19 +86,19 @@ public class AccountServiceImpl implements AccountService {
 		staffRoles.add(roleRepo.getReferenceById(Constant.STAFF_ROLE_ID));
 		staff.setRoles(staffRoles);
 		accountRepo.save(staff);
-		return true;
+		return staff;
 	}
 
 	@Override
-	public boolean updateStaffStatus(Long id) {
-		Account staff = accountRepo.findById(id).get();
-		if (staff.isEnabled()) {
-			staff.setEnabled(false);
+	public Account updateStaffStatus(long id) {
+		Account account = accountRepo.findById(id).get();
+		if (account.isEnabled()) {
+			account.setEnabled(false);
 		} else {
-			staff.setEnabled(true);
+			account.setEnabled(true);
 		}
-		accountRepo.save(staff);
-		return true;
+		accountRepo.save(account);
+		return account;
 	}
 
 	@Override

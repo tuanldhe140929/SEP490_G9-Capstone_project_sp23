@@ -4,16 +4,17 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { Report } from 'src/app/DTOS/Report';
 import { Seller } from 'src/app/DTOS/Seller';
+import { ManageAccountInfoService } from 'src/app/services/manage-account-info.service';
+import { ReportService } from 'src/app/services/report.service';
 import { AuthResponse } from '../../../DTOS/AuthResponse';
 import { Preview } from '../../../DTOS/Preview';
 import { Product } from '../../../DTOS/Product';
 import { ProductFile } from '../../../DTOS/ProductFile';
 import { Tag } from '../../../DTOS/Tag';
 import { User } from '../../../DTOS/User';
-import { AuthService } from '../../../services/auth.service';
 import { CartService } from '../../../services/cart.service';
-import { CommonService } from '../../../services/common.service';
 import { ProductFileService } from '../../../services/product-file.service';
 import { ProductService } from '../../../services/product.service';
 import { StorageService } from '../../../services/storage.service';
@@ -62,31 +63,54 @@ export class ProductDetailsComponent implements OnInit {
   owner: Seller = new Seller;
   visitorAuth: AuthResponse = new AuthResponse;
   visitor: User = new User;//thằng đang xem trang ấy
+  visitorId: number;
+  productId: number;
+  loginStatus = false;
+  user: User = new User;
   product: Product = new Product;//hiển thị
   totalSize: number | undefined;
   sellerTotalProductCount = 0;
+  report: Report;
   dots: number[] = [0];
 
   displayPreviews: DisplayPreview[] = [];
   constructor(private activatedRoute: ActivatedRoute,
-    private commonService: CommonService,
     private router: Router,
     private storageService: StorageService,
-    private authService: AuthService,
     private decimalPipe: DecimalPipe,
     private dialog: MatDialog,
     private productService: ProductService,
     private cartService: CartService,
     private productFileService: ProductFileService,
-    private toastr: ToastrService) {
-
+    private toastr: ToastrService,
+    private manageAccountInfoService: ManageAccountInfoService,
+    private reportService: ReportService) {
+    
   }
 
 
 
   ngOnInit(): void {
     this.getProduct();
-
+    this.productId = Number(this.activatedRoute.snapshot.paramMap.get('productId'));
+    if (this.storageService.isLoggedIn()) {
+      this.loginStatus = true;
+      this.manageAccountInfoService.getCurrentUserInfo().subscribe(
+        data => {
+          this.user = data;
+          this.visitorId = data.id;
+          console.log("productId:"+this.productId+"userId:"+this.visitorId);
+          this.reportService.getReportByProductAndUser(this.product.id,this.user.id).subscribe(
+            data => {
+              this.report = data;
+              console.log(this.report);
+            }
+          )
+        }
+      )
+    } else {
+      this.loginStatus = false;
+    }
     if (this.storageService.isLoggedIn()) {
       this.getVisitor();
     }
@@ -300,22 +324,30 @@ export class ProductDetailsComponent implements OnInit {
     return this.getFormattedValue(this.product.price);
   }
 
-  openReportModal() {
-
-    const data = {
-      productId: this.product.id,
-      userId: this.visitor.id
+  onCheckIfReported(){
+    if(this.report!=null){
+      this.toastr.error('Bạn đã báo cáo sản phẩm này');
+    }else{
+      this.openReportModal();
     }
-    const dialogRef = this.dialog.open(ReportProductComponent, {
+  }
 
-      height: '80%',
-      width: '50%',
-      data:data
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
-    });
+  openReportModal() {
+      const data = {
+        productId: this.product.id,
+        userId: this.visitor.id
+      }
+      const dialogRef = this.dialog.open(ReportProductComponent, {
+  
+        height: '55%',
+        width: '50%',
+        data:data
+      });
+  
+      dialogRef.afterClosed().subscribe(result => {
+        console.log(`Dialog result: ${result}`);
+        setTimeout(() => this.refresh(),300)
+      });
   }
   redirectSellerPage() {
     this.router.navigate(['collection/' + this.owner.username]);
@@ -350,7 +382,12 @@ export class ProductDetailsComponent implements OnInit {
         this.router.navigate(['/download', this.product.id], { queryParams: { token: token } });
       }
     );
+  }
 
+  refresh() {
+    this.reportService.getReportByProductAndUser(this.product.id, this.user.id).subscribe((data: any) => {
+      this.report = data;
+    })
   }
 
 }

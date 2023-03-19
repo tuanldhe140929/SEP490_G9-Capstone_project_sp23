@@ -13,9 +13,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.boot.autoconfigure.flyway.FlywayDataSource;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -24,16 +26,22 @@ import com.SEP490_G9.configs.TestConfig;
 import com.SEP490_G9.entities.Account;
 import com.SEP490_G9.entities.RefreshToken;
 import com.SEP490_G9.entities.Role;
+import com.SEP490_G9.exception.DuplicateFieldException;
+import com.SEP490_G9.exception.EmailServiceException;
 import com.SEP490_G9.repository.AccountRepository;
 import com.SEP490_G9.repository.RefreshTokenRepository;
 import com.SEP490_G9.repository.RoleRepository;
 import com.SEP490_G9.service.AccountService;
 import com.SEP490_G9.service.serviceImpls.AccountServiceImpl;
 
-@AutoConfigureTestDatabase(replace = Replace.NONE)
-@DataJpaTest
-@RunWith(SpringRunner.class)
-@Import(TestConfig.class)
+import jakarta.transaction.Transactional;
+
+//@AutoConfigureTestDatabase(replace = Replace.NONE)
+//@DataJpaTest
+//@RunWith(SpringRunner.class)
+//@Import(TestConfig.class)
+@SpringBootTest
+@Transactional
 class AccountServiceTest {
 
 	@Mock
@@ -118,10 +126,47 @@ class AccountServiceTest {
 		Account account = new Account();
 		account.setId(1L);
 		account.setPassword("asdasdasd");
-
 		when(accountRepo.save(account)).thenReturn(account);
 
 		Account result = accountServiceImpl.update(account);
 		assertThat(result.getPassword()).isEqualTo(account.getPassword());
 	}
+	
+	@Test
+	void testAddStaff() {
+		Account expected = new Account();
+		expected.setEmail("expected@gmail.com");
+		expected.setPassword("password");
+		Account result = accountServiceImpl.addStaff(expected);
+		assertEquals(expected, result);
+	}
+	
+	@Test
+	void testAddStaffDuplicate() {
+		Throwable exception = assertThrows(Exception.class, () -> {
+			Account expected = new Account();
+			expected.setEmail("user1@gmail.com");
+			expected.setPassword("password");
+			Account result = accountServiceImpl.addStaff(expected);
+		});
+		assertEquals(exception.getClass(), DuplicateFieldException.class);
+	}
+	
+	@Test
+	void testAddStaffInvalid() {
+		Throwable exception = assertThrows(Exception.class, () -> {
+			Account expected = new Account();
+			expected.setEmail("abcxyz");
+			expected.setPassword("password");
+			Account result = accountServiceImpl.addStaff(expected);
+		});
+		assertEquals(exception.getClass(), EmailServiceException.class);
+	}
+	
+	@Test
+	void testUpdateStaffStatus() {
+		Account result = accountServiceImpl.getById((long)3);
+		assertEquals(false, result.isEnabled());
+	}
+	
 }

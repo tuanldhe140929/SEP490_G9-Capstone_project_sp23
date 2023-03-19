@@ -6,10 +6,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { User } from 'src/app/DTOS/User';
-import { AuthService } from 'src/app/services/auth.service';
-
 import { StorageService } from 'src/app/services/storage.service';
-import { ManageAccountInfoService } from '../../../services/manage-account-info.service';
+import { UserService } from 'src/app/services/user.service';
+
 
 
 @Component({
@@ -25,7 +24,7 @@ export class ProfileComponent implements OnInit {
     private httpClient: HttpClient,
     private app: AppComponent,
     private storageService: StorageService,
-    private manageAccountInfoService: ManageAccountInfoService) {
+    private userService: UserService) {
 
   }
   ngOnInit(): void {
@@ -58,7 +57,7 @@ export class ProfileComponent implements OnInit {
     this.Profileform.controls.newUsername.setValue(this.user.username)
     this.Profileform.controls.newFirstName.setValue(this.user.firstName)
     this.Profileform.controls.newLastName.setValue(this.user.lastName)
-    this.manageAccountInfoService.onChangeName(this.Profileform.value).subscribe(
+    this.userService.onChangeName(this.Profileform.value).subscribe(
       data => {
         console.log(data)
       },
@@ -69,14 +68,14 @@ export class ProfileComponent implements OnInit {
   }
 
   getUserInfo() {
-    this.manageAccountInfoService.getCurrentUserInfo().subscribe(
+    this.userService.getCurrentUserInfo().subscribe(
       data => {
         this.user = data;
         
         if (this.user.avatar == "" || this.user.avatar == null) {  
             this.ProfileImage.setAttribute('src',"http://ssl.gstatic.com/accounts/ui/avatar_2x.png") ;
         } else {
-         this.ProfileImage.setAttribute('src',"http://localhost:9000/public/serveMedia/serveProfileImage?userId=" + this.user.id) ;
+         this.ProfileImage.setAttribute('src',"http://localhost:9000/public/serveMedia/image?source=" + this.getEncodedUrl(this.user.avatar)) ;
         }
         
         console.log(data)
@@ -85,6 +84,11 @@ export class ProfileComponent implements OnInit {
         console.log(error)
       }
     )
+  }
+  
+  getEncodedUrl(source:string){
+	  const encodedSource = encodeURIComponent(source.replace(/\\/g, '/').replace('//', '/').replace(/\(/g, '%28').replace(/\)/g, '%29'));
+	  return encodedSource;
   }
   UpdateInfo() {
     if (this.UsernameInput != null && this.FirstNameInput != null && this.LastNameInput != null) {
@@ -112,7 +116,7 @@ export class ProfileComponent implements OnInit {
     if (file) {
       const formData = new FormData();
       formData.append("thumbnail", file);
-      const upload$ = this.manageAccountInfoService.uploadProfileImage(file).subscribe(
+      const upload$ = this.userService.uploadProfileImage(file).subscribe(
         data => {
           this.user.avatar = data;
           console.log(data);

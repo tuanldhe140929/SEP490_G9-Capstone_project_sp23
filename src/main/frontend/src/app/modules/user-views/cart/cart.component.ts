@@ -3,6 +3,7 @@ import { Cart } from 'src/app/DTOS/Cart';
 import { CartItem } from 'src/app/DTOS/CartItem';
 import { Product } from 'src/app/DTOS/Product';
 import { CartService } from 'src/app/services/cart.service';
+import { TransactionService } from 'src/app/services/transaction.service';
 
 @Component({
   selector: 'app-cart',
@@ -15,7 +16,7 @@ export class CartComponent implements OnInit{
   cartItemList: CartItem[] = [];
   itemname: any;
   itemprice:any;
-  constructor(private cartService: CartService) {
+  constructor(private cartService: CartService, private transactionService:TransactionService) {
 
    }
   ngOnInit(): void {
@@ -24,6 +25,7 @@ export class CartComponent implements OnInit{
   public getAllCartItem(){
     this.cartService.getAllProduct().subscribe(
       data=>{
+		  console.log(data);
         this.cart = data;
         this.cartItemList=data.items;
       },
@@ -33,8 +35,9 @@ export class CartComponent implements OnInit{
     )
   }
 public getItemCoverImageSrc(cartItem:CartItem){
-  if(cartItem!=null && cartItem.product.id!=-1){
-  return 'http://localhost:9000/public/serveMedia/image?source='+cartItem.product.id;
+  if(cartItem!=null && cartItem.product.id!=-1 && cartItem.product.coverImage!=null){
+	  
+  return 'http://localhost:9000/public/serveMedia/image?source='+cartItem.product.coverImage.replace(/\\/g, '/');
 }
 else{
   return "";
@@ -56,7 +59,17 @@ console.log('xóa thành công '+ cartItem.product.id)
 this.RemoveItem === null
 }
 public checkout(): void{
-  console.log('check it out')
+  this.transactionService.purchase(this.cart.id).subscribe(
+	  data=>{
+		  console.log(data.approvalUrl);
+		  var strWindowFeatures = "location=yes,height=570,width=520,scrollbars=yes,status=yes";
+var URL = data.approvalUrl;
+window.open(URL, "_blank", strWindowFeatures);
+	  },
+	  error=>{
+		  console.log(error);
+	  }
+  )
 }
 
 get TotalPrice(){

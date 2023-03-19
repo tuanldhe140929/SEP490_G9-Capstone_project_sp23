@@ -56,72 +56,23 @@ class AccountRepositoryTest {
 	
 	@Test
 	void testFindById() {
-		Account expected1 = new Account();
-		expected1.setId(1L);
-		expected1.setEmail("expected1@gmail.com");
-		expected1.setPassword("12345678");
-		
-		Account expected2 = new Account();
-		expected2.setId(2L);
-		expected2.setEmail("expected2@gmail.com");
-		expected2.setPassword("12345678");
-		
-		Account result = accountRepo.findById(2L).get();
-		assertEquals(expected2, result);
+		Account result =  accountRepo.findById((long)2).get();
+		String expectedEmail = "seller1@gmail.com";
+		assertEquals(expectedEmail, result.getEmail());
 	}
 	
 	@Test
-	void testFindAll() {
-		Account expected1 = new Account();
-		expected1.setEmail("expected1@gmail.com");
-		expected1.setPassword("12345678");
-		
-		Account expected2 = new Account();
-		expected2.setEmail("expected2@gmail.com");
-		expected2.setPassword("12345678");
-		
-		accountRepo.save(expected1);
-		accountRepo.save(expected2);
-		
+	void testFindAll() {		
 		List<Account> accountList = accountRepo.findAll();
-		assertEquals(2, accountList.size());
+		assertEquals(4, accountList.size());
 	}
 	
 	@Test
 	void testFindByRolesIn() {
-		Role adminRole = new Role(1, "ROLE_ADMIN");
-		Role staffRole = new Role(2, "ROLE_STAFF");
-		Role userRole = new Role(3, "ROLE_USER");
-		Role sellerRole = new Role(4, "ROLE_SELLER");
-		roleRepo.save(adminRole);
-		roleRepo.save(staffRole);
-		roleRepo.save(userRole);
-		roleRepo.save(sellerRole);
-		
-		Account expected1 = new Account();
-		expected1.setEmail("expected1@gmail.com");
-		expected1.setPassword("12345678");
-		List<Role> expectedRoles1 = new ArrayList<>();
-		expectedRoles1.add(sellerRole);
-		expectedRoles1.add(userRole);
-		expected1.setRoles(expectedRoles1);
-		accountRepo.save(expected1);
-		
-		Account expected2 = new Account();
-		expected2.setEmail("expected2@gmail.com");
-		expected2.setPassword("12345678");
-		List<Role> expectedRoles2 = new ArrayList<>();
-		expectedRoles2.add(userRole);
-		expected2.setRoles(expectedRoles2);
-		accountRepo.save(expected2);
-		
 		List<Role> givenRoles = new ArrayList<>();
-		givenRoles.add(sellerRole);
-		givenRoles.add(userRole);
+		givenRoles.add(roleRepo.findById(3));
+		givenRoles.add(roleRepo.findById(4));
 		List<Account> result = accountRepo.findByRolesIn(givenRoles);
-		
-		System.out.println(result);
-		
-		assertEquals(1, result.size());
+		assertEquals(2, result.size());
 	}
 }

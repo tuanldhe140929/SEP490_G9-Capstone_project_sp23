@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileUrlResource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.core.io.support.ResourceRegion;
@@ -18,10 +17,10 @@ import org.springframework.stereotype.Service;
 
 import com.SEP490_G9.repository.PreviewRepository;
 import com.SEP490_G9.repository.ProductRepository;
-import com.SEP490_G9.service.ServeMediaServiceImpl;
+import com.SEP490_G9.service.ServeMediaService;
 
 @Service
-public class ServeMediaService implements ServeMediaServiceImpl {
+public class ServeMediaServiceImpl implements ServeMediaService {
 	
 	private static final long CHUNK_SIZE = 1000000L;
 	
@@ -45,7 +44,7 @@ public class ServeMediaService implements ServeMediaServiceImpl {
 	}
 
 
-	private ResponseEntity<ResourceRegion> getVideoRegion(String rangeHeader, String directory) throws IOException {
+	public ResponseEntity<ResourceRegion> getVideoRegion(String rangeHeader, String directory) throws IOException {
 		FileUrlResource videoResource = new FileUrlResource(directory);
 		ResourceRegion resourceRegion = getResourceRegion(videoResource, rangeHeader);
 
@@ -54,7 +53,8 @@ public class ServeMediaService implements ServeMediaServiceImpl {
 				.body(resourceRegion);
 	}
 
-	private ResourceRegion getResourceRegion(UrlResource video, String httpHeaders) throws IOException {
+	@Override
+	public ResourceRegion getResourceRegion(UrlResource video, String httpHeaders) throws IOException {
 		ResourceRegion resourceRegion = null;
 		long contentLength = video.contentLength();
 		int fromRange = 0;
@@ -79,5 +79,6 @@ public class ServeMediaService implements ServeMediaServiceImpl {
 
 		return resourceRegion;
 	}
+
 	
 }

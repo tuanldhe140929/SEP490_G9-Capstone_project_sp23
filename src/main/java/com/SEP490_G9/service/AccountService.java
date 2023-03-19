@@ -20,9 +20,9 @@ public interface AccountService {
 
 	List<Account> getAllStaffs();
 
-	boolean addStaff(Account staff);
+	Account addStaff(Account staff);
 
-	boolean updateStaffStatus(Long id);
+	Account updateStaffStatus(long id);
 
 	String resetPassword(Account account);
 }

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from 'src/app/services/auth.service';
+import { AccountService } from 'src/app/services/account.service';
 
 @Component({
   selector: 'app-staff-base',
@@ -12,12 +12,12 @@ export class StaffBaseComponent {
   routerName = 'productApproval';
 
   constructor(
-    private authService: AuthService,
+    private accountService: AccountService,
     private router: Router
   ){}
 
   logout(){
-    this.authService.logout().subscribe(
+    this.accountService.logout().subscribe(
       response => {
         console.log("log out successfully");
         this.router.navigate(['login']);

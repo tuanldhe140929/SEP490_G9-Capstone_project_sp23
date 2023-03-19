@@ -40,9 +40,6 @@ public class UserServiceImpl implements UserService {
 	@Value("${root.location}")
 	String ROOT_LOCATION;
 
-	@Autowired
-	ServeMediaService serveMediaService;
-
 	@Override
 	public User getById(Long userId) {
 		User user = userRepository.findById(userId).get();
@@ -108,11 +105,11 @@ public class UserServiceImpl implements UserService {
 			throw new FileUploadException(profileImage.getContentType() + " file not accept");
 		} else {
 			User user = getUserById();
-			String profileImageLocation = user.getUsername() + "\\profileImageFolder\\";
+			String profileImageLocation = "account_id_"+user.getId() + "/profile";
 			File coverImageDir = new File(ROOT_LOCATION + profileImageLocation);
 			coverImageDir.mkdirs();
-			fileIOService.storeV2(profileImage, profileImageLocation);
-			user.setAvatar(profileImageLocation + profileImage.getOriginalFilename());
+			String storedPath = fileIOService.storeV2(profileImage, ROOT_LOCATION + profileImageLocation);
+			user.setAvatar(storedPath.replace(ROOT_LOCATION, ""));
 			userRepository.save(user);
 			return user.getAvatar();
 		}
@@ -132,17 +129,6 @@ public class UserServiceImpl implements UserService {
 				.getAccount();
 		User user = userRepository.getReferenceById(account.getId());
 		return user;
-	}
-
-	@Override
-	public File serveAvatar(Long userId) {
-		User user = userRepository.getReferenceById(userId);
-
-		if (user == null) {
-			throw new ResourceNotFoundException("Product id:", userId.toString(), "");
-		}
-
-		return serveMediaService.serveImage(ROOT_LOCATION + user.getAvatar());
 	}
 
 	@Override
