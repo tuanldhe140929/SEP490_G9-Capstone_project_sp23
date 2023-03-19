@@ -41,6 +41,7 @@ import com.SEP490_G9.configs.TestConfig;
 import com.SEP490_G9.entities.Account;
 import com.SEP490_G9.entities.Product;
 import com.SEP490_G9.entities.ProductDetails;
+import com.SEP490_G9.entities.ProductDetails.Status;
 import com.SEP490_G9.entities.Seller;
 import com.SEP490_G9.entities.UserDetailsImpl;
 import com.SEP490_G9.exception.ResourceNotFoundException;
@@ -89,9 +90,9 @@ class ProductServiceTest {
 		product.setSeller(seller);
 		productDetails.setProduct(product);
 		productDetails.setVersion("1.0.0");
+		productDetails.setApproved(Status.NEW);
 		productDetails.setCreatedDate(new Date());
 		productDetails.setLastModified(new Date());
-		productDetails.setDraft(true);
 		when(pdRepo.save(productDetails)).thenReturn(productDetails);
 		when(productRepository.save(product)).thenReturn(product);
 		Product result = pds.createProduct(product);
@@ -294,29 +295,5 @@ class ProductServiceTest {
 		verify(pdRepo).save(productDetails);
 	}
 
-	@Test
-	void testUpdateProductApprovalStatus() {
-		Product product = new Product();
-		product.setId(1L);
-		Seller seller = new Seller();
-		seller.setId(1L);
-		product.setSeller(seller);
-		product.setApproved("PENDING");
-		when(productRepository.findById(1L)).thenReturn(Optional.of(product));
-		String status = pds.updateProductApprovalStatus(product.getId(), true);
-		assertThat(status).isEqualTo("APPROVED");
-	}
-
-	@Test
-	void testUpdateProductApprovalStatusA() {
-		Product product = new Product();
-		product.setId(1L);
-		Seller seller = new Seller();
-		seller.setId(1L);
-		product.setSeller(seller);
-		product.setApproved("PENDING");
-		when(productRepository.findById(-1L)).thenThrow(NoSuchElementException.class);
-		assertThrows(NoSuchElementException.class, () -> pds.updateProductApprovalStatus(-1L, false));
-	}
 	
 }

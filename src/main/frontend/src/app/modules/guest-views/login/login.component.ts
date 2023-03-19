@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthResponse } from 'src/app/DTOS/AuthResponse';
-import { AuthService } from 'src/app/services/auth.service';
+import { AccountService } from 'src/app/services/account.service';
 import { StorageService } from 'src/app/services/storage.service';
 
 
@@ -27,7 +27,8 @@ export class LoginComponent implements OnInit {
   get Form() {
     return this.loginForm.controls;
   }
-  constructor(private http: HttpClient, private formBuilder: FormBuilder, private authService: AuthService, private storageService: StorageService, private router: Router) {
+  constructor(private http: HttpClient, private formBuilder: FormBuilder, 
+  private accountService: AccountService, private storageService: StorageService, private router: Router) {
 
   }
 
@@ -43,7 +44,7 @@ export class LoginComponent implements OnInit {
     if(this.loginForm.controls.email.value!=null){
 		 this.loginForm.controls.email.setValue(this.loginForm.controls.email.value.trim());
 	}
-      this.authService.login(this.loginForm.value).subscribe(
+      this.accountService.login(this.loginForm.value).subscribe(
 
         response => {
 			console.log(response.body);
@@ -85,7 +86,7 @@ export class LoginComponent implements OnInit {
   }
   public logOut() {
     console.log('loginout');
-    this.authService.logout().subscribe();
+    this.accountService.logout().subscribe();
     this.router.navigate(['login']);
   }
 

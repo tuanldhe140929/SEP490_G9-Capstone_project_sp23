@@ -152,6 +152,11 @@
 			 <version>3.4.0</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+		  <groupId>com.paypal.sdk</groupId>
+		  <artifactId>rest-api-sdk</artifactId>
+		  <version>LATEST</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>

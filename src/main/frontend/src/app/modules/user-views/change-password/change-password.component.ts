@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { ManageAccountInfoService } from 'src/app/services/manage-account-info.service';
+import { UserService } from 'src/app/services/user.service';
 
 const changePasswordUrl = "http://localhost:9000/private/profile/changeAccountPassword";
 @Component({
@@ -14,7 +14,8 @@ export class ChangePasswordComponent {
 	
 	
 	
-	constructor(private formBuilder: FormBuilder, private httpClient: HttpClient, private manageAccountInfoService: ManageAccountInfoService){
+	constructor(private formBuilder: FormBuilder, private httpClient: HttpClient,
+	 private userService: UserService){
 		
 	}
 	
@@ -49,7 +50,7 @@ export class ChangePasswordComponent {
 	}
 	
 	onChangePassword(){
-		this.manageAccountInfoService.onChangePassword(this.changePasswordForm.value).subscribe(
+		this.userService.onChangePassword(this.changePasswordForm.value).subscribe(
 			data => {
         console.log(data);
 			},
