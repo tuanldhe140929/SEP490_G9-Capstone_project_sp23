@@ -4,8 +4,9 @@ import { AbstractControl, FormBuilder, FormControl, ValidationErrors, ValidatorF
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AuthResponse } from 'src/app/DTOS/AuthResponse';
-import { AuthService } from 'src/app/services/auth.service';
+import { AccountService } from 'src/app/services/account.service';
 import { StorageService } from 'src/app/services/storage.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-register',
@@ -71,7 +72,8 @@ public noWhitespaceValidator(control: FormControl) {
     this.modalService.dismissAll();
   }
 
-  constructor(private http: HttpClient, private formBuilder: FormBuilder, private authService: AuthService,
+  constructor(private http: HttpClient, private formBuilder: FormBuilder,
+   private userService: UserService,
     private router: Router, private storageService: StorageService,
     private modalService: NgbModal  ) { }
 
@@ -81,7 +83,7 @@ public noWhitespaceValidator(control: FormControl) {
     this.registerForm.controls.username.setValue(this.username);
     if (this.registerForm.valid) {
       
-      this.authService.register(this.registerForm.value).subscribe(
+      this.userService.register(this.registerForm.value).subscribe(
         data => {
           console.log(data);
           this.message = "Đăng kí thành công, kiểm tra email để xác thực";
@@ -107,7 +109,7 @@ public noWhitespaceValidator(control: FormControl) {
   }
   
   public sendVerifyEmail(email:string){
-	  this.authService.sendVerifyEmail(email).subscribe(
+	  this.userService.sendVerifyEmail(email).subscribe(
 		  (data)=>{
 			  console.log(data);
 		  },

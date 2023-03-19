@@ -27,7 +27,7 @@ public class Sep490G9Application {
 //			Process process = Runtime.getRuntime().exec(script);
 //		    
 //			storageService.deleteAll();
-			storageService.init();
+//			storageService.init();
 		};
 	}
 

@@ -11,12 +11,12 @@ import {
 import { catchError, Observable, of, throwError } from 'rxjs';
 import { StorageService } from '../services/storage.service';
 import { Router } from '@angular/router';
-import { AuthService } from '../services/auth.service';
+import { AccountService } from '../services/account.service';
 const TOKEN_HEADER_KEY = 'Authorization';
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
 
-  constructor(private storage: StorageService, private router:Router, private authService:AuthService) {}
+  constructor(private storage: StorageService, private router:Router, private accountService:AccountService) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
      	let authReq = req;
@@ -31,7 +31,7 @@ private handleAuthError(err: HttpErrorResponse): Observable<any> {
   if (err.status === 401 || err.status === 403) {
 
     this.storage.clearStorage();
-    this.authService.refreshToken().subscribe(
+    this.accountService.refreshToken().subscribe(
       response => {
         this.storage.saveUser(response.body);
         this.storage.saveToken(response.body.accessToken);

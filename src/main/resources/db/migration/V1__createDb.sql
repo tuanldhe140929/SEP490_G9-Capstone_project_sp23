@@ -7,6 +7,22 @@
   END IF;
 END $$;
 
+ DO $$ BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_type WHERE typname = 'Transaction_Status'
+  ) THEN
+    CREATE TYPE TransactionStatus AS ENUM('CREATED', 'COMPLETED', 'CANCELED', 'FAILED');
+  END IF;
+END $$;
+
+ DO $$ BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_type WHERE typname = 'Transaction_Type'
+  ) THEN
+    CREATE TYPE TransactionType AS ENUM('BUY', 'SELL', 'CANCEL');
+  END IF;
+END $$;
+
  create sequence accounts_seq start with 1 increment by 50;
  create sequence carts_seq start with 1 increment by 50;
  create sequence files_seq start with 1 increment by 50;
@@ -29,8 +45,9 @@ END $$;
  create table roles (id serial not null, name varchar(255) not null, primary key (id));
  create table sellers (phone_number varchar(255), seller_enabled boolean, account_id bigint not null, primary key (account_id));
  create table tags (id serial not null, name varchar(255), primary key (id));
- create table transactions (id bigserial not null, purchased_date timestamp(6), cart_id bigint not null, primary key (id));
- create table users (avatar varchar(255), email_verified boolean, first_name varchar(255), last_name varchar(255), username varchar(30) not null, account_id bigint not null, cart_id bigint, primary key (account_id));
+ create table transaction_fees (id serial not null, percentage integer, primary key (id));
+ create table transactions (id bigserial not null, paypal_id varchar(255),paypal_token varchar(255), amount real not null, description varchar(255), created_date timestamp(6) not null,last_modified timestamp(6), cart_id bigint not null, transaction_fee_id integer, status TransactionStatus not null , transaction_type TransactionType not null, primary key (id));
+ create table users (avatar varchar(255), email_verified boolean, first_name varchar(255), last_name varchar(255), username varchar(30) not null, account_id bigint not null, primary key (account_id));
  create table rates (account_id bigint not null, product_id bigint not null, date date, stars integer, primary key (account_id, product_id));
  alter table if exists rates add constraint FKkiwnrvd09n4d8d81hjbwl41xv foreign key (product_id) references products;
  alter table if exists rates add constraint FKbvjnid289x18balux0uumuh7f foreign key (account_id) references users;
@@ -59,6 +76,6 @@ END $$;
  alter table if exists reports add constraint FKq5i41n512ghow5ge92q2k3iqa foreign key (account_id) references users;
  alter table if exists reports add constraint FKlggn2s05pj6w0kecav9atmfuc foreign key (violation_type_id) references violation_types;
  alter table if exists sellers add constraint FKmqo83vk54uyjc032gh7xolel6 foreign key (account_id) references users;
+ alter table if exists transactions add constraint FKoowoodpjfdujxb5viyhgacw0m foreign key (transaction_fee_id) references transaction_fees;
  alter table if exists transactions add constraint FKnkyl3pyaclxtxgcuo1fdy004d foreign key (cart_id) references carts;
- alter table if exists users add constraint FKdv26y3bb4vdmsr89c9ppnx85w foreign key (cart_id) references carts;
  alter table if exists users add constraint FKfm8rm8ks0kgj4fhlmmljkj17x foreign key (account_id) references accounts;

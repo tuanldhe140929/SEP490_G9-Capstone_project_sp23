@@ -34,8 +34,8 @@ public class User extends Account implements Serializable {
 	@Column(name = "email_verified")
 	private boolean emailVerified = false;
 
-	@OneToOne(cascade = CascadeType.ALL)
-	private Cart cart;
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	private List<Cart> carts;
 
 	public User() {
 	}
@@ -111,4 +111,11 @@ public class User extends Account implements Serializable {
 		return serialVersionUID;
 	}
 
+	public List<Cart> getCarts() {
+		return carts;
+	}
+
+	public void setCarts(List<Cart> carts) {
+		this.carts = carts;
+	}
 }
