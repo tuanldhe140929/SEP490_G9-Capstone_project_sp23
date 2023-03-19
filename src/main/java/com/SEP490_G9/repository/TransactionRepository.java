@@ -10,4 +10,8 @@ import com.SEP490_G9.entities.Transaction;
 @Repository
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
 	Transaction findByCartId(Long cartId);
+
+	Transaction findByPaypalId(String paymentId);
+
+	Transaction findByPaypalToken(String token);
 }

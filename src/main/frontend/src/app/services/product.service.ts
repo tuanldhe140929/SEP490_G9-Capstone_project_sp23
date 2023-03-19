@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { License } from '../DTOS/License';
 import { Product } from '../DTOS/Product';
 import { ProductDTO } from '../DTOS/ProductDTO';
 
@@ -10,6 +11,10 @@ const baseUrlProduct = "http://localhost:9000/product";
   providedIn: 'root'
 })
 export class ProductService {
+
+  public getAllLicense():Observable<License[]>{
+	  return this.httpClient.get<License[]>(baseUrl+'/getLicense');
+  }
 
   getProductByIdAndVersion(productId: number, version: string): Observable<Product> {
     return this.httpClient.post<Product>(baseUrl + '/getByIdAndVersion', null, {

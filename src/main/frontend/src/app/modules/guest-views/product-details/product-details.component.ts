@@ -11,9 +11,7 @@ import { Product } from '../../../DTOS/Product';
 import { ProductFile } from '../../../DTOS/ProductFile';
 import { Tag } from '../../../DTOS/Tag';
 import { User } from '../../../DTOS/User';
-import { AuthService } from '../../../services/auth.service';
 import { CartService } from '../../../services/cart.service';
-import { CommonService } from '../../../services/common.service';
 import { ProductFileService } from '../../../services/product-file.service';
 import { ProductService } from '../../../services/product.service';
 import { StorageService } from '../../../services/storage.service';
@@ -70,10 +68,8 @@ export class ProductDetailsComponent implements OnInit {
 
   displayPreviews: DisplayPreview[] = [];
   constructor(private activatedRoute: ActivatedRoute,
-    private commonService: CommonService,
     private router: Router,
     private storageService: StorageService,
-    private authService: AuthService,
     private decimalPipe: DecimalPipe,
     private dialog: MatDialog,
     private productService: ProductService,

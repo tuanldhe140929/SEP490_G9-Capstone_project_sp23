@@ -19,7 +19,6 @@ import com.SEP490_G9.exception.ResourceNotFoundException;
 import com.SEP490_G9.repository.AccountRepository;
 import com.SEP490_G9.repository.UserRepository;
 import com.SEP490_G9.service.FileIOService;
-import com.SEP490_G9.service.ServeMediaService;
 import com.SEP490_G9.service.UserService;
 
 import jakarta.validation.Valid;
@@ -40,9 +39,6 @@ public class UserServiceImpl implements UserService {
 
 	@Value("${root.location}")
 	String ROOT_LOCATION;
-
-	@Autowired
-	ServeMediaService serveMediaService;
 
 	@Override
 	public User getById(Long userId) {
@@ -133,17 +129,6 @@ public class UserServiceImpl implements UserService {
 				.getAccount();
 		User user = userRepository.getReferenceById(account.getId());
 		return user;
-	}
-
-	@Override
-	public File serveAvatar(Long userId) {
-		User user = userRepository.getReferenceById(userId);
-
-		if (user == null) {
-			throw new ResourceNotFoundException("Product id:", userId.toString(), "");
-		}
-
-		return serveMediaService.serveImage(ROOT_LOCATION + user.getAvatar());
 	}
 
 	@Override

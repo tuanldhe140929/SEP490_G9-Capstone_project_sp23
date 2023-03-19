@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from 'src/app/services/auth.service';
+import { AccountService } from 'src/app/services/account.service';
 
 @Component({
   selector: 'app-for-admin-base',
@@ -8,7 +8,7 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./for-admin-base.component.css']
 })
 export class ForAdminBaseComponent {
-  constructor(private router: Router, private authService: AuthService){}
+  constructor(private router: Router, private accountService: AccountService){}
 
   routerName: string = 'dashboard';
 
@@ -50,7 +50,7 @@ export class ForAdminBaseComponent {
   }
 
   logout(){
-    this.authService.logout().subscribe(
+    this.accountService.logout().subscribe(
       response => {
         console.log("log out successfully");
         this.router.navigate(['login']);

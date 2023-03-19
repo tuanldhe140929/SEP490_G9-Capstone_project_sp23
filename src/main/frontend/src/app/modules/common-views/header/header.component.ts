@@ -4,13 +4,12 @@ import { Router } from '@angular/router';
 import { map, Observable, startWith } from 'rxjs';
 import { Product } from 'src/app/DTOS/Product';
 import { User } from 'src/app/DTOS/User';
-import { AuthService } from 'src/app/services/auth.service';
-import { ManageAccountInfoService } from 'src/app/services/manage-account-info.service';
 import { ProductService } from 'src/app/services/product.service';
 import { StorageService } from 'src/app/services/storage.service';
 import { UserService } from 'src/app/services/user.service';
 import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { Role } from '../../../DTOS/Role';
+import { AccountService } from 'src/app/services/account.service';
 
 const removeMark = require("vietnamese-tonemarkless");
 
@@ -32,8 +31,8 @@ export class HeaderComponent implements OnInit {
 
   constructor(
     private storageService: StorageService,
-    private authService: AuthService,
-    private manageAccountInfoService: ManageAccountInfoService,
+    private accountService: AccountService,
+    private userService: UserService,
     private router: Router,
     private productService: ProductService) {
 
@@ -70,7 +69,7 @@ export class HeaderComponent implements OnInit {
     );
     if (this.storageService.isLoggedIn()) {
       this.loginStatus = true;
-      this.manageAccountInfoService.getCurrentUserInfo().subscribe(
+      this.userService.getCurrentUserInfo().subscribe(
         data => {
           this.user = data;
         }
@@ -86,7 +85,7 @@ export class HeaderComponent implements OnInit {
   }
 
   onLogout() {
-    this.authService.logout().subscribe(
+    this.accountService.logout().subscribe(
       data => {
         console.log('Logged out');
         this.router.navigate(['login']);

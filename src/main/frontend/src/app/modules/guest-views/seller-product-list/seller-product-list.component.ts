@@ -6,7 +6,6 @@ import { Product } from 'src/app/DTOS/Product';
 import { Seller } from 'src/app/DTOS/Seller';
 import { User } from 'src/app/DTOS/User';
 import { CategoryService } from 'src/app/services/category.service';
-import { ManageAccountInfoService } from 'src/app/services/manage-account-info.service';
 import { ProductService } from 'src/app/services/product.service';
 import { SellerService } from 'src/app/services/seller.service';
 import { StorageService } from 'src/app/services/storage.service';
@@ -45,11 +44,10 @@ export class SellerProductListComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private productService: ProductService,
     private categoryService: CategoryService,
-    private userService: UserService,
     private router: Router,
     private sellerService: SellerService,
     private storageService: StorageService,
-    private manageAccountInfoService: ManageAccountInfoService,
+    private userService: UserService,
     private modalService: NgbModal
   ) { }
 
@@ -80,7 +78,7 @@ export class SellerProductListComponent implements OnInit {
 
   checkIsLoggedIn() {
     if (this.storageService.isLoggedIn()) {
-      this.manageAccountInfoService.getCurrentUserInfo().subscribe(
+      this.userService.getCurrentUserInfo().subscribe(
         data => {
           this.user = data;
           this.loggedInStatus = true;
@@ -94,7 +92,7 @@ export class SellerProductListComponent implements OnInit {
 
   checkIfIsSeller() {
     if (this.storageService.isLoggedIn()) {
-      this.manageAccountInfoService.getCurrentUserInfo().subscribe(
+      this.userService.getCurrentUserInfo().subscribe(
         data => {
           this.user = data;
           console.log(data);

@@ -1,5 +1,7 @@
  CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
+ insert into transaction_fees(id,percentage) VALUES(1,10);
+ 
  insert into roles (id,name) values (1,'ROLE_ADMIN');
  insert into roles (id,name) values (2,'ROLE_STAFF');
  insert into roles (id,name) values (3,'ROLE_USER');
@@ -22,8 +24,8 @@
 
 
  
- insert into users (avatar, cart_id, email_verified, first_name, last_name, username, account_id) values (null, null, false, 'John', 'Doe', 'usser1', 1);
- insert into users (avatar, cart_id, email_verified, first_name, last_name, username, account_id) values (null, null, false, 'John', 'Doe', 'seller1', 2);
+ insert into users (avatar, email_verified, first_name, last_name, username, account_id) values (null, false, 'John', 'Doe', 'usser1', 1);
+ insert into users (avatar, email_verified, first_name, last_name, username, account_id) values (null, false, 'John', 'Doe', 'seller1', 2);
  insert into sellers (phone_number, seller_enabled, account_id) values (null, true, 2);
  
 
