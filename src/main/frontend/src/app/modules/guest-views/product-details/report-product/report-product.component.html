@@ -1,25 +1,22 @@
-<div class="addReportContainer">
-    <form [formGroup]="addReportForm" (submit)="addReport()">
+<div *ngIf="!loginStatus">
+    <p style="text-align: center;">Vui lòng đăng nhập để báo cáo sản phẩm</p>
+    <button class="btn btn-primary" (click)="toLogin()">Đăng nhập</button>
+</div>
+<div *ngIf="loginStatus" class="addReportContainer">
+    <form [formGroup]="addReportForm" (submit)="toSendReport()">
         <h2>Báo cáo sản phẩm</h2>
-        <b>Lựa chọn nội dung vi phạm</b>
+        <p>Lý do vi phạm:</p>
+        <select #violation (change)="onChange(violation.value)" formControlName="violationtype">
+            <option *ngFor="let type of vioTypeList" [value]="type.id">{{type.name}}</option>
+        </select>
+        <br>
         <div class="form-group">
-            <div class="form-check" *ngFor="let type of vioTypeList">
-                <input class="form-check-input" type="radio" formControlName="violationtype" [value]="type"  id={{type.id}}>
-                <label class="form-check-label">
-                  {{type.name}}
-                </label>
-              </div>
-        </div>
-        <div class="form-group">
-            <p>Mô tả chi tiết lý do vi phạm</p>
-            <textarea formControlName="description">
-
-            </textarea>
+            <p>Mô tả chi tiết:</p>
+            <textarea [(ngModel)]="description" (input)="onDescriptionChange()" formControlName="description"></textarea>
         </div>
         <div class="form-group" align="end">
             <button class="btn btn-warning" mat-dialog-close="">Hủy</button>
-            <button class="btn btn-primary" type="submit" (click)="openSuccess()">Gửi báo cáo</button>
-            <app-pop-up *ngIf="showMessage"></app-pop-up>
+            <button class="btn btn-primary" type="submit" [disabled]="violationTypeId==0" mat-dialog-close="">Gửi báo cáo</button>
         </div>
         
     </form>
