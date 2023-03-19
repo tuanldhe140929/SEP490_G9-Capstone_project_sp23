@@ -60,6 +60,7 @@ export class ProductDetailsComponent implements OnInit {
   owner: Seller = new Seller;
   visitorAuth: AuthResponse = new AuthResponse;
   visitor: User = new User;//thằng đang xem trang ấy
+  visitorId: number;
   product: Product = new Product;//hiển thị
   totalSize: number | undefined;
   sellerTotalProductCount = 0;
@@ -297,14 +298,13 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   openReportModal() {
-
     const data = {
       productId: this.product.id,
       userId: this.visitor.id
     }
     const dialogRef = this.dialog.open(ReportProductComponent, {
 
-      height: '80%',
+      height: '55%',
       width: '50%',
       data:data
     });

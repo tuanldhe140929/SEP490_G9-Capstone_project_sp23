@@ -84,5 +84,4 @@ class ProductRepositoryTest {
 		Product result = productRepository.save(product);
 		assertNotNull(result);
 	}
-	
 }

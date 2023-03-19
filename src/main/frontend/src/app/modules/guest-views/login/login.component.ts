@@ -57,6 +57,8 @@ export class LoginComponent implements OnInit {
               this.router.navigate(['homepage']);
             }else if(authResponse.roles.includes('ROLE_ADMIN')){
               this.router.navigate(['admin']);
+            }else if(authResponse.roles.includes('ROLE_STAFF')){
+              this.router.navigate(['staff']);
             }else{
               this.router.navigate(['login']);
             }

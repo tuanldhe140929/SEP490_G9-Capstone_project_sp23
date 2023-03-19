@@ -1,8 +1,13 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { User } from 'src/app/DTOS/User';
 import { ViolationType } from 'src/app/DTOS/ViolationType';
+import { ManageAccountInfoService } from 'src/app/services/manage-account-info.service';
 import { ReportService } from 'src/app/services/report.service';
+import { StorageService } from 'src/app/services/storage.service';
 import { ViolationTypeService } from 'src/app/services/violation-type.service';
 
 
@@ -14,27 +19,61 @@ import { ViolationTypeService } from 'src/app/services/violation-type.service';
 export class ReportProductComponent implements OnInit{
   dialog: any;
   showMessage = false;
+  loginStatus = false;
+  user: User = new User;
+
   constructor(
     private vioTypeService: ViolationTypeService,
     private reportService: ReportService,
     private formBuilder: FormBuilder,
+    private storageService: StorageService,
+    private router: Router,
+    private toastr: ToastrService,
+    private manageAccountInfoService: ManageAccountInfoService,
     @Inject(MAT_DIALOG_DATA) public data: any){}
 
+    violationTypeId: number;
+    violationName: string;
+    productId: number;
+    userId: number;
     description: string;
-    violationId: number;
 
   vioTypeList: ViolationType[] = [];
 
   ngOnInit(): void {
     this.getAllVioTypes();
+    this.productId = this.data.productId;
+    this.userId = this.data.userId;
+    this.description = "";
+    this.violationTypeId = 0;
+    if (this.storageService.isLoggedIn()) {
+      this.loginStatus = true;
+      this.manageAccountInfoService.getCurrentUserInfo().subscribe(
+        data => {
+          this.user = data;
+        }
+      )
+    } else {
+      this.loginStatus = false;
+    }
   }
 
   addReportForm = this.formBuilder.group({
-    productId:[this.data.productId],
-    userId:[this.data.userId],
-    violationtype: [new ViolationType,[Validators.required]],
+    violationtype: ['',[Validators.required]],
     description: ['',[Validators.required]]
   })
+
+  get form(){
+    return this.addReportForm.controls;
+  }
+
+  get vioTypeId(){
+    return this.addReportForm.controls.violationtype;
+  }
+
+  get desc(){
+    return this.addReportForm.controls.description;
+  }
 
   getAllVioTypes(){
     this.vioTypeService.getAllTypes().subscribe(
@@ -44,25 +83,25 @@ export class ReportProductComponent implements OnInit{
     )
   }
 
+  toLogin(){
+    this.router.navigate(['login']);
+  }
 
-  addReport(){
-    console.log(this.addReportForm.value);
-
-    if(this.addReportForm.valid){
-      this.reportService.addReport(this.addReportForm.value).subscribe(
-        data => {console.log(data)
-        },error=>{console.log(error)}
-        
+  toSendReport(){
+      this.reportService.sendReport(this.data.productId, this.user.id, this.description, this.violationTypeId).subscribe(
+        data =>{
+          console.log(data);
+        }
       )
-    }
+      this.toastr.success("Gửi báo cáo thành công");
   }
-  openSuccess(){
-    this.showMessage = true;
 
-    // Hide the message after a few seconds
-    setTimeout(() => {
-      this.showMessage = false;
-    }, 1500);
+  onDescriptionChange(){
+    console.log(this.description);
   }
- 
+
+  onChange(value: string){
+    this.violationTypeId = Number(value);
+    console.log("proid:"+this.data.productId+" userid:"+this.data.userId+" vio:"+this.violationTypeId+" desc:"+this.description);
+  }
 }

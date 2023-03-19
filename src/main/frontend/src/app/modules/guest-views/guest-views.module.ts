@@ -31,7 +31,6 @@ import { RateComponent } from './product-details/rate/rate.component';
 import { HomeComponent } from './home/home.component';
 import { SearchResultComponent } from './search-result/search-result.component';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { PopUpComponent } from './product-details/report-product/pop-up/pop-up.component';
 
 
 @NgModule({
@@ -47,7 +46,6 @@ import { PopUpComponent } from './product-details/report-product/pop-up/pop-up.c
     RateComponent,
     HomeComponent,
     SearchResultComponent,
-    PopUpComponent,
   ],
   imports: [
     CommonModule,
