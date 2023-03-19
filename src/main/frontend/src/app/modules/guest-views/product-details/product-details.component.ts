@@ -71,6 +71,7 @@ export class ProductDetailsComponent implements OnInit {
   sellerTotalProductCount = 0;
   report: Report;
   dots: number[] = [0];
+  isOwner: boolean;
 
   displayPreviews: DisplayPreview[] = [];
   constructor(private activatedRoute: ActivatedRoute,
@@ -84,9 +85,7 @@ export class ProductDetailsComponent implements OnInit {
     private toastr: ToastrService,
     private userService: UserService,
     private reportService: ReportService) {
-    
   }
-
 
 
   ngOnInit(): void {
@@ -97,6 +96,11 @@ export class ProductDetailsComponent implements OnInit {
         data => {
           this.visitor = data;
           this.visitorId = data.id;
+          if(this.visitorId==this.owner.id){
+            this.isOwner == true;
+          }else{
+            this.isOwner == false;
+          }
           this.reportService.getReportByProductAndUser(this.productId, this.visitorId).subscribe((data: any) => {
             this.report = data;
           })

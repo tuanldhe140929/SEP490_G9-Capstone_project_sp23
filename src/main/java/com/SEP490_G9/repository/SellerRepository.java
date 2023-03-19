@@ -9,5 +9,5 @@ public interface SellerRepository extends JpaRepository<Seller, Long> {
 	Seller findByUsername(String username);
 
 	Seller findById(long id);
-
+	
 }
