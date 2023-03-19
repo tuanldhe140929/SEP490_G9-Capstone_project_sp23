@@ -1,3 +1,12 @@
+
+ DO $$ BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_type WHERE typname = 'Status'
+  ) THEN
+    CREATE TYPE Status AS ENUM('NEW', 'PENDING', 'APPROVED','REJECTED');
+  END IF;
+END $$;
+
  create sequence accounts_seq start with 1 increment by 50;
  create sequence carts_seq start with 1 increment by 50;
  create sequence files_seq start with 1 increment by 50;
@@ -9,13 +18,12 @@
  create table cart_items (cart_id bigint not null, product_id bigint not null, version varchar(255) not null, primary key (cart_id, product_id, version));
  create table carts (id bigint not null, account_id bigint not null, primary key (id));
  create table categories (id serial not null, name varchar(255), primary key (id));
- create table engines (id serial not null, name varchar(255), primary key (id));
  create table files (id bigint not null, name varchar(255), size bigint, source varchar(255), type varchar(255), product_id bigint not null, version varchar(255) not null, primary key (id));
  create table licenses (id serial not null, acrynosm varchar(255), details varchar(1024), name varchar(255), reference_link varchar(255), primary key (id));
  create table previews (id bigint not null, source varchar(255), type varchar(255), product_id bigint not null, version varchar(255) not null, primary key (id));
- create table product_details (product_id bigint not null, version varchar(255) not null, cover_image varchar(255), upload_date timestamp(6), description varchar(100), detail_description varchar(255), draft boolean, instruction varchar(255), last_update timestamp(6), name varchar(30), price integer, category_id integer, engine_id integer, license_id integer, primary key (product_id, version));
+ create table product_details (product_id bigint not null, version varchar(255) not null, cover_image varchar(255), upload_date timestamp(6), status Status not null, description varchar(100), detail_description varchar(255), instruction varchar(255), last_update timestamp(6), name varchar(30), price integer, category_id integer, engine_id integer, license_id integer, primary key (product_id, version));
  create table product_details_tag (product_id bigint not null, version varchar(255) not null, tag_id integer not null);
- create table products (id bigint not null, active_version varchar(255), enabled boolean,approved varchar(255), seller_id bigint not null, primary key (id));
+ create table products (id bigint not null, active_version varchar(255), enabled boolean, draft boolean, seller_id bigint not null, primary key (id));
  create table refresh_token (id bigint not null, expiry_date timestamp(6) with time zone not null, token varchar(255) not null, account_id bigint not null, primary key (id));
  create table reports (product_id bigint not null, account_id bigint not null, created_date timestamp(6) not null, description varchar(255) not null, status varchar(255) not null, violation_type_id bigint, primary key (product_id, account_id));
  create table roles (id serial not null, name varchar(255) not null, primary key (id));
@@ -41,7 +49,6 @@
  alter table if exists files add constraint FKrq9nuhnr6dphartkqp3r43yjy foreign key (product_id, version) references product_details;
  alter table if exists previews add constraint FKbpsr69u0guwhqwn1bh3g8ppun foreign key (product_id, version) references product_details;
  alter table if exists product_details add constraint FK9v67j2u6qdqv0baxdovbadrmq foreign key (category_id) references categories;
- alter table if exists product_details add constraint FKn9hmlxplpcnwn9hs0a59gtalf foreign key (engine_id) references engines;
  alter table if exists product_details add constraint FK5cqxu77mkyjobyhdub60i8alj foreign key (license_id) references licenses;
  alter table if exists product_details add constraint FKnfvvq3meg4ha3u1bju9k4is3r foreign key (product_id) references products;
  alter table if exists product_details_tag add constraint FKnxwgt56h1t5u4eiyv6j9fsylv foreign key (tag_id) references tags;

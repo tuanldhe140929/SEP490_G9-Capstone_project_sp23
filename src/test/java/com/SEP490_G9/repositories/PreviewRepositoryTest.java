@@ -41,6 +41,13 @@ class PreviewRepositoryTest {
 		Preview result = previewRepo.findById(expectedId).get();
 		assertThat(result.getId()).isEqualTo(expectedId);
 	}
+	
+	@Test
+	void testFindByIdA() {
+		Long expectedId = -1L;
+		Preview result = previewRepo.findById(expectedId).get();
+		assertThat(result.getId()).isEqualTo(expectedId);
+	}
 
 	@Test
 	void testFindByProductIdAndVersion() {
@@ -50,6 +57,15 @@ class PreviewRepositoryTest {
 		List<Preview> results = previewRepo.findByProductDetailsAndType(pd, "video");
 		assertNotNull(results);
 	}
+	
+	@Test
+	void testFindByProductIdAndVersionA() {
+		ProductDetails pd = new ProductDetails();
+		pd.setProductVersionKey(new ProductVersionKey(-1L, "1.0.0"));
+
+		List<Preview> results = previewRepo.findByProductDetailsAndType(pd, "video");
+		assertTrue(results.isEmpty());
+	}
 
 	@Test
 	void testDeleteById() {
@@ -58,5 +74,14 @@ class PreviewRepositoryTest {
 		previewRepo.deleteById(1L);
 		boolean afterDelete = previewRepo.existsById(1L);
 		assertTrue(!afterDelete);
+	}
+	
+	@Test
+	void testDeleteByIdA() {
+		boolean beforeDelete = previewRepo.existsById(1L);
+		assertTrue(beforeDelete);
+		previewRepo.deleteById(-1L);
+		boolean afterDelete = previewRepo.existsById(1L);
+		assertTrue(afterDelete);
 	}
 }

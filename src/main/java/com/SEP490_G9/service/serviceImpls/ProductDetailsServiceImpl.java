@@ -18,6 +18,7 @@ import com.SEP490_G9.entities.Category;
 import com.SEP490_G9.entities.Preview;
 import com.SEP490_G9.entities.Product;
 import com.SEP490_G9.entities.ProductDetails;
+import com.SEP490_G9.entities.ProductDetails.Status;
 import com.SEP490_G9.entities.ProductFile;
 import com.SEP490_G9.entities.Seller;
 import com.SEP490_G9.entities.Tag;
@@ -34,6 +35,7 @@ import com.SEP490_G9.service.ProductService;
 
 @Service
 public class ProductDetailsServiceImpl implements ProductDetailsService {
+	
 	final String PRODUCT_FOLDER_NAME = "products";
 	@Value("${root.location}")
 	private String ROOT_LOCATION;
@@ -91,8 +93,7 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 	public List<ProductDetails> getByPending(List<ProductDetails> listPd) {
 		List<ProductDetails> pendingPd = new ArrayList<>();
 		for(ProductDetails pd: listPd) {
-			Product product = pd.getProduct();
-			if(product.isApproved().equalsIgnoreCase("PENDING")) {
+			if(pd.getApproved() == Status.PENDING) {
 				pendingPd.add(pd);
 			}
 		}
@@ -103,8 +104,7 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 	public List<ProductDetails> getByApproved(List<ProductDetails> listPd) {
 		List<ProductDetails> approvedPd = new ArrayList<>();
 		for(ProductDetails pd: listPd) {
-			Product product = pd.getProduct();
-			if(product.isApproved().equalsIgnoreCase("APPROVED")) {
+			if(pd.getApproved() == Status.APPROVED) {
 				approvedPd.add(pd);
 			}
 		}
@@ -115,8 +115,7 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 	public List<ProductDetails> getByRejected(List<ProductDetails> listPd) {
 		List<ProductDetails> rejectedPd = new ArrayList<>();
 		for(ProductDetails pd: listPd) {
-			Product product = pd.getProduct();
-			if(product.isApproved().equalsIgnoreCase("REJECTED")) {
+			if(pd.getApproved() == Status.REJECTED) {
 				rejectedPd.add(pd);
 			}
 		}
@@ -127,7 +126,8 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 	public List<ProductDetails> getByDrafted(List<ProductDetails> listPd) {
 		List<ProductDetails> draftedPd = new ArrayList<>();
 		for(ProductDetails pd: listPd) {
-			if(pd.isDraft()) {
+			Product product = pd.getProduct();
+			if(product.isDraft()) {
 				draftedPd.add(pd);
 			}
 		}
@@ -138,7 +138,8 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 	public List<ProductDetails> getByPublished(List<ProductDetails> listPd) {
 		List<ProductDetails> publishedPd = new ArrayList<>();
 		for(ProductDetails pd: listPd) {
-			if(!pd.isDraft()) {
+			Product product = pd.getProduct();
+			if(!product.isDraft()) {
 				publishedPd.add(pd);
 			}
 		}
@@ -264,14 +265,8 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 
 	@Override
 	public ProductDetails updateProductDetails(ProductDetails edited) {
-
-		if (edited.getName() == null || edited.getName() == "") {
-			throw new DuplicateFieldException("name must not be blank", null);
-		}
-		if (edited.getCategory() == null) {
-			throw new DuplicateFieldException("category must not be blank", null);
-		}
-
+		if(existByProductIdAndVersion(edited.getProductVersionKey().getProductId(), edited.getProductVersionKey().getVersion()))
+			throw new ResourceNotFoundException("product details with id and version","",edited);
 		return productDetailsRepo.save(edited);
 	}
 
@@ -303,6 +298,7 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		}
 
 		newPD.setCreatedDate(new Date());
+		newPD.setApproved(Status.PENDING);
 		newPD.setDescription(productDetails.getDescription());
 		newPD.setDetailDescription(productDetails.getDetailDescription());
 		newPD.setName(productDetails.getName());
@@ -341,7 +337,6 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		productDetails.setVersion(version);
 		productDetails.setCreatedDate(new Date());
 		productDetails.setLastModified(new Date());
-		productDetails.setDraft(true);
 		ProductDetails savedProductDetails = createProductDetails(productDetails);
 
 		String coverImageDestination = getCoverImageLocation(productDetails);
@@ -367,7 +362,7 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		List<ProductDetails> pds = new ArrayList<>();
 		for (Product ep : ps) {
 			ProductDetails apd = findActiveProductDetails(ep);
-			if (apd.isDraft() == isDraft) {
+			if (ep.isDraft()) {
 				pds.add(apd);
 			}
 		}
@@ -383,33 +378,18 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		return null;
 	}
 
-	// v1
-//	private String getProductVersionDataLocation(ProductDetails pd) {
-////		return getSellerProductsDataLocation(pd.getProduct().getSeller()) + "\\" + pd.getProduct().getId() + "\\"
-////				+ pd.getVersion() + "\\";
-//		return getSellerProductsDataLocation(pd.getProduct().getSeller()) + "\\" + pd.getProduct().getId() + "\\";
-//	}
 
 	private String getCoverImageLocation(ProductDetails productDetails) {
-//		return getSellerProductsDataLocation(productDetails.getProduct().getSeller()) + "\\"
-//				+ productDetails.getProduct().getId() + "\\" + productDetails.getVersion() + "\\"
-//				+ PRODUCT_COVER_IMAGE_FOLDER_NAME + "\\";
 		return getSellerProductsDataLocation(productDetails.getProduct().getSeller()) + "\\"
 				+ productDetails.getProduct().getId() + "\\";
 	}
 
 	private String getProductFilesLocation(ProductDetails productDetails) {
-//		return getSellerProductsDataLocation(productDetails.getProduct().getSeller()) + "\\"
-//				+ productDetails.getProduct().getId() + "\\" + productDetails.getVersion() + "\\"
-//				+ PRODUCT_FILES_FOLDER_NAME + "\\";
 		return getSellerProductsDataLocation(productDetails.getProduct().getSeller()) + "\\"
 				+ productDetails.getProduct().getId() + "\\";
 	}
 
 	private String getPreviewsLocation(ProductDetails productDetails) {
-//		return getSellerProductsDataLocation(productDetails.getProduct().getSeller()) + "\\"
-//				+ productDetails.getProduct().getId() + "\\" + productDetails.getVersion() + "\\"
-//				+ PRODUCT_PREVIEWS_FOLDER_NAME + "\\";
 		return getSellerProductsDataLocation(productDetails.getProduct().getSeller()) + "\\"
 				+ productDetails.getProduct().getId() + "\\";
 	}

@@ -1,6 +1,7 @@
 package com.SEP490_G9.controllers;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +15,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.SEP490_G9.dto.ProductDetailsDTO;
+import com.SEP490_G9.entities.Product;
 import com.SEP490_G9.entities.ProductDetails;
+import com.SEP490_G9.repository.ProductDetailsRepository;
 import com.SEP490_G9.service.ProductDetailsService;
+import com.SEP490_G9.service.ProductService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/productDetails")
@@ -24,6 +30,12 @@ public class ProductDetailsController {
 	@Autowired
 	ProductDetailsService productDetailsService;
 
+	@Autowired
+	ProductDetailsRepository productDetailsRepo;
+	
+	@Autowired
+	ProductService productService;
+	
 	@GetMapping(value = "/getFilteredProducts")
 	public ResponseEntity<?> getFilteredProducts(@RequestParam("keyword") String keyword,
 			@RequestParam("categoryid") int categoryid, @RequestParam("min") int min, @RequestParam("max") int max) {
@@ -118,7 +130,44 @@ public class ProductDetailsController {
 		return ResponseEntity.ok(dto);
 	}
 	
-	
+	@PostMapping(value = "updateProduct")
+	public ResponseEntity<?> updateProduct(@Valid @RequestBody ProductDetailsDTO productDetailsDTO,
+			@RequestParam(name = "instruction") String instructionDetails) {
+		ProductDetailsDTO ret = null;
+		ProductDetails notEdited = productDetailsRepo
+				.findByProductIdAndProductVersionKeyVersion(productDetailsDTO.getId(), productDetailsDTO.getVersion());
+		notEdited.setLastModified(new Date());
+		Product product = notEdited.getProduct();
+		notEdited.setTags(productDetailsDTO.getTags());
+		notEdited.setCategory(productDetailsDTO.getCategory());
+		if (productDetailsDTO.getDescription() != null)
+			notEdited.setDescription(productDetailsDTO.getDescription().trim());
+		else
+			notEdited.setDescription(null);
+
+		if (productDetailsDTO.getDetails() != null)
+			notEdited.setDetailDescription(productDetailsDTO.getDetails().trim());
+		else
+			notEdited.setDetailDescription("");
+
+		if (productDetailsDTO.getLicense() != null)
+			notEdited.setLicense(productDetailsDTO.getLicense());
+		else
+			notEdited.setLicense(null);
+
+		notEdited.setName(productDetailsDTO.getName().trim());
+		notEdited.setPrice(productDetailsDTO.getPrice());
+		product.setDraft(productDetailsDTO.isDraft());
+		notEdited.setInstruction(instructionDetails.trim());
+
+		productService.updateProduct(product);
+		ProductDetails updatedPd = productDetailsRepo.save(notEdited);
+
+		ret = new ProductDetailsDTO(updatedPd);
+
+		return ResponseEntity.ok(ret);
+	}
+
 	
 //	@GetMapping(value = "allPendingProducts")
 //	public ResponseEntity<?> getAllPendingProducts(){

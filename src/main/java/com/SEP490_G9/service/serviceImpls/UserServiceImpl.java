@@ -19,6 +19,7 @@ import com.SEP490_G9.exception.ResourceNotFoundException;
 import com.SEP490_G9.repository.AccountRepository;
 import com.SEP490_G9.repository.UserRepository;
 import com.SEP490_G9.service.FileIOService;
+import com.SEP490_G9.service.ServeMediaService;
 import com.SEP490_G9.service.UserService;
 
 import jakarta.validation.Valid;
@@ -108,11 +109,11 @@ public class UserServiceImpl implements UserService {
 			throw new FileUploadException(profileImage.getContentType() + " file not accept");
 		} else {
 			User user = getUserById();
-			String profileImageLocation = user.getUsername() + "\\profileImageFolder\\";
+			String profileImageLocation = "account_id_"+user.getId() + "/profile";
 			File coverImageDir = new File(ROOT_LOCATION + profileImageLocation);
 			coverImageDir.mkdirs();
-			fileIOService.storeV2(profileImage, profileImageLocation);
-			user.setAvatar(profileImageLocation + profileImage.getOriginalFilename());
+			String storedPath = fileIOService.storeV2(profileImage, ROOT_LOCATION + profileImageLocation);
+			user.setAvatar(storedPath.replace(ROOT_LOCATION, ""));
 			userRepository.save(user);
 			return user.getAvatar();
 		}

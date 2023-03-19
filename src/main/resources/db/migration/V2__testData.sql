@@ -1,5 +1,5 @@
  CREATE EXTENSION IF NOT EXISTS pgcrypto;
- 
+
  insert into roles (id,name) values (1,'ROLE_ADMIN');
  insert into roles (id,name) values (2,'ROLE_STAFF');
  insert into roles (id,name) values (3,'ROLE_USER');
@@ -54,13 +54,17 @@
  insert into licenses(id, acrynosm, details, name, reference_link) VALUES(5, 'CC BY-NC', 'This license lets others remix, adapt, and build upon your work non-commercially, and although their new works must also acknowledge you and be non-commercial, they don’t have to license their derivative works on the same terms.','Attribution-NonCommercial','https://creativecommons.org/licenses/by-nc/4.0/');
  insert into licenses(id, acrynosm, details, name, reference_link) VALUES(6, 'CC BY-NC-SA', 'This license lets others remix, adapt, and build upon your work non-commercially, as long as they credit you and license their new creations under the identical terms.','Attribution-NonCommercial-ShareAlike','https://creativecommons.org/licenses/by-nc-sa/4.0/');
  insert into licenses(id, acrynosm, details, name, reference_link) VALUES(7, 'CC BY-NC-ND', 'This license is the most restrictive of our six main licenses, only allowing others to download your works and share them with others as long as they credit you, but they can’t change them in any way or use them commercially.','Attribution-NonCommercial-NoDerivs','https://creativecommons.org/licenses/by-nc-nd/4.0/');
+ 
+ insert into violation_types VALUES (1,'Sexual content');
+ insert into violation_types VALUES (2,'Violent content');
+ insert into violation_types VALUES (3,'Hateful content');
+ insert into violation_types VALUES (4,'Misinformation');
+ insert into violation_types VALUES (5,'Spam');
+ insert into violation_types VALUES (6,'Copyright infringement');
+ insert into violation_types VALUES (7,'Promote terrorism');
 
- insert into engines(id, name) VALUES(1,'Unity');
- insert into engines(id, name) VALUES(2,'Unreal');
- insert into engines(id, name) VALUES(3,'Godot');
- insert into engines(id, name) VALUES(4,'Cocos');
   
- insert into products (id, active_version, enabled, approved, seller_id) VALUES(1,'1.0.0',true,'APPROVED',2);
+ /*insert into products (id, active_version, enabled, approved, seller_id) VALUES(1,'1.0.0',true,'APPROVED',2);
  insert into products (id, active_version, enabled, approved, seller_id) VALUES(2,'1.0.0',true,'APPROVED',2);
  insert into products (id, active_version, enabled, approved, seller_id) VALUES(3,'1.0.0',true,'REJECTED',2);
  insert into products (id, active_version, enabled, approved, seller_id) VALUES(4,'1.0.0',true,'REJECTED',2);

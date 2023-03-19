@@ -31,10 +31,10 @@ import okhttp3.Response;
 @Component
 public class VirusTotalAPI {
 	@Value("${virustotal.key}")
-	private String virusTotalKey;
+	private static String virusTotalKey;
 
-	private final String UPLOAD_ENDPOINT = "https://www.virustotal.com/api/v3/files";
-	private final String ANALYSIS_ENDPOINT = "https://www.virustotal.com/api/v3/analyses/";
+	private final static String UPLOAD_ENDPOINT = "https://www.virustotal.com/api/v3/files";
+	private final static String ANALYSIS_ENDPOINT = "https://www.virustotal.com/api/v3/analyses/";
 
 	public boolean scanFile(File file) throws IOException {
 		long startTime = System.currentTimeMillis();
@@ -83,7 +83,7 @@ public class VirusTotalAPI {
 		return isMalicious;
 	}
 
-	private boolean getAnalysis(String analysisId, int index) {
+	private static boolean getAnalysis(String analysisId, int index) {
 		boolean isSafe = false;
 		OkHttpClient client = new OkHttpClient();
 		boolean notCompleted = true;
@@ -97,21 +97,6 @@ public class VirusTotalAPI {
 				JsonNode rootNode = objectMapper.readTree(response.body().string());
 				// System.out.println(rootNode.toPrettyString());
 				// Check if the analysis is completed
-
-//				{
-//					  "error" : {
-//					    "message" : "Quota exceeded",
-//					    "code" : "QuotaExceededError"
-//					  }
-//					}
-//					gettin analysis
-//					{
-//					  "error" : {
-//					    "message" : "Quota exceeded",
-//					    "code" : "QuotaExceededError"
-//					  }
-//					}
-
 				String status = rootNode.get("data").get("attributes").get("status").asText();
 				if (status.equals("completed")) {
 					// Print out the JSON object
@@ -133,7 +118,7 @@ public class VirusTotalAPI {
 		return isSafe;
 	}
 
-	public String uploadChunk(String url, byte[] data) {
+	public static String uploadChunk(String url, byte[] data) {
 		OkHttpClient.Builder builder = new OkHttpClient.Builder();
 		builder.connectTimeout(100, TimeUnit.SECONDS);
 		builder.readTimeout(100, TimeUnit.SECONDS);

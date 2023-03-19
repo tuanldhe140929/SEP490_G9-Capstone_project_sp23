@@ -61,8 +61,9 @@ class CategoryServiceTest {
 		assertEquals(expected.size(), 2);
 	}
 	
+	
 	@Test
-	void testAddCategory() {
+	void testAddCategoryN() {
 		boolean expected = true;
 		Category category = new Category(50, "Story");
 		Mockito.when(categoryRepo.save(category)).thenReturn(category);

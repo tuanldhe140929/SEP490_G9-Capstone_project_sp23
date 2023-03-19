@@ -8,6 +8,11 @@ import { Category } from "./Category";
 import { Tag } from "./Tag";
 import { Engine } from "./Engine";
 
+export enum Status {
+  NEW = "NEW"
+  , APPROVED = "APPROVED", REJECTED = "REJECTED", PENDING = "PENDING"
+}
+
 export class Product {
   id: number;
   version: string;
@@ -21,6 +26,7 @@ export class Product {
   license: License;
   draft: boolean;
   engine:Engine;
+  approved:Status;
   price: number;
   previewVideo: Preview;
   previewPictures: Preview[];
@@ -32,6 +38,7 @@ export class Product {
   category: Category;
 
   constructor() {
+	  this.approved = Status.REJECTED;
     this.id = -1;
     this.version = "";
     this.name = "";

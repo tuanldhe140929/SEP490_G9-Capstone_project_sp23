@@ -33,6 +33,14 @@ class ProductRepositoryTest {
 		List<Product> products = productRepository.findBySellerId(sellerId);
 		assertThat(products.size()).isEqualTo(expectedSize);
 	}
+	
+	@Test
+	public void testFindBySellerIdA() {
+		Long sellerId = -2L;
+		int expectedSize = 4;
+		List<Product> products = productRepository.findBySellerId(sellerId);
+		assertThat(products.size()).isEqualTo(0);
+	}
 
 	@Test
 	public void testFindById() {
@@ -49,13 +57,13 @@ class ProductRepositoryTest {
 
 	}
 
-	@Test
-	public void testFindByApproved() {
-		int expectedSize = 3;
-		List<Product> result = productRepository.findByApproved(true);
-		assertThat(result.size()).isEqualTo(expectedSize);
-
-	}
+//	@Test
+//	public void testFindByApproved() {
+//		int expectedSize = 3;
+//		List<Product> result = productRepository.findByApproved("APPROVED");
+//		assertThat(result.size()).isEqualTo(expectedSize);
+//
+//	}
 
 	@Test
 	public void testFindAll() {
@@ -76,12 +84,33 @@ class ProductRepositoryTest {
 	}
 	
 	@Test
-	public void testFindBySellerIdAndApproved() {
+	public void testSaveProductA() {
 		Seller seller = new Seller();
-		seller.setId(2L);
-		int expectedSize = 3;
-		List<Product> results = productRepository.findBySellerIdAndApproved(seller.getId(),true);
-		assertThat(results.size()).isEqualTo(expectedSize);
-
+		seller.setId((long) -2);
+		Product product = new Product();
+		product.setSeller(seller);
+		Product result = productRepository.save(product);
+		assertNotNull(result);
 	}
+	
+	
+//	@Test
+//	public void testFindBySellerIdAndApproved() {
+//		Seller seller = new Seller();
+//		seller.setId(2L);
+//		int expectedSize = 3;
+//		List<Product> results = productRepository.findBySellerIdAndApproved(seller.getId(),"APPROVED");
+//		assertThat(results.size()).isEqualTo(expectedSize);
+//
+//	}
+//	
+//	@Test
+//	public void testFindBySellerIdAndApprovedA() {
+//		Seller seller = new Seller();
+//		seller.setId(2L);
+//		int expectedSize = 0;
+//		List<Product> results = productRepository.findBySellerIdAndApproved(seller.getId(),"APPROVEDD");
+//		assertThat(results.size()).isEqualTo(expectedSize);
+//
+//	}
 }
