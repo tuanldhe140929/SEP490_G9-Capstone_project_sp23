@@ -188,6 +188,28 @@ public class CommonExceptionHandler {
 		errorResponse.setStatus(HttpStatus.BAD_REQUEST);
 		return errorResponse;
 	}
+	
+	@ExceptionHandler(IllegalArgumentException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public final ErrorResponse exceptionResolve(IllegalArgumentException ex) {
+		ErrorResponse errorResponse = new ErrorResponse();
+		List<String> msgs = new ArrayList<>();
+		msgs.add(ex.getMessage());
+		errorResponse.setMessages(msgs);
+		errorResponse.setStatus(HttpStatus.BAD_REQUEST);
+		return errorResponse;
+	}
+	
+	@ExceptionHandler(IllegalAccessError.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public final ErrorResponse exceptionResolve(IllegalAccessError ex) {
+		ErrorResponse errorResponse = new ErrorResponse();
+		List<String> msgs = new ArrayList<>();
+		msgs.add(ex.getMessage());
+		errorResponse.setMessages(msgs);
+		errorResponse.setStatus(HttpStatus.BAD_REQUEST);
+		return errorResponse;
+	}
 //	@ExceptionHandler({ CustomException.class })
 //	@ResponseStatus(HttpStatus.BAD_REQUEST)
 //	public ErrorResponse customExceptionHandle(CustomException ex) {

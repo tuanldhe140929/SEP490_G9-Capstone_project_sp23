@@ -18,6 +18,7 @@ import com.SEP490_G9.repository.AccountRepository;
 import com.SEP490_G9.repository.RoleRepository;
 import com.SEP490_G9.service.AccountService;
 import com.SEP490_G9.common.Constant;
+import com.SEP490_G9.common.PasswordGenerator;
 
 @Service
 public class AccountServiceImpl implements AccountService {
@@ -27,6 +28,9 @@ public class AccountServiceImpl implements AccountService {
 
 	@Autowired
 	RoleRepository roleRepo;
+
+	@Autowired
+	PasswordGenerator pg;
 
 	@Override
 	public Account getByRefreshToken(RefreshToken findByToken) {
@@ -65,7 +69,7 @@ public class AccountServiceImpl implements AccountService {
 	public List<Account> getAllStaffs() {
 		List<Role> staffRoles = new ArrayList<>();
 		staffRoles.add(roleRepo.findById(Constant.STAFF_ROLE_ID));
-		
+
 		List<Account> staffList = accountRepo.findByRolesIn(staffRoles);
 		return staffList;
 	}
@@ -75,7 +79,8 @@ public class AccountServiceImpl implements AccountService {
 		if (accountRepo.existsByEmail(staff.getEmail())) {
 			throw new DuplicateFieldException("email", staff.getEmail());
 		}
-		if(!staff.getEmail().matches("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")) {
+		if (!staff.getEmail()
+				.matches("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")) {
 			throw new EmailServiceException("Not a valid email");
 		}
 		String encodedPassword = new BCryptPasswordEncoder().encode(staff.getPassword().trim());
@@ -103,8 +108,11 @@ public class AccountServiceImpl implements AccountService {
 
 	@Override
 	public String resetPassword(Account account) {
-		// TODO Auto-generated method stub
-		return null;
+		String newPassword = pg.generatePassword(8).toString();
+		String encodedPassword = new BCryptPasswordEncoder().encode(newPassword);
+		account.setPassword(encodedPassword);
+		accountRepo.save(account);
+		return newPassword;
 	}
 
 }

@@ -50,7 +50,7 @@ public class ApplicationConfig implements WebMvcConfigurer {
 	        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
 	        mailSender.setHost("smtp.gmail.com");
 	        mailSender.setPort(587);
-	        
+	       
 	        mailSender.setUsername("namdinhdvh@gmail.com");
 	        mailSender.setPassword("hpkcganvdckblmyl");
 	        

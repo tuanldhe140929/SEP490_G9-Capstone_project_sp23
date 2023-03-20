@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.SEP490_G9.dto.CartDTO;
+import com.SEP490_G9.entities.Cart;
 import com.SEP490_G9.service.CartService;
 
 @RestController
@@ -31,14 +32,9 @@ public class CartController {
 
 	@GetMapping("/getCurrentCartDTO")
 	public ResponseEntity<?> getCart() {
-		CartDTO cart = cartService.getCurrentCartDTO();
-		return ResponseEntity.ok(cart);
-	}
-
-	@GetMapping("/checkOut")
-	public ResponseEntity<?> checkOut() {
-		CartDTO cart = cartService.getCurrentCartDTO();
-		return ResponseEntity.ok(cart);
+		Cart cart = cartService.getCurrentCart();
+		CartDTO dto = new CartDTO(cart);
+		return ResponseEntity.ok(dto);
 	}
 
 	@DeleteMapping("/removeAll/{productId}")

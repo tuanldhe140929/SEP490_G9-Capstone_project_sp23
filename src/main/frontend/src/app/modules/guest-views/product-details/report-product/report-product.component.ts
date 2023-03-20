@@ -5,10 +5,10 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { User } from 'src/app/DTOS/User';
 import { ViolationType } from 'src/app/DTOS/ViolationType';
-import { ManageAccountInfoService } from 'src/app/services/manage-account-info.service';
 import { ReportService } from 'src/app/services/report.service';
 import { StorageService } from 'src/app/services/storage.service';
 import { ViolationTypeService } from 'src/app/services/violation-type.service';
+import { UserService } from '../../../../services/user.service';
 
 
 @Component({
@@ -29,7 +29,7 @@ export class ReportProductComponent implements OnInit{
     private storageService: StorageService,
     private router: Router,
     private toastr: ToastrService,
-    private manageAccountInfoService: ManageAccountInfoService,
+    private userService: UserService,
     @Inject(MAT_DIALOG_DATA) public data: any){}
 
     violationTypeId: number;
@@ -48,7 +48,7 @@ export class ReportProductComponent implements OnInit{
     this.violationTypeId = 0;
     if (this.storageService.isLoggedIn()) {
       this.loginStatus = true;
-      this.manageAccountInfoService.getCurrentUserInfo().subscribe(
+      this.userService.getCurrentUserInfo().subscribe(
         data => {
           this.user = data;
         }

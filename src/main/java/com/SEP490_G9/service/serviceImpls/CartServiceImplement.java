@@ -12,9 +12,11 @@ import com.SEP490_G9.dto.CartDTO;
 import com.SEP490_G9.entities.Account;
 import com.SEP490_G9.entities.Cart;
 import com.SEP490_G9.entities.CartItem;
+import com.SEP490_G9.entities.Product;
 import com.SEP490_G9.entities.Transaction;
 import com.SEP490_G9.entities.User;
 import com.SEP490_G9.entities.UserDetailsImpl;
+import com.SEP490_G9.entities.embeddable.CartItemKey;
 import com.SEP490_G9.exception.ResourceNotFoundException;
 import com.SEP490_G9.repository.AccountRepository;
 import com.SEP490_G9.repository.CartItemRepository;
@@ -46,7 +48,7 @@ public class CartServiceImplement implements CartService {
 	private UserRepository userRepository;
 
 	@Autowired
-	TransactionRepository transactionRepository;
+	TransactionRepository transactionRepo;
 
 	@Autowired
 	AccountRepository accountRepository;
@@ -57,14 +59,60 @@ public class CartServiceImplement implements CartService {
 	@Override
 
 	public CartDTO addProduct(Long productId) {
-		ProductDetails productDetails = productDetailsRepository.findFirstByProductIdOrderByCreatedDateDesc(productId);
 		Cart cart = getCurrentCart();
+		boolean userOwnProduct = isUserOwnProduct(cart.getUser(), productId);
+		if (userOwnProduct) {
+			throw new IllegalArgumentException("User had already own product");
+		}
 
-		CartItem item = new CartItem(cart, productDetails);
+		for (CartItem item : cart.getItems()) {
+			if (item.getProductDetails().getProduct().getId() == productId) {
+				throw new IllegalArgumentException("Cart already has item");
+			}
+		}
+
+		Product product = productRepository.findById(productId).orElseThrow();
+		ProductDetails activeVersion = null;
+		for (ProductDetails pd : product.getProductDetails()) {
+			if (pd.getVersion().equalsIgnoreCase(product.getActiveVersion()))
+				activeVersion = pd;
+			break;
+		}
+		if (activeVersion == null) {
+			throw new ResourceNotFoundException("Product", "active version", productId);
+		}
+
+		CartItem item = new CartItem(cart, activeVersion);
 		cart.addItem(item);
 		cartItemRepository.save(item);
-		CartDTO cartDTO = new CartDTO(getCurrentCart(), previewRepo);
+		CartDTO cartDTO = new CartDTO(getCurrentCart());
 		return cartDTO;
+	}
+
+	public boolean isUserOwnProduct(User user, Long productId) {
+		boolean ret = false;
+		List<Cart> carts = cartRepository.findByUser(user);
+		List<Cart> purchasedCart = new ArrayList<>();
+		for (Cart cart : carts) {
+			if (isCartHadPurchased(cart))
+				purchasedCart.add(cart);
+		}
+		for (Cart cart : purchasedCart) {
+			for (CartItem item : cart.getItems()) {
+				if (item.getProductDetails().getProduct().getId() == productId)
+					ret = true;
+			}
+		}
+		return ret;
+	}
+
+	private boolean isCartHadPurchased(Cart cart) {
+		for (Transaction transaction : cart.getTransactions()) {
+			if (transaction.getStatus().equals(Transaction.Status.COMPLETED)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@Override
@@ -81,9 +129,9 @@ public class CartServiceImplement implements CartService {
 			cart.getItems().remove(itemToRemove);
 			cartItemRepository.delete(itemToRemove);
 		} else {
-			throw new ResourceNotFoundException("product");
+			throw new ResourceNotFoundException("item", "id", productId);
 		}
-		CartDTO cartDto = new CartDTO(getCurrentCart(), previewRepo);
+		CartDTO cartDto = new CartDTO(getCurrentCart());
 		return cartDto;
 
 	}
@@ -109,115 +157,63 @@ public class CartServiceImplement implements CartService {
 		}
 
 		// Convert the updated cart to a CartDTO and return it
-		return new CartDTO(getCurrentCart(), previewRepo);
+		return new CartDTO(getCurrentCart());
 
-	}
-
-	private Cart getCurrentCart() {
-		// Get the currently user's account information
-		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
-				.getAccount();
-		// Retrieve User based on the account ID
-		User user = userRepo.findById(account.getId()).get();
-		// Get the newest cart for this user
-		Cart cart = cartRepository.findFirstByUserOrderByIdDesc(user);
-
-		Cart retCart = null;
-		// If the user has no existing cart, create a new one and save it
-		if (cart == null) {
-			retCart = cartRepository.save(new Cart(user));
-		} else {
-			// Check if any items in the cart need to be updated due to changes in product
-			// details
-			boolean cartUpdated = false;
-
-			List<CartItem> updatedItems = new ArrayList<>();
-			for (CartItem item : cart.getItems()) {
-				// Retrieve the latest version of the product based on its ID
-				Long productId = item.getProductDetails().getProductVersionKey().getProductId();
-				String version = item.getProductDetails().getProductVersionKey().getVersion();
-
-				ProductDetails latestProductDetails = productDetailsRepository
-						.findFirstByProductIdOrderByCreatedDateDesc(productId);
-				// If the version of the product in the cart is outdated, update it
-				if (latestProductDetails != null
-						&& !latestProductDetails.getProductVersionKey().getVersion().equals(version)) {
-					// Update the product in the cart to the latest version
-					item.getProductDetails().setVersion(latestProductDetails.getProductVersionKey().getVersion());
-					item.getProductDetails().setPrice(latestProductDetails.getPrice());
-					updatedItems.add(item);
-					cartUpdated = true;
-				}
-			}
-			if (cartUpdated) {
-				cart.setItems(updatedItems);
-				// If any items were updated, save the cart
-				retCart = cartRepository.save(cart);
-			} else {
-				// lâu ko làm quên mẹ cái này để chi rồi
-				retCart = checkTransactionAndReturnCart(cart, user);
-			}
-		}
-		return retCart;
 	}
 
 	@Override
-	public CartDTO getCurrentCartDTO() {
-		Cart cart = getCurrentCart();
-		CartDTO cartDTO = new CartDTO(cart, previewRepo);
-		return cartDTO;
+	public Cart getCurrentCart() {
+		Cart ret = null;
+		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
+				.getAccount();
+		User user = userRepo.findById(account.getId()).get();
+
+		boolean userOwnCart = cartRepository.existsByUser(user);
+		if (!userOwnCart) {
+			Cart newCart = new Cart();
+			newCart.setUser(user);
+			ret = cartRepository.save(newCart);
+		} else {
+			Cart cart = cartRepository.findFirstByUserOrderByIdDesc(user);
+			boolean cartIsPurchased = isCartHadPurchased(cart);
+			if (cartIsPurchased) {
+				Cart newCart = new Cart();
+				newCart.setUser(user);
+				ret = cartRepository.save(newCart);
+			} else {
+				List<CartItem> updatedItems = new ArrayList<>();
+				for (CartItem item : cart.getItems()) {
+					CartItem updatedItem = new CartItem();
+
+					Long productId = item.getProductDetails().getProductVersionKey().getProductId();
+					String activeVersion = item.getProductDetails().getProduct().getActiveVersion();
+
+					ProductDetails pd = productDetailsRepository.findByProductIdAndProductVersionKeyVersion(productId,
+							activeVersion);
+					updatedItem.setProductDetails(pd);
+
+					CartItemKey cartItemKey = new CartItemKey();
+					cartItemKey.setCartId(cart.getId());
+					cartItemKey.setProductVersionKey(pd.getProductVersionKey());
+					updatedItem.setCartItemKey(cartItemKey);
+					updatedItems.add(updatedItem);
+				}
+				cart.setItems(updatedItems);
+				ret = cartRepository.save(cart);
+			}
+		}
+		return ret;
 	}
 
 	@Override
 	public Cart getCart(Long cartId) {
-		Cart cart = cartRepository.getReferenceById(cartId);
+		Cart cart = cartRepository.findById(cartId).get();
 		return cart;
 	}
 
-	private Cart checkTransactionAndReturnCart(Cart cart, User user) {
-		Transaction transactions = transactionRepository.findByCartId(cart.getId());
-		if (transactions == null) {
-			return cart;
-		} else {
-			Cart newCart = cartRepository.save(new Cart(user));
-			return newCart;
-		}
-
-	}
-
 	@Override
-	public CartDTO checkOut(Account account) {
-		// Validate that the user exists
-		account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
-				.getAccount();
-		User user = userRepo.getReferenceById(account.getId());
-		if (user == null) {
-			// Error: User not found
-			return null;
-		}
-
-		// Validate that the cart is not empty
-		Cart cart = getCurrentCart();
-		if (cart == null) {
-			// Error: Cart is empty
-			return null;
-		}
-
-		// Create new transaction
-		Transaction transaction = new Transaction();
-
-		// Set the transaction details
-
-		// Save the transaction
-		transactionRepository.save(transaction);
-
-		// Clear the cart
-		cart = new Cart();
-
-		// Return the transaction details
-		CartDTO cartDto = new CartDTO();
-		// ....
-		return cartDto;
+	public List<Cart> getByUser(User user) {
+		List<Cart> carts = cartRepository.findByUser(user);
+		return carts;
 	}
-
 }
