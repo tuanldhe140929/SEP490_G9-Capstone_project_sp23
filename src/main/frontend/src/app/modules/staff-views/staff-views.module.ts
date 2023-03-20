@@ -13,6 +13,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
 import { MatSortModule } from '@angular/material/sort';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatSelectModule } from '@angular/material/select';
 
 
 import { StaffViewsRoutingModule } from './staff-views-routing.module';
@@ -50,7 +51,8 @@ import { ReportListComponent } from './staff-base/report-list/report-list.compon
     MatPaginatorModule,
     MatInputModule,
     MatSortModule,
-    MatMenuModule
+    MatMenuModule,
+    MatSelectModule
   ]
 })
 export class StaffViewsModule { }

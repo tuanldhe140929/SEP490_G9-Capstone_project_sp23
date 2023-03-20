@@ -84,6 +84,7 @@ export class ProductDetailsComponent implements OnInit {
     private productFileService: ProductFileService,
     private toastr: ToastrService,
     private userService: UserService,
+
     private reportService: ReportService) {
   }
 
@@ -107,15 +108,11 @@ export class ProductDetailsComponent implements OnInit {
         }
       )
     }
-
-
-
   }
 
   currentPreview: DisplayPreview = new DisplayPreview;
 
   onChoosePreview(preview: DisplayPreview): void {
-
     this.currentPreview = preview;
     var index = -1;
     for (let i = 0; i < this.displayPreviews.length; i++) {
@@ -387,4 +384,4 @@ export class ProductDetailsComponent implements OnInit {
     })
   }
 
-}
+  }

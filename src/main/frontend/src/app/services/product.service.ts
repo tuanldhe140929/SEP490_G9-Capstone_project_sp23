@@ -113,4 +113,20 @@ export class ProductService {
     }
     return this.httpClient.get<any>("http://localhost:9000/product/getProductsByReportStatus", {params})
   }
+
+  getByApprovalStatus(status: string): Observable<any>{
+    const params = {
+      status: status
+    }
+    return this.httpClient.get<any>("http://localhost:9000/productDetails/getByApprovalStatus",{params})
+  }
+
+  updateApprovalStatus(productId: number, version: string, status: string): Observable<any>{
+    const params = {
+      productId: productId,
+      version: version,
+      status: status
+    }
+    return this.httpClient.put<any>("http://localhost:9000/productDetails/updateApprovalStatus",{params});
+  }
 }
