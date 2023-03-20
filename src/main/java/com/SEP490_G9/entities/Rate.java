@@ -14,7 +14,7 @@ import jakarta.persistence.MapsId;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "rate")
+@Table(name = "rates")
 public class Rate {
     @EmbeddedId
     private RateId id;

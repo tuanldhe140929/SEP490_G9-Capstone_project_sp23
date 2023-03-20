@@ -22,12 +22,6 @@ public class Product implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@Override
-	public String toString() {
-		return "Product [id=" + id + ", enabled=" + enabled + ", seller=" + seller + ", activeVersion=" + activeVersion
-				+ ", productDetails=" + productDetails + ", reports=" + reports + "]";
-	}
-
 	@Column(name = "enabled")
 	private boolean enabled = true;
 
@@ -41,10 +35,14 @@ public class Product implements Serializable {
 	@OneToMany(mappedBy = "product")
 	private List<ProductDetails> productDetails = new ArrayList<>();
 
+	@Column(name = "draft")
+	private boolean draft;
+
 	@OneToMany(mappedBy = "product")
 	private List<Report> reports = new ArrayList<>();
 	@OneToMany(mappedBy = "product")
-    private List<Rate> rates = new ArrayList<>();
+	private List<Rate> rates = new ArrayList<>();
+
 	public Product() {
 	}
 
@@ -107,11 +105,22 @@ public class Product implements Serializable {
 	public void setActiveVersion(String activeVersion) {
 		this.activeVersion = activeVersion;
 	}
+
 	public List<Rate> getRates() {
-        return rates;
-    }
+		return rates;
+	}
+
 	public void setRates(List<Rate> rates) {
-        this.rates = rates;
-    }
+		this.rates = rates;
+	}
+	
+	public boolean isDraft() {
+		return draft;
+	}
+
+	public void setDraft(boolean draft) {
+		this.draft = draft;
+	}
+
 
 }

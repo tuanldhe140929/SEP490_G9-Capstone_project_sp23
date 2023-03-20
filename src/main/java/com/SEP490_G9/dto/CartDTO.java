@@ -26,12 +26,12 @@ public class CartDTO {
 
 	}
 
-	public CartDTO(Cart cart, PreviewRepository previewRepository) {
+	public CartDTO(Cart cart) {
 		this.id = cart.getId();
 		this.user = cart.getUser();
 		List<CartItemDTO> itemDtos = new ArrayList<>();
 		for (CartItem item : cart.getItems()) {
-			itemDtos.add(new CartItemDTO(item, previewRepository));
+			itemDtos.add(new CartItemDTO(item));
 		}
 		this.items = itemDtos;
 		for (CartItem item : cart.getItems()) {

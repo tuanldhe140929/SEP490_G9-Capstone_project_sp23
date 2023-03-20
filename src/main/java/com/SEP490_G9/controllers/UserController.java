@@ -14,11 +14,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.SEP490_G9.common.Constant;
 import com.SEP490_G9.common.GoogleAPI;
@@ -42,6 +44,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Size;
 
 @RequestMapping(value = "user")
 @RestController
@@ -80,15 +83,18 @@ public class UserController {
 			// invalidate input exception
 			throw new AuthRequestException("username can not contains spaces");
 		}
-
 		List<Role> userRoles = new ArrayList<>();
 		userRoles.add(roleService.getRoleById(Constant.USER_ROLE_ID));
-
+//		userRoles.add(roleService.getRoleById(Constant.SELLER_ROLE_ID));
 		String encodedPassword = new BCryptPasswordEncoder().encode(user.getPassword());
-		user.setPassword(encodedPassword);
-		user.setCreatedDate(new Date());
-		user.setRoles(userRoles);
-		User saved = userService.createUser(user);
+		
+		User newUser = new User();
+		newUser.setUsername(user.getUsername());
+		newUser.setEmail(user.getEmail());
+		newUser.setPassword(encodedPassword);
+		newUser.setCreatedDate(new Date());
+		newUser.setRoles(userRoles);
+		User saved = userService.createUser(newUser);
 		Account account = accountService.getById(saved.getId());
 		RefreshToken refreshToken = refreshTokenService.createRefreshToken(account);
 		emailService.sendVerifyEmail(account.getEmail());
@@ -171,5 +177,38 @@ public class UserController {
 			userService.update(user);
 		}
 		return ResponseEntity.ok(ret);
+	}
+
+	@GetMapping(value = "getUserInfo")
+	public ResponseEntity<?> getUserInfo() {
+		User user;
+		user = userService.getUserInfo();
+		return ResponseEntity.ok(user);
+	}
+
+	@PostMapping(value = "changeAccountPassword")
+	public ResponseEntity<?> changeAccountPassword(
+			@Valid @RequestParam(name = "newPassword", required = true) @Size(min = 8, max = 30) String newPassword,
+			@Valid @RequestParam(name = "oldPassword", required = true) @Size(min = 8, max = 30) String oldPassword) {
+		User user;
+		boolean ret = userService.changePassword(newPassword, oldPassword);
+		return ResponseEntity.ok(ret);
+	}
+
+	@PostMapping(value = "uploadProfileImage")
+	public ResponseEntity<?> uploadProfileImage(@RequestParam(name = "profileImage") MultipartFile profileImage)
+			throws IOException {
+		String src = userService.uploadAvatar(profileImage);
+		return ResponseEntity.ok(src);
+	}
+
+	@PostMapping(value = "changeAccountInfo")
+	public ResponseEntity<?> changeAccountInfo(
+			@Valid @RequestParam(name = "newUserName", required = true) @Size(min = 3, max = 30) String newUserName,
+			@Valid @RequestParam(name = "newFirstName", required = true) @Size(min = 3, max = 30) String newFirstName,
+			@Valid @RequestParam(name = "newLastName", required = true) @Size(min = 3, max = 30) String newLastName) {
+		User user;
+		user = userService.updateUser(newUserName, newFirstName, newLastName);
+		return ResponseEntity.ok(user);
 	}
 }

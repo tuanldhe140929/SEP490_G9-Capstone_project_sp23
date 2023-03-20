@@ -38,10 +38,7 @@ public class UserServiceImpl implements UserService {
 	FileIOService fileIOService;
 
 	@Value("${root.location}")
-	String ROOT_LOCATION;
-
-	@Autowired
-	ServeMediaService serveMediaService;
+	private String ROOT_LOCATION;
 
 	@Override
 	public User getById(Long userId) {
@@ -51,7 +48,16 @@ public class UserServiceImpl implements UserService {
 		}
 		return user;
 	}
-
+	
+	@Override
+	public User getByEmail(String email) {
+		User user = userRepository.findByEmail(email);
+		if (user == null) {
+			throw new ResourceNotFoundException("User", "email", email);
+		}
+		return user;
+	}
+	
 	@Override
 	public User createUser(@Valid User user) {
 		if (userRepository.existsByEmail(user.getEmail())) {
@@ -63,15 +69,6 @@ public class UserServiceImpl implements UserService {
 
 		User saved = userRepository.save(user);
 		return saved;
-	}
-
-	@Override
-	public User getByEmail(String email) {
-		User user = userRepository.findByEmail(email);
-		if (user == null) {
-			throw new ResourceNotFoundException("User", "email", email);
-		}
-		return user;
 	}
 
 	@Override
@@ -108,11 +105,11 @@ public class UserServiceImpl implements UserService {
 			throw new FileUploadException(profileImage.getContentType() + " file not accept");
 		} else {
 			User user = getUserById();
-			String profileImageLocation = user.getUsername() + "\\profileImageFolder\\";
+			String profileImageLocation = "account_id_"+user.getId() + "/profile";
 			File coverImageDir = new File(ROOT_LOCATION + profileImageLocation);
 			coverImageDir.mkdirs();
-			fileIOService.storeV2(profileImage, profileImageLocation);
-			user.setAvatar(profileImageLocation + profileImage.getOriginalFilename());
+			String storedPath = fileIOService.storeV2(profileImage, ROOT_LOCATION + profileImageLocation);
+			user.setAvatar(storedPath.replace(ROOT_LOCATION, ""));
 			userRepository.save(user);
 			return user.getAvatar();
 		}
@@ -135,17 +132,6 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public File serveAvatar(Long userId) {
-		User user = userRepository.getReferenceById(userId);
-
-		if (user == null) {
-			throw new ResourceNotFoundException("Product id:", userId.toString(), "");
-		}
-
-		return serveMediaService.serveImage(ROOT_LOCATION + user.getAvatar());
-	}
-
-	@Override
 	public User updateUser(String newUserName, String newFirstName, String newLastName) {
 		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
 				.getAccount();
@@ -155,6 +141,13 @@ public class UserServiceImpl implements UserService {
 		user.setLastName(newLastName);
 		userRepository.save(user);
 		return user;
+	}
+	public String getROOT_LOCATION() {
+		return ROOT_LOCATION;
+	}
+
+	public void setROOT_LOCATION(String rOOT_LOCATION) {
+		ROOT_LOCATION = rOOT_LOCATION;
 	}
 
 }

@@ -13,7 +13,7 @@
                 <a *ngIf="isSeller()" data-bs-toggle="offcanvas" (click)="redirectSellerPage()" class="btn btn-light">
                   <i class="fa fa-product-hunt"></i> <span class="ms-1">Cửa hàng</span>
                 </a>
-                <a data-bs-toggle="offcanvas" href="#offcanvas_cart" class="btn btn-light">
+                <a data-bs-toggle="offcanvas" routerLink="/cart" class="btn btn-light">
                   <i class="fa fa-shopping-cart"></i> <span class="ms-1">Giỏ hàng</span>
                 </a>
                 <a routerLink="/profile" class="btn btn-light">

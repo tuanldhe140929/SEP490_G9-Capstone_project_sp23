@@ -34,6 +34,7 @@ public class EmailServiceImpl implements EmailService {
 
 	@Override
 	public boolean sendVerifyEmail(String toEmail) {
+		
 		MimeMessage message = javaMailSender.createMimeMessage();
 		MimeMessageHelper helper;
 		Account account = accountRepository.findByEmail(toEmail);
@@ -41,7 +42,7 @@ public class EmailServiceImpl implements EmailService {
 
 		try {
 			helper = new MimeMessageHelper(message, true);
-			helper.setFrom("DPM Sytem");
+			helper.setFrom("DPMSystem");
 			helper.setTo(toEmail);
 
 			message.setSubject("DPM System mail verify");
@@ -70,7 +71,7 @@ public class EmailServiceImpl implements EmailService {
 
 		try {
 			helper = new MimeMessageHelper(message, true);
-			helper.setFrom("DPM System");
+			helper.setFrom("DPMSystem");
 			helper.setTo(toEmail);
 
 			message.setSubject("DPM System mail reset password");

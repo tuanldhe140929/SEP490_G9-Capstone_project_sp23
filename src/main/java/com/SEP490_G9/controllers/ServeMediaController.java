@@ -24,8 +24,8 @@ import com.SEP490_G9.entities.ProductDetails;
 import com.SEP490_G9.entities.User;
 import com.SEP490_G9.service.PreviewService;
 import com.SEP490_G9.service.ProductDetailsService;
+import com.SEP490_G9.service.ServeMediaService;
 import com.SEP490_G9.service.UserService;
-import com.SEP490_G9.service.serviceImpls.ServeMediaService;
 
 @RequestMapping(value = "public/serveMedia")
 @RestController

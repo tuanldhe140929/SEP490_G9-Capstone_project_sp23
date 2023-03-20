@@ -6,10 +6,10 @@ import { Product } from 'src/app/DTOS/Product';
 import { Seller } from 'src/app/DTOS/Seller';
 import { User } from 'src/app/DTOS/User';
 import { CategoryService } from 'src/app/services/category.service';
-import { ManageAccountInfoService } from 'src/app/services/manage-account-info.service';
 import { ProductService } from 'src/app/services/product.service';
 import { SellerService } from 'src/app/services/seller.service';
 import { StorageService } from 'src/app/services/storage.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-seller-product-list',
@@ -24,6 +24,8 @@ export class SellerProductListComponent implements OnInit {
 
   sellerid: number
   productList: Product[] = [];
+  displayForSeller: Product[] = [];
+  displayForUser: Product[] = [];
   categoryList: Category[] = [];
   minprice: number = 0;
   maxprice: number = 10000000;
@@ -35,7 +37,7 @@ export class SellerProductListComponent implements OnInit {
   seller: Seller;
   user: User;
   loggedInStatus: boolean;
-  sellerStatus: boolean;
+  sellerStatus: boolean = false;
 
 
   constructor(
@@ -45,20 +47,25 @@ export class SellerProductListComponent implements OnInit {
     private router: Router,
     private sellerService: SellerService,
     private storageService: StorageService,
-    private manageAccountInfoService: ManageAccountInfoService,
+    private userService: UserService,
     private modalService: NgbModal
   ) { }
 
   ngOnInit(): void {
     this.sellerid = Number(this.activatedRoute.snapshot.paramMap.get('sellerId'));
-    this.productService.getProductsBySeller(this.sellerid, "", 0, 0, 10000000).subscribe(
+    this.checkIfIsSeller();
+    this.productService.getProductsBySellerForSeller(this.sellerid, "", 0, 0, 10000000).subscribe(
       data => {
         this.productList = data;
       }
     )
+    // this.productService.getProductsBySellerForUser(this.sellerid, "", 0, 0, 10000000).subscribe(
+    //   data => {
+    //     this.displayForUser = data;
+    //   }
+    // )
     this.getAllCategories();
     this.getSellerById();
-    this.checkIfIsSeller();
   }
 
   getAllCategories() {
@@ -71,33 +78,34 @@ export class SellerProductListComponent implements OnInit {
 
   checkIsLoggedIn() {
     if (this.storageService.isLoggedIn()) {
-      this.manageAccountInfoService.getCurrentUserInfo().subscribe(
+      this.userService.getCurrentUserInfo().subscribe(
         data => {
           this.user = data;
           this.loggedInStatus = true;
         }
       )
+    }else{
+      this.loggedInStatus = false;
     }
-    this.loggedInStatus = false;
+    
   }
 
   checkIfIsSeller() {
     if (this.storageService.isLoggedIn()) {
-      this.manageAccountInfoService.getCurrentUserInfo().subscribe(
+      this.userService.getCurrentUserInfo().subscribe(
         data => {
           this.user = data;
-          this.loggedInStatus = true;
-          if (this.loggedInStatus) {
-            if (this.user.id == this.sellerid) {
-              this.sellerStatus = true;
-            } else {
-              this.sellerStatus = false;
-            }
+          console.log(data);
+          if (this.user.id == this.sellerid) {
+            this.sellerStatus = true;
+          } else {
+            this.sellerStatus = false;
           }
         }
       )
+    }else{
+      this.sellerStatus = false;
     }
-    this.sellerStatus = false;
   }
 
   getCoverImage(product: Product): string {
@@ -136,11 +144,19 @@ export class SellerProductListComponent implements OnInit {
   }
 
   refresh() {
-    this.productService.getProductsBySeller(this.sellerid, this.keyword, this.chosenCategory, this.minprice, this.maxprice).subscribe(
-      data => {
-        this.productList = data;
-      }
-    )
+    if(this.sellerStatus){
+      this.productService.getProductsBySellerForSeller(this.sellerid, "", 0, 0, 10000000).subscribe(
+        data => {
+          this.productList = data;
+        }
+      )
+    }else{
+      this.productService.getProductsBySellerForUser(this.sellerid, "", 0, 0, 10000000).subscribe(
+        data => {
+          this.productList = data;
+        }
+      )
+    }
   }
 
   createNewProduct() {

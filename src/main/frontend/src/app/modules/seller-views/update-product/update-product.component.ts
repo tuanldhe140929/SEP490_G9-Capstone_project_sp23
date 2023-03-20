@@ -6,7 +6,6 @@ import { finalize, Subscription } from 'rxjs';
 import { Product } from 'src/app/DTOS/Product';
 import { User } from 'src/app/DTOS/User';
 import { AuthResponse } from 'src/app/DTOS/AuthResponse';
-import { AuthService } from 'src/app/services/auth.service';
 import { ManageProductService } from 'src/app/services/manage-product.service';
 import { StorageService } from '../../../services/storage.service';
 import { Category } from '../../../DTOS/Category';
@@ -19,7 +18,6 @@ import { Preview } from '../../../DTOS/Preview';
 import { PreviewService } from '../../../services/preview.service';
 import { ProductFileService } from '../../../services/product-file.service';
 import { License } from 'src/app/DTOS/License';
-import { LicenseService } from 'src/app/services/license.service';
 import { CategoryService } from 'src/app/services/category.service';
 import { TagService } from 'src/app/services/tag.service';
 import { ProductService } from '../../../services/product.service';
@@ -91,7 +89,6 @@ export class UpdateProductComponent implements OnInit {
     private modalService: NgbModal,
     private previewService: PreviewService,
     private productFileService: ProductFileService,
-    private licenseService: LicenseService,
     private categoryService: CategoryService,
     private tagService: TagService,
     private productService: ProductService) { }
@@ -140,7 +137,7 @@ export class UpdateProductComponent implements OnInit {
 
   }
   getLicenseList() {
-    this.licenseService.getAllLicense().subscribe((data) => {
+    this.productService.getAllLicense().subscribe((data) => {
       this.licenseList = data;
     }, (error) => {
 
@@ -572,6 +569,7 @@ export class UpdateProductComponent implements OnInit {
         formData.append("version", this.product.version);
         const upload$ = this.manageProductService.uploadCoverImage(formData).subscribe(
           (data: string) => {
+			  console.log(this.product);
 			  this.CoverImageUploadBtn.value="";
             this.product.coverImage = data;
             console.log(this.product);
@@ -954,7 +952,7 @@ export class UpdateProductComponent implements OnInit {
       this.productService.createNewVersion(this.product, newVersion).subscribe(
         data => {
           console.log(data);
-          window.location.href = 'http://localhost:4200/product/update/1/' + newVersion;
+          window.location.href = 'http://localhost:4200/product/update/'+this.product.id+'/' + newVersion;
         },
         error => {
           console.log(error);
@@ -1188,8 +1186,13 @@ export class UpdateProductComponent implements OnInit {
     const $request = this.manageProductService.activeVersion(version);
     $request.subscribe(
       (data) => {
-        if (data)
+       
+        if(data==true)
           this.product.activeVersion = version.version;
+          else{
+			     this.fileError = "Phiên bản mục tiêu không có tệp nào để dowload, không thể sử dụng phiên bản này";
+        this.openFileSizeErrorModal();
+		  }
       },
       (error) => {
         this.fileError = "Thay đổi phiên bản sản phảm không thành công";

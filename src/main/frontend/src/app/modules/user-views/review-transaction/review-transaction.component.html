@@ -1,0 +1,20 @@
+<<div *ngIf="isLoading">
+  <app-loading-spinner></app-loading-spinner>
+</div>
+<h2>REVIEW TRANSACTION</h2>
+<div>
+  <div>Total amount:</div>{{total}}
+  <div>Item's price:</div>{{originalPrice}}
+  <div>Transaction Fee: {{fee}} ({{transaction.fee.percentage}}%) </div>
+  <button name="execute_btn" (click)="executePayment()"> Pay </button>
+  <button name="cancel_btn" (click)="cancelPayment()"> Cancel </button>
+</div>
+<ng-template #infoModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" style="color:black">Thông báo</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    <small style="color:black;">{{info}}<br /></small>
+  </div>
+</ng-template>

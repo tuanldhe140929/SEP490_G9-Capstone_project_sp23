@@ -32,7 +32,7 @@ public class ViolationType {
 
 	}
 
-	public ViolationType(int id, String name) {
+	public ViolationType(long id, String name) {
 		this.id = id;
 		this.name = name;
 	}
@@ -42,11 +42,11 @@ public class ViolationType {
 		this.reports = report;
 	}
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 

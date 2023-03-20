@@ -65,13 +65,13 @@ public class FileIOServiceImpl implements FileIOService {
 	public String storeV2(MultipartFile file, String path) {
 		InputStream is = null;
 		OutputStream os = null;
-		String dest = path + "\\" + file.getOriginalFilename();
+		String dest = path + "/" + file.getOriginalFilename();
 		File destFile = new File(dest);
 		int count = 0;
 		System.out.println(dest);
 		while (destFile.exists()) {
 			count++;
-			dest = path + "\\(" + count + ") " + file.getOriginalFilename();
+			dest = path + "/(" + count + ") " + file.getOriginalFilename();
 			System.out.println(count);
 			destFile = new File(dest);
 		}

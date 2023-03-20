@@ -11,6 +11,8 @@ import { CheckoutComponent } from './checkout/checkout.component';
 import { DownloadComponent } from './download/download.component';
 import { CartComponent } from './cart/cart.component';
 import { ThankYouComponent } from './thank-you/thank-you.component';
+import { ReviewTransactionComponent } from './review-transaction/review-transaction.component';
+import { LoadingSpinnerComponent } from '../common-views/loading-spinner/loading-spinner.component';
 
 
 @NgModule({
@@ -20,7 +22,8 @@ import { ThankYouComponent } from './thank-you/thank-you.component';
     CheckoutComponent,
     DownloadComponent,
     CartComponent,
-    ThankYouComponent
+    ThankYouComponent,
+    ReviewTransactionComponent
   ],
   imports: [
     CommonModule,

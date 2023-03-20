@@ -4,8 +4,9 @@ import { AbstractControl, FormBuilder, FormControl, ValidationErrors, ValidatorF
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AuthResponse } from 'src/app/DTOS/AuthResponse';
-import { AuthService } from 'src/app/services/auth.service';
+import { AccountService } from 'src/app/services/account.service';
 import { StorageService } from 'src/app/services/storage.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-register',
@@ -16,7 +17,9 @@ export class RegisterComponent implements OnInit {
 
   @ViewChild('messageModal', { static: false }) private messageModal: any;
 
+  @ViewChild('messageModal2', { static: false }) private messageModal2: any;
 
+  loading = false;
   username = "";
   message = "";
 
@@ -68,34 +71,49 @@ public noWhitespaceValidator(control: FormControl) {
 
   dismissError() {
     this.message = "";
+    this.redirectLogin();
     this.modalService.dismissAll();
   }
 
-  constructor(private http: HttpClient, private formBuilder: FormBuilder, private authService: AuthService,
+  dismissError2() {
+    this.message = "";
+    this.modalService.dismissAll();
+  }
+
+  constructor(private http: HttpClient, private formBuilder: FormBuilder,
+   private userService: UserService,
     private router: Router, private storageService: StorageService,
     private modalService: NgbModal  ) { }
 
   ngOnInit(): void { }
 
   public onRegister() {
+    this.loading = true;
     this.registerForm.controls.username.setValue(this.username);
     if (this.registerForm.valid) {
       
-      this.authService.register(this.registerForm.value).subscribe(
+      this.userService.register(this.registerForm.value).subscribe(
         data => {
           console.log(data);
+          this.loading = false;
           this.message = "Đăng kí thành công, kiểm tra email để xác thực";
           this.storageService.saveRegisteredEmail(data);
           this.openModal();
           //this.sendVerifyEmail(data.email);
         },
         error => {
+          console.log(error);
+          this.loading = false;
           if (error.status === 409) {
             if (error.error.messages[0].includes(this.registerForm.controls.username.value)) {
               this.message = "Tên người dùng đã tòn tại";
             } else {
               this.message = "Email đã được đăng kí"
             }
+            this.openModal2();
+          } else {
+            this.message = "Đăng kí thành công, không thể gửi mail xác thực";
+            this.openModal2;
           }
         }
       );
@@ -105,9 +123,13 @@ public noWhitespaceValidator(control: FormControl) {
   openModal() {
     this.modalService.open(this.messageModal, { centered: true });
   }
+
+  openModal2() {
+    this.modalService.open(this.messageModal2, { centered: true });
+  }
   
   public sendVerifyEmail(email:string){
-	  this.authService.sendVerifyEmail(email).subscribe(
+	  this.userService.sendVerifyEmail(email).subscribe(
 		  (data)=>{
 			  console.log(data);
 		  },

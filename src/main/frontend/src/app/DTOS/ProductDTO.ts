@@ -5,6 +5,7 @@ export class ProductDTO {
   id: number;
   enabled: boolean;
   seller: Seller;
+  draft:boolean;
   productDetails: Product[];
   constructor() {
 

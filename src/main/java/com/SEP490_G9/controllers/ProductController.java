@@ -40,7 +40,6 @@ import com.SEP490_G9.exception.ResourceNotFoundException;
 import com.SEP490_G9.repository.PreviewRepository;
 import com.SEP490_G9.repository.ProductDetailsRepository;
 import com.SEP490_G9.service.FileIOService;
-import com.SEP490_G9.service.LicenseService;
 import com.SEP490_G9.service.PreviewService;
 import com.SEP490_G9.service.ProductDetailsService;
 import com.SEP490_G9.service.ProductFileService;
@@ -60,35 +59,25 @@ public class ProductController {
 
 	final String FIRST_PRODUCT_VERSION = "1.0.0";
 
-	@Autowired
-	SellerService sellerService;
 
 	@Autowired
 	ProductService productService;
-
-	@Autowired
-
-	ProductFileService productFileService;
-
-	@Autowired
-	LicenseService licenseService;
 
 	@Autowired
 	ProductDetailsRepository productDetailsRepo;
 
 	@GetMapping("getLicense")
 	public ResponseEntity<?> getAllLicense() {
-		List<License> licenses = licenseService.getAllLicense();
+		List<License> licenses = productService.getAllLicense();
 		return ResponseEntity.ok(licenses);
 	}
 
 	// create new Product
 	@PostMapping(value = "createNewProduct")
 	public ResponseEntity<?> createNewProduct() {
-		Seller seller = getCurrentSeller();
 		Product product = new Product();
 		product.setEnabled(true);
-		product.setSeller(seller);
+		product.setDraft(true);
 		product.setActiveVersion(FIRST_PRODUCT_VERSION);
 		Product createdProduct = productService.createProduct(product);
 		ProductDTO productDTO = new ProductDTO(createdProduct);
@@ -105,44 +94,6 @@ public class ProductController {
 	}
 
 	// update product
-	@PostMapping(value = "updateProduct")
-	public ResponseEntity<?> updateProduct(@Valid @RequestBody ProductDetailsDTO productDetailsDTO,
-			@RequestParam(name = "instruction") String instructionDetails) {
-		ProductDetailsDTO ret = null;
-		ProductDetails notEdited = productDetailsRepo
-				.findByProductIdAndProductVersionKeyVersion(productDetailsDTO.getId(), productDetailsDTO.getVersion());
-		notEdited.setLastModified(new Date());
-		Product product = notEdited.getProduct();
-		notEdited.setTags(productDetailsDTO.getTags());
-		notEdited.setCategory(productDetailsDTO.getCategory());
-		if (productDetailsDTO.getDescription() != null)
-			notEdited.setDescription(productDetailsDTO.getDescription().trim());
-		else
-			notEdited.setDescription(null);
-
-		if (productDetailsDTO.getDetails() != null)
-			notEdited.setDetailDescription(productDetailsDTO.getDetails().trim());
-		else
-			notEdited.setDetailDescription("");
-
-		if (productDetailsDTO.getLicense() != null)
-			notEdited.setLicense(productDetailsDTO.getLicense());
-		else
-			notEdited.setLicense(null);
-
-		notEdited.setName(productDetailsDTO.getName().trim());
-		notEdited.setPrice(productDetailsDTO.getPrice());
-		notEdited.setDraft(productDetailsDTO.isDraft());
-		notEdited.setInstruction(instructionDetails.trim());
-
-		productService.updateProduct(product);
-		ProductDetails updatedPd = productDetailsRepo.save(notEdited);
-
-		ret = new ProductDetailsDTO(updatedPd);
-
-		return ResponseEntity.ok(ret);
-	}
-
 	// delete
 	@DeleteMapping(value = "deleteProduct/{id}")
 	public ResponseEntity<?> deleteProduct(@PathVariable(name = "id") Long id) {
@@ -160,13 +111,6 @@ public class ProductController {
 		src = productService.uploadCoverImage(coverImage, productId, version);
 
 		return ResponseEntity.ok(src);
-	}
-
-	private Seller getCurrentSeller() {
-		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
-				.getAccount();
-		Seller seller = sellerService.getSellerById(account.getId());
-		return seller;
 	}
 
 	@GetMapping(value = "getProductDetails")
@@ -196,144 +140,21 @@ public class ProductController {
 		int count = sellerProducts.size();
 		return ResponseEntity.ok(count);
 	}
+	
+	@PostMapping(value = "updateProductApprovalStatus")
+	public ResponseEntity<?> updateProductApprovalStatus(@RequestParam(name = "productId") long productId, @RequestParam(name = "status") boolean status){
+		productService.updateProductApprovalStatus(productId, status);
+		return ResponseEntity.ok(status);
+	}
 
-//	@GetMapping(value = "getProductsByKeyword/{keyword}")
-//	public ResponseEntity<?> getProductsByKeyword(@PathVariable(name = "keyword") String keyword) {
-//		List<ProductDetails> searchResult = this.productDetailsService.getByKeyword(keyword);
-//		List<ProductDetailsDTO> searchResultDto = new ArrayList<>();
-//		for (ProductDetails result : searchResult) {
-//			searchResultDto.add(new ProductDetailsDTO(result));
-//		}
-//		return ResponseEntity.ok(searchResultDto);
-//	}
+	@GetMapping(value = "getProductsByReportStatus")
+	public ResponseEntity<?> getProductsByReportStatus(@RequestParam(name = "reportStatus") String reportStatus){
+		List<Product> allProductsByStatus = productService.getAllProductsByReportStatus(reportStatus);
+		List<Product> allDtoProducts = new ArrayList<>();
+		for(Product product: allProductsByStatus) {
+			allDtoProducts.add(product);
+		}
+		return ResponseEntity.ok(allDtoProducts);
+	}
 
-
-//	@PostMapping(value = "createNewVersion")
-//	public ResponseEntity<?> createNewVersion(@RequestBody ProductDetailsDTO productDetailsDTO,
-//			@RequestParam(name = "newVersion", required = true) String newVersion) throws IOException {
-//		List<ProductDetails> productDetailss = productDetailsService.getAllByProductId(productDetailsDTO.getId());
-//		List<String> versions = new ArrayList<>();
-//		for (ProductDetails pd : productDetailss) {
-//			versions.add(pd.getVersion());
-//		}
-//
-//		ProductDetailsDTO ret = null;
-//		if (versions.contains(newVersion) || newVersion.endsWith(".") || newVersion.length() > 6) {
-//			throw new DuplicateFieldException("version", newVersion);
-//		} else {
-//			ProductDetails productDetails = productDetailsService.getActiveVersion(productDetailsDTO.getId());
-//			ProductDetails newPD = new ProductDetails();
-//			newPD = createProductDetails(productDetails.getProduct(), newVersion);
-//			String source = getProductVersionDataLocation(productDetails);
-//			String dest = getProductVersionDataLocation(newPD);
-//
-//			File coppyFrom = new File(ROOT_LOCATION + source);
-//			File coppyTo = new File(ROOT_LOCATION + dest);
-//			FileUtils.copyDirectory(coppyFrom, coppyTo);
-//
-//			String newPDCoverImage = productDetails.getCoverImage().replace(source, dest);
-//			newPD.setCoverImage(newPDCoverImage);
-//
-//			newPD.setCategory(
-//					new Category(productDetails.getCategory().getId(), productDetails.getCategory().getName()));
-//
-//			List<Tag> tags = new ArrayList<>();
-//			for (Tag tag : productDetails.getTags()) {
-//				tags.add(new Tag(tag.getId(), tag.getName()));
-//			}
-//			newPD.setTags(tags);
-//
-//			newPD.setCreatedDate(new Date());
-//			newPD.setDescription(productDetails.getDescription());
-//			newPD.setDetailDescription(productDetails.getDetailDescription());
-//			newPD.setName(productDetails.getName());
-//			newPD.setPrice(productDetails.getPrice());
-//			newPD.setInstruction(productDetails.getInstruction());
-//			List<ProductFile> newPDFiles = new ArrayList<>();
-//			for (ProductFile pfile : productDetails.getFiles()) {
-//				ProductFile pf = new ProductFile();
-//				pf.setName(pfile.getName());
-//				pf.setProductDetails(newPD);
-//				pf.setSize(pfile.getSize());
-//				pf.setType(pfile.getType());
-//				pf.setSource(pfile.getSource().replace(source, dest));
-//				newPDFiles.add(pf);
-//			}
-//
-//			List<Preview> newPDPreviews = new ArrayList<>();
-//
-//			for (Preview preview : productDetails.getPreviews()) {
-//				Preview p = new Preview();
-//				p.setProductDetails(newPD);
-//				p.setSource(preview.getSource());
-//				p.setType(preview.getType());
-//				p.setSource(preview.getSource().replace(source, dest));
-//				newPDPreviews.add(p);
-//			}
-//
-//			newPD.setFiles(newPDFiles);
-//			newPD.setPreviews(newPDPreviews);
-//
-//			previewService.createPreviews(newPDPreviews);
-//			productFileService.createProductFiles(newPDFiles);
-//			newPD = productDetailsService.getActiveVersion(productDetailsDTO.getId());
-//			ret = new ProductDetailsDTO(newPD);
-//		}
-//		return ResponseEntity.ok(ret);
-//	}
-
-//	private ProductDetails createProductDetails(Product product, String version) {
-//	ProductDetails productDetails = new ProductDetails();
-//	productDetails.setProduct(product);
-//	productDetails.setVersion(version);
-//	productDetails.setCreatedDate(new Date());
-//	productDetails.setLastModified(new Date());
-//	productDetails.setDraft(true);
-//	ProductDetails savedProductDetails = productDetailsService.createProductDetails(productDetails);
-//
-//	String coverImageDestination = getCoverImageLocation(productDetails);
-//	String filesDestination = getProductFilesLocation(productDetails);
-//	String previewsDestinations = getPreviewsLocation(productDetails);
-//	File folder = new File(ROOT_LOCATION + coverImageDestination);
-//	folder.mkdirs();
-//	folder = new File(ROOT_LOCATION + filesDestination);
-//	folder.mkdirs();
-//	folder = new File(ROOT_LOCATION + previewsDestinations);
-//	folder.mkdirs();
-//	return savedProductDetails;
-//}
-
-//	private String getCoverImageLocation(ProductDetails productDetails) {
-////		return getSellerProductsDataLocation(productDetails.getProduct().getSeller()) + "\\"
-////				+ productDetails.getProduct().getId() + "\\" + productDetails.getVersion() + "\\"
-////				+ PRODUCT_COVER_IMAGE_FOLDER_NAME + "\\";
-//		return getSellerProductsDataLocation(productDetails.getProduct().getSeller()) + "\\"
-//				+ productDetails.getProduct().getId() + "\\";
-//	}
-//
-//	private String getProductFilesLocation(ProductDetails productDetails) {
-////		return getSellerProductsDataLocation(productDetails.getProduct().getSeller()) + "\\"
-////				+ productDetails.getProduct().getId() + "\\" + productDetails.getVersion() + "\\"
-////				+ PRODUCT_FILES_FOLDER_NAME + "\\";
-//		return getSellerProductsDataLocation(productDetails.getProduct().getSeller()) + "\\"
-//				+ productDetails.getProduct().getId() + "\\";
-//	}
-//
-//	private String getPreviewsLocation(ProductDetails productDetails) {
-////		return getSellerProductsDataLocation(productDetails.getProduct().getSeller()) + "\\"
-////				+ productDetails.getProduct().getId() + "\\" + productDetails.getVersion() + "\\"
-////				+ PRODUCT_PREVIEWS_FOLDER_NAME + "\\";
-//		return getSellerProductsDataLocation(productDetails.getProduct().getSeller()) + "\\"
-//				+ productDetails.getProduct().getId() + "\\";
-//	}
-//
-//	private String getSellerProductsDataLocation(Seller seller) {
-//		return "account_id_" + seller.getId() + "\\" + PRODUCT_FOLDER_NAME;
-//	}
-//
-//	private String getProductVersionDataLocation(ProductDetails pd) {
-////		return getSellerProductsDataLocation(pd.getProduct().getSeller()) + "\\" + pd.getProduct().getId() + "\\"
-////				+ pd.getVersion() + "\\";
-//		return getSellerProductsDataLocation(pd.getProduct().getSeller()) + "\\" + pd.getProduct().getId() + "\\";
-//	}
 }
