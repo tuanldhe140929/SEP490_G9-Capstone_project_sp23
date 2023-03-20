@@ -6,8 +6,8 @@ import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Report } from 'src/app/DTOS/Report';
 import { Seller } from 'src/app/DTOS/Seller';
-import { ManageAccountInfoService } from 'src/app/services/manage-account-info.service';
 import { ReportService } from 'src/app/services/report.service';
+import { UserService } from 'src/app/services/user.service';
 import { AuthResponse } from '../../../DTOS/AuthResponse';
 import { Preview } from '../../../DTOS/Preview';
 import { Product } from '../../../DTOS/Product';
@@ -66,7 +66,6 @@ export class ProductDetailsComponent implements OnInit {
   visitorId: number;
   productId: number;
   loginStatus = false;
-  user: User = new User;
   product: Product = new Product;//hiển thị
   totalSize: number | undefined;
   sellerTotalProductCount = 0;
@@ -83,7 +82,7 @@ export class ProductDetailsComponent implements OnInit {
     private cartService: CartService,
     private productFileService: ProductFileService,
     private toastr: ToastrService,
-    private manageAccountInfoService: ManageAccountInfoService,
+    private userService: UserService,
     private reportService: ReportService) {
     
   }
@@ -93,27 +92,19 @@ export class ProductDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.getProduct();
     this.productId = Number(this.activatedRoute.snapshot.paramMap.get('productId'));
-    if (this.storageService.isLoggedIn()) {
-      this.loginStatus = true;
-      this.manageAccountInfoService.getCurrentUserInfo().subscribe(
+    if(this.storageService.getToken()){
+      this.userService.getCurrentUserInfo().subscribe(
         data => {
-          this.user = data;
+          this.visitor = data;
           this.visitorId = data.id;
-          console.log("productId:"+this.productId+"userId:"+this.visitorId);
-          this.reportService.getReportByProductAndUser(this.product.id,this.user.id).subscribe(
-            data => {
-              this.report = data;
-              console.log(this.report);
-            }
-          )
+          this.reportService.getReportByProductAndUser(this.productId, this.visitorId).subscribe((data: any) => {
+            this.report = data;
+          })
         }
       )
-    } else {
-      this.loginStatus = false;
     }
-    if (this.storageService.isLoggedIn()) {
-      this.getVisitor();
-    }
+
+
 
   }
 
@@ -325,7 +316,9 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   onCheckIfReported(){
-    if(this.report!=null){
+    if(!this.storageService.getToken()){
+      this.toastr.error('Vui lòng đăng nhập để báo cáo');
+    }else if(this.report!=null){
       this.toastr.error('Bạn đã báo cáo sản phẩm này');
     }else{
       this.openReportModal();
@@ -385,7 +378,7 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   refresh() {
-    this.reportService.getReportByProductAndUser(this.product.id, this.user.id).subscribe((data: any) => {
+    this.reportService.getReportByProductAndUser(this.product.id, this.visitorId).subscribe((data: any) => {
       this.report = data;
     })
   }
