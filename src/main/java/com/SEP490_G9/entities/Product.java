@@ -40,9 +40,7 @@ public class Product implements Serializable {
 
 	@OneToMany(mappedBy = "product")
 	private List<Report> reports = new ArrayList<>();
-	@OneToMany(mappedBy = "product")
-	private List<Rate> rates = new ArrayList<>();
-
+	
 	public Product() {
 	}
 
@@ -106,14 +104,6 @@ public class Product implements Serializable {
 		this.activeVersion = activeVersion;
 	}
 
-	public List<Rate> getRates() {
-		return rates;
-	}
-
-	public void setRates(List<Rate> rates) {
-		this.rates = rates;
-	}
-	
 	public boolean isDraft() {
 		return draft;
 	}

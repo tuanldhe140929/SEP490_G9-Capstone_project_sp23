@@ -31,8 +31,10 @@ public interface PaypalService {
 
 	public Payer getPayerById(String paymentId);
 
-	public PayoutBatch payout(String email, Double total);
+	public PayoutBatch executePayout(String email, Double total);
 
 	String checkPayoutStatus(String batchId);
+
+	String checkPayoutFee(String batchId);
 
 }

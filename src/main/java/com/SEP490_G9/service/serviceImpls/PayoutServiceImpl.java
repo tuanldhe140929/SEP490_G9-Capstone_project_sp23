@@ -32,7 +32,6 @@ public class PayoutServiceImpl implements PayoutService {
 	@Override
 	public List<Payout> preparePayout(Long transactionId) {
 		Transaction transaction = transactionRepo.findById(transactionId).orElseThrow();
-
 		List<Seller> sellers = new ArrayList<>();
 		for (CartItem item : transaction.getCart().getItems()) {
 			Seller seller = item.getProductDetails().getProduct().getSeller();
@@ -57,65 +56,94 @@ public class PayoutServiceImpl implements PayoutService {
 				total += item.getProductDetails().getPrice();
 			}
 		}
-		total = total * (1 - transaction.getFee().getPercentage() / 100);
+
+		total = total * (1 - transaction.getFee().getPercentage() / 100D);
 
 		return total;
 	}
 
-	Payout preparePayoutForSeller(Seller seller, Double amount, Transaction transaction) {
+	@Override
+	public Payout preparePayoutForSeller(Seller seller, Double amount, Transaction transaction) {
 		Payout payout = new Payout();
 		payout.setAmount(amount);
 		payout.setSeller(seller);
 		payout.setTransaction(transaction);
 		payout.setCreatedDate(new Date());
-		payout.setDescription("Payout");
+		payout.setDescription("Wait for buy transaction to complete");
 		payout.setStatus(Payout.Status.CREATED);
 		payoutRepository.save(payout);
 		return payout;
 	}
 
 	@Override
-	public List<Payout> commitPayout(Long transactionId) {
+	public List<Payout> executePayout(Long transactionId) {
 		List<Payout> payouts = payoutRepository.findByTransactionId(transactionId);
 		for (Payout payout : payouts) {
 			payout.setLastModified(new Date());
 			payout.setDescription("commited payout");
 			payout.setStatus(Payout.Status.PENDING);
-			PayoutBatch batch = paypalService.payout(payout.getSeller().getEmail(), payout.getAmount());
-			fetchPayoutStatus(payout, batch);
+			PayoutBatch batch = paypalService.executePayout(payout.getSeller().getEmail(), payout.getAmount());
+			payout.setBatchId(batch.getBatchHeader().getPayoutBatchId());
+			fetchPayoutStatus(payout.getId(), batch.getBatchHeader().getPayoutBatchId());
 		}
 		payouts = payoutRepository.saveAll(payouts);
 		return payouts;
 	}
 
-	private void fetchPayoutStatus(Payout payout, PayoutBatch batch) {
+	@Override
+	public Payout fetchPayoutStatus(Long payoutId, String batchId) {
+		Payout payout = getById(payoutId);
 
+		int numCheck = 0;
+		int maxCheck = 30;
 		String state = "";
-		while (state != "success") {
-			state = paypalService.checkPayoutStatus(batch.getBatchHeader().getPayoutBatchId());
-			if (state.equals("approved")) {
-				payout.setDescription("success");
+		while (numCheck < maxCheck) {
+			state = paypalService.checkPayoutStatus(batchId);
+			System.out.println(state);
+			if (state.equals("SUCCESS")) {
+				double fee = Double.parseDouble(paypalService.checkPayoutFee(batchId));
+				payout.setDescription("Payout has been send");
 				payout.setStatus(Payout.Status.SUCCESS);
-				break;
-			} else if (state.equals("failed")) {
-				payout.setDescription("failed");
-				payout.setStatus(Payout.Status.FAILED);
-				break;
-			} else if (state.equals("blocked") || state.equals("refunded")) {
-				payout.setDescription("cancel by seller");
-				payout.setStatus(Payout.Status.CANCELED);
-				break;
-			} else {
-				payout.setDescription("cancel by seller");
+				payout.setPayoutFee(fee);
+				payoutRepository.save(payout);
+				return payout;
+			} else if (state.equals("PENDING")) {
+				payout.setDescription("Pending and will be process soon");
 				payout.setStatus(Payout.Status.PENDING);
+				payoutRepository.save(payout);
+
+			} else if (state.equals("PROCESSING")) {
+				payout.setDescription("Payout is being processed");
+				payout.setStatus(Payout.Status.PROCESSING);
+				payoutRepository.save(payout);
+
+			} else if (state.equals("CANCELED")) {
+				payout.setDescription("Cancel by DPM system");
+				payout.setStatus(Payout.Status.CANCELED);
+				payoutRepository.save(payout);
+				return payout;
+			} else if (state.equals("DENIED")) {
+				payout.setDescription("Denied by Paypal");
+				payout.setStatus(Payout.Status.FAILED);
+				payoutRepository.save(payout);
+				return payout;
 			}
-			payoutRepository.save(payout);
 			try {
 				Thread.sleep(3 * 1000L); // Wait for the specified interval before checking again
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
+			numCheck++;
 		}
+		payout.setStatus(Payout.Status.UNDEFINED);
+		payout.setDescription("Fetching status time out");
+		return payoutRepository.save(payout);
+	}
+
+	@Override
+	public Payout getById(Long payoutId) {
+		Payout ret = payoutRepository.findById(payoutId).orElseThrow();
+		return ret;
 	}
 
 	@Override

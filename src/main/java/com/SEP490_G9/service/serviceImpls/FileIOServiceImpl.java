@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.SEP490_G9.exception.StorageException;
+import com.SEP490_G9.exception.InternalServerException;
 import com.SEP490_G9.service.FileIOService;
 import com.SEP490_G9.common.StorageUtil;
 
@@ -40,26 +40,9 @@ public class FileIOServiceImpl implements FileIOService {
 			Path p = Paths.get(ROOT_LOCATION);
 			Files.createDirectories(p);
 		} catch (IOException e) {
-			throw new StorageException("Could not initialize storage", e);
+			throw new InternalServerException("Could not initialize storage", e);
 		}
 	}
-//
-//	@Override
-//	public void store(MultipartFile file, String path) {
-//		try {
-//			if (file.isEmpty()) {
-//				throw new StorageException("Failed to store empty file.");
-//			}
-//			Path destinationFile = this.rootLocation.resolve(Paths.get(path + "\\" + file.getOriginalFilename()))
-//					.normalize().toAbsolutePath();
-//
-//			try (InputStream inputStream = file.getInputStream()) {
-//				Files.copy(inputStream, destinationFile, StandardCopyOption.REPLACE_EXISTING);
-//			}
-//		} catch (IOException e) {
-//			throw new StorageException("Failed to store file.", e);
-//		}
-//	}
 
 	@Override
 	public String storeV2(MultipartFile file, String path) {
@@ -86,13 +69,13 @@ public class FileIOServiceImpl implements FileIOService {
 
 			return dest;
 		} catch (IOException e) {
-			throw new StorageException("Failed to store file.", e);
+			throw new InternalServerException("Failed to store file.", e);
 		} finally {
 			try {
 				is.close();
 				os.close();
 			} catch (IOException e) {
-				throw new StorageException("Failed to store file.", e);
+				throw new InternalServerException("Failed to store file.", e);
 			}
 		}
 	}
@@ -103,7 +86,7 @@ public class FileIOServiceImpl implements FileIOService {
 			return Files.walk(this.rootLocation, 1).filter(path -> !path.equals(this.rootLocation))
 					.map(this.rootLocation::relativize);
 		} catch (IOException e) {
-			throw new StorageException("Failed to read stored files", e);
+			throw new InternalServerException("Failed to read stored files", e);
 		}
 	}
 
@@ -125,11 +108,11 @@ public class FileIOServiceImpl implements FileIOService {
 			if (resource.exists() || resource.isReadable()) {
 				return resource;
 			} else {
-				throw new StorageException("Could not read file: " + filename);
+				throw new InternalServerException("Could not read file: " + filename);
 
 			}
 		} catch (MalformedURLException e) {
-			throw new StorageException("Could not read file: " + filename, e);
+			throw new InternalServerException("Could not read file: " + filename, e);
 		}
 	}
 
@@ -144,7 +127,7 @@ public class FileIOServiceImpl implements FileIOService {
 
 			return multipartFile;
 		} catch (Exception e) {
-			throw new StorageException("Could not read file: " + filename, e);
+			throw new InternalServerException("Could not read file: " + filename, e);
 		}
 	}
 }

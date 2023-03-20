@@ -18,8 +18,10 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
 //	
 	public Cart findFirstByUserOrderByIdDesc(User user);
 
-	public boolean existsByUser(User user);
+	public boolean existsByUserId(Long userId);
 
-	public List<Cart> findByUser(User user);
+	public List<Cart> findByUserId(Long userid);
+
+	public boolean existsByIdAndUserId(Long cartId, Long userId);
 
 }

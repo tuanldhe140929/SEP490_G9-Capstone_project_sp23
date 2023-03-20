@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +27,7 @@ import com.SEP490_G9.repository.ProductRepository;
 import com.SEP490_G9.repository.TransactionRepository;
 import com.SEP490_G9.repository.UserRepository;
 import com.SEP490_G9.service.CartService;
-
+import com.SEP490_G9.service.ProductDetailsService;
 import com.SEP490_G9.entities.ProductDetails;
 import com.SEP490_G9.repository.ProductDetailsRepository;
 
@@ -39,6 +40,9 @@ public class CartServiceImplement implements CartService {
 	PreviewRepository previewRepo;
 	@Autowired
 	ProductRepository productRepository;
+	@Autowired
+	ProductDetailsService productDetailsService;
+
 	@Autowired
 	ProductDetailsRepository productDetailsRepository;
 	@Autowired
@@ -57,11 +61,9 @@ public class CartServiceImplement implements CartService {
 	UserRepository userRepo;
 
 	@Override
-
-	public CartDTO addProduct(Long productId) {
-		Cart cart = getCurrentCart();
-		boolean userOwnProduct = isUserOwnProduct(cart.getUser(), productId);
-		if (userOwnProduct) {
+	public Cart addItem(Long productId, Long cartId) {
+		Cart cart = getById(cartId);
+		if (isUserPurchasedProduct(cart.getUser().getId(), productId)) {
 			throw new IllegalArgumentException("User had already own product");
 		}
 
@@ -70,43 +72,17 @@ public class CartServiceImplement implements CartService {
 				throw new IllegalArgumentException("Cart already has item");
 			}
 		}
-
-		Product product = productRepository.findById(productId).orElseThrow();
-		ProductDetails activeVersion = null;
-		for (ProductDetails pd : product.getProductDetails()) {
-			if (pd.getVersion().equalsIgnoreCase(product.getActiveVersion()))
-				activeVersion = pd;
-			break;
-		}
-		if (activeVersion == null) {
-			throw new ResourceNotFoundException("Product", "active version", productId);
-		}
-
+		ProductDetails activeVersion = productDetailsService.getActiveVersion(productId);
 		CartItem item = new CartItem(cart, activeVersion);
-		cart.addItem(item);
 		cartItemRepository.save(item);
-		CartDTO cartDTO = new CartDTO(getCurrentCart());
-		return cartDTO;
-	}
-
-	public boolean isUserOwnProduct(User user, Long productId) {
-		boolean ret = false;
-		List<Cart> carts = cartRepository.findByUser(user);
-		List<Cart> purchasedCart = new ArrayList<>();
-		for (Cart cart : carts) {
-			if (isCartHadPurchased(cart))
-				purchasedCart.add(cart);
-		}
-		for (Cart cart : purchasedCart) {
-			for (CartItem item : cart.getItems()) {
-				if (item.getProductDetails().getProduct().getId() == productId)
-					ret = true;
-			}
-		}
+		cart.addItem(item);
+		Cart ret = cartRepository.save(cart);
 		return ret;
 	}
 
-	private boolean isCartHadPurchased(Cart cart) {
+	@Override
+	public boolean isCartHadPurchased(Long cartId) {
+		Cart cart = cartRepository.findById(cartId).orElseThrow();
 		for (Transaction transaction : cart.getTransactions()) {
 			if (transaction.getStatus().equals(Transaction.Status.COMPLETED)) {
 				return true;
@@ -116,8 +92,8 @@ public class CartServiceImplement implements CartService {
 	}
 
 	@Override
-	public CartDTO removeProduct(Long productId) {
-		Cart cart = getCurrentCart();
+	public Cart removeItem(Long productId, Long cartId) {
+		Cart cart = getById(cartId);
 		CartItem itemToRemove = null;
 		for (CartItem item : cart.getItems()) {
 			if (item.getProductDetails().getProductVersionKey().getProductId() == productId) {
@@ -125,21 +101,18 @@ public class CartServiceImplement implements CartService {
 				break;
 			}
 		}
-		if (itemToRemove != null) {
-			cart.getItems().remove(itemToRemove);
-			cartItemRepository.delete(itemToRemove);
+		if (itemToRemove == null) {
+			throw new IllegalArgumentException("Cart does not have product with id:" + productId);
 		} else {
-			throw new ResourceNotFoundException("item", "id", productId);
+			cart.getItems().remove(itemToRemove);
+			Cart ret = cartRepository.save(cart);
+			return ret;
 		}
-		CartDTO cartDto = new CartDTO(getCurrentCart());
-		return cartDto;
-
 	}
 
 	public CartDTO removeAllProduct(Long productId) {
 		Cart cart = getCurrentCart();
 		CartItem itemToRemove = null;
-
 		// Find the CartItem in the cart with the given productId
 		for (CartItem item : cart.getItems()) {
 			if (item.getProductDetails().getProductVersionKey().getProductId().equals(productId)) {
@@ -151,14 +124,13 @@ public class CartServiceImplement implements CartService {
 		if (itemToRemove != null) {
 			// Remove the CartItem from the cart
 			cart.getItems().remove(itemToRemove);
-
+			cartItemRepository.delete(itemToRemove);
 			// Update the cart in the database
 			cartRepository.save(cart);
 		}
 
 		// Convert the updated cart to a CartDTO and return it
 		return new CartDTO(getCurrentCart());
-
 	}
 
 	@Override
@@ -168,30 +140,29 @@ public class CartServiceImplement implements CartService {
 				.getAccount();
 		User user = userRepo.findById(account.getId()).get();
 
-		boolean userOwnCart = cartRepository.existsByUser(user);
-		if (!userOwnCart) {
-			Cart newCart = new Cart();
-			newCart.setUser(user);
-			ret = cartRepository.save(newCart);
+		// chua co cart thi tao cart moi
+		if (!cartRepository.existsByUserId(user.getId())) {
+			Cart cart = new Cart();
+			cart.setUser(user);
+			ret = createCart(cart);
 		} else {
 			Cart cart = cartRepository.findFirstByUserOrderByIdDesc(user);
-			boolean cartIsPurchased = isCartHadPurchased(cart);
+			boolean cartIsPurchased = isCartHadPurchased(cart.getId());
+			// cart da thanh toan thi tao cart moi
 			if (cartIsPurchased) {
 				Cart newCart = new Cart();
 				newCart.setUser(user);
-				ret = cartRepository.save(newCart);
+				ret = createCart(cart);
+				// cart chua thanh toan thi update lai active version
 			} else {
 				List<CartItem> updatedItems = new ArrayList<>();
 				for (CartItem item : cart.getItems()) {
 					CartItem updatedItem = new CartItem();
-
 					Long productId = item.getProductDetails().getProductVersionKey().getProductId();
 					String activeVersion = item.getProductDetails().getProduct().getActiveVersion();
-
 					ProductDetails pd = productDetailsRepository.findByProductIdAndProductVersionKeyVersion(productId,
 							activeVersion);
 					updatedItem.setProductDetails(pd);
-
 					CartItemKey cartItemKey = new CartItemKey();
 					cartItemKey.setCartId(cart.getId());
 					cartItemKey.setProductVersionKey(pd.getProductVersionKey());
@@ -206,14 +177,44 @@ public class CartServiceImplement implements CartService {
 	}
 
 	@Override
-	public Cart getCart(Long cartId) {
-		Cart cart = cartRepository.findById(cartId).get();
+	public Cart createCart(Cart cart) {
+		Cart saved = cartRepository.save(cart);
+		return saved;
+	}
+
+	@Override
+	public Cart getById(Long cartId) {
+		Cart cart = cartRepository.findById(cartId).orElseThrow();
 		return cart;
 	}
 
 	@Override
-	public List<Cart> getByUser(User user) {
-		List<Cart> carts = cartRepository.findByUser(user);
+	public List<Cart> getByUserId(Long userId) {
+		List<Cart> carts = cartRepository.findByUserId(userId);
 		return carts;
+	}
+
+	@Override
+	public boolean isUserOwnCart(Long userId, Long cartId) {
+		return cartRepository.existsByIdAndUserId(cartId, userId);
+	}
+
+	@Override
+	public boolean isUserPurchasedProduct(Long userId, Long productId) {
+		boolean ret = false;
+		List<Cart> carts = cartRepository.findByUserId(userId);
+		List<Cart> purchasedCart = new ArrayList<>();
+		for (Cart cart : carts) {
+			if (isCartHadPurchased(cart.getId()))
+				purchasedCart.add(cart);
+		}
+		for (Cart cart : purchasedCart) {
+			for (CartItem item : cart.getItems()) {
+				if (item.getProductDetails().getProduct().getId() == productId)
+					;
+				ret = true;
+			}
+		}
+		return ret;
 	}
 }
