@@ -32,7 +32,6 @@ import com.SEP490_G9.entities.RefreshToken;
 import com.SEP490_G9.entities.Role;
 import com.SEP490_G9.entities.User;
 import com.SEP490_G9.entities.UserDetailsImpl;
-import com.SEP490_G9.exception.AuthRequestException;
 import com.SEP490_G9.service.AccountService;
 import com.SEP490_G9.service.RoleService;
 import com.SEP490_G9.service.UserService;
@@ -81,11 +80,11 @@ public class UserController {
 		user.setUsername(user.getUsername().trim());
 		if (user.getUsername().contains(" ")) {
 			// invalidate input exception
-			throw new AuthRequestException("username can not contains spaces");
+			throw new IllegalArgumentException("username can not contains spaces");
 		}
 		List<Role> userRoles = new ArrayList<>();
 		userRoles.add(roleService.getRoleById(Constant.USER_ROLE_ID));
-//		userRoles.add(roleService.getRoleById(Constant.SELLER_ROLE_ID));
+		userRoles.add(roleService.getRoleById(Constant.SELLER_ROLE_ID));
 		String encodedPassword = new BCryptPasswordEncoder().encode(user.getPassword());
 		
 		User newUser = new User();

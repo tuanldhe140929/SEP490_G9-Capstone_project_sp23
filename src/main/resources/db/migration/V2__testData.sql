@@ -22,7 +22,7 @@
 
  insert into users (avatar, email_verified, first_name, last_name, username, account_id) values (null, false, 'John', 'Doe', 'usser1', 1);
  insert into users (avatar, email_verified, first_name, last_name, username, account_id) values (null, false, 'John', 'Doe', 'seller1', 2);
- insert into sellers (phone_number, seller_enabled, account_id) values (null, true, 2);
+ insert into sellers (paypal_email, seller_enabled, account_id) values ('okokokok@gmail.com', true, 2);
  
 
  insert into tags(id, name) VALUES(1, '2D');

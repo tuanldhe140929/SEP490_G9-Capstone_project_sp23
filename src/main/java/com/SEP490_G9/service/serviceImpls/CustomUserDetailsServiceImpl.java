@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.SEP490_G9.entities.Account;
 import com.SEP490_G9.entities.UserDetailsImpl;
-import com.SEP490_G9.exception.AuthRequestException;
 import com.SEP490_G9.repository.AccountRepository;
 
 @Service
@@ -21,11 +20,7 @@ public class CustomUserDetailsServiceImpl implements UserDetailsService {
 	@Override
 	public UserDetailsImpl loadUserByUsername(String name) throws UsernameNotFoundException {
 		Account account = null;
-		if (accountRepository.existsByEmail(name)) {
-			account = accountRepository.findByEmail(name);
-		} else {
-			throw new AuthRequestException("Email: " + name + " not found.");
-		}
+		account = accountRepository.findByEmail(name);
 		UserDetailsImpl customUserDetail = new UserDetailsImpl();
 		customUserDetail.setAccount(account);
 		return customUserDetail;
