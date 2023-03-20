@@ -467,5 +467,37 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		return allPdByReportStatus;
 	}
 
+	@Override
+	public List<ProductDetails> getProductsByApprovalStatus(String status) {
+		List<ProductDetails> allPd = getAll();
+		List<ProductDetails> allStatusPd = new ArrayList<>();
+		for(ProductDetails pd: allPd) {
+			if(status.equalsIgnoreCase("APPROVED")&&pd.getApproved().equals(Status.APPROVED)) {
+				allStatusPd.add(pd);
+			}
+			if(status.equalsIgnoreCase("REJECTED")&&pd.getApproved().equals(Status.REJECTED)) {
+				allStatusPd.add(pd);
+			}
+			if(status.equalsIgnoreCase("PENDING")&&pd.getApproved().equals(Status.PENDING)) {
+				allStatusPd.add(pd);
+			}
+			if(status.equalsIgnoreCase("NEW")&&pd.getApproved().equals(Status.NEW)) {
+				allStatusPd.add(pd);
+			}
+		}
+		return allStatusPd;
+	}
+
+	@Override
+	public ProductDetails updateApprovalStatus(long productId, String version, String status) {
+		ProductDetails pd = getByProductIdAndVersion(productId, version);
+		if(status.equals("APPROVED")) {
+			pd.setApproved(Status.APPROVED);
+		}else {
+			pd.setApproved(Status.REJECTED);
+		}
+		return pd;
+	}
+
 	
 }

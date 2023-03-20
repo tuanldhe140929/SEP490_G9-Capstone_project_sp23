@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -174,13 +175,21 @@ public class ProductDetailsController {
 		return ResponseEntity.ok(reportList);
 	}
 	
-//	@GetMapping(value = "allPendingProducts")
-//	public ResponseEntity<?> getAllPendingProducts(){
-//		List<ProductDetails> productDetails = productDetailsService.getAllPendingProducts();
-//		List<ProductDetailsDTO> productDetailsDto = new ArrayList<>();
-//		for(ProductDetails pd: productDetails) {
-//			productDetailsDto.add(new ProductDetailsDTO(pd));
-//		}
-//		return ResponseEntity.ok(productDetailsDto);
-//	}
+
+	@GetMapping(value = "getByApprovalStatus")
+	public ResponseEntity<?> getByApprovalStatus(@RequestParam(name = "status") String status){
+		List<ProductDetails> allStatusPd = productDetailsService.getProductsByApprovalStatus(status);
+		List<ProductDetailsDTO> allDtoPd = new ArrayList<>();
+		for(ProductDetails pd: allStatusPd) {
+			allDtoPd.add(new ProductDetailsDTO(pd));
+		}
+		return ResponseEntity.ok(allDtoPd);
+	}
+	
+	@PutMapping(value = "updateApprovalStatus")
+	public ResponseEntity<?> updateApprovalStatus(@RequestParam(name = "productId") long productId, @RequestParam(name = "version")String version, @RequestParam(name = "status") String status){
+		ProductDetails pd = productDetailsService.updateApprovalStatus(productId, version, status);
+		return ResponseEntity.ok(pd);
+	}
+	
 }
