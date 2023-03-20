@@ -1,0 +1,44 @@
+<h1>Danh sách các sản phẩm bị báo cáo</h1>
+<mat-form-field>
+  <mat-label>Bộ lọc</mat-label>
+  <input matInput (keyup)="applyFilter($event)" #input>
+</mat-form-field>
+
+<div class="mat-elevation-z8">
+  <table mat-table [dataSource]="dataSource" matSort>
+
+    <!-- ID Column -->
+    <ng-container matColumnDef="Mã sản phẩm">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header="id"> Tên sản phẩm </th>
+      <td mat-cell *matCellDef="let row"> {{row.id}} </td>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="Phiên bản">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header="name"> Phiên bản </th>
+      <td mat-cell *matCellDef="let row"> {{row.activeVersion}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="Chi tiết">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="seller"> Chi tiết </th>
+        <td mat-cell *matCellDef="let row"> <button class="btn btn-success" (click)="openDetails(row.id)">Mở</button> </td>
+    </ng-container>
+
+    <ng-container matColumnDef="Các báo cáo">
+        <th mat-header-cell *matHeaderCellDef> Các báo cáo </th>
+        <td mat-cell *matCellDef="let row"> <button class="btn btn-success">Xem</button> </td>
+      </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+    <!-- Row shown when there is no matching data. -->
+    <tr class="mat-row" *matNoDataRow>
+      <td class="mat-cell" colspan="4"><p class="noResult">Không có kết quả khớp với "{{input.value}}"</p></td>
+    </tr>
+  </table>
+
+  <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>
+</div>
+
+
+

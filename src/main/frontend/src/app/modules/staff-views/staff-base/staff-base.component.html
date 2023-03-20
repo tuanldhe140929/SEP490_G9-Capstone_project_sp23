@@ -2,7 +2,7 @@
     <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon" (click)="sidebar.toggle()">
      <mat-icon>menu</mat-icon>
    </button>
-   <span>Hệ thống quản lý DPM dành cho Quản trị viên</span>
+   <span>Hệ thống quản lý DPM dành cho Nhân viên</span>
    <span class="example-spacer"></span>
    <span>
    <button mat-button (click)="logout()">
@@ -13,8 +13,8 @@
 <mat-sidenav-container>
     <mat-sidenav #sidebar mode="side">
         <mat-list>
-            <mat-list-item><a (click)="openProductApproval()">Danh sách sản phẩm</a></mat-list-item>
-            <mat-list-item><a>Danh sách báo cáo</a></mat-list-item>
+            <mat-list-item (click)="openProductApproval()" [ngClass]="{chosenTab :productApprovalChosen}"><a>Danh sách sản phẩm</a></mat-list-item>
+            <mat-list-item (click)="openReportList()" [ngClass]="{chosenTab :reportListChosen}"><a>Danh sách báo cáo</a></mat-list-item>
         </mat-list>
     </mat-sidenav>
     <mat-sidenav-content>

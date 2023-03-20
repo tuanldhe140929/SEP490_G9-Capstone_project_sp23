@@ -4,7 +4,10 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { Report } from 'src/app/DTOS/Report';
 import { Seller } from 'src/app/DTOS/Seller';
+import { ReportService } from 'src/app/services/report.service';
+import { UserService } from 'src/app/services/user.service';
 import { AuthResponse } from '../../../DTOS/AuthResponse';
 import { Preview } from '../../../DTOS/Preview';
 import { Product } from '../../../DTOS/Product';
@@ -61,10 +64,14 @@ export class ProductDetailsComponent implements OnInit {
   visitorAuth: AuthResponse = new AuthResponse;
   visitor: User = new User;//thằng đang xem trang ấy
   visitorId: number;
+  productId: number;
+  loginStatus = false;
   product: Product = new Product;//hiển thị
   totalSize: number | undefined;
   sellerTotalProductCount = 0;
+  report: Report;
   dots: number[] = [0];
+  isOwner: boolean;
 
   displayPreviews: DisplayPreview[] = [];
   constructor(private activatedRoute: ActivatedRoute,
@@ -75,18 +82,33 @@ export class ProductDetailsComponent implements OnInit {
     private productService: ProductService,
     private cartService: CartService,
     private productFileService: ProductFileService,
-    private toastr: ToastrService) {
-
+    private toastr: ToastrService,
+    private userService: UserService,
+    private reportService: ReportService) {
   }
-
 
 
   ngOnInit(): void {
     this.getProduct();
-
-    if (this.storageService.isLoggedIn()) {
-      this.getVisitor();
+    this.productId = Number(this.activatedRoute.snapshot.paramMap.get('productId'));
+    if(this.storageService.getToken()){
+      this.userService.getCurrentUserInfo().subscribe(
+        data => {
+          this.visitor = data;
+          this.visitorId = data.id;
+          if(this.visitorId==this.owner.id){
+            this.isOwner == true;
+          }else{
+            this.isOwner == false;
+          }
+          this.reportService.getReportByProductAndUser(this.productId, this.visitorId).subscribe((data: any) => {
+            this.report = data;
+          })
+        }
+      )
     }
+
+
 
   }
 
@@ -297,21 +319,32 @@ export class ProductDetailsComponent implements OnInit {
     return this.getFormattedValue(this.product.price);
   }
 
-  openReportModal() {
-    const data = {
-      productId: this.product.id,
-      userId: this.visitor.id
+  onCheckIfReported(){
+    if(!this.storageService.getToken()){
+      this.toastr.error('Vui lòng đăng nhập để báo cáo');
+    }else if(this.report!=null){
+      this.toastr.error('Bạn đã báo cáo sản phẩm này');
+    }else{
+      this.openReportModal();
     }
-    const dialogRef = this.dialog.open(ReportProductComponent, {
+  }
 
-      height: '55%',
-      width: '50%',
-      data:data
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
-    });
+  openReportModal() {
+      const data = {
+        productId: this.product.id,
+        userId: this.visitor.id
+      }
+      const dialogRef = this.dialog.open(ReportProductComponent, {
+  
+        height: '55%',
+        width: '50%',
+        data:data
+      });
+  
+      dialogRef.afterClosed().subscribe(result => {
+        console.log(`Dialog result: ${result}`);
+        setTimeout(() => this.refresh(),300)
+      });
   }
   redirectSellerPage() {
     this.router.navigate(['collection/' + this.owner.username]);
@@ -346,7 +379,12 @@ export class ProductDetailsComponent implements OnInit {
         this.router.navigate(['/download', this.product.id], { queryParams: { token: token } });
       }
     );
+  }
 
+  refresh() {
+    this.reportService.getReportByProductAndUser(this.product.id, this.visitorId).subscribe((data: any) => {
+      this.report = data;
+    })
   }
 
 }

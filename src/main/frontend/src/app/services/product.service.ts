@@ -106,4 +106,11 @@ export class ProductService {
     }
     return this.httpClient.get<any>("http://localhost:9000/productDetails/getProductsBySellerForUser", {params});
   }
+
+  getProductsByReportStatus(status: string): Observable<any>{
+    const params = {
+      reportStatus: status
+    }
+    return this.httpClient.get<any>("http://localhost:9000/product/getProductsByReportStatus", {params})
+  }
 }

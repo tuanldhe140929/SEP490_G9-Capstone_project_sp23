@@ -1,8 +1,4 @@
-<div *ngIf="!loginStatus">
-    <p style="text-align: center;">Vui lòng đăng nhập để báo cáo sản phẩm</p>
-    <button class="btn btn-primary" (click)="toLogin()">Đăng nhập</button>
-</div>
-<div *ngIf="loginStatus" class="addReportContainer">
+<div class="addReportContainer">
     <form [formGroup]="addReportForm" (submit)="toSendReport()">
         <h2>Báo cáo sản phẩm</h2>
         <p>Lý do vi phạm:</p>

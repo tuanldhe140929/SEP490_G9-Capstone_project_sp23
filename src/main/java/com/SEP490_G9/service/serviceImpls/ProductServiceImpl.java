@@ -1,6 +1,7 @@
 package com.SEP490_G9.service.serviceImpls;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +19,7 @@ import com.SEP490_G9.entities.License;
 import com.SEP490_G9.entities.Product;
 import com.SEP490_G9.entities.ProductDetails;
 import com.SEP490_G9.entities.ProductDetails.Status;
+import com.SEP490_G9.entities.Report;
 import com.SEP490_G9.entities.Seller;
 import com.SEP490_G9.entities.UserDetailsImpl;
 import com.SEP490_G9.exception.FileUploadException;
@@ -28,6 +30,7 @@ import com.SEP490_G9.exception.ResourceNotFoundException;
 import com.SEP490_G9.repository.LicenseRepository;
 import com.SEP490_G9.repository.ProductDetailsRepository;
 import com.SEP490_G9.repository.ProductRepository;
+import com.SEP490_G9.repository.ReportRepository;
 import com.SEP490_G9.service.FileIOService;
 import com.SEP490_G9.service.ProductDetailsService;
 import com.SEP490_G9.service.ProductService;
@@ -56,6 +59,9 @@ public class ProductServiceImpl implements ProductService {
 	
 	@Autowired
 	LicenseRepository licenseRepository;
+	
+	@Autowired
+	ReportRepository reportRepository;
 
 	@Override
 	public Product createProduct(Product product) {
@@ -235,6 +241,19 @@ public class ProductServiceImpl implements ProductService {
 	public void setROOT_LOCATION(String rOOT_LOCATION) {
 		ROOT_LOCATION = rOOT_LOCATION;
 	}
-	
+
+	@Override
+	public List<Product> getAllProductsByReportStatus(String reportStatus) {
+		List<Report> allReports = reportRepository.findAll();
+		List<Product> allReportProducts = new ArrayList<>();
+		for(Report report: allReports) {
+			Product product = report.getProduct();
+			if(report.getStatus().equalsIgnoreCase(reportStatus)) {
+				allReportProducts.add(product);
+			}
+		}
+		List<Product> finalResult = allReportProducts.stream().distinct().toList();
+		return finalResult;
+	}
 
 }

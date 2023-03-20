@@ -21,13 +21,15 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.SEP490_G9.dto.ReportDTO;
 import com.SEP490_G9.entities.Account;
+import com.SEP490_G9.entities.Product;
 import com.SEP490_G9.entities.Report;
 import com.SEP490_G9.entities.UserDetailsImpl;
 import com.SEP490_G9.entities.ViolationType;
 import com.SEP490_G9.entities.embeddable.ReportItemKey;
 import com.SEP490_G9.repository.ViolationTypeRepository;
-
+import com.SEP490_G9.service.ProductService;
 import com.SEP490_G9.service.ReportService;
+import com.SEP490_G9.service.UserService;
 
 @RequestMapping("report")
 @RestController
@@ -36,10 +38,27 @@ public class ReportController {
 	@Autowired
 	ReportService reportService;
 	
+	@Autowired
+	ProductService productService;
+	
+	@Autowired
+	UserService userService;
+	
 	@PostMapping("/sendReport")
 	public ResponseEntity<?> sendReport(@RequestParam(name = "productId") long productId, @RequestParam(name = "accountId") long accountId, @RequestParam(name = "description") String description, @RequestParam(name = "violationTypeId") long violationTypeId){
 		Report report = reportService.sendReport(productId, accountId, description, violationTypeId);
 		return ResponseEntity.ok(report);
+	}
+	
+	@GetMapping("/getByProductAndUser")
+	public ResponseEntity<?> getByReportAndUser(@RequestParam(name = "productId") long productId, @RequestParam(name = "accountId") long accountId){
+		List<Report> reportList = reportService.getByProductAndUser(productId, accountId);
+		if(reportList.isEmpty()) {
+			return ResponseEntity.ok(null);
+		}else {
+			Report report = reportList.get(0);
+			return ResponseEntity.ok(report);
+		}
 	}
 	
 }
