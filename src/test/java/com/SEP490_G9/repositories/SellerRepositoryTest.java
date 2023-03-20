@@ -1,6 +1,10 @@
 package com.SEP490_G9.repositories;
 
+
 import static org.junit.jupiter.api.Assertions.*;
+
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -15,7 +19,7 @@ import com.SEP490_G9.configs.TestConfig;
 import com.SEP490_G9.entities.Account;
 import com.SEP490_G9.entities.Seller;
 import com.SEP490_G9.entities.User;
-import com.SEP490_G9.repository.AccountRepository;
+
 import com.SEP490_G9.repository.SellerRepository;
 import com.SEP490_G9.repository.UserRepository;
 
@@ -25,37 +29,38 @@ import com.SEP490_G9.repository.UserRepository;
 @Import(TestConfig.class)
 class SellerRepositoryTest {
 
-	@Autowired
-	AccountRepository accountRepo;
+
 	
 	@Autowired
 	UserRepository userRepo;
 	
+
+
 	@Autowired
-	SellerRepository sellerRepo;
-	
+	private SellerRepository sellerRepository;
 	@Test
-	void testFindByUsername() {
-		Seller expectedSeller = new Seller();
-		expectedSeller.setEmail("expected@gmail.com");
-		expectedSeller.setPassword("expected");
-		expectedSeller.setUsername("foreveralone");
-		sellerRepo.save(expectedSeller);
+	public void findByUsername() {
+		Seller s = new Seller();
+		s.setPhoneNumber("951123339");
+		s.setUsername("seller1");
+		s.setId((long)2);
+
+		int expectedvalue = 2;
 		
-		Seller result = sellerRepo.findByUsername("foreveralone");
-		assertEquals(expectedSeller, result);
+		Seller result = sellerRepository.findByUsername("seller1");
+		assertThat(result.getId()).isEqualTo(expectedvalue);
 	}
-	
 	@Test
-	void testFindById() {
-		Seller expected = new Seller();
-		expected.setId(1L);
-		expected.setEmail("expected@gmail.com");
-		expected.setPassword("foreveralone");
-		sellerRepo.save(expected);
+	public void findById() {
+		Seller s = new Seller();
+		s.setPhoneNumber("951123339");
+		s.setUsername("seller1");
+		s.setId((long)2);
 		
-		Seller result = sellerRepo.findById(1L);
-		assertEquals(expected, result);
+		String expectedvalue = "seller1";
+		Seller result = sellerRepository.findById((long)2);
+		assertThat(result.getUsername()).isEqualTo(expectedvalue);
+
 	}
 
 }

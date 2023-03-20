@@ -9,7 +9,6 @@ import { ReportService } from 'src/app/services/report.service';
 import { StorageService } from 'src/app/services/storage.service';
 import { UserService } from 'src/app/services/user.service';
 import { ViolationTypeService } from 'src/app/services/violation-type.service';
-import { UserService } from '../../../../services/user.service';
 
 
 @Component({
@@ -31,7 +30,6 @@ export class ReportProductComponent implements OnInit{
     private userService: UserService,
     private router: Router,
     private toastr: ToastrService,
-    private userService: UserService,
     @Inject(MAT_DIALOG_DATA) public data: any){}
 
     violationTypeId: number;
@@ -53,6 +51,7 @@ export class ReportProductComponent implements OnInit{
     )
     this.description = "";
     this.violationTypeId = 0;
+
   }
 
   addReportForm = this.formBuilder.group({
