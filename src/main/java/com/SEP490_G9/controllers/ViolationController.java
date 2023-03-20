@@ -13,9 +13,7 @@ import com.SEP490_G9.repository.ViolationTypeRepository;
 
 
 @RequestMapping(value = "violation")
-// =======
-// @RequestMapping(value = "violationType")
-// >>>>>>> main
+
 @RestController
 public class ViolationController {
 	@Autowired

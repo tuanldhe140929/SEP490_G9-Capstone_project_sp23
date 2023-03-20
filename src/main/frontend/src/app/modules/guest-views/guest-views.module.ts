@@ -44,7 +44,6 @@ import { PopUpComponent } from './product-details/report-product/pop-up/pop-up.c
     SellerProductListComponent,
     ProductDetailsComponent,
     ReportProductComponent,
-    
     HomeComponent,
     SearchResultComponent,
     PopUpComponent
@@ -66,7 +65,6 @@ import { PopUpComponent } from './product-details/report-product/pop-up/pop-up.c
     NgbRating,
     CommonViewsModule,
     NgxPaginationModule
-
   ]
 })
 export class GuestViewsModule { }

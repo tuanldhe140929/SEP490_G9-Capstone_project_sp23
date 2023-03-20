@@ -43,6 +43,7 @@ public class Report {
 
 	@ManyToOne(fetch = FetchType.EAGER)
 
+
 	@JoinColumn(name = "violation_type_id", unique = false, nullable = false) // sual lai la false
 
 	private ViolationType violation_types;
