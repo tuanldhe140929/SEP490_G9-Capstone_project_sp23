@@ -17,13 +17,9 @@
  insert into account_role (account_id, role_id) values (2, 3);
  insert into account_role (account_id, role_id) values (2, 4);
  insert into account_role (account_id, role_id) values (3, 2);
-
- 
  insert into account_role (account_id, role_id) values (4, 1);
+ SELECT setval('accounts_seq', (SELECT MAX(id) FROM accounts));
 
-
-
- 
  insert into users (avatar, email_verified, first_name, last_name, username, account_id) values (null, false, 'John', 'Doe', 'usser1', 1);
  insert into users (avatar, email_verified, first_name, last_name, username, account_id) values (null, false, 'John', 'Doe', 'seller1', 2);
  insert into sellers (phone_number, seller_enabled, account_id) values (null, true, 2);

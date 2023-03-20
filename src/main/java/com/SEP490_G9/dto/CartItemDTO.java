@@ -9,7 +9,7 @@ public class CartItemDTO {
 	private ProductDetailsDTO product;
 	private Long cartId;
 
-	public CartItemDTO(CartItem cartItem, PreviewRepository previewRepo) {
+	public CartItemDTO(CartItem cartItem) {
 		super();
 
 		ProductDetailsDTO pdd = new ProductDetailsDTO(cartItem.getProductDetails());

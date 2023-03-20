@@ -3,6 +3,7 @@ package com.SEP490_G9.entities;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.paypal.api.payments.Payer;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,18 +17,19 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 
-@JsonIgnoreProperties(value= {"cart"})
+@JsonIgnoreProperties(value = { "cart" })
 @Entity
 @Table(name = "transactions")
 public class Transaction {
 
 	public enum Status {
-		COMPLETED, CANCELED, FAILED, CREATED,
+		COMPLETED, CANCELED, FAILED, CREATED, APPROVED
 	}
 
-	public enum Type{
-		BUY,SELL
+	public enum Type {
+		BUY, SELL
 	}
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -43,14 +45,10 @@ public class Transaction {
 	@Column(name = "status")
 	private Status status;
 
-	@Enumerated(EnumType.STRING)
-	@Column(name = "transaction_type")
-	private Type type;
-	
 	@ManyToOne
-	@JoinColumn(name = "transaction_fee_id",nullable = false)
+	@JoinColumn(name = "transaction_fee_id", nullable = false)
 	private TransactionFee fee;
-	
+
 	@Column(name = "created_date")
 	private Date createDate;
 
@@ -60,19 +58,19 @@ public class Transaction {
 	@Column(name = "description")
 	private String description;
 
-	@Column(name="paypal_id")
+	@Column(name = "paypal_id")
 	private String paypalId;
-	
-	@Column(name="paypal_token")
-	private String paypalToken;
-	
+
 	@Transient
 	private String approvalUrl;
-	
+
+	@Transient
+	private Payer payer;
+
 	public Transaction() {
 		// TODO Auto-generated constructor stub
 	}
-	
+
 	public Long getId() {
 		return id;
 	}
@@ -81,28 +79,12 @@ public class Transaction {
 		this.id = id;
 	}
 
-	public String getPaypalToken() {
-		return paypalToken;
-	}
-
-	public void setPaypalToken(String paypalToken) {
-		this.paypalToken = paypalToken;
-	}
-
 	public Cart getCart() {
 		return cart;
 	}
 
 	public void setCart(Cart cart) {
 		this.cart = cart;
-	}
-
-	public Type getType() {
-		return type;
-	}
-
-	public void setType(Type type) {
-		this.type = type;
 	}
 
 	public String getApprovalUrl() {
@@ -121,8 +103,6 @@ public class Transaction {
 		this.status = status;
 	}
 
-
-
 	public Date getCreateDate() {
 		return createDate;
 	}
@@ -137,6 +117,14 @@ public class Transaction {
 
 	public void setPaypalId(String paypalId) {
 		this.paypalId = paypalId;
+	}
+
+	public Payer getPayer() {
+		return payer;
+	}
+
+	public void setPayer(Payer payer) {
+		this.payer = payer;
 	}
 
 	public Date getLastModified() {
@@ -163,13 +151,6 @@ public class Transaction {
 		this.description = description;
 	}
 
-	@Override
-	public String toString() {
-		return "Transaction [id=" + id + ", cart=" + cart + ", amount=" + amount + ", status=" + status + ", type="
-				+ type + ", createDate=" + createDate + ", lastModified=" + lastModified + ", description="
-				+ description + ", paypalId=" + paypalId + ", approvalUrl=" + approvalUrl + "]";
-	}
-
 	public TransactionFee getFee() {
 		return fee;
 	}
@@ -177,4 +158,13 @@ public class Transaction {
 	public void setFee(TransactionFee fee) {
 		this.fee = fee;
 	}
+
+	@Override
+	public String toString() {
+		return "Transaction [id=" + id + ", cart=" + cart + ", amount=" + amount + ", status=" + status + ", fee=" + fee
+				+ ", createDate=" + createDate + ", lastModified=" + lastModified + ", description=" + description
+				+ ", paypalId=" + paypalId + ", approvalUrl=" + approvalUrl + ", payer=" + payer + "]";
+	}
+	
+	
 }

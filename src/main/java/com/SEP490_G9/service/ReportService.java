@@ -20,4 +20,6 @@ public interface ReportService {
 	List<Report> getByUser(List<Report> reportList, User user);
 	
 	List<Report> getByProductAndUser(long productId, long userId);
+	
+	List<Report> getProductReports(long productId);
 }

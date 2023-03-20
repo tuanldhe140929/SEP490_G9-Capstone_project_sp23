@@ -133,7 +133,7 @@
       </aside>
       <main class="col-lg-4">
         <article class="ps-lg-3">
-          <div class="reportBtn" (click)="onCheckIfReported()" style="position:absolute;right:4%; border:1px solid black; cursor:pointer ;border-radius:5px;">
+          <div *ngIf="!isOwner" class="reportBtn"  (click)="onCheckIfReported()" style="position:absolute;right:4%; border:1px solid black; cursor:pointer ;border-radius:5px;">
             
             <img style="width: 30px; height: 30px;" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQzbVmbfZ3BkG0VBARHNv5MFluIkXOUbLRLEw&usqp=CAU" />
           </div>
@@ -205,8 +205,10 @@
 
           <hr>
           <div class="row cart" style="display:flex; height:60px;">
-            <div class="add_to_cart" style="width:80%; padding-right:0; color:lightgrey;"><button class="add_to_cart_btn" (click)="addToCart()" style="letter-spacing: 2px;">Thêm vào giỏ hàng</button></div>
-            <div class="buy_now" style="width: 20%; color: lightgrey;"><button class="buy_now_btn" style="letter-spacing: 2px;">Mua ngay</button></div>
+            <div *ngIf="!isOwner" class="add_to_cart" style="width:80%; padding-right:0; color:lightgrey;"><button class="add_to_cart_btn" (click)="addToCart()" style="letter-spacing: 2px;">Thêm vào giỏ hàng</button></div>
+            <div *ngIf="isOwner" class="add_to_cart" style="width:80%; padding-right:0; color:lightgrey;"><button class="add_to_cart_btn" style="letter-spacing: 2px;">Chỉnh sửa</button></div>
+            <div *ngIf="!isOwner" class="buy_now" style="width: 20%; color: lightgrey;"><button class="buy_now_btn" style="letter-spacing: 2px;">Mua ngay</button></div>
+            <div *ngIf="isOwner" class="buy_now" style="width: 20%; color: lightgrey;"><button class="buy_now_btn" style="letter-spacing: 2px;">Xóa</button></div>
           </div>
           <div class="row files_metadata" style="margin-top:20px;">
             <div class="" style="font-weight:600; font-size:20px;">Các tệp có thể tải xuống</div>

@@ -17,7 +17,9 @@ export class RegisterComponent implements OnInit {
 
   @ViewChild('messageModal', { static: false }) private messageModal: any;
 
+  @ViewChild('messageModal2', { static: false }) private messageModal2: any;
 
+  loading = false;
   username = "";
   message = "";
 
@@ -69,6 +71,12 @@ public noWhitespaceValidator(control: FormControl) {
 
   dismissError() {
     this.message = "";
+    this.redirectLogin();
+    this.modalService.dismissAll();
+  }
+
+  dismissError2() {
+    this.message = "";
     this.modalService.dismissAll();
   }
 
@@ -80,24 +88,32 @@ public noWhitespaceValidator(control: FormControl) {
   ngOnInit(): void { }
 
   public onRegister() {
+    this.loading = true;
     this.registerForm.controls.username.setValue(this.username);
     if (this.registerForm.valid) {
       
       this.userService.register(this.registerForm.value).subscribe(
         data => {
           console.log(data);
+          this.loading = false;
           this.message = "Đăng kí thành công, kiểm tra email để xác thực";
           this.storageService.saveRegisteredEmail(data);
           this.openModal();
           //this.sendVerifyEmail(data.email);
         },
         error => {
+          console.log(error);
+          this.loading = false;
           if (error.status === 409) {
             if (error.error.messages[0].includes(this.registerForm.controls.username.value)) {
               this.message = "Tên người dùng đã tòn tại";
             } else {
               this.message = "Email đã được đăng kí"
             }
+            this.openModal2();
+          } else {
+            this.message = "Đăng kí thành công, không thể gửi mail xác thực";
+            this.openModal2;
           }
         }
       );
@@ -106,6 +122,10 @@ public noWhitespaceValidator(control: FormControl) {
 
   openModal() {
     this.modalService.open(this.messageModal, { centered: true });
+  }
+
+  openModal2() {
+    this.modalService.open(this.messageModal2, { centered: true });
   }
   
   public sendVerifyEmail(email:string){

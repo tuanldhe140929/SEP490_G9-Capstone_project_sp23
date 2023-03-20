@@ -13,6 +13,8 @@ import com.paypal.api.payments.Amount;
 import com.paypal.api.payments.Payer;
 import com.paypal.api.payments.Payment;
 import com.paypal.api.payments.PaymentExecution;
+import com.paypal.api.payments.Payout;
+import com.paypal.api.payments.PayoutBatch;
 import com.paypal.api.payments.RedirectUrls;
 import com.paypal.api.payments.Transaction;
 import com.paypal.base.rest.APIContext;
@@ -21,12 +23,16 @@ import com.paypal.base.rest.PayPalRESTException;
 public interface PaypalService {
 
 	public Payment createPayment(Double total, String currency, String method, String intent, String description,
-			String cancelUrl, String successUrl, TransactionFee fee);
+			String cancelUrl, String successUrl);
 
-	public Payment executePayment(String paymentId,String token, String payerId);
+	public Payment executePayment(String paymentId, String payerId);
 
 	String checkPaymentStatus(String paymentId);
 
-	public Payment getByToken(String token);
+	public Payer getPayerById(String paymentId);
+
+	public PayoutBatch payout(String email, Double total);
+
+	String checkPayoutStatus(String batchId);
 
 }

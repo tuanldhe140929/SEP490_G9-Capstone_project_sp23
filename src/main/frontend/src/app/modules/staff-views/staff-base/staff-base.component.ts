@@ -9,6 +9,9 @@ import { AccountService } from 'src/app/services/account.service';
 })
 export class StaffBaseComponent {
 
+  productApprovalChosen: boolean = true;
+  reportListChosen: boolean = false;
+
   routerName = 'productApproval';
 
   constructor(
@@ -26,6 +29,14 @@ export class StaffBaseComponent {
   }
 
   openProductApproval(){
+    this.routerName = 'productApproval'
+    this.productApprovalChosen = true;
+    this.reportListChosen = false;
+  }
 
+  openReportList(){
+    this.routerName = 'reportList'
+    this.productApprovalChosen = false;
+    this.reportListChosen = true;
   }
 }

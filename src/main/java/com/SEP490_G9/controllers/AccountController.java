@@ -41,6 +41,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
 
 @RequestMapping(value = "account")
 @RestController
@@ -120,7 +121,7 @@ public class AccountController {
 	}
 
 	@RequestMapping(value = "resetPassword", method = RequestMethod.POST)
-	public ResponseEntity<?> resetPassword(HttpServletRequest request, @RequestParam(required = true) String email) {
+	public ResponseEntity<?> resetPassword(@Valid @Email @RequestParam(required = true) String email) {
 
 		Account account = accountService.getByEmail(email);
 		String newPassword = accountService.resetPassword(account);

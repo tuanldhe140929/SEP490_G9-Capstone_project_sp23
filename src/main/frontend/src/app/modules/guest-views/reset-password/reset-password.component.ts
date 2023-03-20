@@ -11,7 +11,7 @@ import { AccountService } from 'src/app/services/account.service';
 })
 export class ResetPasswordComponent implements OnInit {
   @ViewChild('messageModal', { static: false }) private messageModal: any;
-
+  loading = false;
 
   message = '';
   email: String | undefined;
@@ -45,14 +45,21 @@ export class ResetPasswordComponent implements OnInit {
   }
 
   onResetPasswordRequest() {
+ 
     if (this.resetPasswordRequestForm.valid) {
+      this.loading = true;
       if (this.resetPasswordRequestForm.value.email != null) {
         this.email = this.resetPasswordRequestForm.value.email.toString();
         this.accountService.resetPassword(this.resetPasswordRequestForm.value.email.toString()).subscribe(
+       
           data => {
+            this.openModal();
+            this.loading = false;
             this.message = "Đặt lại password thành công, hãy kiểm tra email";
           },
           error => {
+            this.openModal();
+            this.loading = false;
             this.message = "Yêu cầu chưa được thực hiện"
           });
       }

@@ -89,4 +89,11 @@ public class ReportServiceImpl implements ReportService {
 		return reportsByUser;
 	}
 
+	@Override
+	public List<Report> getProductReports(long productId) {
+		Product product = productRepository.findById(productId).get();
+		List<Report> reportsByProduct = product.getReports();
+		return reportsByProduct;
+	}
+
 }

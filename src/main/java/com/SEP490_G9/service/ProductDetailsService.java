@@ -68,5 +68,7 @@ public interface ProductDetailsService {
 			int max);
 
 	public ProductDetails getByProductIdAndVersion(Long productId, String version);
+	
+	public List<ProductDetails> getProductsByReportStatus(String status);
 
 }

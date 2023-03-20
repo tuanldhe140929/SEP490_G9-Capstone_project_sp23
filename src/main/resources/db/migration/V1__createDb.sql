@@ -11,18 +11,19 @@ END $$;
   IF NOT EXISTS (
     SELECT 1 FROM pg_type WHERE typname = 'Transaction_Status'
   ) THEN
-    CREATE TYPE TransactionStatus AS ENUM('CREATED', 'COMPLETED', 'CANCELED', 'FAILED');
+    CREATE TYPE TransactionStatus AS ENUM('CREATED', 'COMPLETED', 'CANCELED', 'FAILED','APPROVED');
   END IF;
 END $$;
 
  DO $$ BEGIN
   IF NOT EXISTS (
-    SELECT 1 FROM pg_type WHERE typname = 'Transaction_Type'
+    SELECT 1 FROM pg_type WHERE typname = 'Payout_Status'
   ) THEN
-    CREATE TYPE TransactionType AS ENUM('BUY', 'SELL', 'CANCEL');
+    CREATE TYPE PayoutStatus AS ENUM('PENDING', 'SUCCESS', 'DENIED', 'FAILED', 'CANCELED', 'CREATED');
   END IF;
 END $$;
 
+ create sequence payouts_seq start with 1 increment by 50;
  create sequence accounts_seq start with 1 increment by 50;
  create sequence carts_seq start with 1 increment by 50;
  create sequence files_seq start with 1 increment by 50;
@@ -36,6 +37,7 @@ END $$;
  create table categories (id serial not null, name varchar(255), primary key (id));
  create table files (id bigint not null, name varchar(255), size bigint, source varchar(255), type varchar(255), product_id bigint not null, version varchar(255) not null, primary key (id));
  create table licenses (id serial not null, acrynosm varchar(255), details varchar(1024), name varchar(255), reference_link varchar(255), primary key (id));
+ create table payouts (id bigint not null, amount float(53), created_date timestamp(6), description varchar(255), last_modified timestamp(6), payout_status varchar(255), account_id bigint, transaction_id bigint, primary key (id));
  create table previews (id bigint not null, source varchar(255), type varchar(255), product_id bigint not null, version varchar(255) not null, primary key (id));
  create table product_details (product_id bigint not null, version varchar(255) not null, cover_image varchar(255), upload_date timestamp(6), status Status not null, description varchar(100), detail_description varchar(255), instruction varchar(255), last_update timestamp(6), name varchar(30), price integer, category_id integer, engine_id integer, license_id integer, primary key (product_id, version));
  create table product_details_tag (product_id bigint not null, version varchar(255) not null, tag_id integer not null);
@@ -46,7 +48,7 @@ END $$;
  create table sellers (phone_number varchar(255), seller_enabled boolean, account_id bigint not null, primary key (account_id));
  create table tags (id serial not null, name varchar(255), primary key (id));
  create table transaction_fees (id serial not null, percentage integer, primary key (id));
- create table transactions (id bigserial not null, paypal_id varchar(255),paypal_token varchar(255), amount real not null, description varchar(255), created_date timestamp(6) not null,last_modified timestamp(6), cart_id bigint not null, transaction_fee_id integer, status TransactionStatus not null , transaction_type TransactionType not null, primary key (id));
+ create table transactions (id bigserial not null, paypal_id varchar(255), amount real not null, description varchar(255), created_date timestamp(6) not null,last_modified timestamp(6), cart_id bigint not null, transaction_fee_id integer, status TransactionStatus not null, primary key (id));
  create table users (avatar varchar(255), email_verified boolean, first_name varchar(255), last_name varchar(255), username varchar(30) not null, account_id bigint not null, primary key (account_id));
  create table rates (account_id bigint not null, product_id bigint not null, date date, stars integer, primary key (account_id, product_id));
  alter table if exists rates add constraint FKkiwnrvd09n4d8d81hjbwl41xv foreign key (product_id) references products;
@@ -64,6 +66,8 @@ END $$;
  alter table if exists cart_items add constraint FKmv6d5b8f4sruuqfwtxq8d4pcn foreign key (product_id, version) references product_details;
  alter table if exists carts add constraint FKmbl9cyge43qwntnq4h2rmvv45 foreign key (account_id) references users;
  alter table if exists files add constraint FKrq9nuhnr6dphartkqp3r43yjy foreign key (product_id, version) references product_details;
+ alter table if exists payouts add constraint FKfb48k2tirbd6g7s5k5mgmevsu foreign key (account_id) references sellers;
+ alter table if exists payouts add constraint FKph49ybw0nn66lg9ow4un6psv2 foreign key (transaction_id) references transactions;
  alter table if exists previews add constraint FKbpsr69u0guwhqwn1bh3g8ppun foreign key (product_id, version) references product_details;
  alter table if exists product_details add constraint FK9v67j2u6qdqv0baxdovbadrmq foreign key (category_id) references categories;
  alter table if exists product_details add constraint FK5cqxu77mkyjobyhdub60i8alj foreign key (license_id) references licenses;
