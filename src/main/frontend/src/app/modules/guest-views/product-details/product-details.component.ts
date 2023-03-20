@@ -74,6 +74,7 @@ export class ProductDetailsComponent implements OnInit {
 
   displayPreviews: DisplayPreview[] = [];
   constructor(private activatedRoute: ActivatedRoute,
+    private manageAccountInfoService: ManageAccountInfoService,
     private router: Router,
     private storageService: StorageService,
     private decimalPipe: DecimalPipe,
@@ -82,7 +83,11 @@ export class ProductDetailsComponent implements OnInit {
     private cartService: CartService,
     private productFileService: ProductFileService,
     private toastr: ToastrService,
+<<<<<<< Updated upstream
     private userService: UserService,
+=======
+   
+>>>>>>> Stashed changes
     private reportService: ReportService) {
     
   }
@@ -92,10 +97,18 @@ export class ProductDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.getProduct();
     this.productId = Number(this.activatedRoute.snapshot.paramMap.get('productId'));
+<<<<<<< Updated upstream
     if(this.storageService.getToken()){
       this.userService.getCurrentUserInfo().subscribe(
         data => {
           this.visitor = data;
+=======
+    if (this.storageService.isLoggedIn()) {
+      this.loginStatus = true;
+      this.manageAccountInfoService.getCurrentUserInfo().subscribe(
+        ( data: any) => {
+          this.user = data;
+>>>>>>> Stashed changes
           this.visitorId = data.id;
           this.reportService.getReportByProductAndUser(this.productId, this.visitorId).subscribe((data: any) => {
             this.report = data;

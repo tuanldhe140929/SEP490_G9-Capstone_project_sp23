@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
 	FileIOService fileIOService;
 
 	@Value("${root.location}")
-	String ROOT_LOCATION;
+	private String ROOT_LOCATION;
 
 	@Override
 	public User getById(Long userId) {
@@ -48,7 +48,16 @@ public class UserServiceImpl implements UserService {
 		}
 		return user;
 	}
-
+	
+	@Override
+	public User getByEmail(String email) {
+		User user = userRepository.findByEmail(email);
+		if (user == null) {
+			throw new ResourceNotFoundException("User", "email", email);
+		}
+		return user;
+	}
+	
 	@Override
 	public User createUser(@Valid User user) {
 		if (userRepository.existsByEmail(user.getEmail())) {
@@ -60,15 +69,6 @@ public class UserServiceImpl implements UserService {
 
 		User saved = userRepository.save(user);
 		return saved;
-	}
-
-	@Override
-	public User getByEmail(String email) {
-		User user = userRepository.findByEmail(email);
-		if (user == null) {
-			throw new ResourceNotFoundException("User", "email", email);
-		}
-		return user;
 	}
 
 	@Override
@@ -141,6 +141,13 @@ public class UserServiceImpl implements UserService {
 		user.setLastName(newLastName);
 		userRepository.save(user);
 		return user;
+	}
+	public String getROOT_LOCATION() {
+		return ROOT_LOCATION;
+	}
+
+	public void setROOT_LOCATION(String rOOT_LOCATION) {
+		ROOT_LOCATION = rOOT_LOCATION;
 	}
 
 }

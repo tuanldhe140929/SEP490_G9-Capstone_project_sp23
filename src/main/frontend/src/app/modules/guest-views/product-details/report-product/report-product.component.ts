@@ -51,7 +51,20 @@ export class ReportProductComponent implements OnInit{
     )
     this.description = "";
     this.violationTypeId = 0;
+<<<<<<< Updated upstream
 
+=======
+    if (this.storageService.isLoggedIn()) {
+      this.loginStatus = true;
+      this.manageAccountInfoService.getCurrentUserInfo().subscribe(
+        (        data: User) => {
+          this.user = data;
+        }
+      )
+    } else {
+      this.loginStatus = false;
+    }
+>>>>>>> Stashed changes
   }
 
   addReportForm = this.formBuilder.group({

@@ -23,6 +23,7 @@ import com.SEP490_G9.repository.RefreshTokenRepository;
 class RefreshTokenRepositoryTest {
 	@Autowired
 	RefreshTokenRepository refreshTokenRepository;
+	
 	@Test
 	public void testFindByToken() {
 		RefreshToken rf = new RefreshToken();
@@ -42,6 +43,18 @@ class RefreshTokenRepositoryTest {
 		boolean afterDelete = refreshTokenRepository.existsById((long)1);
 		assertTrue(!afterDelete);
 	}
+	
+//	@Test
+//	public void testDeleteByAccount2() {
+//		Account a = new Account();
+//		a.setId((long)-1);
+//		boolean beforeDelete = refreshTokenRepository.existsById((long)2);
+//		assertTrue(beforeDelete);
+//		refreshTokenRepository.deleteByAccount(a);
+//		boolean afterDelete = refreshTokenRepository.existsById((long)2);
+//		assertTrue(!afterDelete);
+//	}
+	
 	@Test
 	public void findByAccount() {
 		Account a = new Account();
