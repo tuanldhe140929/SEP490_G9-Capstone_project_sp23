@@ -11,6 +11,7 @@ import { CreateReportComponent } from './create-report/create-report.component';
 
 import { DownloadComponent } from './download/download.component';
 import { ProfileComponent } from './profile/profile.component';
+import { ReviewTransactionComponent } from './review-transaction/review-transaction.component';
 
 const routes: Routes = [
   {
@@ -41,6 +42,13 @@ const routes: Routes = [
     path: 'download/:productId',
     component: DownloadComponent,
     title: 'Download',
+    canActivate: [AuthGuard]
+  },
+
+  {
+    path: 'transaction/reviewTransaction',
+    component: ReviewTransactionComponent,
+    title: 'Xác nhận đơn hàng',
     canActivate: [AuthGuard]
   }
 ];

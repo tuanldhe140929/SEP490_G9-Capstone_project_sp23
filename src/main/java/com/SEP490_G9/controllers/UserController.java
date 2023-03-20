@@ -83,15 +83,18 @@ public class UserController {
 			// invalidate input exception
 			throw new AuthRequestException("username can not contains spaces");
 		}
-
 		List<Role> userRoles = new ArrayList<>();
 		userRoles.add(roleService.getRoleById(Constant.USER_ROLE_ID));
-
+//		userRoles.add(roleService.getRoleById(Constant.SELLER_ROLE_ID));
 		String encodedPassword = new BCryptPasswordEncoder().encode(user.getPassword());
-		user.setPassword(encodedPassword);
-		user.setCreatedDate(new Date());
-		user.setRoles(userRoles);
-		User saved = userService.createUser(user);
+		
+		User newUser = new User();
+		newUser.setUsername(user.getUsername());
+		newUser.setEmail(user.getEmail());
+		newUser.setPassword(encodedPassword);
+		newUser.setCreatedDate(new Date());
+		newUser.setRoles(userRoles);
+		User saved = userService.createUser(newUser);
 		Account account = accountService.getById(saved.getId());
 		RefreshToken refreshToken = refreshTokenService.createRefreshToken(account);
 		emailService.sendVerifyEmail(account.getEmail());
@@ -175,7 +178,7 @@ public class UserController {
 		}
 		return ResponseEntity.ok(ret);
 	}
-	
+
 	@GetMapping(value = "getUserInfo")
 	public ResponseEntity<?> getUserInfo() {
 		User user;

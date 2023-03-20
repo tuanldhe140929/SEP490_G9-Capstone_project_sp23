@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.*;
 
-@JsonIgnoreProperties(value = "user")
+@JsonIgnoreProperties(value = {"user","transactions"})
 @Entity
 @Table(name = "carts")
 public class Cart {
@@ -22,6 +22,9 @@ public class Cart {
 	@ManyToOne
 	@JoinColumn(name = "account_id", nullable = false)
 	private User user;
+	
+	@OneToMany(mappedBy="cart",fetch = FetchType.EAGER)
+	private List<Transaction> transactions = new ArrayList<>();
 
 	public Cart() {
 		// TODO Auto-generated constructor stub
@@ -69,6 +72,14 @@ public class Cart {
 
 	public Cart createCart() {
 		return new Cart();
+	}
+
+	public List<Transaction> getTransactions() {
+		return transactions;
+	}
+
+	public void setTransactions(List<Transaction> transactions) {
+		this.transactions = transactions;
 	}
 
 }

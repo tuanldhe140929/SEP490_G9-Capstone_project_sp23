@@ -14,11 +14,9 @@ export class CartService {
     return this.httpClient.delete<Cart>(baseUrl+"/remove/"+cartItem.product.id);
   }
   public getAllProduct(): Observable<Cart> {
-   
     return this.httpClient.get<Cart>(baseUrl+"/getCurrentCartDTO");
-    
-  
   }
+  
   addToCart(productId: number): Observable<any> {
     const url = `${baseUrl}/add/${productId}`;
     return this.httpClient.post(url, {});

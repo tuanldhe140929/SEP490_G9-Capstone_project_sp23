@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,10 +14,15 @@ import org.springframework.stereotype.Service;
 import com.SEP490_G9.entities.TransactionFee;
 import com.SEP490_G9.service.PaypalService;
 import com.paypal.api.payments.Amount;
+import com.paypal.api.payments.Currency;
 import com.paypal.api.payments.Order;
 import com.paypal.api.payments.Payer;
 import com.paypal.api.payments.Payment;
 import com.paypal.api.payments.PaymentExecution;
+import com.paypal.api.payments.Payout;
+import com.paypal.api.payments.PayoutBatch;
+import com.paypal.api.payments.PayoutItem;
+import com.paypal.api.payments.PayoutSenderBatchHeader;
 import com.paypal.api.payments.RedirectUrls;
 import com.paypal.api.payments.Transaction;
 import com.paypal.base.rest.APIContext;
@@ -31,14 +37,13 @@ public class PaypalServiceImpl implements PaypalService {
 
 	@Override
 	public Payment createPayment(Double total, String currency, String method, String intent, String description,
-			String cancelUrl, String returnUrl, TransactionFee fee) {
-		double feeCaculated = (total * fee.getPercentage()) / 100;
-		feeCaculated = new BigDecimal(feeCaculated).setScale(2, RoundingMode.HALF_UP).doubleValue();
+			String cancelUrl, String returnUrl) {
+
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 		int expirationTimeInSeconds = 150;
 		Amount amount = new Amount();
 		amount.setCurrency(currency);
-		double totalAmount = total + feeCaculated;
+		double totalAmount = total;
 		totalAmount = new BigDecimal(totalAmount).setScale(2, RoundingMode.HALF_UP).doubleValue();
 		amount.setTotal(String.format("%.2f", totalAmount));
 
@@ -78,7 +83,7 @@ public class PaypalServiceImpl implements PaypalService {
 	}
 
 	@Override
-	public Payment executePayment(String paymentId, String token, String payerId) {
+	public Payment executePayment(String paymentId, String payerId) {
 		Payment payment = new Payment();
 		payment.setId(paymentId);
 		PaymentExecution paymentExecute = new PaymentExecution();
@@ -118,15 +123,73 @@ public class PaypalServiceImpl implements PaypalService {
 	}
 
 	@Override
-	public Payment getByToken(String token) {
-		Payment ret = null;
+	public Payer getPayerById(String paymentId) {
+		Payment payment = null;
 		try {
-			ret = Payment.get(apiContext, token);
+			payment = Payment.get(apiContext, paymentId);
 		} catch (PayPalRESTException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return ret;
+		return payment.getPayer();
+	}
+
+	@Override
+	public PayoutBatch payout(String email, Double total) {
+		// Set up the sender information
+		PayoutSenderBatchHeader senderBatchHeader = new PayoutSenderBatchHeader();
+		senderBatchHeader.setSenderBatchId(UUID.randomUUID().toString());
+		senderBatchHeader.setEmailSubject("You have a payout!");
+
+		// Set up the payout item
+		Currency currency = new Currency();
+		currency.setValue("10.00");
+		currency.setCurrency("USD");
+
+		PayoutItem payoutItem = new PayoutItem();
+		payoutItem.setRecipientType("EMAIL");
+		payoutItem.setReceiver(email);
+		payoutItem.setAmount(currency);
+		payoutItem.setSenderItemId(UUID.randomUUID().toString());
+
+		// Create the payout batch
+		List<PayoutItem> payoutItems = new ArrayList<PayoutItem>();
+		payoutItems.add(payoutItem);
+
+		Payout payout = new Payout();
+		payout.setSenderBatchHeader(senderBatchHeader);
+		payout.setItems(payoutItems);
+
+		PayoutBatch createdPayout = null;
+		try {
+			createdPayout = payout.create(apiContext, null);
+		} catch (PayPalRESTException e) {
+			e.printStackTrace();
+		}
+		return createdPayout;
+	}
+
+	@Override
+	public String checkPayoutStatus(String batchId) {
+		PayoutBatch batch = null;
+		try {
+			batch = Payout.get(apiContext, "batch_id");
+		} catch (PayPalRESTException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		if (batch != null) {
+			String batchStatus = batch.getBatchHeader().getBatchStatus();
+			if (batchStatus.equalsIgnoreCase("SUCCESS")) {
+				// Payout was successful
+			} else {
+				// Payout failed or is still in progress
+			}
+		} else {
+			// Unable to retrieve payout batch
+		}
+		return batchId;
 	}
 
 }
