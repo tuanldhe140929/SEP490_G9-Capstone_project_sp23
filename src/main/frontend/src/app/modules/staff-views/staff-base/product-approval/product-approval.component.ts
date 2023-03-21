@@ -10,13 +10,16 @@ import { Category } from 'src/app/DTOS/Category';
 import { Product } from 'src/app/DTOS/Product';
 import { CategoryService } from 'src/app/services/category.service';
 import { ProductService } from 'src/app/services/product.service';
+import { ApprovalProductDetailsComponent } from './approval-product-details/approval-product-details.component';
+import { UpdateApprovalComponent } from './update-approval/update-approval.component';
 @Component({
   selector: 'app-product-approval',
   templateUrl: './product-approval.component.html',
   styleUrls: ['./product-approval.component.css']
 })
 export class ProductApprovalComponent {
-  displayedColumns: string[] = ['Mã sản phẩm', 'Phiên bản','Chi tiết','Hành động'];
+  selectedOption: string = "NEW";  
+  displayedColumns: string[] = ['Mã sản phẩm', 'Phiên bản','Ngày đăng','Chi tiết'];
   dataSource: MatTableDataSource<Product>;
 
   productList: Product[] = [];
@@ -67,28 +70,40 @@ export class ProductApprovalComponent {
   //   });
   // }
 
-  // openUpdateDialog(productId: string, version: string) {
-  //   const dialogRef = this.dialog.open(UpdateCategoryComponent, {
-  //     data: {
-  //       nameList: getNameList,
-  //       id: getId,
-  //       oldName: getOldName
-  //     }
-  //   });
-  //   dialogRef.afterClosed().subscribe(result => {
-  //     console.log(`Dialog result: ${result}`);
-  //     setTimeout(() => this.refresh(),400)
-  //   });
-  // }
+  openUpdateDialog(productId: string, productName: string, version: string) {
+    const dialogRef = this.dialog.open(UpdateApprovalComponent, {
+      data: {
+        productId: productId,
+        productName: productName,
+        version: version
+      }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+      setTimeout(() => this.refresh(this.selectedOption),400)
+    });
+  }
 
   onChangeStatus(event: any){
     const status = (event.target as HTMLSelectElement).value;
     this.refresh(status);
   }
 
-  openDetails(productId: number){
-    const url = this.router.createUrlTree(["/products/"+productId]);
-    window.open(url.toString(), '_blank');
+  openDetails(productId: number, productName: string, version: string){
+    // const url = this.router.createUrlTree(["/products/"+productId]);
+    // window.open(url.toString(), '_blank');
+    const dialogRef = this.dialog.open(ApprovalProductDetailsComponent, {
+      data: {
+        productId: productId,
+        productName: productName,
+        version: version
+      },
+      height: "90%",
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+      setTimeout(() => this.refresh(this.selectedOption),400)
+    });
   }
 
   refresh(status: string) {

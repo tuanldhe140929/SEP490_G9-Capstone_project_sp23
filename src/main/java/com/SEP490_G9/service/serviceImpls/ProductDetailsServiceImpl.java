@@ -498,6 +498,7 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		}else {
 			pd.setApproved(Status.REJECTED);
 		}
+		productDetailsRepo.save(pd);
 		return pd;
 	}
 }
