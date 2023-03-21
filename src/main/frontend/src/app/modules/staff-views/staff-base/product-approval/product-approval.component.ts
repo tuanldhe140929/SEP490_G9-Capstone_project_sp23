@@ -18,7 +18,7 @@ import { UpdateApprovalComponent } from './update-approval/update-approval.compo
   styleUrls: ['./product-approval.component.css']
 })
 export class ProductApprovalComponent {
-  selectedOption: string = "NEW";  
+  selectedOption: string = "PENDING";  
   displayedColumns: string[] = ['Mã sản phẩm', 'Phiên bản','Ngày đăng','Chi tiết'];
   dataSource: MatTableDataSource<Product>;
 
@@ -29,7 +29,7 @@ export class ProductApprovalComponent {
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(private productService: ProductService, private dialog: MatDialog, private router: Router) {
-    this.productService.getByApprovalStatus("NEW").subscribe(response => {
+    this.productService.getByApprovalStatus("PENDING").subscribe(response => {
       this.dataSource = new MatTableDataSource(response);
       this.productList = response;
       this.dataSource.paginator = this.paginator;

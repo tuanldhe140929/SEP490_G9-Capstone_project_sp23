@@ -4,7 +4,7 @@
   <input matInput (keyup)="applyFilter($event)" #input>
 </mat-form-field>
 <select (change)="onChangeStatus($event)" [(ngModel)]="selectedOption">
-    <option value="NEW">Đang chờ duyệt</option>
+    <option value="PENDING">Đang chờ duyệt</option>
     <option value="APPROVED">Đã được duyệt</option>
     <option value="REJECTED">Đã bị từ chối</option>
 </select>

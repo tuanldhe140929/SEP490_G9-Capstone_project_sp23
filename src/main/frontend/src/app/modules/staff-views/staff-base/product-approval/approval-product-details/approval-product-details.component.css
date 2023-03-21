@@ -239,3 +239,11 @@
     display: block;
   }
   
+  .downloadLink{
+    color: blue;
+  }
+
+  .downloadLink:hover{
+    cursor: pointer;
+    color: red;
+  }

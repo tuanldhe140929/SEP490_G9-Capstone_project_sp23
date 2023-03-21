@@ -96,4 +96,25 @@ public class ReportServiceImpl implements ReportService {
 		return reportsByProduct;
 	}
 
+	@Override
+	public List<Report> updateReportStatus(long productId, String status) {
+		Product product = productRepository.findById(productId).get();
+		List<Report> reportList = reportRepository.findByProduct(product);
+		List<Report> reportToBeUpdated = new ArrayList<>();
+		for(Report report: reportList) {
+			if(report.getStatus().equalsIgnoreCase("PENDING")) {
+				report.setStatus(status);
+				reportToBeUpdated.add(report);
+				reportRepository.save(report);
+			}
+		}
+		return reportToBeUpdated;
+	}
+
+	@Override
+	public List<Report> getByStatus(String status) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

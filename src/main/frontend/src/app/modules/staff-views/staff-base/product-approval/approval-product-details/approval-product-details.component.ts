@@ -17,6 +17,7 @@ import { ProductService } from 'src/app/services/product.service';
 import { ReportService } from 'src/app/services/report.service';
 import { StorageService } from 'src/app/services/storage.service';
 import { UserService } from 'src/app/services/user.service';
+import { ApprovalDownloadComponent } from '../approval-download/approval-download.component';
 import { UpdateApprovalComponent } from '../update-approval/update-approval.component';
 
 class DisplayPreview {
@@ -313,33 +314,6 @@ export class ApprovalProductDetailsComponent implements OnInit {
     return this.getFormattedValue(this.product.price);
   }
 
-  // onCheckIfReported(){
-  //   if(!this.storageService.getToken()){
-  //     this.toastr.error('Vui lòng đăng nhập để báo cáo');
-  //   }else if(this.report!=null){
-  //     this.toastr.error('Bạn đã báo cáo sản phẩm này');
-  //   }else{
-  //     this.openReportModal();
-  //   }
-  // }
-
-  // openReportModal() {
-  //     const data = {
-  //       productId: this.product.id,
-  //       userId: this.visitor.id
-  //     }
-  //     const dialogRef = this.dialog.open(ReportProductComponent, {
-  
-  //       height: '55%',
-  //       width: '50%',
-  //       data:data
-  //     });
-  
-  //     dialogRef.afterClosed().subscribe(result => {
-  //       console.log(`Dialog result: ${result}`);
-  //       setTimeout(() => this.refresh(),300)
-  //     });
-  // }
   redirectSellerPage() {
     this.router.navigate(['collection/' + this.owner.username]);
   }
@@ -376,8 +350,9 @@ export class ApprovalProductDetailsComponent implements OnInit {
   }
 
   refresh(productId: number) {
-    this.productService.getProductById(+productId).subscribe(
+    this.productService.getProductById(productId).subscribe(
       data => {
+        this.displayPreviews = [];
         this.product = data;
         if (this.DescriptionTab) {
           this.DescriptionTab.innerHTML = this.product.details;
@@ -411,6 +386,22 @@ export class ApprovalProductDetailsComponent implements OnInit {
         productName: productName,
         version: version
       },
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+      this.refresh(this.data.productId);
+    });
+  }
+
+  openDownload(productId: number, productName: string, version: string){
+    const dialogRef = this.dialog.open(ApprovalDownloadComponent, {
+      data: {
+        productId: productId,
+        productName: productName,
+        version: version
+      },
+      width: '70%',
+      height: '70%'
     });
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
