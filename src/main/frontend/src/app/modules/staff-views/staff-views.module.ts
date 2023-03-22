@@ -24,6 +24,7 @@ import { FormsModule } from '@angular/forms';
 import { StaffBaseComponent } from './staff-base/staff-base.component';
 import { ProductApprovalComponent } from './staff-base/product-approval/product-approval.component';
 import { ReportListComponent } from './staff-base/report-list/report-list.component';
+import { AddviolationComponent } from './addviolation/addviolation.component';
 
 
 @NgModule({
@@ -31,7 +32,8 @@ import { ReportListComponent } from './staff-base/report-list/report-list.compon
     ReportedProductListComponent,
     StaffBaseComponent,
     ProductApprovalComponent,
-    ReportListComponent
+    ReportListComponent,
+    AddviolationComponent
   ],
   imports: [
     CommonModule,

@@ -25,6 +25,7 @@ import { CommonViewsModule } from './modules/common-views/common-views.module';
 import { GuestViewsModule } from './modules/guest-views/guest-views.module';
 import { NgxPaginationModule } from 'ngx-pagination';
 
+
 @NgModule({
   declarations: [
     AppComponent
