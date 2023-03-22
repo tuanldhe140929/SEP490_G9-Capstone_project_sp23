@@ -18,7 +18,7 @@ import jakarta.persistence.Table;
 public class Payout {
 
 	public enum Status {
-		PENDING, SUCCESS, DENIED, FAILED, CANCELED, CREATED
+		PENDING, SUCCESS, DENIED, FAILED, CANCELED, CREATED, UNDEFINED, PROCESSING
 	}
 
 	@Id
@@ -37,6 +37,12 @@ public class Payout {
 	@Enumerated(EnumType.STRING)
 	@Column(name = "payout_status")
 	private Status status;
+
+	@Column(name = "batch_id")
+	private String batchId;
+
+	@Column(name = "payout_fee")
+	private Double payoutFee;
 
 	@Column(name = "description")
 	private String description;
@@ -81,6 +87,14 @@ public class Payout {
 		return lastModified;
 	}
 
+	public Double getPayoutFee() {
+		return payoutFee;
+	}
+
+	public void setPayoutFee(Double payoutFee) {
+		this.payoutFee = payoutFee;
+	}
+
 	public void setLastModified(Date lastModified) {
 		this.lastModified = lastModified;
 	}
@@ -115,6 +129,14 @@ public class Payout {
 
 	public void setTransaction(Transaction transaction) {
 		this.transaction = transaction;
+	}
+
+	public String getBatchId() {
+		return batchId;
+	}
+
+	public void setBatchId(String batchId) {
+		this.batchId = batchId;
 	}
 
 }

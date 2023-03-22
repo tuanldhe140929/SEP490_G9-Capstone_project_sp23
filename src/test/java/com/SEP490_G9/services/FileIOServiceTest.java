@@ -27,7 +27,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.SEP490_G9.configs.TestConfig;
-import com.SEP490_G9.exception.StorageException;
 import com.SEP490_G9.service.serviceImpls.FileIOServiceImpl;
 
 @AutoConfigureTestDatabase(replace = Replace.NONE)

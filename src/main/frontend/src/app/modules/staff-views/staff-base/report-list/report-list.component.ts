@@ -4,13 +4,28 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatSort, Sort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 import { Router } from '@angular/router';
-import { Subject } from 'rxjs';
 import { Account } from 'src/app/DTOS/Account';
 import { Category } from 'src/app/DTOS/Category';
 import { Product } from 'src/app/DTOS/Product';
-import { CategoryService } from 'src/app/services/category.service';
+import { Report } from 'src/app/DTOS/Report';
+import { User } from 'src/app/DTOS/User';
+import { ReportProductComponent } from 'src/app/modules/guest-views/product-details/report-product/report-product.component';
+import { AccountService } from 'src/app/services/account.service';
 import { ProductService } from 'src/app/services/product.service';
+import { ReportService } from 'src/app/services/report.service';
+import { UserService } from 'src/app/services/user.service';
+import { ReportedProductDetailsComponent } from './reported-product-details/reported-product-details.component';
 
+interface ReportEntity{
+  productId: number
+  productName: string
+  productVersion: string
+  userId: number
+  userName: string
+  reportedDate: string
+  reportedDescription: string
+  reportedViolationType: string
+}
 
 @Component({
   selector: 'app-report-list',
@@ -18,26 +33,70 @@ import { ProductService } from 'src/app/services/product.service';
   styleUrls: ['./report-list.component.css']
 })
 export class ReportListComponent {
-  displayedColumns: string[] = ['Mã sản phẩm', 'Phiên bản','Chi tiết','Các báo cáo'];
-  dataSource: MatTableDataSource<Category>;
+  displayedColumns: string[] = ['Mã sản phẩm','Người báo cáo','Ngày tạo','Chi tiết'];
+  dataSource: MatTableDataSource<ReportEntity>;
 
-  productList: Product[] = [];
+  reportList: ReportEntity[] = [];
+  reportEntities: ReportEntity[] =[];
   nameList: string[] = [];
+  mergedData: any[] = [];
+  users: User[];
+  accounts: Account[];
+  products: Product[];
+  reports: Report[];
+  selectedOption: string = "PENDING";  
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private productService: ProductService, private dialog: MatDialog, private router: Router) {
-    this.productService.getProductsByReportStatus("PENDING").subscribe(response => {
-      this.dataSource = new MatTableDataSource(response);
-      this.productList = response;
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-      for(let i=0;i<this.productList.length;i++){
-        this.nameList.push(this.productList[i].name);
-      }
-      console.log(this.nameList.length)
-    })
+  constructor(
+    private reportService: ReportService, 
+    private userService: UserService,
+    private accountService: AccountService, 
+    private productService: ProductService, 
+    private dialog: MatDialog, 
+    private router: Router) {
+    // this.reportService.getByStatus("PENDING").subscribe(response => {
+    //   this.dataSource = new MatTableDataSource(response);
+    //   this.reportList = response;
+    //   this.dataSource.paginator = this.paginator;
+    //   this.dataSource.sort = this.sort;
+    // })
+
+    
+    this.reportService.getByStatus("PENDING").subscribe (reports => {
+      this.reports = reports;
+      this.userService.getAllUsers().subscribe( users => {
+        this.users = users;
+        this.productService.getAllProductsLatestVers().subscribe (products => {
+          this.products = products;
+          this.reportEntities = this.reports.map(report => {
+            const product = this.products.find(p => {p.id === report.product.id; console.log(p.id+" "+report.product.id)});
+            const user = this.users.find(u => {u.id === report.user.id; console.log(u.id+" "+report.user.id)});
+            return{
+              productId: report.product.id,
+              productName: report.product.name,
+              productVersion: report.product.activeVersion,
+              userId: report.user.id,
+              userName: report.user.username,
+              reportedDate: report.created_date,
+              reportedDescription: report.description,
+            } as ReportEntity;
+            
+          })
+          console.log(this.reportEntities);
+          this.dataSource = new MatTableDataSource(this.reportEntities);
+        this.reportList = this.reportEntities;
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+        })
+        
+      });
+      
+    });
+    
+    
+    
 
     // Assign the data to the data source for the table to render
     // this.dataSource = new MatTableDataSource([{'id':1,'name':'AAA'},{'id':2,'name':'BBB'}]);
@@ -83,19 +142,60 @@ export class ReportListComponent {
   //   });
   // }
 
-  openDetails(productId: number){
-    const url = this.router.createUrlTree(["/products/"+productId]);
-    window.open(url.toString(), '_blank');
+
+  refresh(status: string) {
+    this.reportService.getByStatus(status).subscribe (reports => {
+      this.reports = reports;
+      this.userService.getAllUsers().subscribe( users => {
+        this.users = users;
+        this.productService.getAllProductsLatestVers().subscribe (products => {
+          this.products = products;
+          this.reportEntities = this.reports.map(report => {
+            const product = this.products.find(p => {p.id === report.product.id; console.log(p.id+" "+report.product.id)});
+            const user = this.users.find(u => {u.id === report.user.id; console.log(u.id+" "+report.user.id)});
+            return{
+              productId: report.product.id,
+              productName: report.product.name,
+              productVersion: report.product.activeVersion,
+              userId: report.user.id,
+              userName: report.user.username,
+              reportedDate: report.created_date,
+              reportedDescription: report.description,
+              reportedViolationType: report.violation_type.name
+            } as ReportEntity;
+            
+          })
+          console.log(this.reportEntities);
+          this.dataSource = new MatTableDataSource(this.reportEntities);
+        this.reportList = this.reportEntities;
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+        })
+        
+      });
+      
+    });
   }
 
-  refresh() {
-    this.productService.getProductsByReportStatus("PENDING").subscribe((data: Product[]) => {
-      this.dataSource.data = data;
-      this.nameList = [];
-      for (let i = 0; i < data.length; i++) {
-        this.nameList.push(data[i].name);
-      }
-      console.log(data);
-    })
+  onChangeStatus(event: any){
+    const status = (event.target as HTMLSelectElement).value;
+    this.refresh(status);
+  }
+
+  openDetails(productId: number, productVersion: string, userId: number, userName: string, description: string){
+    const dialogRef = this.dialog.open(ReportedProductDetailsComponent, {
+      data: {
+        productId: productId,
+        productVersion: productVersion,
+        userId: userId,
+        userName: userName,
+        description: description,
+      },
+      height: "90%",
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+      setTimeout(() => this.refresh(this.selectedOption),400)
+    });
   }
 }

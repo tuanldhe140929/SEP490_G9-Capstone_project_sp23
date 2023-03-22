@@ -1,7 +1,12 @@
+import { Account } from "./Account";
+import { Product } from "./Product";
+import { User } from "./User";
+import { ViolationType } from "./ViolationType";
+
 export class Report {
-      userId: number;
-      productId: number;
+      user: User;
+      product: Product;
       description: string;
       created_date: string;
-      violation_type_id: number
+      violation_type: ViolationType
 }

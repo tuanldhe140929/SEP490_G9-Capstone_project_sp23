@@ -17,6 +17,7 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "reports")
 public class Report {
+	
 	private static final long serialVersionUID = 1L;
 
 	@EmbeddedId

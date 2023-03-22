@@ -25,4 +25,6 @@ public interface AccountService {
 	Account updateStaffStatus(long id);
 
 	String resetPassword(Account account);
+	
+	List<Account> getAllAccounts();
 }
