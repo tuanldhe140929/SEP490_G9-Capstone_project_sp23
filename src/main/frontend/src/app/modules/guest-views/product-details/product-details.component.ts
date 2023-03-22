@@ -84,7 +84,6 @@ export class ProductDetailsComponent implements OnInit {
     private productFileService: ProductFileService,
     private toastr: ToastrService,
     private userService: UserService,
-
     private reportService: ReportService) {
   }
 
