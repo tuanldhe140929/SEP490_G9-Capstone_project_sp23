@@ -501,4 +501,12 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		productDetailsRepo.save(pd);
 		return pd;
 	}
+
+	@Override
+	public List<ProductDetails> getAllByLatestVersion() {
+		List<ProductDetails> allPd = getAll();
+		List<ProductDetails> approvedPd = getByApproved(allPd);
+		List<ProductDetails> allLatestVer = getByLatestVer(approvedPd);
+		return allLatestVer;
+	}
 }

@@ -77,4 +77,8 @@ export class UserService {
   loginWithGoogle(body: any): Observable<any> {
     return this.httpClient.post<any>(baseUrl + "/loginWithGoogle", body, httpOptions);
   }
+
+  getAllUsers(): Observable<any>{
+    return this.httpClient.get<any>(baseUrl+"/getAllUsers");
+  }
 }

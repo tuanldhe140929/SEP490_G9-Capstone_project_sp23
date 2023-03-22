@@ -137,4 +137,15 @@ export class ProductService {
     }
     return this.httpClient.post<any>("http://localhost:9000/productDetails/getByIdAndVersion",null,{params});
   }
+
+  getAllProductsLatestVers(){
+    return this.httpClient.get<any>("http://localhost:9000/productDetails/allProductsLatestVers");
+  }
+
+  getActiveVersion(productId: number){
+    const params = {
+      productId: productId
+    }
+    return this.httpClient.get<any>("http://localhost:9000/productDetails/getActiveVersion",{params});
+  }
 }

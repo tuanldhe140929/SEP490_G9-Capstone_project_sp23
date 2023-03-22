@@ -37,7 +37,6 @@ export class ProductApprovalComponent {
       for(let i=0;i<this.productList.length;i++){
         this.nameList.push(this.productList[i].name);
       }
-      console.log(this.nameList.length)
     })
 
     // Assign the data to the data source for the table to render
@@ -90,8 +89,6 @@ export class ProductApprovalComponent {
   }
 
   openDetails(productId: number, productName: string, version: string){
-    // const url = this.router.createUrlTree(["/products/"+productId]);
-    // window.open(url.toString(), '_blank');
     const dialogRef = this.dialog.open(ApprovalProductDetailsComponent, {
       data: {
         productId: productId,

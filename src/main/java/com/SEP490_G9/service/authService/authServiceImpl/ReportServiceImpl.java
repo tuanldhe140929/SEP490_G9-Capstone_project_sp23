@@ -80,13 +80,14 @@ public class ReportServiceImpl implements ReportService {
 	}
 
 	@Override
-	public List<Report> getByProductAndUser(long productId, long userId) {
+	public Report getByProductAndUser(long productId, long userId) {
 		Product product = productRepository.findById(productId).get();
 		User user = userRepository.findById(userId).get();
 		List<Report> allReports = getAllReports();
 		List<Report> reportsByProduct = getByProduct(allReports, product);
 		List<Report> reportsByUser = getByUser(reportsByProduct, user);
-		return reportsByUser;
+		Report report = reportsByUser.get(0);
+		return report;
 	}
 
 	@Override
@@ -97,24 +98,36 @@ public class ReportServiceImpl implements ReportService {
 	}
 
 	@Override
-	public List<Report> updateReportStatus(long productId, String status) {
-		Product product = productRepository.findById(productId).get();
-		List<Report> reportList = reportRepository.findByProduct(product);
-		List<Report> reportToBeUpdated = new ArrayList<>();
-		for(Report report: reportList) {
-			if(report.getStatus().equalsIgnoreCase("PENDING")) {
-				report.setStatus(status);
-				reportToBeUpdated.add(report);
-				reportRepository.save(report);
+	public Report updateReportStatus(long productId, long userId, String status) {
+		Report report = getByProductAndUser(productId, userId);
+		if(status.equalsIgnoreCase("DENIED")) {
+			report.setStatus("DENIED");
+			reportRepository.save(report);
+		}else {
+			report.setStatus("ACCEPTED");
+			reportRepository.save(report);
+			Product product = productRepository.findById(productId).get();
+			product.setEnabled(false);
+			productRepository.save(product);
+			List<Report> pendingList = getByStatus("PENDING");
+			for(Report pendingReport: pendingList) {
+				pendingReport.setStatus("SKIPPED");
+				reportRepository.save(pendingReport);
 			}
 		}
-		return reportToBeUpdated;
+		return report;
 	}
 
 	@Override
 	public List<Report> getByStatus(String status) {
-		// TODO Auto-generated method stub
-		return null;
+		List<Report> allReports = reportRepository.findAll();
+		List<Report> statusReports = new ArrayList<>();
+		for(Report report: allReports) {
+			if(report.getStatus().equalsIgnoreCase(status)) {
+				statusReports.add(report);
+			}
+		}
+		return statusReports;
 	}
 
 }

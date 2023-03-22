@@ -146,4 +146,10 @@ public class AccountController {
 		Account updatedStaff = accountService.updateStaffStatus(id);
 		return ResponseEntity.ok(updatedStaff);
 	}
+	
+	@GetMapping("allAccounts")
+	public ResponseEntity<?> getAllAccounts(){
+		List<Account> allAccounts = accountService.getAllAccounts();
+		return ResponseEntity.ok(allAccounts);
+	}
 }
