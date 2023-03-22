@@ -29,6 +29,7 @@ import { FormsModule } from '@angular/forms';
 import { StaffBaseComponent } from './staff-base/staff-base.component';
 import { ProductApprovalComponent } from './staff-base/product-approval/product-approval.component';
 import { ReportListComponent } from './staff-base/report-list/report-list.component';
+import { AddviolationComponent } from './addviolation/addviolation.component';
 import { UpdateApprovalComponent } from './staff-base/product-approval/update-approval/update-approval.component';
 import { ApprovalProductDetailsComponent } from './staff-base/product-approval/approval-product-details/approval-product-details.component';
 import { ApprovalDownloadComponent } from './staff-base/product-approval/approval-download/approval-download.component';
@@ -41,6 +42,7 @@ import { ReportedProductDetailsComponent } from './staff-base/report-list/report
     StaffBaseComponent,
     ProductApprovalComponent,
     ReportListComponent,
+    AddviolationComponent
     UpdateApprovalComponent,
     ApprovalProductDetailsComponent,
     ApprovalDownloadComponent,

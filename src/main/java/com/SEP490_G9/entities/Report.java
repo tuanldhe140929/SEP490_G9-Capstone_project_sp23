@@ -43,7 +43,10 @@ public class Report {
 	private String status;
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "violation_type_id", unique = false, nullable = false)//sual lai la false
+
+
+	@JoinColumn(name = "violation_type_id", unique = false, nullable = false) // sual lai la false
+
 	private ViolationType violation_types;
 
 	public Report() {
