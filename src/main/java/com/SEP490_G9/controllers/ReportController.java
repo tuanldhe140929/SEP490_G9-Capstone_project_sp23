@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -52,13 +53,25 @@ public class ReportController {
 	
 	@GetMapping("/getByProductAndUser")
 	public ResponseEntity<?> getByReportAndUser(@RequestParam(name = "productId") long productId, @RequestParam(name = "accountId") long accountId){
-		List<Report> reportList = reportService.getByProductAndUser(productId, accountId);
-		if(reportList.isEmpty()) {
-			return ResponseEntity.ok(null);
-		}else {
-			Report report = reportList.get(0);
-			return ResponseEntity.ok(report);
-		}
+		Report report = reportService.getByProductAndUser(productId, accountId);
+		return ResponseEntity.ok(report);
 	}
 	
+	@GetMapping("/getByStatus")
+	public ResponseEntity<?> getByStatus(@RequestParam(name = "status") String status){
+		List<Report> reportsByStatus = reportService.getByStatus(status);
+		return ResponseEntity.ok(reportsByStatus);
+	}
+	
+	@PutMapping("/updateReportStatus")
+	public ResponseEntity<?> updateReportStatus(@RequestParam(name = "productId") long productId, @RequestParam(name = "userId") long userId, @RequestParam(name = "status") String status){
+		Report report = reportService.updateReportStatus(productId, userId, status);
+		return ResponseEntity.ok(report);
+	}
+	
+	@GetMapping("/getAllReports")
+	public ResponseEntity<?> getAllReports(){
+		List<Report> allReports = reportService.getAllReports();
+		return ResponseEntity.ok(allReports);
+	}
 }

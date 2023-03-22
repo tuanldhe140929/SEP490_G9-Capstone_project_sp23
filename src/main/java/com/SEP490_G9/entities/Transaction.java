@@ -23,15 +23,11 @@ import jakarta.persistence.Transient;
 public class Transaction {
 
 	public enum Status {
-		COMPLETED, CANCELED, FAILED, CREATED, APPROVED
-	}
-
-	public enum Type {
-		BUY, SELL
+		COMPLETED, CANCELED, FAILED, CREATED, APPROVED, UNDEFINED, EXPIRED
 	}
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
 	@ManyToOne
@@ -165,6 +161,5 @@ public class Transaction {
 				+ ", createDate=" + createDate + ", lastModified=" + lastModified + ", description=" + description
 				+ ", paypalId=" + paypalId + ", approvalUrl=" + approvalUrl + ", payer=" + payer + "]";
 	}
-	
-	
+
 }

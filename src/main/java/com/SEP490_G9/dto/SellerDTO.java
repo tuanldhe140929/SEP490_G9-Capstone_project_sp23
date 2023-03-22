@@ -19,7 +19,7 @@ public class SellerDTO {
 	private String lastName;
 	private String avatar;
 	private boolean emailVerified = false;
-	private String phoneNumber;
+	private String paypalEmail;
 	private boolean sellerEnabled;
 
 	public SellerDTO() {
@@ -37,7 +37,7 @@ public class SellerDTO {
 		this.lastModified = seller.getLastModified();
 		this.avatar = seller.getAvatar();
 		this.emailVerified = seller.isEmailVerified();
-		this.phoneNumber = seller.getPhoneNumber();
+		this.paypalEmail = seller.getPaypalEmail();
 		this.sellerEnabled = seller.isSellerEnabled();
 	}
 
@@ -129,12 +129,12 @@ public class SellerDTO {
 		this.emailVerified = emailVerified;
 	}
 
-	public String getPhoneNumber() {
-		return phoneNumber;
+	public String getPaypalEmail() {
+		return paypalEmail;
 	}
 
-	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
+	public void setPaypalEmail(String paypalEmail) {
+		this.paypalEmail = paypalEmail;
 	}
 
 	public boolean isSellerEnabled() {

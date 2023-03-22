@@ -40,7 +40,7 @@ public class TransactionController {
 	public ResponseEntity<?> purchase(@RequestParam(name = "cartId") Long cartId) {
 		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
 				.getAccount();
-		Transaction transaction = transactionService.purchase(cartId, account);
+		Transaction transaction = transactionService.createTransaction(cartId, account);
 		System.out.println(transaction);
 		return ResponseEntity.ok(transaction);
 	}
@@ -72,7 +72,7 @@ public class TransactionController {
 	
 	@PostMapping("/cancelTransaction")
 	public ResponseEntity<?> cancelTransaction(@RequestParam("transId") Long transId) {
-		boolean ret = transactionService.cancelByTransactionId(transId);
+		Transaction ret = transactionService.cancel(transId);
 		return ResponseEntity.ok(ret);
 	}
 

@@ -75,7 +75,6 @@ export class ProductDetailsComponent implements OnInit {
 
   displayPreviews: DisplayPreview[] = [];
   constructor(private activatedRoute: ActivatedRoute,
-
     private router: Router,
     private storageService: StorageService,
     private decimalPipe: DecimalPipe,
@@ -84,11 +83,7 @@ export class ProductDetailsComponent implements OnInit {
     private cartService: CartService,
     private productFileService: ProductFileService,
     private toastr: ToastrService,
-
     private userService: UserService,
-
-   
-
     private reportService: ReportService) {
   }
 
@@ -96,12 +91,10 @@ export class ProductDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.getProduct();
     this.productId = Number(this.activatedRoute.snapshot.paramMap.get('productId'));
-
     if(this.storageService.getToken()){
       this.userService.getCurrentUserInfo().subscribe(
         data => {
           this.visitor = data;
-
           this.visitorId = data.id;
           if(this.visitorId==this.owner.id){
             this.isOwner == true;
@@ -114,15 +107,11 @@ export class ProductDetailsComponent implements OnInit {
         }
       )
     }
-
-
-
   }
 
   currentPreview: DisplayPreview = new DisplayPreview;
 
   onChoosePreview(preview: DisplayPreview): void {
-
     this.currentPreview = preview;
     var index = -1;
     for (let i = 0; i < this.displayPreviews.length; i++) {
@@ -394,4 +383,4 @@ export class ProductDetailsComponent implements OnInit {
     })
   }
 
-}
+  }

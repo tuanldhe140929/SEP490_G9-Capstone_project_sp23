@@ -37,7 +37,7 @@ import com.SEP490_G9.service.ProductService;
 
 @Service
 public class ProductDetailsServiceImpl implements ProductDetailsService {
-	
+
 	final String PRODUCT_FOLDER_NAME = "products";
 	@Value("${root.location}")
 	private String ROOT_LOCATION;
@@ -59,22 +59,22 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 
 	@Autowired
 	ProductFileRepository productFileRepo;
-	
+
 	@Autowired
 	ReportRepository reportRepo;
 
-	//Supporting methods
-	
+	// Supporting methods
+
 	@Override
 	public List<ProductDetails> getAll() {
 		List<ProductDetails> allProductDetails = productDetailsRepo.findAll();
 		return allProductDetails;
 	}
-	
+
 	@Override
 	public List<ProductDetails> getByLatestVer(List<ProductDetails> listPd) {
 		List<ProductDetails> latestVerPd = new ArrayList<>();
-		for(ProductDetails pd: listPd) {
+		for (ProductDetails pd : listPd) {
 			Product product = pd.getProduct();
 			ProductDetails latestVer = getActiveVersion(product.getId());
 			latestVerPd.add(latestVer);
@@ -85,9 +85,9 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 	@Override
 	public List<ProductDetails> getBySeller(List<ProductDetails> listPd, long sellerId) {
 		List<ProductDetails> PdBySeller = new ArrayList<>();
-		for(ProductDetails pd: listPd) {
+		for (ProductDetails pd : listPd) {
 			Product product = pd.getProduct();
-			if(product.getSeller().getId().equals(sellerId)) {
+			if (product.getSeller().getId().equals(sellerId)) {
 				PdBySeller.add(pd);
 			}
 		}
@@ -97,8 +97,8 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 	@Override
 	public List<ProductDetails> getByPending(List<ProductDetails> listPd) {
 		List<ProductDetails> pendingPd = new ArrayList<>();
-		for(ProductDetails pd: listPd) {
-			if(pd.getApproved() == Status.PENDING) {
+		for (ProductDetails pd : listPd) {
+			if (pd.getApproved() == Status.PENDING) {
 				pendingPd.add(pd);
 			}
 		}
@@ -108,8 +108,8 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 	@Override
 	public List<ProductDetails> getByApproved(List<ProductDetails> listPd) {
 		List<ProductDetails> approvedPd = new ArrayList<>();
-		for(ProductDetails pd: listPd) {
-			if(pd.getApproved() == Status.APPROVED) {
+		for (ProductDetails pd : listPd) {
+			if (pd.getApproved() == Status.APPROVED) {
 				approvedPd.add(pd);
 			}
 		}
@@ -119,8 +119,8 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 	@Override
 	public List<ProductDetails> getByRejected(List<ProductDetails> listPd) {
 		List<ProductDetails> rejectedPd = new ArrayList<>();
-		for(ProductDetails pd: listPd) {
-			if(pd.getApproved() == Status.REJECTED) {
+		for (ProductDetails pd : listPd) {
+			if (pd.getApproved() == Status.REJECTED) {
 				rejectedPd.add(pd);
 			}
 		}
@@ -130,9 +130,9 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 	@Override
 	public List<ProductDetails> getByDrafted(List<ProductDetails> listPd) {
 		List<ProductDetails> draftedPd = new ArrayList<>();
-		for(ProductDetails pd: listPd) {
+		for (ProductDetails pd : listPd) {
 			Product product = pd.getProduct();
-			if(product.isDraft()) {
+			if (product.isDraft()) {
 				draftedPd.add(pd);
 			}
 		}
@@ -142,9 +142,9 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 	@Override
 	public List<ProductDetails> getByPublished(List<ProductDetails> listPd) {
 		List<ProductDetails> publishedPd = new ArrayList<>();
-		for(ProductDetails pd: listPd) {
+		for (ProductDetails pd : listPd) {
 			Product product = pd.getProduct();
-			if(!product.isDraft()) {
+			if (!product.isDraft()) {
 				publishedPd.add(pd);
 			}
 		}
@@ -154,9 +154,9 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 	@Override
 	public List<ProductDetails> getByEnabled(List<ProductDetails> listPd) {
 		List<ProductDetails> enabledPd = new ArrayList<>();
-		for(ProductDetails pd: listPd) {
+		for (ProductDetails pd : listPd) {
 			Product product = pd.getProduct();
-			if(product.isEnabled()) {
+			if (product.isEnabled()) {
 				enabledPd.add(pd);
 			}
 		}
@@ -166,9 +166,9 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 	@Override
 	public List<ProductDetails> getByDisabled(List<ProductDetails> listPd) {
 		List<ProductDetails> disabledPd = new ArrayList<>();
-		for(ProductDetails pd: listPd) {
+		for (ProductDetails pd : listPd) {
 			Product product = pd.getProduct();
-			if(!product.isEnabled()) {
+			if (!product.isEnabled()) {
 				disabledPd.add(pd);
 			}
 		}
@@ -177,12 +177,13 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 
 	@Override
 	public List<ProductDetails> getByKeyword(List<ProductDetails> listPd, String keyword) {
-		if(keyword.trim().isEmpty()) {
+		if (keyword.trim().isEmpty()) {
 			return listPd;
-		}else {
+		} else {
 			List<ProductDetails> pdByKeyword = new ArrayList<>();
-			for(ProductDetails pd: listPd) {
-				if(pd.getName().trim().replaceAll("\\s+", " ").toLowerCase().contains(keyword.trim().toLowerCase().replaceAll("\\s+", " "))) {
+			for (ProductDetails pd : listPd) {
+				if (pd.getName().trim().replaceAll("\\s+", " ").toLowerCase()
+						.contains(keyword.trim().toLowerCase().replaceAll("\\s+", " "))) {
 					pdByKeyword.add(pd);
 				}
 			}
@@ -193,11 +194,11 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 	@Override
 	public List<ProductDetails> getByCategory(List<ProductDetails> listPd, int categoryId) {
 		List<ProductDetails> pdByCategory = new ArrayList<>();
-		if(categoryId==0) {
+		if (categoryId == 0) {
 			return listPd;
-		}else {
-			for(ProductDetails pd: listPd) {
-				if(pd.getCategory().getId()==categoryId) {
+		} else {
+			for (ProductDetails pd : listPd) {
+				if (pd.getCategory().getId() == categoryId) {
 					pdByCategory.add(pd);
 				}
 			}
@@ -213,29 +214,29 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 
 	@Override
 	public List<ProductDetails> getByPriceRange(List<ProductDetails> listPd, int min, int max) {
-		if(min > max) {
+		if (min > max) {
 			throw new NumberException("Min cannot be greater than max");
 		}
-		if(min < 0 || max < 0) {
+		if (min < 0 || max < 0) {
 			throw new NumberException("Min or max cannot be negative");
 		}
 		List<ProductDetails> pdByPriceRange = new ArrayList<>();
-		for(ProductDetails pd: listPd) {
-			if(pd.getPrice()>=min&&pd.getPrice()<=max) {
+		for (ProductDetails pd : listPd) {
+			if (pd.getPrice() >= min && pd.getPrice() <= max) {
 				pdByPriceRange.add(pd);
 			}
 		}
 		return pdByPriceRange;
 	}
-	
-	//By Nam Dinh
-	
+
+	// By Nam Dinh
+
 	@Override
 	public ProductDetails getActiveVersion(Long productId) {
 		Product product = productRepo.findById(productId).orElseThrow();
 		ProductDetails ret = null;
-		for(ProductDetails pd: product.getProductDetails()) {
-			if(pd.getVersion().equals(product.getActiveVersion())) {
+		for (ProductDetails pd : product.getProductDetails()) {
+			if (pd.getVersion().equals(product.getActiveVersion())) {
 				ret = pd;
 			}
 		}
@@ -270,8 +271,10 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 
 	@Override
 	public ProductDetails updateProductDetails(ProductDetails edited) {
-		if(existByProductIdAndVersion(edited.getProductVersionKey().getProductId(), edited.getProductVersionKey().getVersion()))
-			throw new ResourceNotFoundException("product details with id and version","",edited);
+		if (existByProductIdAndVersion(edited.getProductVersionKey().getProductId(),
+				edited.getProductVersionKey().getVersion()))
+			throw new ResourceNotFoundException("product details with id and version", "", edited);
+
 		return productDetailsRepo.save(edited);
 	}
 
@@ -383,7 +386,6 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		return null;
 	}
 
-
 	private String getCoverImageLocation(ProductDetails productDetails) {
 		return getSellerProductsDataLocation(productDetails.getProduct().getSeller()) + "\\"
 				+ productDetails.getProduct().getId() + "\\";
@@ -402,10 +404,10 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 	private String getSellerProductsDataLocation(Seller seller) {
 		return "account_id_" + seller.getId() + "\\" + PRODUCT_FOLDER_NAME;
 	}
-	
+
 	// By Quan Nguyen
-	
-	//hien san pham theo tu khoa
+
+	// hien san pham theo tu khoa
 	@Override
 	public List<ProductDetails> getProductForSearching(String keyword, int categoryid, int min, int max) {
 		List<ProductDetails> allPd = getAll();
@@ -419,7 +421,7 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		return finalResult;
 	}
 
-	//hien san pham nguoi dung cho chinh no
+	// hien san pham nguoi dung cho chinh no
 	@Override
 	public List<ProductDetails> getProductBySellerForSeller(long sellerId, String keyword, int categoryId, int min,
 			int max) {
@@ -433,7 +435,7 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		return allSellerPd;
 	}
 
-	//hien san pham nguoi dung cho nguoi khac
+	// hien san pham nguoi dung cho nguoi khac
 	@Override
 	public List<ProductDetails> getProductBySellerForUser(long sellerId, String keyword, int categoryId, int min,
 			int max) {
@@ -449,17 +451,17 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		return allSellerPd;
 	}
 
-	//hien san pham cho nhan vien dua theo trang thai bao cao
+	// hien san pham cho nhan vien dua theo trang thai bao cao
 	@Override
 	public List<ProductDetails> getProductsByReportStatus(String status) {
 		List<ProductDetails> allPd = getAll();
 		List<ProductDetails> latestVer = getByLatestVer(allPd);
 		List<ProductDetails> allPdByReportStatus = new ArrayList<>();
-		for(ProductDetails pd: latestVer) {
+		for (ProductDetails pd : latestVer) {
 			Product product = pd.getProduct();
 			List<Report> reportList = reportRepo.findAll();
-			for(Report report: reportList) {
-				if(report.getProduct().equals(product)&&report.getStatus().equalsIgnoreCase(status)) {
+			for (Report report : reportList) {
+				if (report.getProduct().equals(product) && report.getStatus().equalsIgnoreCase(status)) {
 					allPdByReportStatus.add(pd);
 				}
 			}
@@ -467,5 +469,44 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		return allPdByReportStatus;
 	}
 
-	
+	@Override
+	public List<ProductDetails> getProductsByApprovalStatus(String status) {
+		List<ProductDetails> allPd = getAll();
+		List<ProductDetails> allStatusPd = new ArrayList<>();
+		for(ProductDetails pd: allPd) {
+			if(status.equalsIgnoreCase("APPROVED")&&pd.getApproved().equals(Status.APPROVED)) {
+				allStatusPd.add(pd);
+			}
+			if(status.equalsIgnoreCase("REJECTED")&&pd.getApproved().equals(Status.REJECTED)) {
+				allStatusPd.add(pd);
+			}
+			if(status.equalsIgnoreCase("PENDING")&&pd.getApproved().equals(Status.PENDING)) {
+				allStatusPd.add(pd);
+			}
+			if(status.equalsIgnoreCase("NEW")&&pd.getApproved().equals(Status.NEW)) {
+				allStatusPd.add(pd);
+			}
+		}
+		return allStatusPd;
+	}
+
+	@Override
+	public ProductDetails updateApprovalStatus(long productId, String version, String status) {
+		ProductDetails pd = getByProductIdAndVersion(productId, version);
+		if(status.equals("APPROVED")) {
+			pd.setApproved(Status.APPROVED);
+		}else {
+			pd.setApproved(Status.REJECTED);
+		}
+		productDetailsRepo.save(pd);
+		return pd;
+	}
+
+	@Override
+	public List<ProductDetails> getAllByLatestVersion() {
+		List<ProductDetails> allPd = getAll();
+		List<ProductDetails> approvedPd = getByApproved(allPd);
+		List<ProductDetails> allLatestVer = getByLatestVer(approvedPd);
+		return allLatestVer;
+	}
 }

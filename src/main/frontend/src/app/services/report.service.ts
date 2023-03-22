@@ -28,4 +28,20 @@ export class ReportService {
     }
     return this.httpClient.get<any>(this.BaseUrl+"/getByProductAndUser",{params});
   }
+
+  getByStatus(status: string): Observable<any>{
+    const params = {
+      status: status
+    }
+    return this.httpClient.get<any>(this.BaseUrl+"/getByStatus",{params})
+  }
+
+  updateReportStatus(productId: number, userId: number, status: string){
+    const params = {
+      productId: productId,
+      userId: userId,
+      status: status
+    }
+    return this.httpClient.put<any>(this.BaseUrl+"/updateReportStatus",null,{params})
+  }
 }

@@ -2,6 +2,7 @@ package com.SEP490_G9.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,4 +26,6 @@ public interface UserService {
 	public User updateUser(String newUserName, String newFirstName, String newLastName);
 
 	public String uploadAvatar(MultipartFile coverImage) throws IOException;
+	
+	List<User> getAllUsers();
 }
