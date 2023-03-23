@@ -44,7 +44,6 @@ class SellerRepositoryTest {
 	@Test
 	public void findByUsername() {
 		Seller s = new Seller();
-		s.setPhoneNumber("951123339");
 		s.setUsername("seller123");
 		s.setId((long)2);
 
@@ -56,7 +55,7 @@ class SellerRepositoryTest {
 	@Test
 	public void findById() {
 		Seller s = new Seller();
-		s.setPhoneNumber("951123339");
+
 		s.setUsername("seller123");
 		s.setId((long)2);
 		
