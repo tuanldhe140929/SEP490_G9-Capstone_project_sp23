@@ -37,7 +37,13 @@ import com.SEP490_G9.service.UserService;
 public class ReportController {
 
 	@Autowired
-	ReportService reportService;
+	private ReportService reportService;
+
+
+	@GetMapping("/reports")
+	public List<Report> getAllEmployees() {
+		return reportService.getAllReports();
+	}
 	
 	@Autowired
 	ProductService productService;
@@ -56,6 +62,38 @@ public class ReportController {
 		Report report = reportService.getByProductAndUser(productId, accountId);
 		return ResponseEntity.ok(report);
 	}
+
+
+//	@RequestMapping(value = "/createreport", method = RequestMethod.POST)
+//	public Report addReport(@RequestBody Report report) {
+//		System.out.println(report.getReportKey().getProductId());
+//		System.out.println(report.getReportKey().getUserId());
+//		return reportService.saveReport(report);
+//	}
+
+//	@RequestMapping(value = "/edit", method = RequestMethod.POST)
+//	public Report editUser(@RequestBody Report report) {
+//		Report reportEdit = reportService.findReportById(report.getReportKey()).get();
+//		reportEdit.setDescription(reportEdit.getDescription());
+//		reportEdit.setStatus(report.getStatus());
+//		reportService.saveEditedReport(reportEdit);
+//
+//		return report;
+//	}
+//
+//	@RequestMapping(value = "save", method = RequestMethod.POST)
+//	public String save(Report report) {
+//		reportService.saveReport(report);
+//		return "redirect:/";
+//	}
+//
+//	@RequestMapping(value = "/delete", method = RequestMethod.GET)
+//	public boolean deleteUser(@RequestParam("userId") Long userID, @RequestParam("productID") Long productID) {
+//		ReportItemKey key = new ReportItemKey(userID, productID);
+//		reportService.deleteReport(key);
+//		return true;
+//
+//	}
 	
 	@GetMapping("/getByStatus")
 	public ResponseEntity<?> getByStatus(@RequestParam(name = "status") String status){
