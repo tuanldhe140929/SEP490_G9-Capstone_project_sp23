@@ -24,8 +24,7 @@ public class Sep490G9Application {
 	CommandLineRunner init(FileIOService storageService) {
 		return (args) -> {
 //			String[] script = {"cmd.exe", "/c", "net", "start", "clamd"};
-//			Process process = Runtime.getRuntime().exec(script);
-//		    
+//			Process process = Runtime.getRuntime().exec(script);		    
 //			storageService.deleteAll();
 //			storageService.init();
 		};

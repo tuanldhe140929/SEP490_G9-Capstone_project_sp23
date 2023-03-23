@@ -30,7 +30,7 @@ public class ViolationController {
 		return ResponseEntity.ok(vtypes);
 	}
 	@PostMapping("/addViolation")
-	public ResponseEntity<?> addViolation(@RequestParam(name = "name") String name, @RequestParam(name = "violationTypeId") long violationTypeId){
+	public ResponseEntity<?> addViolation(@RequestParam(name = "description") String name, @RequestParam(name = "violationTypeId") long violationTypeId){
 		ViolationType vio = vioTypeSer.sendVio(name, violationTypeId);
 		return ResponseEntity.ok(vio);
 	}

@@ -1,6 +1,8 @@
-import { HttpClient } from '@angular/common/http';
-import { Component } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, Inject } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
+import { AddviolationService } from 'src/app/services/addviolation.service';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-addviolation',
@@ -9,12 +11,43 @@ import { Observable } from 'rxjs';
 })
 export class AddviolationComponent {
 
-getViolation = "http://localhost:9000/addviolation";
+  constructor(private formBuilder: FormBuilder, private addviolationService: AddviolationService, private toastr: ToastrService, @Inject(MAT_DIALOG_DATA) public data: {descriptionList: string[]}){}
 
-  constructor(private httpClient: HttpClient) { }
+  addViolationForm = this.formBuilder.group({
+    "description": ['',[Validators.required]]
+  });
 
-  getAllTypes(): Observable<any>{
-    return this.httpClient.get<any>(this.getViolation);
+  get form(){
+    return this.addViolationForm;
+  }
+
+  get description(){
+    return this.addViolationForm.controls.description;
+  }
+
+
+  checkDescriptionExists(){
+    for(let i=0;i<this.data.descriptionList.length;i++){
+      if(this.description.value?.toLowerCase().trim()==this.data.descriptionList[i].toLowerCase().trim()){
+        return true;
+      }
+    }
+    return false;
+  }
+
+  addViolation(){
+    if(this.addViolationForm.valid){
+      if(!this.checkDescriptionExists()){
+        this.addviolationService.addViolation(this.addViolationForm.value).subscribe(
+          data => {
+            console.log(data);
+            this.toastr.success('Thêm chủ đề thành công')
+          }
+        )
+      }else{
+        this.toastr.error('Vui lòng sử dụng tên khác','Tên chủ đề đã được sử dụng')
+      }
+    }
   }
   
 }
