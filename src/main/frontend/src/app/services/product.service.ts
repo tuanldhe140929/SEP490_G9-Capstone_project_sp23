@@ -109,9 +109,9 @@ export class ProductService {
 
   getProductsByReportStatus(status: string): Observable<any>{
     const params = {
-      reportStatus: status
+      status: status
     }
-    return this.httpClient.get<any>("http://localhost:9000/product/getProductsByReportStatus", {params})
+    return this.httpClient.get<any>("http://localhost:9000/productDetails/getProductsByReportStatus", {params})
   }
 
   getByApprovalStatus(status: string): Observable<any>{

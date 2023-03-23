@@ -11,6 +11,7 @@ import { Report } from 'src/app/DTOS/Report';
 import { Seller } from 'src/app/DTOS/Seller';
 import { Tag } from 'src/app/DTOS/Tag';
 import { User } from 'src/app/DTOS/User';
+import { ViolationType } from 'src/app/DTOS/ViolationType';
 import { CartService } from 'src/app/services/cart.service';
 import { ProductFileService } from 'src/app/services/product-file.service';
 import { ProductService } from 'src/app/services/product.service';
@@ -18,6 +19,8 @@ import { ReportService } from 'src/app/services/report.service';
 import { StorageService } from 'src/app/services/storage.service';
 import { UserService } from 'src/app/services/user.service';
 import { ViolationTypeService } from 'src/app/services/violation-type.service';
+import { ReportedProductDownloadComponent } from '../reported-product-download/reported-product-download.component';
+import { UpdateReportStatusComponent } from '../update-report-status/update-report-status.component';
 
 
 class DisplayPreview {
@@ -71,7 +74,7 @@ export class ReportedProductDetailsComponent implements OnInit {
 
   displayPreviews: DisplayPreview[] = [];
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: {productId: number, productVersion:string, userId: number, userName: string, description: string, viotype: string}, 
+    @Inject(MAT_DIALOG_DATA) public data: {productId: number}, 
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private storageService: StorageService,
@@ -89,26 +92,7 @@ export class ReportedProductDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.getProduct();
-    this.reportService.getReportByProductAndUser(this.data.productId,this.data.userId).subscribe(data => {
-      this.report = data;
-    })
     this.productId = this.data.productId;
-    if(this.storageService.getToken()){
-      this.userService.getCurrentUserInfo().subscribe(
-        data => {
-          this.visitor = data;
-          this.visitorId = data.id;
-          if(this.visitorId==this.owner.id){
-            this.isOwner == true;
-          }else{
-            this.isOwner == false;
-          }
-          this.reportService.getReportByProductAndUser(this.productId, this.visitorId).subscribe((data: any) => {
-            this.report = data;
-          })
-        }
-      )
-    }
   }
 
   currentPreview: DisplayPreview = new DisplayPreview;
@@ -382,33 +366,31 @@ export class ReportedProductDetailsComponent implements OnInit {
       })
   }
 
-  // updateApproval(productId: number, productName: string, version: string){
-  //   const dialogRef = this.dialog.open(UpdateApprovalComponent, {
-  //     data: {
-  //       productId: productId,
-  //       productName: productName,
-  //       version: version
-  //     },
-  //   });
-  //   dialogRef.afterClosed().subscribe(result => {
-  //     console.log(`Dialog result: ${result}`);
-  //     this.refresh(this.data.productId);
-  //   });
-  // }
+  updateReport(){
+    const dialogRef = this.dialog.open(UpdateReportStatusComponent, {
+      data: {
+        productId: this.productId
+      },
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+      this.refresh(this.data.productId);
+    });
+  }
 
-  // openDownload(productId: number, productName: string, version: string){
-  //   const dialogRef = this.dialog.open(ApprovalDownloadComponent, {
-  //     data: {
-  //       productId: productId,
-  //       productName: productName,
-  //       version: version
-  //     },
-  //     width: '70%',
-  //     height: '70%'
-  //   });
-  //   dialogRef.afterClosed().subscribe(result => {
-  //     console.log(`Dialog result: ${result}`);
-  //     this.refresh(this.data.productId);
-  //   });
-  // }
+  openDownload(){
+    const dialogRef = this.dialog.open(ReportedProductDownloadComponent, {
+      data: {
+        productId: this.productId,
+        productName: this.product.name,
+        version: this.product.version
+      },
+      width: '70%',
+      height: '70%'
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+      this.refresh(this.data.productId);
+    });
+  }
 }

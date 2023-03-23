@@ -74,4 +74,16 @@ public class ReportController {
 		List<Report> allReports = reportService.getAllReports();
 		return ResponseEntity.ok(allReports);
 	}
+	
+	@GetMapping("/getReportsByProduct")
+	public ResponseEntity<?> getReportsByProduct(@RequestParam(name = "productId")long productId){
+		List<Report> reportsByProduct = reportService.getProductReports(productId);
+		return ResponseEntity.ok(reportsByProduct);
+	}
+	
+	@GetMapping("/getByProductAndStatus")
+	public ResponseEntity<?> getByProductAndStatus(@RequestParam(name = "productId")long productId, @RequestParam(name = "status")String status){
+		List<Report> reportsByProductAndStatus = reportService.getByStatusAndProduct(productId, status);
+		return ResponseEntity.ok(reportsByProductAndStatus);
+	}
 }

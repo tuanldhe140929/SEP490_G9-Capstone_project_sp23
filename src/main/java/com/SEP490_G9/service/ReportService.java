@@ -27,4 +27,6 @@ public interface ReportService {
 	
 	List<Report> getProductReports(long productId);
 	
+	List<Report> getByStatusAndProduct(long productId, String status);
+	
 }

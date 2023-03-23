@@ -33,6 +33,8 @@ import { UpdateApprovalComponent } from './staff-base/product-approval/update-ap
 import { ApprovalProductDetailsComponent } from './staff-base/product-approval/approval-product-details/approval-product-details.component';
 import { ApprovalDownloadComponent } from './staff-base/product-approval/approval-download/approval-download.component';
 import { ReportedProductDetailsComponent } from './staff-base/report-list/reported-product-details/reported-product-details.component';
+import { ReportedProductDownloadComponent } from './staff-base/report-list/reported-product-download/reported-product-download.component';
+import { UpdateReportStatusComponent } from './staff-base/report-list/update-report-status/update-report-status.component';
 
 
 @NgModule({
@@ -45,6 +47,8 @@ import { ReportedProductDetailsComponent } from './staff-base/report-list/report
     ApprovalProductDetailsComponent,
     ApprovalDownloadComponent,
     ReportedProductDetailsComponent,
+    ReportedProductDownloadComponent,
+    UpdateReportStatusComponent,
   ],
   imports: [
     CommonModule,

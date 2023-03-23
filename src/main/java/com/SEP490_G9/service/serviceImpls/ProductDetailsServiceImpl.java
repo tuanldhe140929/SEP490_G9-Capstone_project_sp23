@@ -466,7 +466,7 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 				}
 			}
 		}
-		return allPdByReportStatus;
+		return allPdByReportStatus.stream().distinct().toList();
 	}
 
 	@Override

@@ -130,4 +130,18 @@ public class ReportServiceImpl implements ReportService {
 		return statusReports;
 	}
 
+	@Override
+	public List<Report> getByStatusAndProduct(long productId, String status) {
+		List<Report> allReports = getAllReports();
+		Product product = productRepository.findById(productId).get();
+		List<Report> allByProduct = getByProduct(allReports, product);
+		List<Report> allByStatus = new ArrayList<>();
+		for(Report report: allByProduct) {
+			if(report.getStatus().equalsIgnoreCase(status)) {
+				allByStatus.add(report);
+			}
+		}
+		return allByStatus;
+	}
+
 }

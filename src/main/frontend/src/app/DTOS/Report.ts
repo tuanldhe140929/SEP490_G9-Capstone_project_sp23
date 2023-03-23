@@ -8,5 +8,5 @@ export class Report {
       product: Product;
       description: string;
       created_date: string;
-      violation_type: ViolationType
+      violation_type: ViolationType;
 }
