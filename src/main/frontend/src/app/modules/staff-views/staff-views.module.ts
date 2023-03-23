@@ -36,6 +36,7 @@ import { ApprovalDownloadComponent } from './staff-base/product-approval/approva
 import { ReportedProductDetailsComponent } from './staff-base/report-list/reported-product-details/reported-product-details.component';
 import { ReportedProductDownloadComponent } from './staff-base/report-list/reported-product-download/reported-product-download.component';
 import { UpdateReportStatusComponent } from './staff-base/report-list/update-report-status/update-report-status.component';
+import { ReportDescriptionComponent } from './staff-base/report-list/report-description/report-description.component';
 
 
 @NgModule({
@@ -44,13 +45,14 @@ import { UpdateReportStatusComponent } from './staff-base/report-list/update-rep
     StaffBaseComponent,
     ProductApprovalComponent,
     ReportListComponent,
-    AddviolationComponent
     UpdateApprovalComponent,
+    AddviolationComponent,
     ApprovalProductDetailsComponent,
     ApprovalDownloadComponent,
     ReportedProductDetailsComponent,
     ReportedProductDownloadComponent,
     UpdateReportStatusComponent,
+    ReportDescriptionComponent,
   ],
   imports: [
     CommonModule,
@@ -74,7 +76,7 @@ import { UpdateReportStatusComponent } from './staff-base/report-list/update-rep
     VgControlsModule,
     VgCoreModule,
     VgBufferingModule,
-    VgOverlayPlayModule
+    VgOverlayPlayModule,
   ]
 })
 export class StaffViewsModule { }

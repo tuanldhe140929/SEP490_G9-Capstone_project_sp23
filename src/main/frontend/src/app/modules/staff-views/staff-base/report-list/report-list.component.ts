@@ -59,7 +59,6 @@ export class ReportListComponent {
     private router: Router) {
       this.productService.getProductsByReportStatus("PENDING").subscribe(products => {
         this.products = products;
-        console.log(products);
         this.dataSource = new MatTableDataSource(products);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;

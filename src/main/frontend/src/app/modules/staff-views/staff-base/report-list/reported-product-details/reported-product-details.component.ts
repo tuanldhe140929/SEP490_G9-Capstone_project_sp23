@@ -371,6 +371,8 @@ export class ReportedProductDetailsComponent implements OnInit {
       data: {
         productId: this.productId
       },
+      width: '80%'
+
     });
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);

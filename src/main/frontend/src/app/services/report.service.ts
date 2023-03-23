@@ -44,4 +44,16 @@ export class ReportService {
     }
     return this.httpClient.put<any>(this.BaseUrl+"/updateReportStatus",null,{params})
   }
+
+  getAllReports(){
+    return this.httpClient.get<any>(this.BaseUrl+"/getAllReports");
+  }
+
+  getByProductAndStatus(productId: number, status: string){
+    const params = {
+      productId: productId,
+      status: status
+    }
+    return this.httpClient.get<any>(this.BaseUrl+"/getByProductAndStatus",{params});
+  }
 }
