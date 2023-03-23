@@ -1,0 +1,10 @@
+<div class="updateApprovalContainer">
+    <mat-dialog-content>
+        <p>Bạn có muốn duyệt sản phẩm <b>{{data.productName}}</b> phiên bản <b>{{data.version}}</b>?</p>
+        <div class="form-group" align="end">
+            <button class="btn btn-success" (click)="onApprove('APPROVED')" [mat-dialog-close]="true" >Duyệt</button>
+            <button class="btn btn-danger" (click)="onApprove('REJECTED')" [mat-dialog-close]="true" >Từ chối</button>
+            <button class="btn btn-warning" [mat-dialog-close]="true">Quay lại</button>
+        </div>
+    </mat-dialog-content>
+</div>

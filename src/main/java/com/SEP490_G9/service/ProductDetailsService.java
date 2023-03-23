@@ -70,5 +70,10 @@ public interface ProductDetailsService {
 	public ProductDetails getByProductIdAndVersion(Long productId, String version);
 	
 	public List<ProductDetails> getProductsByReportStatus(String status);
+	
+	public List<ProductDetails> getProductsByApprovalStatus(String status);
+	
+	public ProductDetails updateApprovalStatus(long productId, String version, String status);
 
+	public List<ProductDetails> getAllByLatestVersion();
 }

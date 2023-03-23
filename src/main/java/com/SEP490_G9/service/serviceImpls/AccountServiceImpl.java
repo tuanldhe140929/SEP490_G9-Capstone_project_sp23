@@ -12,7 +12,6 @@ import com.SEP490_G9.entities.Account;
 import com.SEP490_G9.entities.RefreshToken;
 import com.SEP490_G9.entities.Role;
 import com.SEP490_G9.exception.DuplicateFieldException;
-import com.SEP490_G9.exception.EmailServiceException;
 import com.SEP490_G9.exception.ResourceNotFoundException;
 import com.SEP490_G9.repository.AccountRepository;
 import com.SEP490_G9.repository.RoleRepository;
@@ -81,7 +80,8 @@ public class AccountServiceImpl implements AccountService {
 		}
 		if (!staff.getEmail()
 				.matches("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")) {
-			throw new EmailServiceException("Not a valid email");
+			// Nam sua
+			throw new IllegalArgumentException("Not a valid email");
 		}
 		String encodedPassword = new BCryptPasswordEncoder().encode(staff.getPassword().trim());
 		staff.setPassword(encodedPassword);
@@ -113,6 +113,12 @@ public class AccountServiceImpl implements AccountService {
 		account.setPassword(encodedPassword);
 		accountRepo.save(account);
 		return newPassword;
+	}
+
+	@Override
+	public List<Account> getAllAccounts() {
+		List<Account> allAccounts = accountRepo.findAll();
+		return allAccounts;
 	}
 
 }

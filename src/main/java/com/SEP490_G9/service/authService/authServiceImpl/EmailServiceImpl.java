@@ -7,7 +7,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import com.SEP490_G9.entities.Account;
-import com.SEP490_G9.exception.EmailServiceException;
+import com.SEP490_G9.exception.InternalServerException;
 import com.SEP490_G9.repository.AccountRepository;
 import com.SEP490_G9.repository.RefreshTokenRepository;
 import com.SEP490_G9.service.authService.EmailService;
@@ -51,14 +51,14 @@ public class EmailServiceImpl implements EmailService {
 			message.setText(html, "UTF-8", "html");
 		} catch (MessagingException e) {
 			System.out.println(e);
-			throw new EmailServiceException("Send email failed");
+			throw new InternalServerException("Send email failed");
 		}
 
 		try {
 			javaMailSender.send(message);
 		} catch (MailException ex) {
 			System.out.println(ex);
-			throw new EmailServiceException("Send email failed");
+			throw new InternalServerException("Send email failed");
 		}
 
 		return true;
@@ -79,14 +79,14 @@ public class EmailServiceImpl implements EmailService {
 			message.setText(html, "UTF-8", "html");
 		} catch (MessagingException e) {
 			System.out.println(e);
-			throw new EmailServiceException("Send email failed");
+			throw new InternalServerException("Send email failed");
 		}
 
 		try {
 			javaMailSender.send(message);
 		} catch (MailException ex) {
 			System.out.println(ex);
-			throw new EmailServiceException("Send email failed");
+			throw new InternalServerException("Send email failed");
 		}
 		return true;
 	}

@@ -47,4 +47,8 @@ logout() {
   resetPassword(email: String) {
     return this.httpClient.post<any>(this.apiServerUrlManageAccount + '/resetPassword?email=' + email.toString(), {});
   }
+
+  getAllAccounts(){
+    return this.httpClient.get<any>(this.apiServerUrlManageAccount + '/allAccounts');
+  }
 }

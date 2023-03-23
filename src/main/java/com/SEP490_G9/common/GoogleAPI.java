@@ -7,7 +7,7 @@ import org.apache.http.client.fluent.Request;
 import org.springframework.stereotype.Component;
 
 import com.SEP490_G9.entities.User;
-import com.SEP490_G9.exception.AuthRequestException;
+import com.SEP490_G9.exception.InternalServerException;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -20,7 +20,7 @@ public class GoogleAPI {
 			userInfoJson = Request.Get(Constant.GOOGLE_LINK_GET_USER_INFO + getToken(code)).execute().returnContent()
 					.asString();
 		} catch (IOException e) {
-			throw new AuthRequestException("Can't get token for code: " + code);
+			throw new InternalServerException("Can't get token for code: " + code);
 		}
 		JsonObject userJsonObject = new Gson().fromJson(userInfoJson, JsonObject.class);
 		User user = new User(userJsonObject.get("email").getAsString());
@@ -38,7 +38,7 @@ public class GoogleAPI {
 							.add("grant_type", Constant.GOOGLE_GRANT_TYPE).build())
 					.execute().returnContent().asString();
 		} catch (IOException e) {
-			throw new AuthRequestException("Can't get information for user's code: " + code);
+			throw new InternalServerException("Can't get information for user's code: " + code);
 		}
 
 		JsonObject jobj = new Gson().fromJson(response, JsonObject.class);

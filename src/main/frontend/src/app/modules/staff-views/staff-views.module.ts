@@ -13,6 +13,11 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
 import { MatSortModule } from '@angular/material/sort';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatSelectModule } from '@angular/material/select';
+import { VgCoreModule } from '@videogular/ngx-videogular/core';
+import { VgControlsModule } from '@videogular/ngx-videogular/controls';
+import { VgOverlayPlayModule } from '@videogular/ngx-videogular/overlay-play';
+import { VgBufferingModule } from '@videogular/ngx-videogular/buffering';
 
 
 import { StaffViewsRoutingModule } from './staff-views-routing.module';
@@ -24,6 +29,10 @@ import { FormsModule } from '@angular/forms';
 import { StaffBaseComponent } from './staff-base/staff-base.component';
 import { ProductApprovalComponent } from './staff-base/product-approval/product-approval.component';
 import { ReportListComponent } from './staff-base/report-list/report-list.component';
+import { UpdateApprovalComponent } from './staff-base/product-approval/update-approval/update-approval.component';
+import { ApprovalProductDetailsComponent } from './staff-base/product-approval/approval-product-details/approval-product-details.component';
+import { ApprovalDownloadComponent } from './staff-base/product-approval/approval-download/approval-download.component';
+import { ReportedProductDetailsComponent } from './staff-base/report-list/reported-product-details/reported-product-details.component';
 
 
 @NgModule({
@@ -31,7 +40,11 @@ import { ReportListComponent } from './staff-base/report-list/report-list.compon
     ReportedProductListComponent,
     StaffBaseComponent,
     ProductApprovalComponent,
-    ReportListComponent
+    ReportListComponent,
+    UpdateApprovalComponent,
+    ApprovalProductDetailsComponent,
+    ApprovalDownloadComponent,
+    ReportedProductDetailsComponent,
   ],
   imports: [
     CommonModule,
@@ -50,7 +63,12 @@ import { ReportListComponent } from './staff-base/report-list/report-list.compon
     MatPaginatorModule,
     MatInputModule,
     MatSortModule,
-    MatMenuModule
+    MatMenuModule,
+    MatSelectModule,
+    VgControlsModule,
+    VgCoreModule,
+    VgBufferingModule,
+    VgOverlayPlayModule
   ]
 })
 export class StaffViewsModule { }

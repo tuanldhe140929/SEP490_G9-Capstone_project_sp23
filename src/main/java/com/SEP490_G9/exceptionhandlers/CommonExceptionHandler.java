@@ -21,10 +21,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
-import com.SEP490_G9.exception.AuthRequestException;
 import com.SEP490_G9.exception.DuplicateFieldException;
-import com.SEP490_G9.exception.EmailServiceException;
 import com.SEP490_G9.exception.ErrorResponse;
+import com.SEP490_G9.exception.InternalServerException;
 import com.SEP490_G9.exception.ResourceNotFoundException;
 
 import jakarta.validation.ConstraintViolationException;
@@ -78,30 +77,15 @@ public class CommonExceptionHandler {
 		return errorResponse;
 	}
 
-	@ExceptionHandler(EmailServiceException.class)
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	public ErrorResponse resolveException(EmailServiceException exception) {
-		ErrorResponse errorResponse = exception.getErrorResponse();
-		return errorResponse;
-	}
-
-	@ExceptionHandler(AuthRequestException.class)
-	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-	public ErrorResponse resolveException(AuthRequestException exception) {
-		System.out.println("auth request");
-		ErrorResponse errorResponse = exception.getErrorResponse();
-		return errorResponse;
-	}
-
 	@ExceptionHandler(AuthenticationException.class)
-	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	@ResponseStatus(HttpStatus.FORBIDDEN)
 	public ErrorResponse resolveException(AuthenticationException exception) {
 		List<String> msgs = new ArrayList<>();
 		msgs.add(exception.getMessage());
-		ErrorResponse errorResponse = new ErrorResponse(msgs, HttpStatus.INTERNAL_SERVER_ERROR);
+		ErrorResponse errorResponse = new ErrorResponse(msgs, HttpStatus.FORBIDDEN);
 		return errorResponse;
 	}
-
+	
 	@ExceptionHandler(UserPrincipalNotFoundException.class)
 	@ResponseStatus(HttpStatus.FORBIDDEN)
 	public ErrorResponse resolveException(UserPrincipalNotFoundException ex) {
@@ -201,13 +185,24 @@ public class CommonExceptionHandler {
 	}
 	
 	@ExceptionHandler(IllegalAccessError.class)
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ResponseStatus(HttpStatus.FORBIDDEN)
 	public final ErrorResponse exceptionResolve(IllegalAccessError ex) {
 		ErrorResponse errorResponse = new ErrorResponse();
 		List<String> msgs = new ArrayList<>();
 		msgs.add(ex.getMessage());
 		errorResponse.setMessages(msgs);
-		errorResponse.setStatus(HttpStatus.BAD_REQUEST);
+		errorResponse.setStatus(HttpStatus.FORBIDDEN);
+		return errorResponse;
+	}
+	
+	@ExceptionHandler(InternalServerException.class)
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	public final ErrorResponse exceptionResolve(InternalServerException ex) {
+		ErrorResponse errorResponse = new ErrorResponse();
+		List<String> msgs = new ArrayList<>();
+		msgs.add(ex.getMessage());
+		errorResponse.setMessages(msgs);
+		errorResponse.setStatus(HttpStatus.INTERNAL_SERVER_ERROR);
 		return errorResponse;
 	}
 //	@ExceptionHandler({ CustomException.class })

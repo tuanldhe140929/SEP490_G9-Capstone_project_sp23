@@ -198,7 +198,7 @@ public class ProductFileServiceImpl implements ProductFileService {
 		OutputStream os = null;
 		Path tempFilePath = null;
 		try {
-			new File(ROOT_LOCATION + "\\" + "temp").mkdirs();
+			new File(ROOT_LOCATION + "/" + "temp").mkdirs();
 			String fileName = UUID.randomUUID().toString();
 			tempFilePath = Paths.get(this.ROOT_LOCATION + "/temp/" + fileName);
 			Files.createDirectories(tempFilePath.getParent());
