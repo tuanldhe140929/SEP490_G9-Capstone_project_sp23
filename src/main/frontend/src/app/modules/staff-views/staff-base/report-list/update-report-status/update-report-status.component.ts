@@ -40,40 +40,6 @@ export class UpdateReportStatusComponent implements AfterViewInit{
   @ViewChild(MatPaginator) paginator: MatPaginator;
   selection = new SelectionModel<ReportEntity>(true, []);
 
-
-  
-  // userList: User[] = [];
-  // violationTypeList: ViolationType[] = []
-
-  // constructor(
-  //   @Inject(MAT_DIALOG_DATA) public data: {productId: number}, 
-  //   private productService: ProductService,
-  //   private toastr: ToastrService,
-  //   private reportService: ReportService,
-  //   private userService: UserService,
-  //   private violationTypeService: ViolationTypeService){
-
-  //   }
-
-  //   ngOnInit(): void {
-  //     this.reportService.getByStatus("PENDING").subscribe( reports => {
-  //       this.reportList = reports;
-  //       this.userService.getAllUsers().subscribe(users => {
-  //         this.userList = users;
-  //         const reportEntities = this.reportList.map(report => {
-  //           const user = this.userList.find(u => u.id === report.product.id);
-  //           return{
-  //             username: user?.username,
-  //             description: report.description,
-  //             createdDate: report.created_date
-  //           } as ReportEntity
-            
-  //         })
-  //         console.log(reportEntities);
-  //       })
-  //     })
-  //   }
-
   constructor(
     @Inject(MAT_DIALOG_DATA) public dataInjected: {productId: number, status: string}, 
     private reportService: ReportService,
@@ -83,11 +49,6 @@ export class UpdateReportStatusComponent implements AfterViewInit{
   ){
     this.reportService.getByProductAndStatus(dataInjected.productId, dataInjected.status).subscribe(reports => {
       this.reportList = reports
-      // if(this.reportList[0].status == 'PENDING'){
-      //   this.reported == false;
-      // }else{
-      //   this.reported == true;
-      // }
       this.userService.getAllUsers().subscribe(users => {
         this.userList = users
         this.violationTypeService.getAllTypes().subscribe(violationtypes => {
