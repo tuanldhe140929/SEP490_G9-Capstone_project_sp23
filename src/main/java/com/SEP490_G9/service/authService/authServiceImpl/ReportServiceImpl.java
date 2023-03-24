@@ -107,7 +107,12 @@ public class ReportServiceImpl implements ReportService {
 			report.setStatus(status);
 			reportRepository.save(report);
 			Product product = productRepository.findById(productId).get();
-			product.setEnabled(false);
+			for(String str: statusList) {
+				if(str.equalsIgnoreCase("ACCEPTED")) {
+					product.setEnabled(false);
+					break;
+				}
+			}
 			productRepository.save(product);
 			updatedList.add(report);
 		}
