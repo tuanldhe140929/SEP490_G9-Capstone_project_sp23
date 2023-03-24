@@ -1,4 +1,6 @@
+import { ProductService } from 'src/app/services/product.service';
 import { Component, OnInit } from '@angular/core';
+import { data } from 'jquery';
 
 @Component({
   selector: 'app-home',
@@ -6,12 +8,20 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit{
-  constructor(){}
+  constructor(
+    private productService: ProductService
+  ){}
 
 
   ngOnInit(): void {
     
   }
-
+  getProduct(){
+    this.productService.getAllProductForHome().subscribe(
+      data => {
+        this.productService = data;
+      }
+    )
+  }
   
 }
