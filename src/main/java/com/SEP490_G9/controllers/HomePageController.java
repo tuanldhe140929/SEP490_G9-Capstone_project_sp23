@@ -1,6 +1,7 @@
 package com.SEP490_G9.controllers;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ ProductDetailsRepository productDetailRepo;
 @Autowired
 ProductDetailsService productDetailsService;
 
-@GetMapping(value = "/getAllProducts")
+@GetMapping(value = "getAllProducts")
 public ResponseEntity<?> getAllProducts(){
 	List<ProductDetails> allProducts = productDetailsService.getAll();
 	List<ProductDetailsDTO> allProductsDto = new ArrayList<>();
@@ -35,6 +36,8 @@ public ResponseEntity<?> getAllProducts(){
 	}
 	return ResponseEntity.ok(allProductsDto);
 }
+
+
 @GetMapping(value = "getByApprovalStatus")
 public ResponseEntity<?> getByApprovalStatus(@RequestParam(name = "status") String status){
 	List<ProductDetails> allStatusPd = productDetailsService.getProductsByApprovalStatus(status);
@@ -43,6 +46,21 @@ public ResponseEntity<?> getByApprovalStatus(@RequestParam(name = "status") Stri
 		allDtoPd.add(new ProductDetailsDTO(pd));
 	}
 	return ResponseEntity.ok(allDtoPd);
+}
+
+
+@GetMapping (value ="GetAllProductForHomePage")
+public ResponseEntity<?> GetAllProductForHomePage(){
+	List<ProductDetails> allProducts = productDetailsService.getAll();
+	List<ProductDetails> approvedProducts = productDetailsService.getByApproved(allProducts);
+	List<ProductDetails> lastestProducts = productDetailsService.getByLatestVer(approvedProducts);
+	List<ProductDetails> EnabledProducts = productDetailsService.getByEnabled(lastestProducts);
+	List<ProductDetails> PublishedProducts = productDetailsService.getByPublished(EnabledProducts);
+	List<ProductDetailsDTO> allProductsDTO = new ArrayList<>();
+	for(ProductDetails p : PublishedProducts) {
+		allProductsDTO.add(new ProductDetailsDTO(p));
+	}
+	return ResponseEntity.ok(allProductsDTO);
 }
 
 }
