@@ -11,7 +11,7 @@ END $$;
   IF NOT EXISTS (
     SELECT 1 FROM pg_type WHERE typname = 'Transaction_Status'
   ) THEN								
-    CREATE TYPE TransactionStatus AS ENUM('CREATED', 'COMPLETED', 'CANCELED', 'FAILED','APPROVED' , 'UNDEFINED','EXPIRED');
+    CREATE TYPE TransactionStatus AS ENUM('CREATED', 'COMPLETED', 'CANCELED', 'FAILED','APPROVED','EXPIRED');
   END IF;
 END $$;
 
@@ -19,7 +19,7 @@ END $$;
   IF NOT EXISTS (
     SELECT 1 FROM pg_type WHERE typname = 'Payout_Status'
   ) THEN
-    CREATE TYPE PayoutStatus AS ENUM('PENDING', 'SUCCESS', 'DENIED', 'FAILED', 'CANCELED', 'CREATED' , 'UNDEFINED','PROCESSING');
+    CREATE TYPE PayoutStatus AS ENUM('SUCCESS', 'FAILED', 'CANCELED', 'CREATED', 'PROCESSING');
   END IF;
 END $$;
 
