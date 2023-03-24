@@ -210,4 +210,10 @@ public class UserController {
 		user = userService.updateUser(newUserName, newFirstName, newLastName);
 		return ResponseEntity.ok(user);
 	}
+	
+	@GetMapping(value = "getAllUsers")
+	public ResponseEntity<?> getAllUsers(){
+		List<User> userList = userService.getAllUsers();
+		return ResponseEntity.ok(userList);
+	}
 }

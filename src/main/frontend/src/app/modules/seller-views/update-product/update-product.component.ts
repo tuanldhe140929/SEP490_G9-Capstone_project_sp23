@@ -1190,12 +1190,12 @@ export class UpdateProductComponent implements OnInit {
         if(data==true)
           this.product.activeVersion = version.version;
           else{
-			     this.fileError = "Phiên bản mục tiêu không có tệp nào để dowload, không thể sử dụng phiên bản này";
+			     this.fileError = "Phiên bản mục tiêu không có tệp nào để download, không thể sử dụng phiên bản này";
         this.openFileSizeErrorModal();
 		  }
       },
       (error) => {
-        this.fileError = "Thay đổi phiên bản sản phảm không thành công";
+        this.fileError = "Thay đổi phiên bản sản phẩm không thành công";
         this.openFileSizeErrorModal();
       });
   }

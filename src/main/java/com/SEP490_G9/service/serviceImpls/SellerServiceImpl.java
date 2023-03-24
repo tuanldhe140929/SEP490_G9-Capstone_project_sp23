@@ -1,5 +1,8 @@
 package com.SEP490_G9.service.serviceImpls;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +36,31 @@ public class SellerServiceImpl implements SellerService {
 		Product product = productRepository.findById(productId).get();
 		Seller seller = product.getSeller();
 		return seller;
+	}
+
+	@Override
+	public int getSellerNumberOfFlags(long sellerId) {
+		int amountOfFlags = 0;
+		Seller seller = sellerRepository.findById(sellerId);
+		List<Product> sellerProducts = seller.getProducts();
+		for(Product product: sellerProducts) {
+			if(!product.isEnabled()) {
+				amountOfFlags = amountOfFlags + 1;
+			}
+		}
+		return amountOfFlags;
+	}
+
+	@Override
+	public List<Seller> getFlaggedSellers() {
+		List<Seller> allSellers = sellerRepository.findAll();
+		List<Seller> flaggedSellers = new ArrayList<>();
+		for(Seller seller: allSellers) {
+			if(getSellerNumberOfFlags(seller.getId())>0) {
+				flaggedSellers.add(seller);
+			}
+		}
+		return flaggedSellers;
 	}
 	
 }

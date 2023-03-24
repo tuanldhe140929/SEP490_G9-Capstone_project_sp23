@@ -80,13 +80,14 @@ public class ReportServiceImpl implements ReportService {
 	}
 
 	@Override
-	public List<Report> getByProductAndUser(long productId, long userId) {
+	public Report getByProductAndUser(long productId, long userId) {
 		Product product = productRepository.findById(productId).get();
 		User user = userRepository.findById(userId).get();
 		List<Report> allReports = getAllReports();
 		List<Report> reportsByProduct = getByProduct(allReports, product);
 		List<Report> reportsByUser = getByUser(reportsByProduct, user);
-		return reportsByUser;
+		Report report = reportsByUser.get(0);
+		return report;
 	}
 
 	@Override
@@ -94,6 +95,57 @@ public class ReportServiceImpl implements ReportService {
 		Product product = productRepository.findById(productId).get();
 		List<Report> reportsByProduct = product.getReports();
 		return reportsByProduct;
+	}
+
+	@Override
+	public List<Report> updateReportStatus(long productId, List<Long> userIdList, List<String> statusList) {
+		List<Report> updatedList = new ArrayList<>();
+		for(int i=0;i<userIdList.size();i++) {
+			long userId = userIdList.get(i);
+			String status = statusList.get(i);
+			Report report = getByProductAndUser(productId, userId);
+			report.setStatus(status);
+			reportRepository.save(report);
+			Product product = productRepository.findById(productId).get();
+			for(String str: statusList) {
+				if(str.equalsIgnoreCase("ACCEPTED")) {
+					product.setEnabled(false);
+					break;
+				}
+			}
+			productRepository.save(product);
+			updatedList.add(report);
+		}
+		return updatedList;
+	}
+
+	@Override
+	public List<Report> getByStatus(String status) {
+		List<Report> allReports = reportRepository.findAll();
+		List<Report> statusReports = new ArrayList<>();
+		for(Report report: allReports) {
+			if(report.getStatus().equalsIgnoreCase(status)) {
+				statusReports.add(report);
+			}
+		}
+		return statusReports;
+	}
+
+	@Override
+	public List<Report> getByStatusAndProduct(long productId, String status) {
+		List<Report> allReports = getAllReports();
+		Product product = productRepository.findById(productId).get();
+		List<Report> allByProduct = getByProduct(allReports, product);
+		List<Report> allByStatus = new ArrayList<>();
+		for(Report report: allByProduct) {
+			if(status.equalsIgnoreCase("PENDING") && report.getStatus().equalsIgnoreCase("PENDING")) {
+				allByStatus.add(report);
+			}
+			if(status.equalsIgnoreCase("HANDLED") && (report.getStatus().equalsIgnoreCase("ACCEPTED")||report.getStatus().equalsIgnoreCase("DENIED"))) {
+				allByStatus.add(report);
+			}
+		}
+		return allByStatus;
 	}
 
 }

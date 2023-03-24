@@ -1,0 +1,24 @@
+<div class="description">
+    <h2>Chi tiết báo cáo</h2>
+    <div>
+        <label>Người báo cáo: </label>
+        {{data.username}}
+    </div>
+    <div>
+        <label>Loại vi phạm: </label>
+        {{data.violationTypeName}}
+    </div>
+    <div>
+        <label>Nội dung: </label>
+        <article>
+            {{data.description}} 
+        </article>
+    </div>
+    <div>
+        <label>Ngày báo cáo: </label>
+        {{data.reportedDate}} 
+    </div>
+    <div align="end">
+        <button class="btn btn-warning" mat-dialog-close>Đóng</button>
+    </div>
+</div>

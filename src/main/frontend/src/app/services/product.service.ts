@@ -109,9 +109,9 @@ export class ProductService {
 
   getProductsByReportStatus(status: string): Observable<any>{
     const params = {
-      reportStatus: status
+      status: status
     }
-    return this.httpClient.get<any>("http://localhost:9000/product/getProductsByReportStatus", {params})
+    return this.httpClient.get<any>("http://localhost:9000/productDetails/getProductsByReportStatus", {params})
   }
 
   getByApprovalStatus(status: string): Observable<any>{
@@ -127,6 +127,25 @@ export class ProductService {
       version: version,
       status: status
     }
-    return this.httpClient.put<any>("http://localhost:9000/productDetails/updateApprovalStatus",{params});
+    return this.httpClient.put<any>("http://localhost:9000/productDetails/updateApprovalStatus",null,{params});
+  }
+
+  getByIdAndVersion(productId: number, version: string): Observable<any>{
+    const params = {
+      productId: productId,
+      version: version
+    }
+    return this.httpClient.post<any>("http://localhost:9000/productDetails/getByIdAndVersion",null,{params});
+  }
+
+  getAllProductsLatestVers(){
+    return this.httpClient.get<any>("http://localhost:9000/productDetails/allProductsLatestVers");
+  }
+
+  getActiveVersion(productId: number){
+    const params = {
+      productId: productId
+    }
+    return this.httpClient.get<any>("http://localhost:9000/productDetails/getActiveVersion",{params});
   }
 }

@@ -172,7 +172,11 @@ public class ProductDetailsController {
 	@GetMapping(value = "getProductsByReportStatus")
 	public ResponseEntity<?> getProductsByReportStatus(@RequestParam(name = "status") String status){
 		List<ProductDetails> reportList = productDetailsService.getProductsByReportStatus(status);
-		return ResponseEntity.ok(reportList);
+		List<ProductDetailsDTO> allDtoPd = new ArrayList<>();
+		for(ProductDetails pd: reportList) {
+			allDtoPd.add(new ProductDetailsDTO(pd));
+		}
+		return ResponseEntity.ok(allDtoPd);
 	}
 	
 
@@ -192,4 +196,13 @@ public class ProductDetailsController {
 		return ResponseEntity.ok(pd);
 	}
 	
+	@GetMapping(value = "allProductsLatestVers")
+	public ResponseEntity<?> allProductsLatestVer(){
+		List<ProductDetails> allProductsLatestVer = productDetailsService.getAllByLatestVersion();
+		List<ProductDetailsDTO> allDtoPd = new ArrayList<>();
+		for(ProductDetails pd: allProductsLatestVer) {
+			allDtoPd.add(new ProductDetailsDTO(pd));
+		}
+		return ResponseEntity.ok(allDtoPd);
+	}
 }

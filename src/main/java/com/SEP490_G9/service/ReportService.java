@@ -19,7 +19,14 @@ public interface ReportService {
 	
 	List<Report> getByUser(List<Report> reportList, User user);
 	
-	List<Report> getByProductAndUser(long productId, long userId);
+	Report getByProductAndUser(long productId, long userId);
+	
+	List<Report> updateReportStatus(long productId, List<Long> userIdList, List<String> statusList);
+	
+	List<Report> getByStatus(String status);
 	
 	List<Report> getProductReports(long productId);
+	
+	List<Report> getByStatusAndProduct(long productId, String status);
+	
 }

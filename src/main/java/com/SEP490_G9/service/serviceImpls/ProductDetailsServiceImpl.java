@@ -461,14 +461,17 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 			Product product = pd.getProduct();
 			List<Report> reportList = reportRepo.findAll();
 			for (Report report : reportList) {
-				if (report.getProduct().equals(product) && report.getStatus().equalsIgnoreCase(status)) {
+				if (status.equalsIgnoreCase("PENDING") && report.getProduct().equals(product) && report.getStatus().equalsIgnoreCase("PENDING")) {
+					allPdByReportStatus.add(pd);
+				}
+				if (status.equalsIgnoreCase("HANDLED") && report.getProduct().equals(product) && (report.getStatus().equalsIgnoreCase("ACCEPTED")||report.getStatus().equalsIgnoreCase("DENIED"))) {
 					allPdByReportStatus.add(pd);
 				}
 			}
 		}
-		return allPdByReportStatus;
+		return allPdByReportStatus.stream().distinct().toList();
 	}
-
+	
 	@Override
 	public List<ProductDetails> getProductsByApprovalStatus(String status) {
 		List<ProductDetails> allPd = getAll();
@@ -498,6 +501,15 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		}else {
 			pd.setApproved(Status.REJECTED);
 		}
+		productDetailsRepo.save(pd);
 		return pd;
+	}
+
+	@Override
+	public List<ProductDetails> getAllByLatestVersion() {
+		List<ProductDetails> allPd = getAll();
+		List<ProductDetails> approvedPd = getByApproved(allPd);
+		List<ProductDetails> allLatestVer = getByLatestVer(approvedPd);
+		return allLatestVer;
 	}
 }

@@ -14,4 +14,6 @@ import com.SEP490_G9.entities.embeddable.ReportItemKey;
 public interface ReportRepository extends JpaRepository<Report, ReportItemKey> {
 	
 	List<Report> findAll();
+	
+	List<Report> findByProduct(Product product);
 }
