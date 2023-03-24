@@ -69,7 +69,7 @@ public interface ProductDetailsService {
 
 	public ProductDetails getByProductIdAndVersion(Long productId, String version);
 	
-	public List<ProductDetails> getProductsByReportStatus(String status);
+	public List<ProductDetails> getProductsByReportStatus(String report);
 	
 	public List<ProductDetails> getProductsByApprovalStatus(String status);
 	

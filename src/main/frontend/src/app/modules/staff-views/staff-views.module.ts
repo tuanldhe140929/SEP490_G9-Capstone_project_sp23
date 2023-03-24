@@ -18,6 +18,7 @@ import { VgCoreModule } from '@videogular/ngx-videogular/core';
 import { VgControlsModule } from '@videogular/ngx-videogular/controls';
 import { VgOverlayPlayModule } from '@videogular/ngx-videogular/overlay-play';
 import { VgBufferingModule } from '@videogular/ngx-videogular/buffering';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 
 import { StaffViewsRoutingModule } from './staff-views-routing.module';
@@ -35,6 +36,9 @@ import { UpdateApprovalComponent } from './staff-base/product-approval/update-ap
 import { ApprovalProductDetailsComponent } from './staff-base/product-approval/approval-product-details/approval-product-details.component';
 import { ApprovalDownloadComponent } from './staff-base/product-approval/approval-download/approval-download.component';
 import { ReportedProductDetailsComponent } from './staff-base/report-list/reported-product-details/reported-product-details.component';
+import { ReportedProductDownloadComponent } from './staff-base/report-list/reported-product-download/reported-product-download.component';
+import { UpdateReportStatusComponent } from './staff-base/report-list/update-report-status/update-report-status.component';
+import { ReportDescriptionComponent } from './staff-base/report-list/report-description/report-description.component';
 
 
 @NgModule({
@@ -45,9 +49,13 @@ import { ReportedProductDetailsComponent } from './staff-base/report-list/report
     ReportListComponent,
     AddviolationComponent,
     UpdateApprovalComponent,
+    AddviolationComponent,
     ApprovalProductDetailsComponent,
     ApprovalDownloadComponent,
     ReportedProductDetailsComponent,
+    ReportedProductDownloadComponent,
+    UpdateReportStatusComponent,
+    ReportDescriptionComponent,
   ],
   imports: [
     CommonModule,
@@ -72,7 +80,8 @@ import { ReportedProductDetailsComponent } from './staff-base/report-list/report
     VgControlsModule,
     VgCoreModule,
     VgBufferingModule,
-    VgOverlayPlayModule
+    VgOverlayPlayModule,
+    MatCheckboxModule
   ]
 })
 export class StaffViewsModule { }

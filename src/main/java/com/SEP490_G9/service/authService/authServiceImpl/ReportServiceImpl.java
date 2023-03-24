@@ -98,24 +98,25 @@ public class ReportServiceImpl implements ReportService {
 	}
 
 	@Override
-	public Report updateReportStatus(long productId, long userId, String status) {
-		Report report = getByProductAndUser(productId, userId);
-		if(status.equalsIgnoreCase("DENIED")) {
-			report.setStatus("DENIED");
-			reportRepository.save(report);
-		}else {
-			report.setStatus("ACCEPTED");
+	public List<Report> updateReportStatus(long productId, List<Long> userIdList, List<String> statusList) {
+		List<Report> updatedList = new ArrayList<>();
+		for(int i=0;i<userIdList.size();i++) {
+			long userId = userIdList.get(i);
+			String status = statusList.get(i);
+			Report report = getByProductAndUser(productId, userId);
+			report.setStatus(status);
 			reportRepository.save(report);
 			Product product = productRepository.findById(productId).get();
-			product.setEnabled(false);
-			productRepository.save(product);
-			List<Report> pendingList = getByStatus("PENDING");
-			for(Report pendingReport: pendingList) {
-				pendingReport.setStatus("SKIPPED");
-				reportRepository.save(pendingReport);
+			for(String str: statusList) {
+				if(str.equalsIgnoreCase("ACCEPTED")) {
+					product.setEnabled(false);
+					break;
+				}
 			}
+			productRepository.save(product);
+			updatedList.add(report);
 		}
-		return report;
+		return updatedList;
 	}
 
 	@Override
@@ -128,6 +129,23 @@ public class ReportServiceImpl implements ReportService {
 			}
 		}
 		return statusReports;
+	}
+
+	@Override
+	public List<Report> getByStatusAndProduct(long productId, String status) {
+		List<Report> allReports = getAllReports();
+		Product product = productRepository.findById(productId).get();
+		List<Report> allByProduct = getByProduct(allReports, product);
+		List<Report> allByStatus = new ArrayList<>();
+		for(Report report: allByProduct) {
+			if(status.equalsIgnoreCase("PENDING") && report.getStatus().equalsIgnoreCase("PENDING")) {
+				allByStatus.add(report);
+			}
+			if(status.equalsIgnoreCase("HANDLED") && (report.getStatus().equalsIgnoreCase("ACCEPTED")||report.getStatus().equalsIgnoreCase("DENIED"))) {
+				allByStatus.add(report);
+			}
+		}
+		return allByStatus;
 	}
 
 }

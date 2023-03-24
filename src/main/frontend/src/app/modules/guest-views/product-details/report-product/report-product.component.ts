@@ -92,6 +92,22 @@ export class ReportProductComponent implements OnInit{
       this.toastr.success("Gửi báo cáo thành công");
   }
 
+  descriptionEmpty(): boolean{
+    if(this.description.length<=0){
+      return true
+    }else{
+      return false
+    }
+  }
+
+  descriptionExceed(): boolean{
+    if(this.description.length>255){
+      return true
+    }else{
+      return false
+    }
+  }
+
   onDescriptionChange(){
     console.log(this.description);
   }

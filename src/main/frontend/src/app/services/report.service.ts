@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -36,12 +36,20 @@ export class ReportService {
     return this.httpClient.get<any>(this.BaseUrl+"/getByStatus",{params})
   }
 
-  updateReportStatus(productId: number, userId: number, status: string){
+  updateReportStatus(productId: number, userIdList: number[], statusList: string[]){
+    let params = new HttpParams().set('productId', productId).set('userIdList',userIdList.join(',')).set('statusList',statusList.join(','));
+    return this.httpClient.put<any>(this.BaseUrl+"/updateReportStatus",null,{params})
+  }
+
+  getAllReports(){
+    return this.httpClient.get<any>(this.BaseUrl+"/getAllReports");
+  }
+
+  getByProductAndStatus(productId: number, status: string){
     const params = {
       productId: productId,
-      userId: userId,
       status: status
     }
-    return this.httpClient.put<any>(this.BaseUrl+"/updateReportStatus",null,{params})
+    return this.httpClient.get<any>(this.BaseUrl+"/getByProductAndStatus",{params});
   }
 }

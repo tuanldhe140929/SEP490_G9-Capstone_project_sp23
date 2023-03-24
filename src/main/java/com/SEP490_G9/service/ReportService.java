@@ -21,10 +21,12 @@ public interface ReportService {
 	
 	Report getByProductAndUser(long productId, long userId);
 	
-	Report updateReportStatus(long productId, long userId, String status);
+	List<Report> updateReportStatus(long productId, List<Long> userIdList, List<String> statusList);
 	
 	List<Report> getByStatus(String status);
 	
 	List<Report> getProductReports(long productId);
+	
+	List<Report> getByStatusAndProduct(long productId, String status);
 	
 }
