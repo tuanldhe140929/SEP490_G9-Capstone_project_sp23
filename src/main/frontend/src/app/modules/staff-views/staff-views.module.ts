@@ -13,6 +13,11 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
 import { MatSortModule } from '@angular/material/sort';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatSelectModule } from '@angular/material/select';
+import { VgCoreModule } from '@videogular/ngx-videogular/core';
+import { VgControlsModule } from '@videogular/ngx-videogular/controls';
+import { VgOverlayPlayModule } from '@videogular/ngx-videogular/overlay-play';
+import { VgBufferingModule } from '@videogular/ngx-videogular/buffering';
 
 
 import { StaffViewsRoutingModule } from './staff-views-routing.module';
@@ -26,6 +31,10 @@ import { ProductApprovalComponent } from './staff-base/product-approval/product-
 import { ReportListComponent } from './staff-base/report-list/report-list.component';
 import { AddviolationComponent } from './staff-base/addviolation/addviolation.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { UpdateApprovalComponent } from './staff-base/product-approval/update-approval/update-approval.component';
+import { ApprovalProductDetailsComponent } from './staff-base/product-approval/approval-product-details/approval-product-details.component';
+import { ApprovalDownloadComponent } from './staff-base/product-approval/approval-download/approval-download.component';
+import { ReportedProductDetailsComponent } from './staff-base/report-list/reported-product-details/reported-product-details.component';
 
 
 @NgModule({
@@ -34,7 +43,11 @@ import { ReactiveFormsModule } from '@angular/forms';
     StaffBaseComponent,
     ProductApprovalComponent,
     ReportListComponent,
-    AddviolationComponent
+    AddviolationComponent,
+    UpdateApprovalComponent,
+    ApprovalProductDetailsComponent,
+    ApprovalDownloadComponent,
+    ReportedProductDetailsComponent,
   ],
   imports: [
     CommonModule,
@@ -54,7 +67,12 @@ import { ReactiveFormsModule } from '@angular/forms';
     MatInputModule,
     MatSortModule,
     MatMenuModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatSelectModule,
+    VgControlsModule,
+    VgCoreModule,
+    VgBufferingModule,
+    VgOverlayPlayModule
   ]
 })
 export class StaffViewsModule { }

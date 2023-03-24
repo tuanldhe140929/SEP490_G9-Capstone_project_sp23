@@ -40,7 +40,7 @@ public class PaypalServiceImpl implements PaypalService {
 			String cancelUrl, String returnUrl) {
 
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-		int expirationTimeInSeconds = 150;
+		int expirationTimeInSeconds = 80;
 		Amount amount = new Amount();
 		amount.setCurrency(currency);
 		double totalAmount = total;
@@ -69,9 +69,6 @@ public class PaypalServiceImpl implements PaypalService {
 		payment.setUpdateTime(
 				dateFormat.format(new Date(System.currentTimeMillis() + expirationTimeInSeconds * 1000L))); // Set the
 																											// payment
-																											// expiration
-																											// time
-
 		Payment ret = null;
 		try {
 			ret = payment.create(apiContext);
@@ -107,19 +104,8 @@ public class PaypalServiceImpl implements PaypalService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		String paymentStatus = payment.getState();
-		return paymentStatus;
-	}
-
-	public String getAccessToken() {
-
-		String accessToken = null;
-		try {
-			accessToken = apiContext.fetchAccessToken();
-		} catch (PayPalRESTException e) {
-			e.printStackTrace();
-		}
-		return accessToken;
+		String status = payment.getState();
+		return status;
 	}
 
 	@Override
@@ -135,7 +121,7 @@ public class PaypalServiceImpl implements PaypalService {
 	}
 
 	@Override
-	public PayoutBatch payout(String email, Double total) {
+	public PayoutBatch executePayout(String email, Double total) {
 		// Set up the sender information
 		PayoutSenderBatchHeader senderBatchHeader = new PayoutSenderBatchHeader();
 		senderBatchHeader.setSenderBatchId(UUID.randomUUID().toString());
@@ -143,7 +129,7 @@ public class PaypalServiceImpl implements PaypalService {
 
 		// Set up the payout item
 		Currency currency = new Currency();
-		currency.setValue("10.00");
+		currency.setValue(total.toString());
 		currency.setCurrency("USD");
 
 		PayoutItem payoutItem = new PayoutItem();
@@ -151,7 +137,7 @@ public class PaypalServiceImpl implements PaypalService {
 		payoutItem.setReceiver(email);
 		payoutItem.setAmount(currency);
 		payoutItem.setSenderItemId(UUID.randomUUID().toString());
-
+		payoutItem.setNote("Payout from DPM");
 		// Create the payout batch
 		List<PayoutItem> payoutItems = new ArrayList<PayoutItem>();
 		payoutItems.add(payoutItem);
@@ -173,23 +159,26 @@ public class PaypalServiceImpl implements PaypalService {
 	public String checkPayoutStatus(String batchId) {
 		PayoutBatch batch = null;
 		try {
-			batch = Payout.get(apiContext, "batch_id");
+			batch = Payout.get(apiContext, batchId);
 		} catch (PayPalRESTException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		String status = batch.getBatchHeader().getBatchStatus();
+		return status;
+	}
 
-		if (batch != null) {
-			String batchStatus = batch.getBatchHeader().getBatchStatus();
-			if (batchStatus.equalsIgnoreCase("SUCCESS")) {
-				// Payout was successful
-			} else {
-				// Payout failed or is still in progress
-			}
-		} else {
-			// Unable to retrieve payout batch
+	@Override
+	public String checkPayoutFee(String batchId) {
+		PayoutBatch batch = null;
+		try {
+			batch = Payout.get(apiContext, batchId);
+		} catch (PayPalRESTException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		return batchId;
+		Currency fee = batch.getBatchHeader().getFees();
+		return fee.getValue();
 	}
 
 }

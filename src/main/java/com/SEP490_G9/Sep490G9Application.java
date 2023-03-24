@@ -26,7 +26,7 @@ public class Sep490G9Application {
 //			String[] script = {"cmd.exe", "/c", "net", "start", "clamd"};
 //			Process process = Runtime.getRuntime().exec(script);		    
 //			storageService.deleteAll();
-//			storageService.init();
+			storageService.init();
 		};
 	}
 

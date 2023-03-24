@@ -27,7 +27,7 @@ import com.SEP490_G9.entities.Account;
 import com.SEP490_G9.entities.RefreshToken;
 import com.SEP490_G9.entities.Role;
 import com.SEP490_G9.exception.DuplicateFieldException;
-import com.SEP490_G9.exception.EmailServiceException;
+import com.SEP490_G9.exception.InternalServerException;
 import com.SEP490_G9.repository.AccountRepository;
 import com.SEP490_G9.repository.RefreshTokenRepository;
 import com.SEP490_G9.repository.RoleRepository;
@@ -160,7 +160,8 @@ class AccountServiceTest {
 			expected.setPassword("password");
 			Account result = accountServiceImpl.addStaff(expected);
 		});
-		assertEquals(exception.getClass(), EmailServiceException.class);
+		//nam sua
+		assertEquals(exception.getClass(), InternalServerException.class);
 	}
 	
 	@Test

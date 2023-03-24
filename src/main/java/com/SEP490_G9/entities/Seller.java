@@ -18,8 +18,8 @@ public class Seller extends User {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@Column(name = "phone_number")
-	private String phoneNumber;
+	@Column(name="paypal_email")
+	private String paypalEmail;
 
 	@Column(name = "seller_enabled")
 	private boolean sellerEnabled;
@@ -31,19 +31,10 @@ public class Seller extends User {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Seller(String phoneNumber, boolean sellerEnabled, List<Product> products) {
+	public Seller(boolean sellerEnabled, List<Product> products) {
 		super();
-		this.phoneNumber = phoneNumber;
 		this.sellerEnabled = sellerEnabled;
 		this.products = products;
-	}
-
-	public String getPhoneNumber() {
-		return phoneNumber;
-	}
-
-	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
 	}
 
 	public boolean isSellerEnabled() {
@@ -60,6 +51,14 @@ public class Seller extends User {
 
 	public void setProducts(List<Product> products) {
 		this.products = products;
+	}
+
+	public String getPaypalEmail() {
+		return paypalEmail;
+	}
+
+	public void setPaypalEmail(String paypalEmail) {
+		this.paypalEmail = paypalEmail;
 	}
 
 }

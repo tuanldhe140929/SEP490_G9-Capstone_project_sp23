@@ -1,0 +1,29 @@
+<div class="container-fluid grad">
+    <div class="row padded">
+      <div class="col-12 content">
+        <div class="row label">
+          <span style="font-size: 20px; font-weight: 600; color: #434343; margin-bottom: 25px; border-bottom: 1px solid; border-color: #dadada;" *ngIf="product!=null">Tải xuống "{{product.name}}"</span>
+        </div>
+        <div class="row download" *ngFor="let file of product.files">
+          <div class="row downloader" style="display: flex;">
+            <div class="download_file" style="width: auto; padding: 5px; ">
+              <span style="font-weight:500; font-size:18px;padding-top:5px;">{{file.name}}</span>&nbsp;
+              <span style="font-weight: 500; font-size: 18px; padding-top: 5px; color: #606060;">{{getFileSize(file)}}</span>
+            </div>
+          </div>
+        </div>
+        <div class="row instruction" style="margin-top: 25px; background-color: #f4f4f4; margin-top:20px;margin-bottom:20px;">
+          <div class="instruction_label">
+            <span style="font-weight:500; font-size:16px;">Hướng dẫn tải và cài đặt</span>
+          </div>
+          <div class="instruction_details" style="padding:20px;">
+            <span style="padding:10px; user-select:text;" *ngIf="product!=null">{{product.instruction}}</span>
+          </div>
+        </div>
+        <div class="download_btn" style="width: auto; margin-right: 25px;">
+          <button (click)="download()">Tải xuống</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
