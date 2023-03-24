@@ -18,6 +18,7 @@ import { VgCoreModule } from '@videogular/ngx-videogular/core';
 import { VgControlsModule } from '@videogular/ngx-videogular/controls';
 import { VgOverlayPlayModule } from '@videogular/ngx-videogular/overlay-play';
 import { VgBufferingModule } from '@videogular/ngx-videogular/buffering';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 
 import { StaffViewsRoutingModule } from './staff-views-routing.module';
@@ -77,6 +78,7 @@ import { ReportDescriptionComponent } from './staff-base/report-list/report-desc
     VgCoreModule,
     VgBufferingModule,
     VgOverlayPlayModule,
+    MatCheckboxModule
   ]
 })
 export class StaffViewsModule { }

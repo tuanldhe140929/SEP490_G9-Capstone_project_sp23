@@ -164,6 +164,7 @@ export class ReportListComponent {
     const dialogRef = this.dialog.open(ReportedProductDetailsComponent, {
       data: {
         productId: productId,
+        status: this.selectedOption
       },
       height: "90%",
     });

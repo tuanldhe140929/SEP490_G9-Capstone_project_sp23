@@ -9,4 +9,5 @@ export class Report {
       description: string;
       created_date: string;
       violation_types: ViolationType;
+      status: string
 }

@@ -15,10 +15,13 @@ import {SelectionModel} from '@angular/cdk/collections';
 import { ReportDescriptionComponent } from '../report-description/report-description.component';
 
 interface ReportEntity{
+  userId: number,
   username: string,
   violationTypeName: string,
   description: string,
-  createdDate: string
+  createdDate: string,
+  status: String,
+  checked: boolean,
 }
 
 @Component({
@@ -32,6 +35,7 @@ export class UpdateReportStatusComponent implements AfterViewInit{
   userList: User[] = [];
   violationTypeList: ViolationType[] = [];
   reportEntityList: ReportEntity[] = [];
+  reported: boolean = false;
   dataSource: MatTableDataSource<ReportEntity>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   selection = new SelectionModel<ReportEntity>(true, []);
@@ -71,14 +75,19 @@ export class UpdateReportStatusComponent implements AfterViewInit{
   //   }
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: {productId: number}, 
+    @Inject(MAT_DIALOG_DATA) public dataInjected: {productId: number, status: string}, 
     private reportService: ReportService,
     private userService: UserService,
     private violationTypeService: ViolationTypeService,
     private dialog: MatDialog, 
   ){
-    this.reportService.getByProductAndStatus(data.productId, "PENDING").subscribe(reports => {
+    this.reportService.getByProductAndStatus(dataInjected.productId, dataInjected.status).subscribe(reports => {
       this.reportList = reports
+      // if(this.reportList[0].status == 'PENDING'){
+      //   this.reported == false;
+      // }else{
+      //   this.reported == true;
+      // }
       this.userService.getAllUsers().subscribe(users => {
         this.userList = users
         this.violationTypeService.getAllTypes().subscribe(violationtypes => {
@@ -87,10 +96,13 @@ export class UpdateReportStatusComponent implements AfterViewInit{
             const user = users.find((u: User) => {u.id === report.user.id});
             const violationType = violationtypes.find((v: ViolationType) => {v.id === report.violation_types.id});
             return{
+              userId: report.user.id,
               username: report.user.username,
               violationTypeName: report.violation_types.name,
               description: report.description,
-              createdDate: report.created_date
+              createdDate: report.created_date,
+              status: report.status,
+              checked: false,
             }
           })
           this.reportEntityList = reportEntities;
@@ -117,6 +129,22 @@ export class UpdateReportStatusComponent implements AfterViewInit{
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
     });
+  }
+
+  updateStatus(){
+    let data = this.dataSource.data;
+    let userIdList = [];
+    let statusList = [];
+    for(let i = 0; i<data.length;i++){
+      let userData = data[i];
+      userIdList.push(userData.userId);
+      statusList.push(userData.checked ? "ACCEPTED":"DENIED");
+    }
+    this.reportService.updateReportStatus(this.dataInjected.productId, userIdList, statusList).subscribe(data => {
+      console.log(data);
+    })
+    alert('Đã cập nhật tình trạng báo cáo');
+    window.location.reload();
   }
 
   ngAfterViewInit() {

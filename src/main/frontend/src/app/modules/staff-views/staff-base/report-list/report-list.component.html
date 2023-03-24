@@ -5,9 +5,7 @@
 </mat-form-field>
 <select (change)="onChangeStatus($event)" [(ngModel)]="selectedOption">
   <option value="PENDING">Đang chờ xem xét</option>
-  <option value="ACCEPTED">Đã được chấp nhận</option>
-  <option value="DENIED">Đã bị từ chối</option>
-  <option value="HANDLED">Đã được bỏ qua</option>
+  <option value="HANDLED">Đã được xử lý</option>
 </select>
 <div class="mat-elevation-z8">
   <table mat-table [dataSource]="dataSource" matSort>

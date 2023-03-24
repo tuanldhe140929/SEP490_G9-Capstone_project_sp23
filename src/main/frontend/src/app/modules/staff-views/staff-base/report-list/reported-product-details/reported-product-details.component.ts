@@ -74,7 +74,7 @@ export class ReportedProductDetailsComponent implements OnInit {
 
   displayPreviews: DisplayPreview[] = [];
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: {productId: number}, 
+    @Inject(MAT_DIALOG_DATA) public data: {productId: number, status: string}, 
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private storageService: StorageService,
@@ -369,7 +369,8 @@ export class ReportedProductDetailsComponent implements OnInit {
   updateReport(){
     const dialogRef = this.dialog.open(UpdateReportStatusComponent, {
       data: {
-        productId: this.productId
+        productId: this.productId,
+        status: this.data.status
       },
       width: '80%'
 
