@@ -50,6 +50,8 @@ END $$;
  create table transaction_fees (id serial not null, percentage integer, primary key (id));
  create table transactions (id bigserial not null, paypal_id varchar(255), amount real not null, description varchar(255), created_date timestamp(6) not null,last_modified timestamp(6), cart_id bigint not null, transaction_fee_id integer, status TransactionStatus not null, primary key (id));
  create table users (avatar varchar(255), email_verified boolean, first_name varchar(255), last_name varchar(255), username varchar(30) not null, account_id bigint not null, primary key (account_id));
+ create table violations(id bigint not null, created_date timestamp(6), description varchar(255), account_id bigint); 
+  alter table if exists violations add constraint FKkiwnrvd09n4d8d81hjbwl49xv foreign key (account_id) references accounts;
  create table rates (account_id bigint not null, product_id bigint not null, date date, stars integer, primary key (account_id, product_id));
  alter table if exists rates add constraint FKkiwnrvd09n4d8d81hjbwl41xv foreign key (product_id) references products;
  alter table if exists rates add constraint FKbvjnid289x18balux0uumuh7f foreign key (account_id) references users;

@@ -24,7 +24,7 @@ import { FormsModule } from '@angular/forms';
 import { StaffBaseComponent } from './staff-base/staff-base.component';
 import { ProductApprovalComponent } from './staff-base/product-approval/product-approval.component';
 import { ReportListComponent } from './staff-base/report-list/report-list.component';
-import { AddviolationComponent } from './addviolation/addviolation.component';
+import { AddviolationComponent } from './staff-base/addviolation/addviolation.component';
 import { ReactiveFormsModule } from '@angular/forms';
 
 
