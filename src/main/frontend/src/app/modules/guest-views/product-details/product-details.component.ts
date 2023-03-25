@@ -343,7 +343,7 @@ export class ProductDetailsComponent implements OnInit {
       });
   }
   redirectSellerPage() {
-    this.router.navigate(['collection/' + this.owner.username]);
+    this.router.navigate(['collection/' + this.owner.id]);
   }
   addToCart() {
     if (!this.storageService.isLoggedIn()) {
