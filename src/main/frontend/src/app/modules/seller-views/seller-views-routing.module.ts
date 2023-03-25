@@ -7,19 +7,19 @@ const routes: Routes = [
   {
     path: 'product/update/:productId/:version',
     component: UpdateProductComponent,
-    title: "Update product",
+    title: "Cập nhật sản phẩm",
     canActivate: [SellerGuardGuard]
   },
   {
     path: 'product/update/:productId',
     component: UpdateProductComponent,
-    title: "Update product",
+    title: "Cập nhật sản phẩm",
     canActivate: [SellerGuardGuard]
   },
   {
     path: 'product/new/:productId',
     component: UpdateProductComponent,
-    title: "Update product",
+    title: "Cập nhật sản phẩm",
     canActivate: [SellerGuardGuard]
   }
 ];

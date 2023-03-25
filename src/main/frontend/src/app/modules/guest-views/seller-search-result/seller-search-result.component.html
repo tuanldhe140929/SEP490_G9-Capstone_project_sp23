@@ -23,7 +23,7 @@
     
 
     <!-- ===== Card for sidebar filter ===== -->
-    <div id="aside_filter" class="collapse card d-lg-block mb-5">
+    <!-- <div id="aside_filter" class="collapse card d-lg-block mb-5">
     
       <article class="filter-group">
       <header class="card-header">
@@ -38,7 +38,7 @@
             <label class="form-check-label" for="flexRadioDefault1">
               Tất cả phân loại
             </label>
-            <!-- <b class="badge rounded-pill bg-gray-dark float-end">{{resultList.length}}</b> -->
+            <b class="badge rounded-pill bg-gray-dark float-end">{{resultList.length}}</b>
           </div>
           <div class="form-check" *ngFor="let category of categoryList">
             <input class="form-check-input" type="radio" name="choosecategory" id="flexRadioDefault1" [value]="category.id" [(ngModel)]="chosenCategory" (change)="onChangeCategory($event)">
@@ -46,11 +46,11 @@
               {{category.name}}
             </label>
           </div>
-        </div> <!-- card-body.// -->
-      </div> <!-- collapse.// -->
-      </article> <!-- filter-group // -->
+        </div> 
+      </div> 
+      </article> 
     
-      <!-- <article class="filter-group">
+      <article class="filter-group">
       <header class="card-header">
         <a href="#" class="title" data-bs-toggle="collapse" data-bs-target="#collapse_aside_brands">
         <i class="icon-control fa fa-chevron-down"></i>  Nhãn
@@ -64,7 +64,7 @@
           </label> 
         </div> 
       </div> 
-      </article> -->
+      </article>
     
       <article class="filter-group">
       <header class="card-header">
@@ -74,7 +74,7 @@
       </header>
       <div class="collapse show" id="collapse_aside2">
         <div class="card-body">
-        <!-- <input type="range" class="form-range" min="0" max="100"> -->
+        <input type="range" class="form-range" min="0" max="100">
         <div class="row mb-3">
           <div class="col-6">
           <label for="min" class="form-label">Min</label>
@@ -84,17 +84,17 @@
           <div class="col-6">
           <label for="max" class="form-label">Max</label>
           <input class="form-control" id="max" min="0" max="10000000" placeholder="Max" type="number" [(ngModel)]="maxprice">
-          </div> <!-- col end.// -->
+          </div> 
           <div *ngIf="!compareMinMax()">
             <small style="color: red">Khoảng giá không hợp lệ</small>
           </div>
-        </div> <!-- row end.// -->
+        </div> 
         <button class="btn btn-light w-100" (click)="refresh()" [disabled]="!compareMinMax()">Áp dụng</button>
-        </div> <!-- card-body.// -->
-      </div> <!-- collapse.// -->
-      </article> <!-- filter-group // -->
-    </div> <!-- card.// -->
-    <!-- ===== Card for sidebar filter .// ===== -->
+        </div> 
+      </div> 
+      </article> 
+    </div>  -->
+
 
 
 
@@ -106,7 +106,7 @@
           <strong class="d-block py-2">Không có kết quả</strong>
         </div>
         <div *ngIf="resultList.length>0">
-          <strong class="d-block py-2">Tìm thấy {{resultList.length}} sản phẩm</strong>
+          <strong class="d-block py-2">Tìm thấy {{resultList.length}} người bán</strong>
         </div>
         <div class="ms-auto ">
           <select class="form-select d-inline-block w-auto me-1">
@@ -135,12 +135,11 @@
           </div>
           <figcaption class="info-wrap border-top">
             <div class="price-wrap">
-            <strong class="price">{{result.name}}</strong>
+            <strong class="price">{{result.username}}</strong>
             </div> <!-- price-wrap.// -->
-            <p class="title mb-2">{{result.price}}</p>
+            <p class="title mb-2">{{result.email}}</p>
             
-            <a (click)="openDetails(result.id)" class="btn btn-primary">Chi tiết</a>
-            <a href="#" class="btn btn-light btn-icon"> <i class="fa fa-shopping-cart"></i> </a>
+            <a (click)="openCollection(result.id)" class="btn btn-primary">Các sản phẩm</a>
           </figcaption>
           </figure>
         </div> <!-- col end.// -->

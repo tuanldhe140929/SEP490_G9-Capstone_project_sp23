@@ -2,12 +2,16 @@
 <!-- ============== SECTION PAGETOP ============== -->
 <section class="bg-primary py-5">
   <div class="container">
-    <h2 *ngIf="seller!=null" class="text-white">Các sản phẩm của {{seller.username}}</h2>
-    <ol class="breadcrumb ondark mb-0">
-      <li class="breadcrumb-item"><a href="#">Home</a></li>
-      <li class="breadcrumb-item"><a href="#">Library</a></li>
-      <li class="breadcrumb-item active" aria-current="page">Data</li>
-    </ol>
+    <div class="row">
+      <div class="col-2">
+        <img [src]="getSellerAvatar()" width="150" height="150">
+      </div>
+      <div class="col-2">
+        <b style="color: white; font-size: 40px;">{{seller.username}}</b>
+        <br>
+        <p style="color: white; font-size: 30px;">{{seller.email}}</p>
+      </div>
+    </div>
   </div> <!-- container //  -->
 </section>
 <!-- ============== SECTION PAGETOP END// ============== -->

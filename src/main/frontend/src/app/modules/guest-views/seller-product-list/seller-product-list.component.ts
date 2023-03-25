@@ -22,7 +22,7 @@ export class SellerProductListComponent implements OnInit {
 
   @ViewChild('infoModal', { static: false }) private infoModal: any;
 
-  sellerid: number
+  sellerid: number;
   productList: Product[] = [];
   displayForSeller: Product[] = [];
   displayForUser: Product[] = [];
@@ -53,6 +53,10 @@ export class SellerProductListComponent implements OnInit {
 
   ngOnInit(): void {
     this.sellerid = Number(this.activatedRoute.snapshot.paramMap.get('sellerId'));
+    this.sellerService.getSellerById(this.sellerid).subscribe(data => {
+      this.seller = data;
+      this.getSellerAvatar();
+    });
     this.checkIfIsSeller();
     this.productService.getProductsBySellerForSeller(this.sellerid, "", 0, 0, 10000000).subscribe(
       data => {
@@ -144,19 +148,26 @@ export class SellerProductListComponent implements OnInit {
   }
 
   refresh() {
-    if(this.sellerStatus){
-      this.productService.getProductsBySellerForSeller(this.sellerid, "", 0, 0, 10000000).subscribe(
-        data => {
-          this.productList = data;
-        }
-      )
-    }else{
-      this.productService.getProductsBySellerForUser(this.sellerid, "", 0, 0, 10000000).subscribe(
-        data => {
-          this.productList = data;
-        }
-      )
-    }
+    this.productService.getProductsBySellerForSeller(this.sellerid, this.keyword, this.chosenCategory, this.minprice, this.maxprice).subscribe(
+      data => {
+        this.productList = data;
+      }
+    )
+
+    // if(this.sellerStatus){
+    //   this.productService.getProductsBySellerForSeller(this.sellerid, "", 0, 0, 10000000).subscribe(
+    //     data => {
+    //       this.productList = data;
+    //     }
+    //   )
+    // }
+    // else{
+    //   this.productService.getProductsBySellerForUser(this.sellerid, "", 0, 0, 10000000).subscribe(
+    //     data => {
+    //       this.productList = data;
+    //     }
+    //   )
+    // }
   }
 
   createNewProduct() {
@@ -205,5 +216,13 @@ export class SellerProductListComponent implements OnInit {
 
   openInfoModal() {
     this.modalService.open(this.infoModal, { centered: true });
+  }
+
+  getSellerAvatar(): string{
+    if (this.seller.avatar != null) {
+      return 'http://localhost:9000/public/serveMedia/image?source=' + this.seller.avatar.replace(/\\/g, '/');
+    } else {
+      return 'assets/images/noimage.png'
+    }
   }
 }

@@ -25,17 +25,20 @@ const routes: Routes = [
 {
   path: 'staff',
   component: StaffBaseComponent,
+  title: 'Hệ thống DPM dành cho nhân viên',
   children: [
     {
       path: '',
       outlet: 'productApproval',
       component: ProductApprovalComponent,
+      title: 'Duyệt sản phẩm',
       pathMatch: 'full'
     },
     {
       path: '',
       outlet: 'reportList',
       component: ReportListComponent,
+      title: 'Quản lý báo cáo',
       pathMatch: 'full'
     }
   ],

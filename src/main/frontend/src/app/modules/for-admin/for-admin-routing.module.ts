@@ -13,6 +13,7 @@ const routes: Routes = [
   {
     path: 'admin',
     component: ForAdminBaseComponent,
+    title: 'Hệ thống DPM dành cho Quản trị viên',
     children: [
       {
         path: '',

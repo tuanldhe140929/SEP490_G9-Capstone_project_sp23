@@ -12,5 +12,17 @@ public interface SellerService {
 	
 	int getSellerNumberOfFlags(long sellerId);
 	
-	List<Seller> getFlaggedSellers();
+	//supporting methods
+	
+	List<Seller> getAllSellers();
+	
+	List<Seller> getAllEnabledSellers(List<Seller> sellerList);
+	
+	List<Seller> getFlaggedSellers(List<Seller> sellerList);
+	
+	List<Seller> getSellersByKeyword(List<Seller> sellerList, String keyword);
+	
+	//main methods
+	
+	List<Seller> getSellersForSearching(String keyword);
 }

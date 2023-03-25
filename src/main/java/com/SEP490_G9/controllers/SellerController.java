@@ -1,5 +1,7 @@
 package com.SEP490_G9.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,5 +23,11 @@ public class SellerController {
 	public ResponseEntity<?> getSellerById(@RequestParam("sellerid") long sellerid) {
 		Seller seller = sellerService.getSellerById(sellerid);
 		return ResponseEntity.ok(seller);
+	}
+	
+	@GetMapping("/getSellersForSearching")
+	public ResponseEntity<?> getSellersForSearching(@RequestParam("keyword") String keyword){
+		List<Seller> sellerList = sellerService.getSellersForSearching(keyword);
+		return ResponseEntity.ok(sellerList);
 	}
 }
