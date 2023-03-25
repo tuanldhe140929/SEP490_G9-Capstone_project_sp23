@@ -182,26 +182,39 @@ export class SellerProductListComponent implements OnInit {
   }
 
   refresh() {
-    this.productService.getProductsBySellerForSeller(this.sellerid, this.keyword, this.chosenCategory, [], this.minprice, this.maxprice).subscribe(
-      data => {
-        this.productList = data;
-      }
-    )
-
-    // if(this.sellerStatus){
-    //   this.productService.getProductsBySellerForSeller(this.sellerid, "", 0, 0, 10000000).subscribe(
-    //     data => {
-    //       this.productList = data;
-    //     }
-    //   )
-    // }
-    // else{
-    //   this.productService.getProductsBySellerForUser(this.sellerid, "", 0, 0, 10000000).subscribe(
-    //     data => {
-    //       this.productList = data;
-    //     }
-    //   )
-    // }
+    console.log(this.checkedTags);
+    if(this.storageService.isLoggedIn()){
+      this.userService.getCurrentUserInfo().subscribe(data => {
+        this.user = data;
+        if(this.user.id == this.sellerid){
+          this.productService.getProductsBySellerForSeller(this.sellerid, this.keyword, this.chosenCategory, this.checkedTags, this.minprice, this.maxprice).subscribe(
+            data => {
+              this.productList = data;
+              this.sellerStatus = true;
+            }
+          )
+        }else{
+          this.productService.getProductsBySellerForUser(this.sellerid, this.keyword, this.chosenCategory, this.checkedTags, this.minprice, this.maxprice).subscribe(
+            data => {
+              this.productList = data;
+              this.sellerStatus = false;
+            }
+          )
+        }
+      })
+    }else{
+      this.productService.getProductsBySellerForUser(this.sellerid, this.keyword, this.chosenCategory, this.checkedTags, this.minprice, this.maxprice).subscribe(
+        data => {
+          this.productList = data;
+          this.sellerStatus = false;
+        }
+      )
+    }
+    // this.productService.getProductsBySellerForSeller(this.sellerid, this.keyword, this.chosenCategory, [], this.minprice, this.maxprice).subscribe(
+    //   data => {
+    //     this.productList = data;
+    //   }
+    // )
   }
 
   createNewProduct() {
