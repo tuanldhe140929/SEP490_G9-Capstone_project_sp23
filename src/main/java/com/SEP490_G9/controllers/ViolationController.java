@@ -26,9 +26,13 @@ import com.SEP490_G9.service.ViolationService;
 public class ViolationController {
 	@Autowired
 	ViolationService vioSer;
-	
 	@PostMapping("addviolation")
 	public ResponseEntity<?> addTag(@RequestBody Violation vio) {
+		Violation vionew = new Violation();
+		vionew.setAccount(null);
+		vionew.setCreated_date(null);
+		vionew.setDescription(null);
+		
 		boolean canAdd = vioSer.addVio(vio);
 		return ResponseEntity.ok(canAdd);
 	}

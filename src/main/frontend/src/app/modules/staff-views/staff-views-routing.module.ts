@@ -38,13 +38,14 @@ const routes: Routes = [
       outlet: 'reportList',
       component: ReportListComponent,
       pathMatch: 'full'
-    },
-    {
-      path: '',
-      outlet: 'addviolation',
-      component: AddviolationComponent,
-      pathMatch: 'full'
     }
+    // ,
+    // {
+    //   path: '',
+    //   outlet: 'addviolation',
+    //   component: AddviolationComponent,
+    //   pathMatch: 'full'
+    // }
   ],
   canActivate: [StaffGuard]
 }];

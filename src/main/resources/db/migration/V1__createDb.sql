@@ -25,6 +25,7 @@ END $$;
 
  create sequence payouts_seq start with 1 increment by 50;
  create sequence accounts_seq start with 1 increment by 50;
+  create sequence violations_seq start with 1 increment by 50;
  create sequence carts_seq start with 1 increment by 50;
  create sequence files_seq start with 1 increment by 50;
  create sequence previews_seq start with 1 increment by 50;
