@@ -10,6 +10,8 @@ import { UserService } from 'src/app/services/user.service';
 import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { Role } from '../../../DTOS/Role';
 import { AccountService } from 'src/app/services/account.service';
+import { SellerService } from 'src/app/services/seller.service';
+import { Seller } from 'src/app/DTOS/Seller';
 
 const removeMark = require("vietnamese-tonemarkless");
 
@@ -24,9 +26,12 @@ export class HeaderComponent implements OnInit {
   username: string;
   user: User = new User;
   productList: Product[] = [];
+  sellerList: Seller[] = [];
   nameList: string[] = [];
+  sellerNameList: string[] = [];
   filteredOptions: Observable<string[]>;
   myControl = new FormControl('');
+  chosenOption: string = "PRODUCTS";
   keyword: string;
 
   constructor(
@@ -34,7 +39,8 @@ export class HeaderComponent implements OnInit {
     private accountService: AccountService,
     private userService: UserService,
     private router: Router,
-    private productService: ProductService) {
+    private productService: ProductService,
+    private sellerService: SellerService) {
 
   }
 
@@ -63,6 +69,14 @@ export class HeaderComponent implements OnInit {
         }
       }
     )
+    this.sellerService.getSellersForSearching("").subscribe(
+      data => {
+        this.sellerList = data;
+        for(let i = 0;i <= this.sellerList.length; i++){
+          this.sellerNameList.push(this.sellerList[i].username);
+        }
+      }
+    )
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value || '')),
@@ -81,7 +95,11 @@ export class HeaderComponent implements OnInit {
 
   private _filter(value: string): string[] {
     const filterValue = value.toLowerCase().trim().replace(/\s+/g, ' ');
-    return this.nameList.filter(option => option.toLowerCase().includes(filterValue));
+    if(this.chosenOption == "PRODUCTS"){
+      return this.nameList.filter(option => option.toLowerCase().includes(filterValue));
+    }else{
+      return this.sellerNameList.filter(option => option.toLowerCase().includes(filterValue));
+    }
   }
 
   onLogout() {
@@ -94,17 +112,36 @@ export class HeaderComponent implements OnInit {
   }
 
   toSearchResult() {
-    this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
-      this.router.navigate(['/result', this.keyword])
-    })
+    if(this.chosenOption == "PRODUCTS"){
+      this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
+        this.router.navigate(['/result', this.keyword])
+      })
+    }else{
+      this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
+        this.router.navigate(['/sellers', this.keyword])
+      })
+    }
   }
 
   onOptionSelected(event: MatAutocompleteSelectedEvent) {
     const selectedOption = event.option.value;
-    this.router.navigate(['/result', selectedOption]);
+    if(this.chosenOption == "PRODUCTS"){
+      this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
+        this.router.navigate(['/result', selectedOption])
+      })
+    }else{
+      this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
+        this.router.navigate(['/sellers', selectedOption])
+      })
+    }
+    
   }
 
   redirectSellerPage() {
     this.router.navigate(['collection/' + this.user.id]);
+  }
+
+  onChangeSearch(event: any){
+    this.chosenOption = (event.target as HTMLSelectElement).value;
   }
 }
