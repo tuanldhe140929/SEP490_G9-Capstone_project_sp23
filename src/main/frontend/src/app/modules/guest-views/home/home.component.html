@@ -168,7 +168,7 @@
       <h3 class="section-title">New products</h3>
     </header> 
     <div class="row">
-      <div class="col-lg-3 col-md-6 col-sm-6">
+      <!-- <div class="col-lg-3 col-md-6 col-sm-6">
         <figure class="card-product-grid">
           <a href="#" class="img-wrap rounded bg-gray-light"> 
             <span class="topbar"> <span class="badge bg-danger"> New </span> </span>
@@ -176,13 +176,14 @@
           </a>
           <figcaption class="pt-2">
             <a href="#" class="float-end btn btn-light btn-icon"> <i class="fa fa-heart"></i> </a>
-            <strong class="price">$29.95</strong> <!-- price.// -->
+            <strong class="price">$29.95</strong> 
             <a href="#" class="title text-truncate">GoPro action camera 4K</a>
             <small class="text-muted">Model: X-200</small>
           </figcaption>
         </figure>
-      </div> <!-- col end.// -->
-      <div class="col-lg-3 col-md-6 col-sm-6">
+      </div>  -->
+      <!-- col end.// -->
+      <!-- <div class="col-lg-3 col-md-6 col-sm-6">
         <figure class="card-product-grid">
           <a href="#" class="img-wrap rounded bg-gray-light"> 
             <span class="topbar"> <span class="badge bg-warning"> Offer </span> </span>
@@ -190,90 +191,29 @@
           </a>
           <figcaption class="pt-2">
             <a href="#" class="float-end btn btn-light btn-icon"> <i class="fa fa-heart"></i> </a>
-            <strong class="price">$590.00</strong> <!-- price.// -->
+            <strong class="price">$590.00</strong> 
             <a href="#" class="title text-truncate">Canon EOS professional</a>
             <small class="text-muted">Capacity: 128GB</small>
           </figcaption>
         </figure>
-      </div> <!-- col end.// -->
-      <div class="col-lg-3 col-md-6 col-sm-6">
+      </div>  -->
+      <!-- col end.// -->
+      <div class="col-lg-3 col-md-6 col-sm-6" *ngFor="let product of productList | paginate: {itemsPerPage: itemsPerPage, currentPage: p}">
         <figure class="card-product-grid">
           <a href="#" class="img-wrap rounded bg-gray-light"> 
-            <img height="250" class="mix-blend-multiply" src="assets/images/items/3.webp"> 
+            <img height="250" class="mix-blend-multiply" [src]="getCoverImage(product)"> 
           </a>
           <figcaption class="pt-2">
             <a href="#" class="float-end btn btn-light btn-icon"> <i class="fa fa-heart"></i> </a>
-            <strong class="price">$29.95</strong> <!-- price.// -->
-            <a href="#" class="title text-truncate">Modern product name here</a>
-            <small class="text-muted">Sizes: S, M, XL</small>
+            <strong class="price">{{product.price}}$29.95</strong> <!-- price.// -->
+            <a href="#" class="title text-truncate">{{product.name}}Modern product name here</a>
+            <small class="text-muted">{{product.category}}Sizes: S, M, XL</small>
           </figcaption>
         </figure>
-      </div> <!-- col end.// -->
-      <div class="col-lg-3 col-md-6 col-sm-6">
-        <figure class="card-product-grid">
-          <a href="#" class="img-wrap rounded bg-gray-light"> 
-            <img height="250" class="mix-blend-multiply" src="assets/images/items/4.webp"> 
-          </a>
-          <figcaption class="pt-2">
-            <a href="#" class="float-end btn btn-light btn-icon"> <i class="fa fa-heart"></i> </a>
-            <strong class="price">$1099.00</strong> <!-- price.// -->
-            <a href="#" class="title text-truncate">Apple iPhone 13 Pro max</a>
-            <small class="text-muted">Color: Black, Memory: 128GB</small>
-          </figcaption>
-        </figure>
-      </div> <!-- col end.// -->
-      <div class="col-lg-3 col-md-6 col-sm-6">
-        <figure class="card-product-grid">
-          <a href="#" class="img-wrap rounded bg-gray-light"> 
-            <img height="250" class="mix-blend-multiply" src="assets/images/items/5.webp"> 
-          </a>
-          <figcaption class="pt-2">
-            <a href="#" class="float-end btn btn-light btn-icon"> <i class="fa fa-heart"></i> </a>
-            <strong class="price">$29.95</strong> <!-- price.// -->
-            <a href="#" class="title text-truncate">Modern product name here</a>
-            <small class="text-muted">Sizes: S, M, XL</small>
-          </figcaption>
-        </figure>
-      </div> <!-- col end.// -->
-      <div class="col-lg-3 col-md-6 col-sm-6">
-        <figure class="card-product-grid">
-          <a href="#" class="img-wrap rounded bg-gray-light"> 
-            <img height="250" class="mix-blend-multiply" src="assets/images/items/6.webp"> 
-          </a>
-          <figcaption class="pt-2">
-            <a href="#" class="float-end btn btn-light btn-icon"> <i class="fa fa-heart"></i> </a>
-            <strong class="price">$29.95</strong> <!-- price.// -->
-            <a href="#" class="title text-truncate">Modern product name here</a>
-            <small class="text-muted">Sizes: S, M, XL</small>
-          </figcaption>
-        </figure>
-      </div> <!-- col end.// -->
-      <div class="col-lg-3 col-md-6 col-sm-6">
-        <figure class="card-product-grid">
-          <a href="#" class="img-wrap rounded bg-gray-light"> 
-            <img height="250" class="mix-blend-multiply" src="assets/images/items/7.webp"> 
-          </a>
-          <figcaption class="pt-2">
-            <a href="#" class="float-end btn btn-light btn-icon"> <i class="fa fa-heart"></i> </a>
-            <strong class="price">$29.95</strong> <!-- price.// -->
-            <a href="#" class="title text-truncate">Modern product name here</a>
-            <small class="text-muted">Sizes: S, M, XL</small>
-          </figcaption>
-        </figure>
-      </div> <!-- col end.// -->
-      <div class="col-lg-3 col-md-6 col-sm-6">
-        <figure class="card-product-grid">
-          <a href="#" class="img-wrap rounded bg-gray-light"> 
-            <img height="250" class="mix-blend-multiply" src="assets/images/items/8.webp"> 
-          </a>
-          <figcaption class="pt-2">
-            <a href="#" class="float-end btn btn-light btn-icon"> <i class="fa fa-heart"></i> </a>
-            <strong class="price">$29.95</strong> <!-- price.// -->
-            <a href="#" class="title text-truncate">Modern product name here</a>
-            <small class="text-muted">Material: Jeans</small>
-          </figcaption>
-        </figure>
-      </div> <!-- col end.// -->
+      </div> 
+      <!-- col end.// -->
+      
+      <!-- col end.// -->
     </div> <!-- row end.// -->
   </div> <!-- container end.// -->
   </section>
