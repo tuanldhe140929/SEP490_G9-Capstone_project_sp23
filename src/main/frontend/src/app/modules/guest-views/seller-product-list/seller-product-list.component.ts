@@ -57,12 +57,34 @@ export class SellerProductListComponent implements OnInit {
       this.seller = data;
       this.getSellerAvatar();
     });
-    this.checkIfIsSeller();
-    this.productService.getProductsBySellerForSeller(this.sellerid, "", 0, 0, 10000000).subscribe(
-      data => {
-        this.productList = data;
-      }
-    )
+    if(this.storageService.isLoggedIn()){
+      this.userService.getCurrentUserInfo().subscribe(data => {
+        this.user = data;
+        if(this.user.id == this.sellerid){
+          this.productService.getProductsBySellerForSeller(this.sellerid, "", 0, 0, 10000000).subscribe(
+            data => {
+              this.productList = data;
+              this.sellerStatus = true;
+            }
+          )
+        }else{
+          this.productService.getProductsBySellerForUser(this.sellerid, "", 0, 0, 10000000).subscribe(
+            data => {
+              this.productList = data;
+              this.sellerStatus = false;
+            }
+          )
+        }
+      })
+    }else{
+      this.productService.getProductsBySellerForUser(this.sellerid, "", 0, 0, 10000000).subscribe(
+        data => {
+          this.productList = data;
+          this.sellerStatus = false;
+        }
+      )
+    }
+    
     // this.productService.getProductsBySellerForUser(this.sellerid, "", 0, 0, 10000000).subscribe(
     //   data => {
     //     this.displayForUser = data;
