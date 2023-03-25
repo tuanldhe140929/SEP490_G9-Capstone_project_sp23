@@ -1,0 +1,13 @@
+<mat-dialog-content class="mat-typography">
+  <h2>Thêm vi phạm</h2>
+  <form [formGroup]="addViolationForm" (submit)="addViolation()">
+      <div class="form-group">
+          <label>Tên nhãn</label>
+          <input type="text" class="form-control" formControlName="description" (change)="checkDescriptionExists()">
+      </div>
+      <div class="form-group" align="end">
+          <button mat-dialog-close="false" class="btn btn-warning">Hủy</button>
+          <button type="submit"  class="btn btn-success">Thêm vi phạm</button>
+      </div>
+  </form>
+</mat-dialog-content>
