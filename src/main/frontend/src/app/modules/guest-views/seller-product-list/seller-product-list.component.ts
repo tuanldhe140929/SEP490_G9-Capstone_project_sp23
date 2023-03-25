@@ -9,6 +9,7 @@ import { CategoryService } from 'src/app/services/category.service';
 import { ProductService } from 'src/app/services/product.service';
 import { SellerService } from 'src/app/services/seller.service';
 import { StorageService } from 'src/app/services/storage.service';
+import { TagService } from 'src/app/services/tag.service';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
@@ -27,6 +28,7 @@ export class SellerProductListComponent implements OnInit {
   displayForSeller: Product[] = [];
   displayForUser: Product[] = [];
   categoryList: Category[] = [];
+  tagList: Category[] = [];
   minprice: number = 0;
   maxprice: number = 10000000;
   chosenCategory: number = 0;
@@ -44,6 +46,7 @@ export class SellerProductListComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private productService: ProductService,
     private categoryService: CategoryService,
+    private tagService: TagService,
     private router: Router,
     private sellerService: SellerService,
     private storageService: StorageService,
@@ -61,14 +64,14 @@ export class SellerProductListComponent implements OnInit {
       this.userService.getCurrentUserInfo().subscribe(data => {
         this.user = data;
         if(this.user.id == this.sellerid){
-          this.productService.getProductsBySellerForSeller(this.sellerid, "", 0, 0, 10000000).subscribe(
+          this.productService.getProductsBySellerForSeller(this.sellerid, "", 0, [],0, 10000000).subscribe(
             data => {
               this.productList = data;
               this.sellerStatus = true;
             }
           )
         }else{
-          this.productService.getProductsBySellerForUser(this.sellerid, "", 0, 0, 10000000).subscribe(
+          this.productService.getProductsBySellerForUser(this.sellerid, "", 0, [],0, 10000000).subscribe(
             data => {
               this.productList = data;
               this.sellerStatus = false;
@@ -77,7 +80,7 @@ export class SellerProductListComponent implements OnInit {
         }
       })
     }else{
-      this.productService.getProductsBySellerForUser(this.sellerid, "", 0, 0, 10000000).subscribe(
+      this.productService.getProductsBySellerForUser(this.sellerid, "", 0,[], 0, 10000000).subscribe(
         data => {
           this.productList = data;
           this.sellerStatus = false;
@@ -91,6 +94,7 @@ export class SellerProductListComponent implements OnInit {
     //   }
     // )
     this.getAllCategories();
+    this.getAllTags();
     this.getSellerById();
   }
 
@@ -98,6 +102,14 @@ export class SellerProductListComponent implements OnInit {
     this.categoryService.getAllCategories().subscribe(
       data => {
         this.categoryList = data;
+      }
+    )
+  }
+
+  getAllTags(){
+    this.tagService.getAllTags().subscribe(
+      data => {
+        this.tagList = data;
       }
     )
   }
@@ -170,7 +182,7 @@ export class SellerProductListComponent implements OnInit {
   }
 
   refresh() {
-    this.productService.getProductsBySellerForSeller(this.sellerid, this.keyword, this.chosenCategory, this.minprice, this.maxprice).subscribe(
+    this.productService.getProductsBySellerForSeller(this.sellerid, this.keyword, this.chosenCategory, [], this.minprice, this.maxprice).subscribe(
       data => {
         this.productList = data;
       }
@@ -245,6 +257,16 @@ export class SellerProductListComponent implements OnInit {
       return 'http://localhost:9000/public/serveMedia/image?source=' + this.seller.avatar.replace(/\\/g, '/');
     } else {
       return 'assets/images/noimage.png'
+    }
+  }
+
+  checkedTags: number[] = [];
+  updateCheckedValues(event: any){
+    const value = event.target.value;
+    if(event.target.checked){
+      this.checkedTags.push(value);
+    }else{
+      this.checkedTags = this.checkedTags.filter(v => v !== value);
     }
   }
 }

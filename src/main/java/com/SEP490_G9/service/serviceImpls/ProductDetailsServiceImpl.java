@@ -206,10 +206,20 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		}
 	}
 
-	// unusable, yet
 	@Override
-	public List<ProductDetails> getByTag(List<ProductDetails> listPd, List<Integer> tagId) {
-		return null;
+	public List<ProductDetails> getByTags(List<ProductDetails> listPd, List<Integer> tagIdList) {
+		List<ProductDetails> filteredByTags = new ArrayList<>();
+		for(ProductDetails pd: listPd) {
+			List<Tag> tagList = pd.getTags();
+			List<Integer> tagIdOfAProduct = new ArrayList<>();
+			for(Tag tag: tagList) {
+				tagIdOfAProduct.add(tag.getId());
+			}
+			if(tagIdOfAProduct.containsAll(tagIdList)) {
+				filteredByTags.add(pd);
+			}
+		}
+		return filteredByTags;
 	}
 
 	@Override
@@ -409,7 +419,7 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 
 	// hien san pham theo tu khoa
 	@Override
-	public List<ProductDetails> getProductForSearching(String keyword, int categoryid, int min, int max) {
+	public List<ProductDetails> getProductForSearching(String keyword, int categoryid, List<Integer> tagIdList, int min, int max) {
 		List<ProductDetails> allPd = getAll();
 		List<ProductDetails> allApprovedPd = getByApproved(allPd);
 		List<ProductDetails> allEnabledPd = getByEnabled(allApprovedPd);
@@ -417,13 +427,14 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		List<ProductDetails> allLatestPd = getByLatestVer(allPublishedPd);
 		List<ProductDetails> allKeywordPd = getByKeyword(allLatestPd, keyword);
 		List<ProductDetails> allCategoryPd = getByCategory(allKeywordPd, categoryid);
-		List<ProductDetails> finalResult = getByPriceRange(allCategoryPd, min, max);
+		List<ProductDetails> allTagsPd = getByTags(allCategoryPd, tagIdList);
+		List<ProductDetails> finalResult = getByPriceRange(allTagsPd, min, max);
 		return finalResult;
 	}
 
 	// hien san pham nguoi dung cho chinh no
 	@Override
-	public List<ProductDetails> getProductBySellerForSeller(long sellerId, String keyword, int categoryId, int min,
+	public List<ProductDetails> getProductBySellerForSeller(long sellerId, String keyword, int categoryId, List<Integer> tagidlist , int min,
 			int max) {
 		List<ProductDetails> allPd = getAll();
 		List<ProductDetails> allEnabledPd = getByEnabled(allPd);
@@ -432,12 +443,13 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		List<ProductDetails> allCategoryPd = getByCategory(allKeywordPd, categoryId);
 		List<ProductDetails> allPricePd = getByPriceRange(allCategoryPd, min, max);
 		List<ProductDetails> allSellerPd = getBySeller(allPricePd, sellerId);
-		return allSellerPd;
+		List<ProductDetails> finalResult = getByTags(allSellerPd, tagidlist);
+		return finalResult;
 	}
 
 	// hien san pham nguoi dung cho nguoi khac
 	@Override
-	public List<ProductDetails> getProductBySellerForUser(long sellerId, String keyword, int categoryId, int min,
+	public List<ProductDetails> getProductBySellerForUser(long sellerId, String keyword, int categoryId, List<Integer> tagidlist, int min,
 			int max) {
 		List<ProductDetails> allPd = getAll();
 		List<ProductDetails> allApprovedPd = getByApproved(allPd);
@@ -448,7 +460,8 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		List<ProductDetails> allCategoryPd = getByCategory(allKeywordPd, categoryId);
 		List<ProductDetails> allPricePd = getByPriceRange(allCategoryPd, min, max);
 		List<ProductDetails> allSellerPd = getBySeller(allPricePd, sellerId);
-		return allSellerPd;
+		List<ProductDetails> finalResult = getByTags(allSellerPd, tagidlist);
+		return finalResult;
 	}
 
 	// hien san pham cho nhan vien dua theo trang thai bao cao

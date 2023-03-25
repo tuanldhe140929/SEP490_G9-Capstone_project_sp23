@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { License } from '../DTOS/License';
@@ -75,35 +75,18 @@ export class ProductService {
     return this.httpClient.get<any>(baseUrl + "/getProductsByKeyword/" + keyword);
   }
 
-  getFilteredProducts(keyword: string, categoryid: number, min: number, max: number): Observable<any>{
-    const params = {
-      keyword: keyword,
-      categoryid: categoryid,
-      min: min,
-      max: max
-    }
-    return this.httpClient.get<any>("http://localhost:9000/productDetails/getFilteredProducts", {params});
+  getFilteredProducts(keyword: string, categoryid: number, tagidlist: number[], min: number, max: number): Observable<any>{
+    let params = new HttpParams().set('keyword', keyword).set('categoryid',categoryid).set('tagidlist',tagidlist.join(',')).set("min",min).set("max",max);
+    return this.httpClient.get<any>("http://localhost:9000/productDetails/getProductsForSearching", {params});
   }
 
-  getProductsBySellerForSeller(sellerid: number, keyword: string,categoryid: number, min: number, max: number): Observable<any>{
-    const params = {
-      sellerid: sellerid,
-      keyword: keyword,
-      categoryid: categoryid,
-      min: min,
-      max: max
-    }
+  getProductsBySellerForSeller(sellerid: number, keyword: string,categoryid: number, tagidlist: number[], min: number, max: number): Observable<any>{
+    let params = new HttpParams().set('sellerid',sellerid).set('keyword', keyword).set('categoryid',categoryid).set('tagidlist',tagidlist.join(',')).set("min",min).set("max",max);
     return this.httpClient.get<any>("http://localhost:9000/productDetails/getProductsBySellerForSeller", {params});
   }
 
-  getProductsBySellerForUser(sellerid: number, keyword: string,categoryid: number, min: number, max: number): Observable<any>{
-    const params = {
-      sellerid: sellerid,
-      keyword: keyword,
-      categoryid: categoryid,
-      min: min,
-      max: max
-    }
+  getProductsBySellerForUser(sellerid: number, keyword: string,categoryid: number, tagidlist: number[], min: number, max: number): Observable<any>{
+    let params = new HttpParams().set('sellerid',sellerid).set('keyword', keyword).set('categoryid',categoryid).set('tagidlist',tagidlist.join(',')).set("min",min).set("max",max);
     return this.httpClient.get<any>("http://localhost:9000/productDetails/getProductsBySellerForUser", {params});
   }
 

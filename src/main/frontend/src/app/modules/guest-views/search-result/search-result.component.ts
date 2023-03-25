@@ -53,7 +53,7 @@ export class SearchResultComponent implements OnInit{
     //     }
     //   }
     // )
-    this.productService.getFilteredProducts(this.keyword,0,0,10000000).subscribe(
+    this.productService.getFilteredProducts(this.keyword,0,[],0,10000000).subscribe(
       data => {
         this.resultList = data;
         this.totalResult = this.resultList.length;
@@ -105,10 +105,21 @@ export class SearchResultComponent implements OnInit{
   }
 
   refresh(){
-    this.productService.getFilteredProducts(this.keyword,this.chosenCategory,this.minprice,this.maxprice).subscribe(
+    console.log(this.checkedTags);
+    this.productService.getFilteredProducts(this.keyword,this.chosenCategory, this.checkedTags,this.minprice,this.maxprice).subscribe(
       data => {
         this.resultList = data;
       }
     )
+  }
+
+  checkedTags: number[] = [];
+  updateCheckedValues(event: any){
+    const value = event.target.value;
+    if(event.target.checked){
+      this.checkedTags.push(value);
+    }else{
+      this.checkedTags = this.checkedTags.filter(v => v !== value);
+    }
   }
 }

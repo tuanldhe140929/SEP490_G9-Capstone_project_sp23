@@ -37,10 +37,10 @@ public class ProductDetailsController {
 	@Autowired
 	ProductService productService;
 	
-	@GetMapping(value = "/getFilteredProducts")
+	@GetMapping(value = "/getProductsForSearching")
 	public ResponseEntity<?> getFilteredProducts(@RequestParam("keyword") String keyword,
-			@RequestParam("categoryid") int categoryid, @RequestParam("min") int min, @RequestParam("max") int max) {
-		List<ProductDetails> filteredProducts = productDetailsService.getProductForSearching(keyword, categoryid, min,
+			@RequestParam("categoryid") int categoryid, @RequestParam("tagidlist") List<Integer> tagidlist , @RequestParam("min") int min, @RequestParam("max") int max) {
+		List<ProductDetails> filteredProducts = productDetailsService.getProductForSearching(keyword, categoryid, tagidlist, min,
 				max);
 		List<ProductDetailsDTO> filteredProductsDto = new ArrayList<>();
 		for (ProductDetails result : filteredProducts) {
@@ -64,8 +64,8 @@ public class ProductDetailsController {
 	@GetMapping(value = "/getProductsBySellerForSeller")
 	public ResponseEntity<?> getProductsBySellerForSeller(@RequestParam("sellerid") Long sellerid,
 			@RequestParam("keyword") String keyword, @RequestParam("categoryid") int categoryid,
-			@RequestParam("min") int min, @RequestParam("max") int max) {
-		List<ProductDetails> finalList = productDetailsService.getProductBySellerForSeller(sellerid, keyword, categoryid, min,
+			@RequestParam("tagidlist") List<Integer> tagidlist ,@RequestParam("min") int min, @RequestParam("max") int max) {
+		List<ProductDetails> finalList = productDetailsService.getProductBySellerForSeller(sellerid, keyword, categoryid, tagidlist, min,
 				max);
 		List<ProductDetailsDTO> finalListDto = new ArrayList<>();
 		for (ProductDetails result : finalList) {
@@ -77,8 +77,8 @@ public class ProductDetailsController {
 	@GetMapping(value = "/getProductsBySellerForUser")
 	public ResponseEntity<?> getProductsBySellerForUser(@RequestParam("sellerid") Long sellerid,
 			@RequestParam("keyword") String keyword, @RequestParam("categoryid") int categoryid,
-			@RequestParam("min") int min, @RequestParam("max") int max){
-		List<ProductDetails> finalList = productDetailsService.getProductBySellerForUser(sellerid, keyword, categoryid, min, max);
+			@RequestParam("tagidlist") List<Integer> tagidlist,@RequestParam("min") int min, @RequestParam("max") int max){
+		List<ProductDetails> finalList = productDetailsService.getProductBySellerForUser(sellerid, keyword, categoryid, tagidlist, min, max);
 		List<ProductDetailsDTO> finalListDto = new ArrayList<>();
 		for(ProductDetails result: finalList) {
 			finalListDto.add(new ProductDetailsDTO(result));
