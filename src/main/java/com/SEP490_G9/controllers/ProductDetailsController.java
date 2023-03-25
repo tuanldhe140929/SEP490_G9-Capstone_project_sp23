@@ -213,7 +213,7 @@ public class ProductDetailsController {
 		List<ProductDetails> EnabledProducts = productDetailsService.getByEnabled(lastestProducts);
 		List<ProductDetails> PublishedProducts = productDetailsService.getByPublished(EnabledProducts);
 		List<ProductDetailsDTO> allProductsDTO = new ArrayList<>();
-		for(ProductDetails p : PublishedProducts) {
+		for(ProductDetails p : lastestProducts) {
 			allProductsDTO.add(new ProductDetailsDTO(p));
 		}
 		return ResponseEntity.ok(allProductsDTO);

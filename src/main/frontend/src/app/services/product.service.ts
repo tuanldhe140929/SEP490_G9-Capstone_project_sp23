@@ -149,6 +149,6 @@ export class ProductService {
     return this.httpClient.get<any>("http://localhost:9000/productDetails/getActiveVersion",{params});
   }
   getAllProductForHome(){
-    return this.httpClient.get<any>("http//localhost:9000/productDetails/GetAllProductForHomePage");
+    return this.httpClient.get<any>("http://localhost:9000/productDetails/GetAllProductForHomePage");
   }
 }

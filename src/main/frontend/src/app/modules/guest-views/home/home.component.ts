@@ -18,7 +18,7 @@ export class HomeComponent implements OnInit{
 
 
   ngOnInit(): void {
-    
+    this.getProduct();
   }
 
   public getCoverImage(product: Product): string {
@@ -30,10 +30,12 @@ export class HomeComponent implements OnInit{
       return "https://lyon.palmaresdudroit.fr/images/joomlart/demo/default.jpg";
     }
   }
+
   getProduct(){
     this.productService.getAllProductForHome().subscribe(
       data => {
-        this.productService = data;
+        console.log(data);
+        this.productList = data;
       }
     )
   }

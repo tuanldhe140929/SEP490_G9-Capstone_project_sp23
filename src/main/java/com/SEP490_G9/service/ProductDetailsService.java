@@ -76,4 +76,6 @@ public interface ProductDetailsService {
 	public ProductDetails updateApprovalStatus(long productId, String version, String status);
 
 	public List<ProductDetails> getAllByLatestVersion();
+	
+	public List<ProductDetails>getHotProduct(Long productId);
 }
