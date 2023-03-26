@@ -525,4 +525,10 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		List<ProductDetails> allLatestVer = getByLatestVer(approvedPd);
 		return allLatestVer;
 	}
+
+	@Override
+	public List<ProductDetails> getHotProduct(Long productId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

@@ -26,6 +26,12 @@ public interface ProductDetailsService {
 
 	public List<ProductDetails> getAll();
 
+	
+	//p1 : pd1 , pd2 , activersion: pd1 , seller1
+	//p2 : pd3, pd4, activersion: pd3, seller1
+	//p3 : pd5, pd6, aciversion:pd5, seller2
+	
+	
 	public List<ProductDetails> getByLatestVer(List<ProductDetails> listPd);
 
 	public List<ProductDetails> getBySeller(List<ProductDetails> listPd, long sellerId);
@@ -53,10 +59,10 @@ public interface ProductDetailsService {
 	public List<ProductDetails> getByPriceRange(List<ProductDetails> listPd, int min, int max);
 
 	public List<ProductDetails> getAllByProductId(Long id);
-
+	
 	public boolean existByProductIdAndVersion(Long productId, String version);
-
-
+	
+	
 	// by Quan Nguyen
 
 	public List<ProductDetails> getProductForSearching(String keyword, int categoryid, List<Integer> tagIdList, int min, int max);

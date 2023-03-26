@@ -205,6 +205,7 @@ public class ProductDetailsController {
 		}
 		return ResponseEntity.ok(allDtoPd);
 	}
+
 	@GetMapping (value ="GetAllProductForHomePage")
 	public ResponseEntity<?> GetAllProductForHomePage(){
 		List<ProductDetails> allProducts = productDetailsService.getAll();
@@ -218,4 +219,5 @@ public class ProductDetailsController {
 		}
 		return ResponseEntity.ok(allProductsDTO);
 	}
+
 }
