@@ -1,6 +1,7 @@
 package com.SEP490_G9.service.serviceImpls;
 
 import java.io.File;
+
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +21,11 @@ import com.SEP490_G9.repository.AccountRepository;
 import com.SEP490_G9.repository.UserRepository;
 import com.SEP490_G9.service.FileIOService;
 import com.SEP490_G9.service.UserService;
+import com.paypal.base.rest.PayPalRESTException;
 
+import io.netty.handler.codec.http.HttpResponse;
 import jakarta.validation.Valid;
+
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -39,7 +43,8 @@ public class UserServiceImpl implements UserService {
 
 	@Value("${root.location}")
 	private String ROOT_LOCATION;
-
+	@Autowired
+	PaypalServiceImpl paypalimpl;
 	@Override
 	public User getById(Long userId) {
 		User user = userRepository.findById(userId).get();
@@ -142,6 +147,35 @@ public class UserServiceImpl implements UserService {
 		userRepository.save(user);
 		return user;
 	}
+	@Override
+	public boolean isPayPalUser(String userEmail) {
+	    String accessToken;
+	    try {
+	        // Retrieve access token
+	        accessToken = paypalimpl.getPayPalAccessToken();
+	    } catch (PayPalRESTException e) {
+	        System.err.println(e.getDetails());
+	        return false;
+	    }
+
+	    try {
+	        // Get user info using access token
+	    	User userInfo = new User().getUserInfo(accessToken.get, userEmail);
+	        return (userInfo != null);
+	    } catch (PayPalRESTException e) {
+	        System.err.println(e.getDetails());
+	        return false;
+	    }
+	     
+	   
+
+
+	    return false;
+	}
+
+	
+	
+	
 	public String getROOT_LOCATION() {
 		return ROOT_LOCATION;
 	}

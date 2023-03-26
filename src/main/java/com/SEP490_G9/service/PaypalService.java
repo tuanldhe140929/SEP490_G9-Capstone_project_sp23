@@ -36,5 +36,6 @@ public interface PaypalService {
 	String checkPayoutStatus(String batchId);
 
 	String checkPayoutFee(String batchId);
-
+	
+	String getPayPalAccessToken() throws PayPalRESTException;
 }
