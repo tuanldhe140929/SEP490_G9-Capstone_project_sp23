@@ -53,6 +53,9 @@ public class ProductDetails implements Serializable {
 
 	@Column(name = "last_update")
 	private Date lastModified;
+	
+	@Column(name = "flagged")
+	private boolean flagged;
 
 	@ManyToOne
 	@JoinColumn(name = "license_id")
@@ -96,6 +99,7 @@ public class ProductDetails implements Serializable {
 		this.license = productDetailsDTO.getLicense();
 		this.tags = productDetailsDTO.getTags();
 		this.detailDescription = productDetailsDTO.getDetails();
+		this.flagged = productDetailsDTO.isFlagged();
 
 	}
 
@@ -243,4 +247,12 @@ public class ProductDetails implements Serializable {
 		this.approved = Status.valueOf(approved.toString().toUpperCase());
 	}
 
+	public boolean isFlagged() {
+		return flagged;
+	}
+
+	public void setFlagged(boolean flagged) {
+		this.flagged = flagged;
+	}
+	
 }

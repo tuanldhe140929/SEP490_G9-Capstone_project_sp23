@@ -130,5 +130,5 @@ public class Report {
 	public void setViolation_types(ViolationType violation_types) {
 		this.violation_types = violation_types;
 	}
-
+	
 }
