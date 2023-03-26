@@ -39,12 +39,10 @@
                           {{option}}
                         </mat-option>
                       </mat-autocomplete>
-                      <!-- <select class="form-select">
-                        <option value="">All type</option>
-                        <option value="codex">Special</option>
-                        <option value="comments">Only best</option>
-                        <option value="content">Latest</option>
-                      </select> -->
+                      <select class="form-select" (change)="onChangeSearch($event)">
+                        <option value="PRODUCTS">Sản phẩm</option>
+                        <option value="SELLERS">Người bán</option>
+                      </select>
                       <button class="btn btn-primary" type="submit">
                         <i class="fa fa-search"></i> 
                       </button>

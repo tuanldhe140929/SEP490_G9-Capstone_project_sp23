@@ -48,7 +48,7 @@ public interface ProductDetailsService {
 
 	public List<ProductDetails> getByCategory(List<ProductDetails> listPd, int categoryId);
 
-	public List<ProductDetails> getByTag(List<ProductDetails> listPd, List<Integer> tagId);
+	public List<ProductDetails> getByTags(List<ProductDetails> listPd, List<Integer> tagIdList);
 
 	public List<ProductDetails> getByPriceRange(List<ProductDetails> listPd, int min, int max);
 
@@ -59,12 +59,12 @@ public interface ProductDetailsService {
 
 	// by Quan Nguyen
 
-	public List<ProductDetails> getProductForSearching(String keyword, int categoryid, int min, int max);
+	public List<ProductDetails> getProductForSearching(String keyword, int categoryid, List<Integer> tagIdList, int min, int max);
 
-	public List<ProductDetails> getProductBySellerForSeller(long sellerId, String keyword, int categoryId, int min,
+	public List<ProductDetails> getProductBySellerForSeller(long sellerId, String keyword, int categoryId, List<Integer> tagidlist, int min,
 			int max);
 
-	public List<ProductDetails> getProductBySellerForUser(long sellerId, String keyword, int categoryId, int min,
+	public List<ProductDetails> getProductBySellerForUser(long sellerId, String keyword, int categoryId, List<Integer> tagidlist ,int min,
 			int max);
 
 	public ProductDetails getByProductIdAndVersion(Long productId, String version);
@@ -76,4 +76,6 @@ public interface ProductDetailsService {
 	public ProductDetails updateApprovalStatus(long productId, String version, String status);
 
 	public List<ProductDetails> getAllByLatestVersion();
+	
+	public List<ProductDetails>getHotProduct(Long productId);
 }

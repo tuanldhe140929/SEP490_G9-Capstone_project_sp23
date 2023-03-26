@@ -30,7 +30,8 @@ import { FormsModule } from '@angular/forms';
 import { StaffBaseComponent } from './staff-base/staff-base.component';
 import { ProductApprovalComponent } from './staff-base/product-approval/product-approval.component';
 import { ReportListComponent } from './staff-base/report-list/report-list.component';
-import { AddviolationComponent } from './addviolation/addviolation.component';
+import { AddviolationComponent } from './staff-base/addviolation/addviolation.component';
+import { ReactiveFormsModule } from '@angular/forms';
 import { UpdateApprovalComponent } from './staff-base/product-approval/update-approval/update-approval.component';
 import { ApprovalProductDetailsComponent } from './staff-base/product-approval/approval-product-details/approval-product-details.component';
 import { ApprovalDownloadComponent } from './staff-base/product-approval/approval-download/approval-download.component';
@@ -47,7 +48,6 @@ import { ReportDescriptionComponent } from './staff-base/report-list/report-desc
     ProductApprovalComponent,
     ReportListComponent,
     UpdateApprovalComponent,
-    AddviolationComponent,
     ApprovalProductDetailsComponent,
     ApprovalDownloadComponent,
     ReportedProductDetailsComponent,
@@ -73,6 +73,7 @@ import { ReportDescriptionComponent } from './staff-base/report-list/report-desc
     MatInputModule,
     MatSortModule,
     MatMenuModule,
+    ReactiveFormsModule,
     MatSelectModule,
     VgControlsModule,
     VgCoreModule,

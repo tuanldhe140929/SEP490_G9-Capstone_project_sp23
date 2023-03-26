@@ -20,4 +20,11 @@ export class SellerService {
     }
     return this.httpClient.get<any>(baseUrl+'/getSeller', {params})
   }
+
+  getSellersForSearching(keyword: string): Observable<any>{
+    const params = {
+      keyword: keyword
+    }
+    return this.httpClient.get<any>(baseUrl+'/getSellersForSearching',{params})
+  }
 }

@@ -8,8 +8,10 @@ import org.springframework.stereotype.Service;
 
 import com.SEP490_G9.entities.Seller;
 import com.SEP490_G9.exception.ResourceNotFoundException;
+import com.SEP490_G9.repository.AccountRepository;
 import com.SEP490_G9.repository.ProductRepository;
 import com.SEP490_G9.repository.SellerRepository;
+import com.SEP490_G9.entities.Account;
 import com.SEP490_G9.entities.Product;
 import com.SEP490_G9.service.SellerService;
 
@@ -21,6 +23,9 @@ public class SellerServiceImpl implements SellerService {
 	
 	@Autowired
 	ProductRepository productRepository;
+	
+	@Autowired
+	AccountRepository accountRepository;
 
 	@Override
 	public Seller getSellerById(Long sellerId) {
@@ -51,16 +56,57 @@ public class SellerServiceImpl implements SellerService {
 		return amountOfFlags;
 	}
 
+	//supporting methods
+	
 	@Override
-	public List<Seller> getFlaggedSellers() {
+	public List<Seller> getAllSellers() {
 		List<Seller> allSellers = sellerRepository.findAll();
+		return allSellers;
+	}
+
+	@Override
+	public List<Seller> getAllEnabledSellers(List<Seller> sellerList) {
+		List<Seller> allEnabled = new ArrayList<>();
+		List<Account> allAccount = accountRepository.findAll();
+		for(Seller seller: sellerList) {
+			for(Account account: allAccount) {
+				if(account.getId().equals(seller.getId()) && account.isEnabled()) {
+					allEnabled.add(seller);
+				}
+			}
+		}
+		return allEnabled;
+	}
+
+	@Override
+	public List<Seller> getFlaggedSellers(List<Seller> sellerList) {
 		List<Seller> flaggedSellers = new ArrayList<>();
-		for(Seller seller: allSellers) {
+		for(Seller seller: sellerList) {
 			if(getSellerNumberOfFlags(seller.getId())>0) {
 				flaggedSellers.add(seller);
 			}
 		}
 		return flaggedSellers;
+	}
+
+	@Override
+	public List<Seller> getSellersByKeyword(List<Seller> sellerList, String keyword) {
+		List<Seller> sellerByKeyword = new ArrayList<>();
+		for(Seller seller: sellerList) {
+			if(seller.getUsername().trim().toLowerCase().replaceAll("\\s+", " ").contains(keyword.trim().toLowerCase().replaceAll("\\s+", " "))) {
+				sellerByKeyword.add(seller);
+			}
+		}
+		return sellerByKeyword;
+	}
+	
+	//main method
+	@Override
+	public List<Seller> getSellersForSearching(String keyword) {
+		List<Seller> allSellers = getAllSellers();
+		List<Seller> allEnabled	= getAllEnabledSellers(allSellers);
+		List<Seller> allByKeyword = getSellersByKeyword(allEnabled, keyword);
+		return allByKeyword;
 	}
 	
 }

@@ -2,20 +2,22 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Category } from 'src/app/DTOS/Category';
 import { Product } from 'src/app/DTOS/Product';
+import { Seller } from 'src/app/DTOS/Seller';
 import { Tag } from 'src/app/DTOS/Tag';
 import { CategoryService } from 'src/app/services/category.service';
 import { ProductService } from 'src/app/services/product.service';
+import { SellerService } from 'src/app/services/seller.service';
 import { TagService } from 'src/app/services/tag.service';
 
-@Component({
-  selector: 'app-search-result',
-  templateUrl: './search-result.component.html',
-  styleUrls: ['./search-result.component.css']
-})
-export class SearchResultComponent implements OnInit{
 
-  productList: Product[] = [];
-  resultList: Product[] = [];
+@Component({
+  selector: 'app-seller-search-result',
+  templateUrl: './seller-search-result.component.html',
+  styleUrls: ['./seller-search-result.component.css']
+})
+export class SellerSearchResultComponent implements OnInit{
+
+  resultList: Seller[] = [];
   categoryList: Category[] = [];
   tagList: Tag[] = [];
   filterResult: Product[] = [];
@@ -30,7 +32,7 @@ export class SearchResultComponent implements OnInit{
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private productService: ProductService,
+    private sellerService: SellerService,
     private categoryService: CategoryService,
     private tagService: TagService,
     private router: Router){}
@@ -53,7 +55,7 @@ export class SearchResultComponent implements OnInit{
     //     }
     //   }
     // )
-    this.productService.getFilteredProducts(this.keyword,0,[],0,10000000).subscribe(
+    this.sellerService.getSellersForSearching(this.keyword).subscribe(
       data => {
         this.resultList = data;
         this.totalResult = this.resultList.length;
@@ -77,18 +79,18 @@ export class SearchResultComponent implements OnInit{
     )
   }
 
-  getCoverImage(product: Product): string{
-    console.log(product.coverImage==null);
-    if(product.coverImage!=null){
-      return 'http://localhost:9000/public/serveMedia/image?source=' + product.coverImage.replace(/\\/g, '/');
+  getCoverImage(seller: Seller): string{
+    console.log(seller.avatar==null);
+    if(seller.avatar!=null){
+      return 'http://localhost:9000/public/serveMedia/image?source=' + seller.avatar;
     }else{
       return 'assets/images/noimage.png'
     }
     
   }
   
-  openDetails(id: number){
-    this.router.navigate(['/products',id]);
+  openCollection(id: number){
+    this.router.navigate(['/collection',id]);
   }
 
 
@@ -105,21 +107,10 @@ export class SearchResultComponent implements OnInit{
   }
 
   refresh(){
-    console.log(this.checkedTags);
-    this.productService.getFilteredProducts(this.keyword,this.chosenCategory, this.checkedTags,this.minprice,this.maxprice).subscribe(
+    this.sellerService.getSellersForSearching(this.keyword).subscribe(
       data => {
         this.resultList = data;
       }
     )
-  }
-
-  checkedTags: number[] = [];
-  updateCheckedValues(event: any){
-    const value = event.target.value;
-    if(event.target.checked){
-      this.checkedTags.push(value);
-    }else{
-      this.checkedTags = this.checkedTags.filter(v => v !== value);
-    }
   }
 }

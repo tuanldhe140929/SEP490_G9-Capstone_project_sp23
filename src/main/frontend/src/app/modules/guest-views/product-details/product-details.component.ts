@@ -332,7 +332,7 @@ export class ProductDetailsComponent implements OnInit {
       }
       const dialogRef = this.dialog.open(ReportProductComponent, {
   
-        height: '55%',
+        height: '57%',
         width: '50%',
         data:data
       });
@@ -343,7 +343,7 @@ export class ProductDetailsComponent implements OnInit {
       });
   }
   redirectSellerPage() {
-    this.router.navigate(['collection/' + this.owner.username]);
+    this.router.navigate(['collection/' + this.owner.id]);
   }
   addToCart() {
     if (!this.storageService.isLoggedIn()) {
