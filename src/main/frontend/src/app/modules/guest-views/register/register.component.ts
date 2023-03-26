@@ -113,7 +113,7 @@ public noWhitespaceValidator(control: FormControl) {
             this.openModal2();
           } else {
             this.message = "Đăng kí thành công, không thể gửi mail xác thực";
-            this.openModal2;
+            this.openModal2();
           }
         }
       );

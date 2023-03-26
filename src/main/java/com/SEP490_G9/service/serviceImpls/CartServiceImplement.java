@@ -105,6 +105,7 @@ public class CartServiceImplement implements CartService {
 			throw new IllegalArgumentException("Cart does not have product with id:" + productId);
 		} else {
 			cart.getItems().remove(itemToRemove);
+			cartItemRepository.delete(itemToRemove);
 			Cart ret = cartRepository.save(cart);
 			return ret;
 		}

@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Category } from 'src/app/DTOS/Category';
@@ -11,6 +12,7 @@ import { SellerService } from 'src/app/services/seller.service';
 import { StorageService } from 'src/app/services/storage.service';
 import { TagService } from 'src/app/services/tag.service';
 import { UserService } from 'src/app/services/user.service';
+import { DeleteProductComponent } from './delete-product/delete-product.component';
 
 @Component({
   selector: 'app-seller-product-list',
@@ -18,8 +20,6 @@ import { UserService } from 'src/app/services/user.service';
   styleUrls: ['./seller-product-list.component.css']
 })
 export class SellerProductListComponent implements OnInit {
-
-  @ViewChild('confirmDelete', { static: false }) private confirmDelete: any;
 
   @ViewChild('infoModal', { static: false }) private infoModal: any;
 
@@ -51,7 +51,8 @@ export class SellerProductListComponent implements OnInit {
     private sellerService: SellerService,
     private storageService: StorageService,
     private userService: UserService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -147,7 +148,6 @@ export class SellerProductListComponent implements OnInit {
   }
 
   getCoverImage(product: Product): string {
-    console.log(product.coverImage == null);
     if (product.coverImage != null) {
       return 'http://localhost:9000/public/serveMedia/image?source=' + product.coverImage.replace(/\\/g, '/');
     } else {
@@ -231,20 +231,28 @@ export class SellerProductListComponent implements OnInit {
     this.router.navigate(['product/update/' + productId]);
   }
 
-  deleteProduct(product: Product) {
-    this.productService.deleteProduct(product).subscribe(
+  deleteProduct(id: number) {
+    console.log(id);
+    this.productService.deleteProduct(id).subscribe(
       data => {
         if (data) {
           var index = -1;
           for (let i = 0; i < this.productList.length; i++) {
-            if (this.productList[i].id == product.id) {
+            console.log(i);
+            if (this.productList[i].id == id) {
+              console.log(this.productList[i].id);
+              console.log(id);
+              console.log(i);
               index = i;
-              break;
             }
           }
           if (index != -1) {
             this.productList.slice(index, 1);
+            console.log(index);
           }
+         
+          console.log(this.productList);
+          this.dismissModal();
         }
       },
       error => {
@@ -253,9 +261,17 @@ export class SellerProductListComponent implements OnInit {
     );
   }
 
-  openConfirmDelete() {
-    this.modalService.open(this.confirmDelete, { centered: true });
-  }
+  openConfirmDelete(productId: number) {
+    const dialogRef = this.dialog.open(DeleteProductComponent, {
+      data: {
+        productId: productId
+       }
+     });
+     dialogRef.afterClosed().subscribe(result => {
+       console.log(`Dialog result: ${result}`);
+       setTimeout(() => this.refresh(),400)
+     });
+   }
 
   dismissModal() {
     this.modalService.dismissAll();
@@ -266,7 +282,7 @@ export class SellerProductListComponent implements OnInit {
   }
 
   getSellerAvatar(): string{
-    if (this.seller.avatar != null) {
+    if (this.seller!=null && this.seller.avatar != null && this.seller.id != -1) {
       return 'http://localhost:9000/public/serveMedia/image?source=' + this.seller.avatar.replace(/\\/g, '/');
     } else {
       return 'assets/images/noimage.png'

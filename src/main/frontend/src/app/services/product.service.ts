@@ -35,8 +35,8 @@ export class ProductService {
     )
   }
 
-  deleteProduct(product: Product): Observable<boolean> {
-    return this.httpClient.delete<boolean>(baseUrlProduct + "/deleteProduct/" + product.id);
+  deleteProduct(id: number): Observable<boolean> {
+    return this.httpClient.delete<boolean>(baseUrlProduct + "/deleteProduct/" + id);
   }
   createNewProduct(sellerid: number): Observable<ProductDTO> {
     return this.httpClient.post<ProductDTO>(baseUrlProduct+"/createNewProduct", null);

@@ -31,10 +31,10 @@ import okhttp3.Response;
 @Component
 public class VirusTotalAPI {
 	@Value("${virustotal.key}")
-	private static String virusTotalKey;
+	private String virusTotalKey;
 
-	private final static String UPLOAD_ENDPOINT = "https://www.virustotal.com/api/v3/files";
-	private final static String ANALYSIS_ENDPOINT = "https://www.virustotal.com/api/v3/analyses/";
+	private final String UPLOAD_ENDPOINT = "https://www.virustotal.com/api/v3/files";
+	private final String ANALYSIS_ENDPOINT = "https://www.virustotal.com/api/v3/analyses/";
 
 	public boolean scanFile(File file) throws IOException {
 		long startTime = System.currentTimeMillis();
@@ -49,8 +49,8 @@ public class VirusTotalAPI {
 				long uploadChunkStart = System.currentTimeMillis();
 				String analysisId = uploadChunk(UPLOAD_ENDPOINT, chunk);
 				long uploadChunkEnd = System.currentTimeMillis();
-				System.out.println("upload chunk " + (chunks.indexOf(chunk) + 1) + " takes "
-						+ (uploadChunkEnd - uploadChunkStart) / 1000 + "s");
+				//System.out.println("upload chunk " + (chunks.indexOf(chunk) + 1) + " takes "
+			//			+ (uploadChunkEnd - uploadChunkStart) / 1000 + "s");
 
 				boolean isChunkSafe = getAnalysis(analysisId, chunks.indexOf(chunk));
 				long analysisEnd = System.currentTimeMillis();
@@ -79,29 +79,32 @@ public class VirusTotalAPI {
 		}
 
 		long finishTime = System.currentTimeMillis();
-		System.out.println("total: " + (finishTime - startTime) / 1000);
+		//System.out.println("total: " + (finishTime - startTime) / 1000);
 		return isMalicious;
 	}
 
-	private static boolean getAnalysis(String analysisId, int index) {
+	private boolean getAnalysis(String analysisId, int index) {
 		boolean isSafe = false;
 		OkHttpClient client = new OkHttpClient();
 		boolean notCompleted = true;
 		while (notCompleted) {
 			Request request = new Request.Builder().url(ANALYSIS_ENDPOINT + analysisId).get()
 					.addHeader("accept", "application/json").addHeader("x-apikey", virusTotalKey).build();
-
+			System.out.println("Request URL: " + request.url());
+			System.out.println("Request method: " + request.method());
+			System.out.println("Request headers: " + request.headers());
+			System.out.println("Request body: " + request.body());
 			try {
 				Response response = client.newCall(request).execute();
 				ObjectMapper objectMapper = new ObjectMapper();
 				JsonNode rootNode = objectMapper.readTree(response.body().string());
-				// System.out.println(rootNode.toPrettyString());
+				System.out.println(rootNode.toPrettyString());
 				// Check if the analysis is completed
 				String status = rootNode.get("data").get("attributes").get("status").asText();
 				if (status.equals("completed")) {
 					// Print out the JSON object
 					notCompleted = false;
-					System.out.println(index);
+					//System.out.println(index);
 
 					int malicious = rootNode.get("data").get("attributes").get("stats").get("malicious").asInt();
 					if (malicious == 0) {
@@ -118,7 +121,7 @@ public class VirusTotalAPI {
 		return isSafe;
 	}
 
-	public static String uploadChunk(String url, byte[] data) {
+	public String uploadChunk(String url, byte[] data) {
 		OkHttpClient.Builder builder = new OkHttpClient.Builder();
 		builder.connectTimeout(100, TimeUnit.SECONDS);
 		builder.readTimeout(100, TimeUnit.SECONDS);
@@ -135,11 +138,13 @@ public class VirusTotalAPI {
 		Request request = new Request.Builder().url(url).post(requestBody).addHeader("accept", "application/json")
 				.addHeader("x-apikey", virusTotalKey).build();
 		String id = "";
+
+		// Print out the response information
 		try {
 			Response response = client.newCall(request).execute();
 
-			ObjectMapper objectMapper = new ObjectMapper();
-			JsonNode rootNode = objectMapper.readTree(response.body().string());
+		ObjectMapper objectMapper = new ObjectMapper();
+		JsonNode rootNode = objectMapper.readTree(response.body().string());
 
 			// Get the value of the "id" attribute
 			id = rootNode.get("data").get("id").asText();
@@ -168,7 +173,7 @@ public class VirusTotalAPI {
 				chunks.add(chunk);
 			}
 		}
-		System.out.println("chunk: " + chunks.size());
+		//System.out.println("chunk: " + chunks.size());
 		return chunks;
 	}
 

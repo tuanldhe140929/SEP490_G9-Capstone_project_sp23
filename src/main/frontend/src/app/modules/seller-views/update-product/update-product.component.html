@@ -352,15 +352,31 @@
     <button type="button" class="btn-close" aria-label="Close" (click)="dismissError()"></button>
   </div>
   <div class="modal-body">
-    <div *ngFor="let ver of productVersions" style="display:flex">
-      <div class="ver" (click)="chooseVersion(ver)">{{ver.version}}</div>
+    <table>
+      <tr>
+        <th style="width:100px;"></th>
+        <th style="width:100px;"></th>
+        <th style="width:200px;">Ngày tạo</th>
+        <th style="width:200px;">Chỉnh sửa cuối</th>
+        <th >Trạng thái</th>
+      </tr>
+      <tr *ngFor="let ver of productVersions">
+        <td><div class="ver" (click)="chooseVersion(ver)">{{ver.version}}</div></td>
+        <td>
+          <div *ngIf="isCurrent(ver); then showActive else optionActive"></div>
+          <ng-template #showActive> <div class="current_version">Hiện tại</div></ng-template>
+          <ng-template #optionActive>
+            <div *ngIf="ver.approved == ProductStatus.APPROVED" class="option_active" (click)="activeVersion(ver)">Sử dụng</div>
+            <div *ngIf="ver.approved !=ProductStatus.APPROVED" class="option_active" >Sử dụng</div>
+          </ng-template>
+        </td>
+        <td><div>{{dateFormat(ver.createdDate)}}</div></td>
+        <td><div>{{dateFormat(ver.lastModified)}}</div></td>
+        <td><div>{{getApproved(ver.approved)}}</div></td>
+      </tr>
 
-      <div *ngIf="isCurrent(ver); then showActive else optionActive"></div>
-      <ng-template #showActive> <div class="current_version">Current</div></ng-template>
-      <ng-template #optionActive> <div class="option_active" (click)="activeVersion(ver)">Active</div></ng-template>
+    </table>
 
-
-    </div>
     <input style="width:75%;" type="text" name="new_version" value="{{product.version}}" id="new_version" placeholder="{{product.version}}" (keydown)="checkInputVersion($event)" />
     <div *ngFor="let err of versionError">
       <small style="color:red;">{{err}}</small>
