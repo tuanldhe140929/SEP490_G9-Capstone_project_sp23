@@ -37,7 +37,7 @@ public class TransactionController {
 	PaypalService paypalService;
 
 	@PostMapping("/purchase")
-	public ResponseEntity<?> purchase(@RequestParam(name = "cartId") Long cartId) {
+	public ResponseEntity<?> checkout(@RequestParam(name = "cartId") Long cartId) {
 		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
 				.getAccount();
 		Transaction transaction = transactionService.createTransaction(cartId, account);

@@ -81,7 +81,7 @@ public class PayoutServiceImpl implements PayoutService {
 		for (Payout payout : payouts) {
 			payout.setLastModified(new Date());
 			payout.setDescription("commited payout");
-			payout.setStatus(Payout.Status.PENDING);
+			payout.setStatus(Payout.Status.PROCESSING);
 			PayoutBatch batch = paypalService.executePayout(payout.getSeller().getEmail(), payout.getAmount());
 			payout.setBatchId(batch.getBatchHeader().getPayoutBatchId());
 			fetchPayoutStatus(payout.getId(), batch.getBatchHeader().getPayoutBatchId());
@@ -98,18 +98,19 @@ public class PayoutServiceImpl implements PayoutService {
 		int maxCheck = 30;
 		String state = "";
 		while (numCheck < maxCheck) {
-			state = paypalService.checkPayoutStatus(batchId);
+			PayoutBatch batch = paypalService.getPayoutByBatchId(batchId);
+			batch.getItems().get(0).getError();
+			state = batch.getBatchHeader().getBatchStatus();
 			System.out.println(state);
 			if (state.equals("SUCCESS")) {
-				double fee = Double.parseDouble(paypalService.checkPayoutFee(batchId));
-				payout.setDescription("Payout has been send");
+				double fee = Double.parseDouble(paypalService.getPayoutFee(batchId));
 				payout.setStatus(Payout.Status.SUCCESS);
 				payout.setPayoutFee(fee);
 				payoutRepository.save(payout);
 				return payout;
 			} else if (state.equals("PENDING")) {
 				payout.setDescription("Pending and will be process soon");
-				payout.setStatus(Payout.Status.PENDING);
+				payout.setStatus(Payout.Status.PROCESSING);
 				payoutRepository.save(payout);
 
 			} else if (state.equals("PROCESSING")) {
@@ -127,6 +128,11 @@ public class PayoutServiceImpl implements PayoutService {
 				payout.setStatus(Payout.Status.FAILED);
 				payoutRepository.save(payout);
 				return payout;
+			} else if (state.equals("FAILED")) {
+				payout.setDescription("Failed by Paypal");
+				payout.setStatus(Payout.Status.FAILED);
+				payoutRepository.save(payout);
+				return payout;
 			}
 			try {
 				Thread.sleep(3 * 1000L); // Wait for the specified interval before checking again
@@ -135,8 +141,11 @@ public class PayoutServiceImpl implements PayoutService {
 			}
 			numCheck++;
 		}
-		payout.setStatus(Payout.Status.UNDEFINED);
-		payout.setDescription("Fetching status time out");
+		if (!payout.getStatus().equals(Payout.Status.CANCELED) || !payout.getStatus().equals(Payout.Status.FAILED)
+				|| !payout.getStatus().equals(Payout.Status.SUCCESS)
+				|| !!payout.getStatus().equals(Payout.Status.CANCELED))
+			payout.setDescription("fetching timeout");
+		payout.setStatus(Payout.Status.FAILED);
 		return payoutRepository.save(payout);
 	}
 

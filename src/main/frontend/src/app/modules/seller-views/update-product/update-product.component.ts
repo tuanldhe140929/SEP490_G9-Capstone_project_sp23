@@ -3,7 +3,7 @@ import { AfterViewInit, Component, ElementRef, Input, OnInit, Renderer2, Templat
 import { AbstractControl, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { finalize, Subscription } from 'rxjs';
-import { Product } from 'src/app/DTOS/Product';
+import { Product, Status } from 'src/app/DTOS/Product';
 import { User } from 'src/app/DTOS/User';
 import { AuthResponse } from 'src/app/DTOS/AuthResponse';
 import { ManageProductService } from 'src/app/services/manage-product.service';
@@ -1002,7 +1002,7 @@ export class UpdateProductComponent implements OnInit {
   }
 
   openSpecifyVersionModal() {
-    this.modalService.open(this.specifyVersionModal, { centered: true });
+    this.modalService.open(this.specifyVersionModal, { centered: true, size:"lg" });
   }
 
   get DefaultTagSelectOption() {
@@ -1198,5 +1198,33 @@ export class UpdateProductComponent implements OnInit {
         this.fileError = "Thay đổi phiên bản sản phẩm không thành công";
         this.openFileSizeErrorModal();
       });
+  }
+
+ dateFormat(date1:Date):string {
+   var date :Date = new Date(date1.toString());
+  const day = date.getDate();
+  const month = date.getMonth() + 1;
+  const year = date.getFullYear();
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+  const seconds = date.getSeconds();
+  return `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
+}
+
+  getApproved(status:Status):string{
+    switch (status) {
+      case Status.NEW:
+        return "Mới";
+      case Status.PENDING:
+        return "Chờ kiểm duyệt";
+      case Status.APPROVED:
+        return "Đã kiểm duyệt";
+      case Status.REJECTED:
+        return "Bị từ chối";
+    }
+  }
+
+  public get ProductStatus(): typeof Status {
+    return Status;
   }
 }

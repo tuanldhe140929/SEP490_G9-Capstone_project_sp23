@@ -49,7 +49,6 @@ export class HeaderComponent implements OnInit {
     const sellerRoleId = 4;
 
     if (this.user.id != -1) {
-      console.log(this.user);
       for (let i = 0; i < this.user.roles.length; i++) {
         if (this.user.roles[i].id == sellerRoleId)
           return true;

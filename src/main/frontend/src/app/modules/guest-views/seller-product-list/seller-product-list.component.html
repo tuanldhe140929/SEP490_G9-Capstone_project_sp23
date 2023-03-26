@@ -203,22 +203,10 @@
                 <a (click)="openDetails(product.id)" class="btn btn-primary">Chi tiết</a>
                 <a *ngIf="!sellerStatus" href="#" class="btn btn-light btn-icon"> <i class="fa fa-shopping-cart"></i> </a>
                 <a *ngIf="sellerStatus" (click)="redirectUpdatePage(product.id)" class="btn btn-light btn-icon"> <i class="fa fa-pen"></i> </a>
-                <a *ngIf="sellerStatus" (click)="openConfirmDelete()" class="btn btn-light btn-icon"> <i class="fa fa-trash"></i> </a>
+                <a *ngIf="sellerStatus" (click)="openConfirmDelete(product.id)" class="btn btn-light btn-icon"> <i class="fa fa-trash"></i> </a>
               </figcaption>
             </figure>
-            <ng-template #confirmDelete let-modal>
-              <div class="modal-header">
-                <h4 class="modal-title" style="color:red">Thông báo</h4>
-                <button type="button" class="btn-close" aria-label="Close" (click)="dismissModal()"></button>
-              </div>
-              <div class="modal-body">
-                <small style="color:red;">Xác nhận xóa sản phẩm<br /></small>
-                <div style="display: flex; width: auto; float: right;" class="delete_action_btns">
-                  <button (click)="deleteProduct(product)" style=" margin-right: 10px;" class="actionBtn">Xóa</button>
-                  <button (click)="dismissModal()" class="dismissBtn">Hủy bỏ</button>
-                </div>
-              </div>
-            </ng-template>
+       
           </div> <!-- col end.// -->
         </div> <!-- row end.// -->
 

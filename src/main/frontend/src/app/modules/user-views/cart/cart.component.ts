@@ -46,7 +46,6 @@ export class CartComponent implements OnInit {
   }
   public getItemCoverImageSrc(cartItem: CartItem) {
     if (cartItem != null && cartItem.product.id != -1 && cartItem.product.coverImage != null) {
-
       return 'http://localhost:9000/public/serveMedia/image?source=' + cartItem.product.coverImage.replace(/\\/g, '/');
     }
     else {

@@ -360,7 +360,7 @@ section {
   box-shadow: inset 0 0 1px rgb(255 255 255/ 70%);
   border-radius: 4px;
   cursor: pointer;
-  margin: 10px;
+ 
 }
 
 .license_details:hover .license_details_content {
@@ -382,7 +382,6 @@ section {
 }
 
 .current_version {
-  margin-top: 10px;
   padding: 6px;
   height: 40px;
   border-radius: 4px;
@@ -396,14 +395,13 @@ section {
 }
 
 .option_active {
-  margin-top: 10px;
   padding: 6px;
   height: 40px;
   border-radius: 4px;
   border: none;
   color: white;
   text-align: center;
-  width: 70px;
+  width: 90px;
   background: grey;
   font-weight: 600;
   cursor: pointer

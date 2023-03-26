@@ -18,7 +18,7 @@ import jakarta.persistence.Table;
 public class Payout {
 
 	public enum Status {
-		PENDING, SUCCESS, DENIED, FAILED, CANCELED, CREATED, UNDEFINED, PROCESSING
+		SUCCESS, FAILED, CANCELED, CREATED, PROCESSING
 	}
 
 	@Id

@@ -32,38 +32,44 @@ import com.paypal.base.rest.PayPalRESTException;
 @Service
 public class PaypalServiceImpl implements PaypalService {
 
+	final String METHOD = "paypal";
+	final String CURRENCY = "USD";
+	final String RETURN_URL = "http://localhost:4200/transaction/reviewTransaction";
+	final String CANCEL_URL = "transaction/cancel";
+	final String INTENT = "sale";
+
 	@Autowired
 	private APIContext apiContext;
 
 	@Override
-	public Payment createPayment(Double total, String currency, String method, String intent, String description,
-			String cancelUrl, String returnUrl) {
+	public Payment createPayment(com.SEP490_G9.entities.Transaction t) {
 
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 		int expirationTimeInSeconds = 80;
 		Amount amount = new Amount();
-		amount.setCurrency(currency);
-		double totalAmount = total;
+		amount.setCurrency(CURRENCY);
+		double totalAmount = t.getAmount();
 		totalAmount = new BigDecimal(totalAmount).setScale(2, RoundingMode.HALF_UP).doubleValue();
 		amount.setTotal(String.format("%.2f", totalAmount));
 
 		Transaction transaction = new Transaction();
-		transaction.setDescription(description);
+		transaction.setDescription(transaction.getDescription());
 		transaction.setAmount(amount);
 
 		List<Transaction> transactions = new ArrayList<>();
 		transactions.add(transaction);
 
 		Payer payer = new Payer();
-		payer.setPaymentMethod(method.toString());
+		payer.setPaymentMethod(METHOD.toString());
 
 		Payment payment = new Payment();
-		payment.setIntent(intent.toString());
+		payment.setIntent(INTENT.toString());
 		payment.setPayer(payer);
 		payment.setTransactions(transactions);
 		RedirectUrls redirectUrls = new RedirectUrls();
+		String cancelUrl = "http://localhost:9000/transaction/cancel/" + t.getId() + "/paypal";
 		redirectUrls.setCancelUrl(cancelUrl);
-		redirectUrls.setReturnUrl(returnUrl);
+		redirectUrls.setReturnUrl(RETURN_URL);
 		payment.setRedirectUrls(redirectUrls);
 		payment.setCreateTime(dateFormat.format(new Date()));
 		payment.setUpdateTime(
@@ -96,7 +102,7 @@ public class PaypalServiceImpl implements PaypalService {
 	}
 
 	@Override
-	public String checkPaymentStatus(String paymentId) {
+	public Payment getPaymentByPaypalId(String paymentId) {
 		Payment payment = null;
 		try {
 			payment = Payment.get(apiContext, paymentId);
@@ -104,8 +110,8 @@ public class PaypalServiceImpl implements PaypalService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		String status = payment.getState();
-		return status;
+
+		return payment;
 	}
 
 	@Override
@@ -156,7 +162,7 @@ public class PaypalServiceImpl implements PaypalService {
 	}
 
 	@Override
-	public String checkPayoutStatus(String batchId) {
+	public PayoutBatch getPayoutByBatchId(String batchId) {
 		PayoutBatch batch = null;
 		try {
 			batch = Payout.get(apiContext, batchId);
@@ -164,12 +170,11 @@ public class PaypalServiceImpl implements PaypalService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		String status = batch.getBatchHeader().getBatchStatus();
-		return status;
+		return batch;
 	}
 
 	@Override
-	public String checkPayoutFee(String batchId) {
+	public String getPayoutFee(String batchId) {
 		PayoutBatch batch = null;
 		try {
 			batch = Payout.get(apiContext, batchId);

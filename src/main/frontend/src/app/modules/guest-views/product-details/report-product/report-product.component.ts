@@ -27,9 +27,9 @@ export class ReportProductComponent implements OnInit{
     private reportService: ReportService,
     private formBuilder: FormBuilder,
     private storageService: StorageService,
-    private userService: UserService,
     private router: Router,
     private toastr: ToastrService,
+    private userService:UserService,
     @Inject(MAT_DIALOG_DATA) public data: any){}
 
     violationTypeId: number;
