@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.SEP490_G9.entities.Category;
 import com.SEP490_G9.exception.DuplicateFieldException;
+import com.SEP490_G9.exception.NumberException;
 import com.SEP490_G9.repository.CategoryRepository;
 import com.SEP490_G9.service.CategoryService;
 
@@ -23,12 +24,15 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 
 	@Override
-	public boolean addCategory(Category category) {
+	public Category addCategory(Category category) {
 		if (categoryRepo.existsByName(category.getName())) {
 			throw new DuplicateFieldException("name", category.getName());
 		}
+		if (category.getName().length() <= 2 || category.getName().length() >= 20) {
+			throw new NumberException("category name length must be between 2 to 20");
+		}
 		categoryRepo.save(category);
-		return true;
+		return category;
 	}
 
 	@Override

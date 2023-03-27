@@ -18,7 +18,7 @@ import { ProductService } from 'src/app/services/product.service';
 import { ReportService } from 'src/app/services/report.service';
 import { StorageService } from 'src/app/services/storage.service';
 import { UserService } from 'src/app/services/user.service';
-import { ViolationTypeService } from 'src/app/services/violation-type.service';
+import { ViolationService } from 'src/app/services/violation.service';
 import { ReportedProductDownloadComponent } from '../reported-product-download/reported-product-download.component';
 import { UpdateReportStatusComponent } from '../update-report-status/update-report-status.component';
 

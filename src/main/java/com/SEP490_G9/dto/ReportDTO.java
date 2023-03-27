@@ -7,15 +7,18 @@ import com.SEP490_G9.entities.ViolationType;
 public class ReportDTO {
 	private Long userId;
 	private Long productId;
+	private String version;
 	private String description;
 	private Date created_date;
 	private String status;
 	private ViolationType violationtype;
-	public ReportDTO(Long userId, Long productId, String description, Date created_date, String status,
+	
+	public ReportDTO(Long userId, Long productId, String version, String description, Date created_date, String status,
 			ViolationType violationtype) {
 		super();
 		this.userId = userId;
 		this.productId = productId;
+		this.version = version;
 		this.description = description;
 		this.created_date = created_date;
 		this.status = status;
@@ -56,6 +59,12 @@ public class ReportDTO {
 	}
 	public void setViolationtype(ViolationType violationtype) {
 		this.violationtype = violationtype;
+	}
+	public String getVersion() {
+		return version;
+	}
+	public void setVersion(String version) {
+		this.version = version;
 	}
 	
 }

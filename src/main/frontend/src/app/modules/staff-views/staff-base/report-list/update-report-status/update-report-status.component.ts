@@ -7,7 +7,7 @@ import { ViolationType } from 'src/app/DTOS/ViolationType';
 import { ProductService } from 'src/app/services/product.service';
 import { ReportService } from 'src/app/services/report.service';
 import { UserService } from 'src/app/services/user.service';
-import { ViolationTypeService } from 'src/app/services/violation-type.service';
+import { ViolationService} from 'src/app/services/violation.service';
 import {AfterViewInit, ViewChild} from '@angular/core';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
@@ -44,14 +44,14 @@ export class UpdateReportStatusComponent implements AfterViewInit{
     @Inject(MAT_DIALOG_DATA) public dataInjected: {productId: number, status: string}, 
     private reportService: ReportService,
     private userService: UserService,
-    private violationTypeService: ViolationTypeService,
+    private violationService: ViolationService,
     private dialog: MatDialog, 
   ){
     this.reportService.getByProductAndStatus(dataInjected.productId, dataInjected.status).subscribe(reports => {
       this.reportList = reports
       this.userService.getAllUsers().subscribe(users => {
         this.userList = users
-        this.violationTypeService.getAllTypes().subscribe(violationtypes => {
+        this.violationService.getAllTypes().subscribe(violationtypes => {
           this.violationTypeList = violationtypes
           const reportEntities : ReportEntity[] = reports.map((report: Report) => {
             const user = users.find((u: User) => {u.id === report.user.id});

@@ -37,7 +37,10 @@ logout() {
   }
 
   updateStaffStatus(id: number): Observable<any>{
-    return this.httpClient.put<any>(`${this.apiServerUrlManageAccount}/updateStaffStatus/${id}`, id);
+    const params = {
+      id: id
+    }
+    return this.httpClient.put<any>(this.apiServerUrlManageAccount+ '/updateStaffStatus', null, {params});
   }
   
     refreshToken() {
