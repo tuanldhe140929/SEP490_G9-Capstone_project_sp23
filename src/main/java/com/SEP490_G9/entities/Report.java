@@ -32,7 +32,7 @@ public class Report {
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "product_id", referencedColumnName = "id")
 	private Product product;
-
+	
 	@Column(name = "description", unique = false, nullable = false, insertable = true)
 	private String description;
 
@@ -45,8 +45,7 @@ public class Report {
 	@ManyToOne(fetch = FetchType.EAGER)
 
 
-	@JoinColumn(name = "violation_type_id", unique = false, nullable = false) // sual lai la false
-
+	@JoinColumn(name = "violation_type_id", unique = false, nullable = false) 
 	private ViolationType violation_types;
 
 	public Report() {

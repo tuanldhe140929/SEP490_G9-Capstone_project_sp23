@@ -8,7 +8,7 @@ import { ViolationType } from 'src/app/DTOS/ViolationType';
 import { ReportService } from 'src/app/services/report.service';
 import { StorageService } from 'src/app/services/storage.service';
 import { UserService } from 'src/app/services/user.service';
-import { ViolationTypeService } from 'src/app/services/violation-type.service';
+import { ViolationService } from 'src/app/services/violation.service';
 
 
 @Component({
@@ -23,7 +23,7 @@ export class ReportProductComponent implements OnInit{
   user: User = new User;
 
   constructor(
-    private vioTypeService: ViolationTypeService,
+    private violationService: ViolationService,
     private reportService: ReportService,
     private formBuilder: FormBuilder,
     private storageService: StorageService,
@@ -41,7 +41,11 @@ export class ReportProductComponent implements OnInit{
   vioTypeList: ViolationType[] = [];
 
   ngOnInit(): void {
-    this.getAllVioTypes();
+    this.violationService.getAllTypes().subscribe(
+      response => {
+        this.vioTypeList = response;
+      }
+    )
     this.productId = this.data.productId;
     this.userService.getCurrentUserInfo().subscribe(
       data => {
@@ -72,7 +76,7 @@ export class ReportProductComponent implements OnInit{
   }
 
   getAllVioTypes(){
-    this.vioTypeService.getAllTypes().subscribe(
+    this.violationService.getAllTypes().subscribe(
       response => {
         this.vioTypeList = response;
       }

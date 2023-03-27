@@ -1,5 +1,6 @@
 package com.SEP490_G9.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +21,13 @@ import com.SEP490_G9.repository.ViolationTypeRepository;
 import com.SEP490_G9.service.ViolationService;
 
 
-@RequestMapping(value = "private/manageviolation")
+@RequestMapping(value = "violation")
 
 @RestController
 public class ViolationController {
 	@Autowired
-	ViolationService vioSer;
+	ViolationService violationService;
+	
 	@PostMapping("addviolation")
 	public ResponseEntity<?> addTag(@RequestBody Violation vio) {
 		Violation vionew = new Violation();
@@ -33,8 +35,13 @@ public class ViolationController {
 		vionew.setCreated_date(null);
 		vionew.setDescription(null);
 		
-		boolean canAdd = vioSer.addVio(vio);
+		boolean canAdd = violationService.addVio(vio);
 		return ResponseEntity.ok(canAdd);
 	}
 	
+	@GetMapping("getAllVioTypes")
+	public ResponseEntity<?> getAllViolationType(){
+		List<ViolationType> vioTypeList = violationService.getVioTypeList();
+		return ResponseEntity.ok(vioTypeList);
+	}
 }
