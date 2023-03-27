@@ -147,7 +147,7 @@ public class AccountController {
 	}
 
 	@PutMapping("updateStaffStatus")
-	public ResponseEntity<?> updateStaffStatus(@PathVariable(name = "id") Long id) {
+	public ResponseEntity<?> updateStaffStatus(@RequestParam(name="id") long id) {
 		Account updatedStaff = accountService.updateStaffStatus(id);
 		return ResponseEntity.ok(updatedStaff);
 	}

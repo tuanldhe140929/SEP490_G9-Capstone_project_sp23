@@ -15,7 +15,7 @@ export class UpdateStaffStatusComponent implements OnInit{
   formerStatus: boolean = this.data.enabled;
 
   ngOnInit(): void {
-    
+    console.log(this.data.id);
   }
 
   onUpdateStatus(){

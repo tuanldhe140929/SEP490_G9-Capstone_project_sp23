@@ -11,7 +11,7 @@ import jakarta.persistence.*;
 @JsonIgnoreProperties(value = { "productDetails" })
 @Entity
 @Table(name = "categories")
-public class Category implements Serializable {
+public class Category implements Serializable{
 	/**
 	 * 
 	 */
