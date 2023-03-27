@@ -16,6 +16,7 @@ export class ForAdminBaseComponent {
   manageStaffChosen: boolean = false;
   categoriesChosen: boolean = false;
   tagsChosen: boolean = false;
+  reportedSellerChosen: boolean = false;
 
   openDashboard(){
     this.routerName = 'dashboard';
@@ -23,6 +24,7 @@ export class ForAdminBaseComponent {
     this.manageStaffChosen = false;
     this.categoriesChosen = false;
     this.tagsChosen = false;
+    this.reportedSellerChosen = false;
   }
 
   openManageStaffs(){
@@ -31,6 +33,7 @@ export class ForAdminBaseComponent {
     this.manageStaffChosen = true;
     this.categoriesChosen = false;
     this.tagsChosen = false;
+    this.reportedSellerChosen = false;
   }
 
   openCategories(){
@@ -39,6 +42,8 @@ export class ForAdminBaseComponent {
     this.manageStaffChosen = false;
     this.categoriesChosen = true;
     this.tagsChosen = false;
+    this.reportedSellerChosen = false;
+
   }
 
   openTags(){
@@ -47,6 +52,7 @@ export class ForAdminBaseComponent {
     this.manageStaffChosen = false;
     this.categoriesChosen = false;
     this.tagsChosen = true;
+    this.reportedSellerChosen = false;
   }
 
   logout(){
@@ -57,4 +63,14 @@ export class ForAdminBaseComponent {
       }
     )
   }
+
+  openReportedseller(){
+    this.routerName = 'reportedsellerlist';
+    this.dashboardChosen = false;
+    this.manageStaffChosen = false;
+    this.categoriesChosen = false;
+    this.tagsChosen = false;
+    this.reportedSellerChosen = true;
+  }
+
 }
