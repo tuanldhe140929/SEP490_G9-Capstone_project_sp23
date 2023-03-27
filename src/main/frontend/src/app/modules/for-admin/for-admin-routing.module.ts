@@ -8,6 +8,7 @@ import { StaffsComponent } from './for-admin-base/staffs/staffs.component';
 import { AdminGuard } from 'src/app/guards/admin.guard';
 import { CategoriesComponent } from './for-admin-base/categories/categories.component';
 import { TagsComponent } from './for-admin-base/tags/tags.component';
+import { ReportedSellerListsComponent } from './for-admin-base/reported-seller-lists/reported-seller-lists.component';
 
 const routes: Routes = [
   {
@@ -37,6 +38,12 @@ const routes: Routes = [
         path: '',
         outlet: 'tags',
         component: TagsComponent,
+        pathMatch: 'full'
+      },
+      {
+        path: '',
+        outlet: 'reportedsellerlist',
+        component: ReportedSellerListsComponent,
         pathMatch: 'full'
       }
     ],
