@@ -88,7 +88,7 @@ export class ReportProductComponent implements OnInit{
   }
 
   toSendReport(){
-      this.reportService.sendReport(this.data.productId, this.userId, this.description, this.violationTypeId).subscribe(
+      this.reportService.sendReport(this.data.productId, this.userId, this.data.version , this.description, this.violationTypeId).subscribe(
         data =>{
           console.log(data);
         }

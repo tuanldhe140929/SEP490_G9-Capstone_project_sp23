@@ -56,6 +56,7 @@ public class Report {
 		ReportItemKey keyitem = new ReportItemKey();
 		keyitem.setUserId(repo.getUserId());
 		keyitem.setProductId(repo.getProductId());
+		keyitem.setVersion(repo.getVersion());
 		this.reportKey=keyitem;
 		this.description = repo.getDescription();
 		this.created_date = repo.getCreated_date();
@@ -74,9 +75,7 @@ public class Report {
 		this.violation_types = violation_types;
 	}
 
-	public ReportItemKey getReportKey() {
-		return reportKey;
-	}
+	
 
 	public void setCartItemKey(ReportItemKey reportKey) {
 		this.reportKey = reportKey;
@@ -130,4 +129,19 @@ public class Report {
 		this.violation_types = violation_types;
 	}
 	
+	public ReportItemKey getReportKey() {
+		return reportKey;
+	}
+	
+	public void setReportKey(ReportItemKey reportKey) {
+		this.reportKey = reportKey;
+	}
+
+	public String getVersion() {
+		return reportKey.getVersion();
+	}
+	
+	public void setVersion(String version) {
+		this.reportKey.setVersion(version);
+	}
 }

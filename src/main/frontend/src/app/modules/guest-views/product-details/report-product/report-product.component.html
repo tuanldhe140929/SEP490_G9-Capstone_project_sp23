@@ -1,6 +1,6 @@
 <div class="addReportContainer">
     <form [formGroup]="addReportForm" (submit)="toSendReport()">
-        <h2>Báo cáo sản phẩm</h2>
+        <h2>Báo cáo sản phẩm {{data.version}}</h2>
         <p>Lý do vi phạm:</p>
         <select #violation (change)="onChange(violation.value)" formControlName="violationtype">
             <option *ngFor="let type of vioTypeList" [value]="type.id">{{type.name}}</option>

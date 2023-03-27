@@ -34,6 +34,7 @@ import com.SEP490_G9.repository.SellerRepository;
 import com.SEP490_G9.service.PreviewService;
 import com.SEP490_G9.service.ProductDetailsService;
 import com.SEP490_G9.service.ProductService;
+import com.SEP490_G9.service.ReportService;
 
 @Service
 public class ProductDetailsServiceImpl implements ProductDetailsService {
@@ -56,6 +57,9 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 
 	@Autowired
 	PreviewService previewService;
+	
+//	@Autowired
+//	ReportService reportService;
 
 	@Autowired
 	ProductFileRepository productFileRepo;
@@ -483,6 +487,20 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 			}
 		}
 		return allPdByReportStatus.stream().distinct().toList();
+//		List<Report> allReports = reportService.getAllReports();
+//		List<ProductDetails> pdByStatus = new ArrayList<>();
+//		for(Report report: allReports) {
+//			Product product = report.getProduct();
+//			List<Report> reportsOfAProduct = product.getReports();
+//			ProductDetails pd = getActiveVersion(product.getId());
+//			if(status.equalsIgnoreCase("HANDLED")&&pd.isFlagged()) {
+//				pdByStatus.add(pd);
+//			}
+//			if(status.equalsIgnoreCase("PENDING")&&!pd.isFlagged()&&reportsOfAProduct.size()>0) {
+//				pdByStatus.add(pd);
+//			}
+//		}
+//		return pdByStatus;
 	}
 	
 	@Override

@@ -11,22 +11,22 @@ import com.SEP490_G9.entities.embeddable.ReportItemKey;
 
 public interface ReportService {
 	
-	Report sendReport(long productId, long accountId, String description, long violationTypeId);
+	Report sendReport(long productId, long accountId, String version, String description, long violationTypeId);
 	
 	List<Report> getAllReports();
 	
-	List<Report> getByProduct(List<Report> reportList, Product product);
+	List<Report> getByProductDetails(List<Report> reportList, Product product, String version);
 	
 	List<Report> getByUser(List<Report> reportList, User user);
 	
-	Report getByProductAndUser(long productId, long userId);
+	Report getByProductUserVersion(long productId, long userId, String version);
 	
-	List<Report> updateReportStatus(long productId, List<Long> userIdList, List<String> statusList);
+	List<Report> updateReportStatus(long productId, String version, List<Long> userIdList, List<String> statusList);
 	
 	List<Report> getByStatus(String status);
 	
 	List<Report> getProductReports(long productId);
 	
-	List<Report> getByStatusAndProduct(long productId, String status);
+	List<Report> getByStatusAndProduct(long productId, String version, String status);
 	
 }

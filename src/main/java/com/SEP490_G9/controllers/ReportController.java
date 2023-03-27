@@ -52,14 +52,14 @@ public class ReportController {
 	UserService userService;
 	
 	@PostMapping("/sendReport")
-	public ResponseEntity<?> sendReport(@RequestParam(name = "productId") long productId, @RequestParam(name = "accountId") long accountId, @RequestParam(name = "description") String description, @RequestParam(name = "violationTypeId") long violationTypeId){
-		Report report = reportService.sendReport(productId, accountId, description, violationTypeId);
+	public ResponseEntity<?> sendReport(@RequestParam(name = "productId") long productId, @RequestParam(name = "accountId") long accountId, @RequestParam(name = "version") String version , @RequestParam(name = "description") String description, @RequestParam(name = "violationTypeId") long violationTypeId){
+		Report report = reportService.sendReport(productId, accountId, version, description, violationTypeId);
 		return ResponseEntity.ok(report);
 	}
 	
-	@GetMapping("/getByProductAndUser")
-	public ResponseEntity<?> getByReportAndUser(@RequestParam(name = "productId") long productId, @RequestParam(name = "accountId") long accountId){
-		Report report = reportService.getByProductAndUser(productId, accountId);
+	@GetMapping("/getByProductUserVersion")
+	public ResponseEntity<?> getByReportAndUser(@RequestParam(name = "productId") long productId, @RequestParam(name = "accountId") long accountId, @RequestParam(name = "version") String version){
+		Report report = reportService.getByProductUserVersion(productId, accountId, version);
 		return ResponseEntity.ok(report);
 	}
 
@@ -70,8 +70,8 @@ public class ReportController {
 	}
 	
 	@PutMapping("/updateReportStatus")
-	public ResponseEntity<?> updateReportStatus(@RequestParam(name = "productId") long productId, @RequestParam(name = "userIdList") List<Long> userIdList, @RequestParam(name = "statusList") List<String> statusList){
-		List<Report> reportList = reportService.updateReportStatus(productId, userIdList, statusList);
+	public ResponseEntity<?> updateReportStatus(@RequestParam(name = "productId") long productId, @RequestParam(name = "version") String version , @RequestParam(name = "userIdList") List<Long> userIdList, @RequestParam(name = "statusList") List<String> statusList){
+		List<Report> reportList = reportService.updateReportStatus(productId, version, userIdList, statusList);
 		return ResponseEntity.ok(reportList);
 	}
 	
@@ -88,8 +88,8 @@ public class ReportController {
 	}
 	
 	@GetMapping("/getByProductAndStatus")
-	public ResponseEntity<?> getByProductAndStatus(@RequestParam(name = "productId")long productId, @RequestParam(name = "status")String status){
-		List<Report> reportsByProductAndStatus = reportService.getByStatusAndProduct(productId, status);
+	public ResponseEntity<?> getByProductAndStatus(@RequestParam(name = "productId")long productId, @RequestParam(name = "version")String version, @RequestParam(name = "status")String status){
+		List<Report> reportsByProductAndStatus = reportService.getByStatusAndProduct(productId, version, status);
 		return ResponseEntity.ok(reportsByProductAndStatus);
 	}
 }

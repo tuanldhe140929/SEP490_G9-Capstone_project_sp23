@@ -41,13 +41,14 @@ export class UpdateReportStatusComponent implements AfterViewInit{
   selection = new SelectionModel<ReportEntity>(true, []);
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public dataInjected: {productId: number, status: string}, 
+    @Inject(MAT_DIALOG_DATA) public dataInjected: {productId: number, version: string, status: string}, 
     private reportService: ReportService,
     private userService: UserService,
     private violationService: ViolationService,
-    private dialog: MatDialog, 
+    private dialog: MatDialog,
+    private toastr: ToastrService 
   ){
-    this.reportService.getByProductAndStatus(dataInjected.productId, dataInjected.status).subscribe(reports => {
+    this.reportService.getByProductAndStatus(dataInjected.productId, dataInjected.version, dataInjected.status).subscribe(reports => {
       this.reportList = reports
       this.userService.getAllUsers().subscribe(users => {
         this.userList = users
@@ -101,11 +102,11 @@ export class UpdateReportStatusComponent implements AfterViewInit{
       userIdList.push(userData.userId);
       statusList.push(userData.checked ? "ACCEPTED":"DENIED");
     }
-    this.reportService.updateReportStatus(this.dataInjected.productId, userIdList, statusList).subscribe(data => {
+    this.reportService.updateReportStatus(this.dataInjected.productId, this.dataInjected.version, userIdList, statusList).subscribe(data => {
       console.log(data);
+      this.toastr.success('Cập nhật trạng thái báo cáo thành công');
     })
-    alert('Đã cập nhật tình trạng báo cáo');
-    window.location.reload();
+    
   }
 
   ngAfterViewInit() {

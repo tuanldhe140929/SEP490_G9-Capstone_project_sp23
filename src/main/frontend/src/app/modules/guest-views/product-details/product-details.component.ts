@@ -65,6 +65,7 @@ export class ProductDetailsComponent implements OnInit {
   visitor: User = new User;//thằng đang xem trang ấy
   visitorId: number;
   productId: number;
+  version: string;
   loginStatus = false;
   product: Product = new Product;//hiển thị
   totalSize: number | undefined;
@@ -89,23 +90,60 @@ export class ProductDetailsComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.getProduct();
-    this.productId = Number(this.activatedRoute.snapshot.paramMap.get('productId'));
-    if(this.storageService.getToken()){
-      this.userService.getCurrentUserInfo().subscribe(
+
+    // this.getProduct();
+
+    // tôi đang có việc cần phải cho hẳn vào đây
+    var productIdAndName = this.activatedRoute.snapshot.paramMap.get('productId');
+    if (productIdAndName) {
+      var productId = productIdAndName.split("-")[0];
+
+      this.productService.getProductById(+productId).subscribe(
         data => {
-          this.visitor = data;
-          this.visitorId = data.id;
-          if(this.visitorId==this.owner.id){
-            this.isOwner == true;
-          }else{
-            this.isOwner == false;
+          this.product = data;
+          this.version = this.product.version;
+
+          if (this.DescriptionTab) {
+            this.DescriptionTab.innerHTML = this.product.details;
           }
-          this.reportService.getReportByProductAndUser(this.productId, this.visitorId).subscribe((data: any) => {
-            this.report = data;
-          })
-        }
-      )
+          this.owner = data.seller;
+          this.getSellerTotalProductCount(this.owner.id);
+          this.getProfileImage();
+          if (this.product.previewVideo != null)
+            this.displayPreviews.push(DisplayPreview.fromPreview(this.product.previewVideo));
+
+          if (this.product.previewPictures != null)
+            for (let i = 0; i < this.product.previewPictures.length; i++) {
+              var a = DisplayPreview.fromPreview(this.product.previewPictures[i]);
+              this.displayPreviews.push(a);
+              console.log(a);
+            }
+
+          if (this.BlackThumbs.length > 0)
+            this.BlackThumbs.item(0)?.setAttribute("style", "border-radius: 4px; position: absolute; top: 0; right: 9px; bottom: 0; left: 0; background: #000; opacity: 0;");
+
+            //sau phần getProduct
+          this.productId = Number(this.activatedRoute.snapshot.paramMap.get('productId'));
+          if (this.storageService.getToken()) {
+            this.userService.getCurrentUserInfo().subscribe(
+              data => {
+                this.visitor = data;
+                this.visitorId = data.id;
+                if (this.visitorId == this.owner.id) {
+                  this.isOwner == true;
+                } else {
+                  this.isOwner == false;
+                }
+                this.reportService.getReportByProductUserVersion(this.productId, this.visitorId, this.version).subscribe((data: any) => {
+                  this.report = data;
+                })
+              }
+            )
+          }
+        },
+        error => {
+          console.log(error);
+        })
     }
   }
 
@@ -174,6 +212,7 @@ export class ProductDetailsComponent implements OnInit {
       this.productService.getProductById(+productId).subscribe(
         data => {
           this.product = data;
+          this.version = this.product.version;
           if (this.DescriptionTab) {
             this.DescriptionTab.innerHTML = this.product.details;
           }
@@ -315,32 +354,33 @@ export class ProductDetailsComponent implements OnInit {
     return this.getFormattedValue(this.product.price);
   }
 
-  onCheckIfReported(){
-    if(!this.storageService.getToken()){
+  onCheckIfReported() {
+    if (!this.storageService.getToken()) {
       this.toastr.error('Vui lòng đăng nhập để báo cáo');
-    }else if(this.report!=null){
-      this.toastr.error('Bạn đã báo cáo sản phẩm này');
-    }else{
+    } else if (this.report != null) {
+      this.toastr.error('Bạn đã báo cáo phiên bản này của sản phẩm');
+    } else {
       this.openReportModal();
     }
   }
 
   openReportModal() {
-      const data = {
-        productId: this.product.id,
-        userId: this.visitor.id
-      }
-      const dialogRef = this.dialog.open(ReportProductComponent, {
-  
-        height: '57%',
-        width: '50%',
-        data:data
-      });
-  
-      dialogRef.afterClosed().subscribe(result => {
-        console.log(`Dialog result: ${result}`);
-        setTimeout(() => this.refresh(),300)
-      });
+    const data = {
+      productId: this.product.id,
+      version: this.product.version,
+      userId: this.visitor.id
+    }
+    const dialogRef = this.dialog.open(ReportProductComponent, {
+
+      height: '57%',
+      width: '50%',
+      data: data
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+      setTimeout(() => this.refresh(), 300)
+    });
   }
   redirectSellerPage() {
     this.router.navigate(['collection/' + this.owner.id]);
@@ -378,9 +418,9 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   refresh() {
-    this.reportService.getReportByProductAndUser(this.product.id, this.visitorId).subscribe((data: any) => {
+    this.reportService.getReportByProductUserVersion(this.product.id, this.visitorId, this.version).subscribe((data: any) => {
       this.report = data;
     })
   }
 
-  }
+}
