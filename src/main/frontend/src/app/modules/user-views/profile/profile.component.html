@@ -1,10 +1,10 @@
-<head>
+<!-- <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
-<hr>
+<hr> -->
 <div class="container bootstrap snippet">
     <div class="row">
         <div class="col-sm-10">
@@ -92,57 +92,19 @@
                                         ariaCurrentWhenActive="page"> Đổi mật khẩu</a></button>
                                 <button (click)="UpdateInfo()" class="btn btn-lg btn-success" type="text">
                                     Cập nhật thông tin</button>
-                                    
+                                <!-- here -->
+
+                                <p>Click the button below to log in with PayPal:</p>
+                                <a
+                                    href="https://www.sandbox.paypal.com/connect/?flowEntry=static&client_id=AXeBEqb1kDGW5dIr6LfFb5VUAq1O71dUvAnF_cni3TATp2fUv-94ZMl1sqpJFGowcDfcfo2y5EX1jXYF&response_type=code&scope=email&redirect_uri=https://www.google.com&state=1">
+                                    PayPal Login</a>
+
+                                <!-- to here -->
                             </div>
                         </div>
                     </form>
                 </div>
 
 
-                <!-- fix here -->
-                <div style="text-align: center;">
-                    <div id="paypal-button-container"></div>
-                    <a saddddddddddddddddddd src="https://www.paypal.com/sdk/js?client-id=sb&enable-funding=venmo&currency=USD" data-sdk-integration-source="button-factory"></a>
-                    <!-- <div>
-                        function initPayPalButton() {
-                            paypal.Buttons({
-                                style: {
-                                    shape: 'rect',
-                                    color: 'gold',
-                                    layout: 'horizontal',
-                                    label: 'paypal',
-                                },
-                                createOrder: function (data, actions) {
-                                    return actions.order.create({
-                                        purchase_units: [{ "amount": { "currency_code": "USD", "value": 0 } }]
-                                    });
-                                },
-                                onApprove: function (data, actions) {
-                                    return actions.order.capture().then(function (orderData) {
-                                        // Full available details
-                                        console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
-                                        // Show a success message within this page, e.g.
-                                        const element = document.getElementById('paypal-button-container');
-                                        element.innerHTML = '';
-                                        element.innerHTML = '<h3>Thank you for your payment!</h3>';
-                                        // Or go to another URL:  actions.redirect('thank_you.html');
-                                    });
-                                },
-                                onError: function (err) {
-                                    console.log(err);
-                                }
-                            }).render('#paypal-button-container');
-                        }
-                        initPayPalButton();
-                    </div> -->
-                </div>
-                
-                
-              
-
-
-                <!-- to  here -->
             </div>
         </div>
-    </div>
-</div>
