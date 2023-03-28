@@ -20,5 +20,5 @@ public interface PayoutService {
 	
 	public Payout getById(Long id);
 	
-	public List<Payout> getPurchasedProduct(Payout.Status status);
+	public List<Payout> getPayoutHistory();
 }

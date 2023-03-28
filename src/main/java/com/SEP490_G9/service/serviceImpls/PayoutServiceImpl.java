@@ -166,4 +166,18 @@ public class PayoutServiceImpl implements PayoutService {
 		payouts = payoutRepository.saveAll(payouts);
 		return payouts;
 	}
+	@Override
+	public List<Payout> getPayoutHistory() {
+		List<Payout> Allpayout = payoutRepository.findAll();
+		List<Payout> allPayoutHistory = new ArrayList<>();
+		for(Payout po : Allpayout) {
+			if(po.getStatus().equals(Payout.Status.SUCCESS)){
+				allPayoutHistory.add(po);
+			}
+			if(po.getStatus().equals(Payout.Status.FAILED)){
+				allPayoutHistory.add(po);
+			}
+		}
+		return allPayoutHistory.stream().distinct().toList();
+	}
 }
