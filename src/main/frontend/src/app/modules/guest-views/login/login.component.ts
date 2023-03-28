@@ -54,7 +54,7 @@ export class LoginComponent implements OnInit {
           authResponse = this.storageService.getAuthResponse();
           if(authResponse){
             if(authResponse.roles.includes('ROLE_USER')||authResponse.roles.includes('ROLE_SELLER')){
-              this.router.navigate(['homepage']);
+              this.router.navigate(['home']);
             }else if(authResponse.roles.includes('ROLE_ADMIN')){
               this.router.navigate(['admin']);
             }else if(authResponse.roles.includes('ROLE_STAFF')){

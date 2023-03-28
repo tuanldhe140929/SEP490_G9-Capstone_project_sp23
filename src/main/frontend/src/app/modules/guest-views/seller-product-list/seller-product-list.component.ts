@@ -285,7 +285,7 @@ export class SellerProductListComponent implements OnInit {
     if (this.seller!=null && this.seller.avatar != null && this.seller.id != -1) {
       return 'http://localhost:9000/public/serveMedia/image?source=' + this.seller.avatar.replace(/\\/g, '/');
     } else {
-      return 'assets/images/noimage.png'
+      return 'assets/images/noavatar.png'
     }
   }
 
