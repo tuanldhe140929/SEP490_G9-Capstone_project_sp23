@@ -4,7 +4,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { Report } from 'src/app/DTOS/Report';
 import { AuthGuard } from '../../guards/auth.guard';
 import { CheckOutComponent } from '../for-users/check-out/check-out.component';
-import { ReportedProductListComponent } from '../staff-views/reported-product-list/reported-product-list.component';
 import { CartComponent } from './cart/cart.component';
 import { ChangePasswordComponent } from './change-password/change-password.component';
 import { CreateReportComponent } from './create-report/create-report.component';

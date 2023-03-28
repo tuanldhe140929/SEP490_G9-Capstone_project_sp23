@@ -23,8 +23,6 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 
 import { StaffViewsRoutingModule } from './staff-views-routing.module';
 
-
-import { ReportedProductListComponent } from './reported-product-list/reported-product-list.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { StaffBaseComponent } from './staff-base/staff-base.component';
@@ -43,7 +41,6 @@ import { ReportDescriptionComponent } from './staff-base/report-list/report-desc
 
 @NgModule({
   declarations: [
-    ReportedProductListComponent,
     StaffBaseComponent,
     ProductApprovalComponent,
     ReportListComponent,
