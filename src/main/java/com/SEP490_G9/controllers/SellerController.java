@@ -24,10 +24,11 @@ public class SellerController {
 		Seller seller = sellerService.getSellerById(sellerid);
 		return ResponseEntity.ok(seller);
 	}
-	
+
 	@GetMapping("/getSellersForSearching")
 	public ResponseEntity<?> getSellersForSearching(@RequestParam("keyword") String keyword){
 		List<Seller> sellerList = sellerService.getSellersForSearching(keyword);
 		return ResponseEntity.ok(sellerList);
 	}
+
 }

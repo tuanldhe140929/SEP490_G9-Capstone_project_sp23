@@ -12,6 +12,7 @@ public interface SellerService {
 	
 	int getSellerNumberOfFlags(long sellerId);
 	
+
 	//supporting methods
 	
 	List<Seller> getAllSellers();
@@ -25,4 +26,9 @@ public interface SellerService {
 	//main methods
 	
 	List<Seller> getSellersForSearching(String keyword);
+
+	List<Seller> getFlaggedSellers();
+	
+	List<Seller> getPurchasedProduct(long sellerId);
+
 }

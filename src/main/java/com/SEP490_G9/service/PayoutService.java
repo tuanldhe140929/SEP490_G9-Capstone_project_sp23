@@ -19,4 +19,6 @@ public interface PayoutService {
 	Payout preparePayoutForSeller(Seller seller, Double amount, Transaction transaction);
 	
 	public Payout getById(Long id);
+	
+	public List<Payout> getPurchasedProduct(Payout.Status status);
 }
