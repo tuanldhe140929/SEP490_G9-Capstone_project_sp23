@@ -130,9 +130,9 @@ export class ProductDetailsComponent implements OnInit {
                 this.visitor = data;
                 this.visitorId = data.id;
                 if (this.visitorId == this.owner.id) {
-                  this.isOwner == true;
+                  this.isOwner = true;
                 } else {
-                  this.isOwner == false;
+                  this.isOwner = false;
                 }
                 this.reportService.getReportByProductUserVersion(this.productId, this.visitorId, this.version).subscribe((data: any) => {
                   this.report = data;
