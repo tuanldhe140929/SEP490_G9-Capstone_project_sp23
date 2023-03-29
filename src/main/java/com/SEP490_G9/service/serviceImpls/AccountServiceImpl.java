@@ -115,4 +115,10 @@ public class AccountServiceImpl implements AccountService {
 		return newPassword;
 	}
 
+	@Override
+	public List<Account> getAllAccounts() {
+		List<Account> allAccounts = accountRepo.findAll();
+		return allAccounts;
+	}
+
 }

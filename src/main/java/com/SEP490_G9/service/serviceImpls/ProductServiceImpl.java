@@ -56,10 +56,10 @@ public class ProductServiceImpl implements ProductService {
 
 	@Autowired
 	SellerService sellerService;
-	
+
 	@Autowired
 	LicenseRepository licenseRepository;
-	
+
 	@Autowired
 	ReportRepository reportRepository;
 
@@ -83,7 +83,7 @@ public class ProductServiceImpl implements ProductService {
 		productDetails.setLastModified(new Date());
 		productDetails.setApproved(Status.NEW);
 		ProductDetails savedProductDetails = productDetailsRepo.save(productDetails);
-		
+
 		String coverImageDestination = getCoverImageLocation(productDetails);
 		String filesDestination = getProductFilesLocation(productDetails);
 		String previewsDestinations = getPreviewsLocation(productDetails);
@@ -101,7 +101,7 @@ public class ProductServiceImpl implements ProductService {
 		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
 				.getAccount();
 		if (product.getSeller().getId() != account.getId()) {
-			// throw new AuthorizationServiceException(FIRST_PRODUCT_VERSION);
+			throw new IllegalAccessError("Authorization exception");
 		}
 		return productRepository.save(product);
 	}
@@ -110,11 +110,15 @@ public class ProductServiceImpl implements ProductService {
 	public boolean deleteProductById(Long id) {
 		Seller seller = getCurrentSeller();
 		Product product = productRepository.findById(id).orElseThrow();
-		product.setEnabled(false);
-		productRepository.save(product);
-		if (product == null || product.getSeller() != seller) {
+		if (seller != product.getSeller()) {
+			throw new IllegalAccessError("Authorization exception");
+		}
+		if (product == null || !product.isEnabled()) {
 			throw new ResourceNotFoundException("product id", id.toString(), seller);
 		}
+		product.setEnabled(false);
+		productRepository.save(product);
+
 		return true;
 	}
 
@@ -136,21 +140,34 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public List<Product> getProductsBySellerId(Long sellerId) {
+		List<Product> products = productRepository.findBySellerId(sellerId);
+		for (Product p : products) {
+			if (!p.isEnabled()) {
+				products.remove(p);
+			}
+		}
 		return productRepository.findBySellerId(sellerId);
 	}
 
 	@Override
 	public boolean setActiveVersion(Long productId, String version) {
+		Seller seller = getCurrentSeller();
 		Product product = productRepository.findById(productId).orElseThrow();
 		ProductDetails pd = productDetailsRepo.findByProductIdAndProductVersionKeyVersion(productId, version);
-		if(pd==null){
-			throw new ResourceNotFoundException("product details","id and version",productId + " "+ version);
+		if (pd == null) {
+			throw new ResourceNotFoundException("product details", "id and version", productId + " " + version);
 		}
-		if(pd.getFiles().size()>0) {
+		if (pd.getApproved() != Status.APPROVED) {
+			throw new IllegalArgumentException("This version is not approved");
+		}
+		if (product.getSeller() != seller) {
+			throw new IllegalAccessError("Authorization exception");
+		}
+		if (pd.getFiles().size() > 0) {
 			product.setActiveVersion(version);
 			productRepository.save(product);
 			return true;
-		}else {
+		} else {
 			return false;
 		}
 
@@ -178,6 +195,7 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public String uploadCoverImage(MultipartFile coverImage, Long productId, String version) {
 		String src = "";
+
 		if (!checkFileType(coverImage, IMAGE_EXTENSIONS)) {
 			throw new FileUploadException(coverImage.getContentType() + " file not accept");
 		} else {
@@ -193,6 +211,9 @@ public class ProductServiceImpl implements ProductService {
 
 			if (productDetails == null) {
 				throw new ResourceNotFoundException("Product's", "active version", productId);
+			}
+			if (productDetails.getApproved() != Status.NEW) {
+				throw new IllegalArgumentException("Cannot edit this version");
 			}
 			String coverImageLocation = getCoverImageLocation(productDetails);
 			File coverImageDir = new File(ROOT_LOCATION + coverImageLocation);
@@ -231,7 +252,7 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public List<License> getAllLicense() {
-	return licenseRepository.findAll();
+		return licenseRepository.findAll();
 	}
 
 	public String getROOT_LOCATION() {
@@ -246,9 +267,9 @@ public class ProductServiceImpl implements ProductService {
 	public List<Product> getAllProductsByReportStatus(String reportStatus) {
 		List<Report> allReports = reportRepository.findAll();
 		List<Product> allReportProducts = new ArrayList<>();
-		for(Report report: allReports) {
+		for (Report report : allReports) {
 			Product product = report.getProduct();
-			if(report.getStatus().equalsIgnoreCase(reportStatus)) {
+			if (report.getStatus().equalsIgnoreCase(reportStatus)) {
 				allReportProducts.add(product);
 			}
 		}

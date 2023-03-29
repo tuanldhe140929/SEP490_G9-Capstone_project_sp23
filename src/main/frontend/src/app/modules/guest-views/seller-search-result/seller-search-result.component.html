@@ -1,0 +1,173 @@
+<app-header></app-header>
+<!-- ============== SECTION PAGETOP ============== -->
+<section class="bg-primary py-5">
+    <div class="container">
+      <h2 class="text-white">Kết quả tìm kiếm cho "{{keyword}}"</h2>
+      <!-- <ol class="breadcrumb ondark mb-0">
+      <li class="breadcrumb-item"><a href="#">Home</a></li>
+      <li class="breadcrumb-item"><a href="#">Library</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Data</li>
+      </ol> -->
+    </div> <!-- container //  -->
+    </section>
+    <!-- ============== SECTION PAGETOP END// ============== -->
+    
+    <!-- ============== SECTION CONTENT ============== -->
+    <section class="padding-y">
+    <div class="container">
+    
+    <div class="row">
+      <aside class="col-lg-3">
+    
+    <button class="btn btn-outline-secondary mb-3 w-100  d-lg-none" data-bs-toggle="collapse" data-bs-target="#aside_filter">Show filter</button>
+    
+
+    <!-- ===== Card for sidebar filter ===== -->
+    <!-- <div id="aside_filter" class="collapse card d-lg-block mb-5">
+    
+      <article class="filter-group">
+      <header class="card-header">
+        <a href="#" class="title" data-bs-toggle="collapse" data-bs-target="#collapse_aside1">
+        <i class="icon-control fa fa-chevron-down"></i>   Phân loại 
+        </a>
+      </header>
+      <div class="collapse show" id="collapse_aside1">
+        <div class="card-body">
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="choosecategory" id="flexRadioDefault1" [value]="0" [(ngModel)]="chosenCategory" (change)="onChangeCategory($event)">
+            <label class="form-check-label" for="flexRadioDefault1">
+              Tất cả phân loại
+            </label>
+            <b class="badge rounded-pill bg-gray-dark float-end">{{resultList.length}}</b>
+          </div>
+          <div class="form-check" *ngFor="let category of categoryList">
+            <input class="form-check-input" type="radio" name="choosecategory" id="flexRadioDefault1" [value]="category.id" [(ngModel)]="chosenCategory" (change)="onChangeCategory($event)">
+            <label class="form-check-label" for="flexRadioDefault2">
+              {{category.name}}
+            </label>
+          </div>
+        </div> 
+      </div> 
+      </article> 
+    
+      <article class="filter-group">
+      <header class="card-header">
+        <a href="#" class="title" data-bs-toggle="collapse" data-bs-target="#collapse_aside_brands">
+        <i class="icon-control fa fa-chevron-down"></i>  Nhãn
+        </a>
+      </header>
+      <div class="collapse show" id="collapse_aside_brands">
+        <div class="card-body">
+          <label class="form-check mb-2" *ngFor="let tag of tagList">
+          <input class="form-check-input" name="choosetag" type="checkbox" [(ngModel)]="chosenTags" [value]="tag.id">
+          <span class="form-check-label"> {{tag.name}} </span>
+          </label> 
+        </div> 
+      </div> 
+      </article>
+    
+      <article class="filter-group">
+      <header class="card-header">
+        <a href="#" class="title" data-bs-toggle="collapse" data-bs-target="#collapse_aside2">
+        <i class="icon-control fa fa-chevron-down"></i>  Giá 
+        </a>
+      </header>
+      <div class="collapse show" id="collapse_aside2">
+        <div class="card-body">
+        <input type="range" class="form-range" min="0" max="100">
+        <div class="row mb-3">
+          <div class="col-6">
+          <label for="min" class="form-label">Min</label>
+          <input class="form-control" id="min" min="0" max="10000000" placeholder="Min" type="number" [(ngModel)]="minprice">
+          </div> 
+    
+          <div class="col-6">
+          <label for="max" class="form-label">Max</label>
+          <input class="form-control" id="max" min="0" max="10000000" placeholder="Max" type="number" [(ngModel)]="maxprice">
+          </div> 
+          <div *ngIf="!compareMinMax()">
+            <small style="color: red">Khoảng giá không hợp lệ</small>
+          </div>
+        </div> 
+        <button class="btn btn-light w-100" (click)="refresh()" [disabled]="!compareMinMax()">Áp dụng</button>
+        </div> 
+      </div> 
+      </article> 
+    </div>  -->
+
+
+
+
+      </aside> <!-- col .// -->
+      <main class="col-lg-9">
+        
+      <header class="d-sm-flex align-items-center border-bottom mb-4 pb-3">
+        <div *ngIf="resultList.length==0">
+          <strong class="d-block py-2">Không có kết quả</strong>
+        </div>
+        <div *ngIf="resultList.length>0">
+          <strong class="d-block py-2">Tìm thấy {{resultList.length}} người bán</strong>
+        </div>
+        <div class="ms-auto ">
+          <select class="form-select d-inline-block w-auto me-1">
+            <option value="0">Best match</option>
+            <option value="1">Recommended</option>
+            <option value="2">High rated</option>
+            <option value="3">Randomly</option>
+          </select>
+          <div class="btn-group">
+          <a href="#" class="btn btn-light" data-bs-toggle="tooltip" title="List view"> 
+            <i class="fa fa-bars"></i>
+          </a>
+          <a href="#" class="btn btn-light active" data-bs-toggle="tooltip" title="Grid view"> 
+            <i class="fa fa-th"></i>
+          </a>
+          </div> <!-- btn-group end.// -->
+        </div>
+      </header>
+    
+      <!-- ========= content items ========= -->
+      <div class="row">
+        <div class="col-lg-4 col-md-6 col-sm-6" *ngFor="let result of resultList | paginate: {itemsPerPage: itemsPerPage, currentPage: p}">
+          <figure class="card card-product-grid">
+          <div class="img-wrap"> 
+            <img [src]="getCoverImage(result)"> 
+          </div>
+          <figcaption class="info-wrap border-top">
+            <div class="price-wrap">
+            <strong class="price">{{result.username}}</strong>
+            </div> <!-- price-wrap.// -->
+            <p class="title mb-2">{{result.email}}</p>
+            
+            <a (click)="openCollection(result.id)" class="btn btn-primary">Các sản phẩm</a>
+          </figcaption>
+          </figure>
+        </div> <!-- col end.// -->
+    
+      </div> <!-- row end.// -->
+    
+      <hr>
+  <footer class="d-flex mt-4">
+                
+                  <!-- <nav class="ms-3">
+                      <ul class="pagination">
+                      <li class="page-item"><a class="page-link" href="#">1</a></li>
+                      <li class="page-item active" aria-current="page">
+                          <span class="page-link">2</span>
+                      </li>
+                      <li class="page-item"><a class="page-link" href="#">3</a></li>
+                      <li class="page-item">
+                          <a class="page-link" href="#">Next</a>
+                      </li>
+                      </ul>
+                  </nav> -->
+                  <div class="mt-8 py-5 flex justify-center items-center" *ngIf="resultList.length>0">
+                    <pagination-controls (pageChange)="p = $event"></pagination-controls>
+                  </div>
+                  </footer>
+                
+                  </main>
+                  </div> 
+                  </div> 
+                  </section>
+                  <app-footer></app-footer>

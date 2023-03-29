@@ -34,13 +34,6 @@ import jakarta.transaction.InvalidTransactionException;
 @Service
 public class TransactionServiceImpl implements TransactionService {
 
-	final String METHOD = "paypal";
-	final String CURRENCY = "USD";
-	final String RETURN_URL = "transaction/reviewTransaction";
-	final String CANCEL_URL = "transaction/cancel";
-	final String BUY_INTENT = "buy";
-	final String SALE_INTENT = "sale";
-
 	@Autowired
 	CartService cartService;
 
@@ -127,11 +120,8 @@ public class TransactionServiceImpl implements TransactionService {
 		Transaction transaction = transactionRepo.findById(transactionId).orElseThrow();
 		transaction.setDescription("pay with paypal");
 		Payment payment = null;
-		payment = paypalService.createPayment(transaction.getAmount(), CURRENCY, METHOD, SALE_INTENT,
-				transaction.getDescription(),
-				"http://localhost:9000/transaction/cancel/" + transaction.getId() + "/paypal",
-				"http://localhost:4200/" + RETURN_URL);
-		String state = paypalService.checkPaymentStatus(payment.getId());
+		payment = paypalService.createPayment(transaction);
+		String state = payment.getState();
 
 		switch (state) {
 		case "created": {
@@ -175,9 +165,10 @@ public class TransactionServiceImpl implements TransactionService {
 	public Transaction fetchTransactionStatus(String paymenId, Long transactionId) {
 		Transaction transaction = transactionRepo.findById(transactionId).orElseThrow();
 		int numChecks = 0;
-		int maxChecks = 30;
+		int maxChecks = 300;
 		while (numChecks < maxChecks) {
-			String state = paypalService.checkPaymentStatus(paymenId);
+			Payment payment = paypalService.getPaymentByPaypalId(paymenId);
+			String state = payment.getState();
 			System.out.println("Payment State: " + state);
 			if (state.equals("approved")) {
 				System.out.println("Payment has been approved.");
@@ -218,8 +209,11 @@ public class TransactionServiceImpl implements TransactionService {
 			}
 			numChecks++;
 		}
-		transaction.setStatus(Transaction.Status.UNDEFINED);
-		transaction.setDescription("Fetching status time out");
+		if (!transaction.getStatus().equals(Transaction.Status.CANCELED)
+				|| !transaction.getStatus().equals(Transaction.Status.COMPLETED)
+				|| !transaction.getStatus().equals(Transaction.Status.FAILED))
+			transaction.setStatus(Transaction.Status.EXPIRED);
+		transaction.setDescription("Trasaction is expired");
 		transaction = transactionRepo.save(transaction);
 		return transaction;
 	}
@@ -230,8 +224,7 @@ public class TransactionServiceImpl implements TransactionService {
 
 		if (transaction.getStatus().equals(Transaction.Status.COMPLETED)
 				|| transaction.getStatus().equals(Transaction.Status.FAILED)
-				|| transaction.getStatus().equals(Transaction.Status.EXPIRED)
-				|| transaction.getStatus().equals(Transaction.Status.UNDEFINED))
+				|| transaction.getStatus().equals(Transaction.Status.EXPIRED))
 			throw new IllegalArgumentException("The transaction has ben made");
 		transaction.setStatus(Transaction.Status.CANCELED);
 		transaction.setLastModified(new Date());

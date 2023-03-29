@@ -18,29 +18,39 @@ import { VgCoreModule } from '@videogular/ngx-videogular/core';
 import { VgControlsModule } from '@videogular/ngx-videogular/controls';
 import { VgOverlayPlayModule } from '@videogular/ngx-videogular/overlay-play';
 import { VgBufferingModule } from '@videogular/ngx-videogular/buffering';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 
 import { StaffViewsRoutingModule } from './staff-views-routing.module';
 
-
-import { ReportedProductListComponent } from './reported-product-list/reported-product-list.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { StaffBaseComponent } from './staff-base/staff-base.component';
 import { ProductApprovalComponent } from './staff-base/product-approval/product-approval.component';
 import { ReportListComponent } from './staff-base/report-list/report-list.component';
+import { AddviolationComponent } from './staff-base/addviolation/addviolation.component';
+import { ReactiveFormsModule } from '@angular/forms';
 import { UpdateApprovalComponent } from './staff-base/product-approval/update-approval/update-approval.component';
 import { ApprovalProductDetailsComponent } from './staff-base/product-approval/approval-product-details/approval-product-details.component';
+import { ApprovalDownloadComponent } from './staff-base/product-approval/approval-download/approval-download.component';
+import { ReportedProductDetailsComponent } from './staff-base/report-list/reported-product-details/reported-product-details.component';
+import { ReportedProductDownloadComponent } from './staff-base/report-list/reported-product-download/reported-product-download.component';
+import { UpdateReportStatusComponent } from './staff-base/report-list/update-report-status/update-report-status.component';
+import { ReportDescriptionComponent } from './staff-base/report-list/report-description/report-description.component';
 
 
 @NgModule({
   declarations: [
-    ReportedProductListComponent,
     StaffBaseComponent,
     ProductApprovalComponent,
     ReportListComponent,
     UpdateApprovalComponent,
     ApprovalProductDetailsComponent,
+    ApprovalDownloadComponent,
+    ReportedProductDetailsComponent,
+    ReportedProductDownloadComponent,
+    UpdateReportStatusComponent,
+    ReportDescriptionComponent,
   ],
   imports: [
     CommonModule,
@@ -60,11 +70,13 @@ import { ApprovalProductDetailsComponent } from './staff-base/product-approval/a
     MatInputModule,
     MatSortModule,
     MatMenuModule,
+    ReactiveFormsModule,
     MatSelectModule,
     VgControlsModule,
     VgCoreModule,
     VgBufferingModule,
-    VgOverlayPlayModule
+    VgOverlayPlayModule,
+    MatCheckboxModule
   ]
 })
 export class StaffViewsModule { }

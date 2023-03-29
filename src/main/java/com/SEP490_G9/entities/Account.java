@@ -22,6 +22,7 @@ public class Account {
 
 	@Column(name = "email", nullable = false, unique = true)
 	@Email(message = "invalid format")
+	@Size(min = 3, max = 320)
 	@NotBlank(message = "email can't be blank")
 	private String email;
 

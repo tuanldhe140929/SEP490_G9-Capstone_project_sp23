@@ -26,6 +26,12 @@ public interface ProductDetailsService {
 
 	public List<ProductDetails> getAll();
 
+	
+	//p1 : pd1 , pd2 , activersion: pd1 , seller1
+	//p2 : pd3, pd4, activersion: pd3, seller1
+	//p3 : pd5, pd6, aciversion:pd5, seller2
+	
+	
 	public List<ProductDetails> getByLatestVer(List<ProductDetails> listPd);
 
 	public List<ProductDetails> getBySeller(List<ProductDetails> listPd, long sellerId);
@@ -48,31 +54,36 @@ public interface ProductDetailsService {
 
 	public List<ProductDetails> getByCategory(List<ProductDetails> listPd, int categoryId);
 
-	public List<ProductDetails> getByTag(List<ProductDetails> listPd, List<Integer> tagId);
+	public List<ProductDetails> getByTags(List<ProductDetails> listPd, List<Integer> tagIdList);
 
 	public List<ProductDetails> getByPriceRange(List<ProductDetails> listPd, int min, int max);
 
 	public List<ProductDetails> getAllByProductId(Long id);
-
+	
 	public boolean existByProductIdAndVersion(Long productId, String version);
-
-
+	
+	
 	// by Quan Nguyen
 
-	public List<ProductDetails> getProductForSearching(String keyword, int categoryid, int min, int max);
+	public List<ProductDetails> getProductForSearching(String keyword, int categoryid, List<Integer> tagIdList, int min, int max);
 
-	public List<ProductDetails> getProductBySellerForSeller(long sellerId, String keyword, int categoryId, int min,
+	public List<ProductDetails> getProductBySellerForSeller(long sellerId, String keyword, int categoryId, List<Integer> tagidlist, int min,
 			int max);
 
-	public List<ProductDetails> getProductBySellerForUser(long sellerId, String keyword, int categoryId, int min,
+	public List<ProductDetails> getProductBySellerForUser(long sellerId, String keyword, int categoryId, List<Integer> tagidlist ,int min,
 			int max);
 
 	public ProductDetails getByProductIdAndVersion(Long productId, String version);
 	
-	public List<ProductDetails> getProductsByReportStatus(String status);
+	public List<ProductDetails> getProductsByReportStatus(String report);
 	
 	public List<ProductDetails> getProductsByApprovalStatus(String status);
 	
 	public ProductDetails updateApprovalStatus(long productId, String version, String status);
 
+	public List<ProductDetails> getAllByLatestVersion();
+	
+	public List<ProductDetails>getHotProduct(Long productId);
+
+	public ProductDetails getActiveVersionForDownload(Long productId);
 }

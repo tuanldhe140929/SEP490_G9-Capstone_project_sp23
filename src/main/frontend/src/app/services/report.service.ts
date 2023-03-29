@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -11,21 +11,48 @@ export class ReportService {
 
   constructor(private httpClient: HttpClient) { }
 
-  sendReport(productId: number, accountId: number, description: string, violationTypeId: number): Observable<any>{
+  sendReport(productId: number, accountId: number, version: string, description: string, violationTypeId: number): Observable<any>{
     const params = {
       productId: productId,
       accountId: accountId,
+      version: version,
       description: description,
       violationTypeId: violationTypeId
     }
     return this.httpClient.post<any>(this.BaseUrl+"/sendReport", null, {params});
   }
 
-  getReportByProductAndUser(productId: number, accountId: number): Observable<any>{
+  getReportByProductUserVersion(productId: number, accountId: number, version: string): Observable<any>{
     const params = {
       productId: productId,
-      accountId: accountId
+      accountId: accountId,
+      version: version
     }
-    return this.httpClient.get<any>(this.BaseUrl+"/getByProductAndUser",{params});
+    return this.httpClient.get<any>(this.BaseUrl+"/getByProductUserVersion",{params});
+  }
+
+  getByStatus(status: string): Observable<any>{
+    const params = {
+      status: status
+    }
+    return this.httpClient.get<any>(this.BaseUrl+"/getByStatus",{params})
+  }
+
+  updateReportStatus(productId: number, version: string, userIdList: number[], statusList: string[]){
+    let params = new HttpParams().set('productId', productId).set('version',version).set('userIdList',userIdList.join(',')).set('statusList',statusList.join(','));
+    return this.httpClient.put<any>(this.BaseUrl+"/updateReportStatus",null,{params})
+  }
+
+  getAllReports(){
+    return this.httpClient.get<any>(this.BaseUrl+"/getAllReports");
+  }
+
+  getByProductAndStatus(productId: number, version: string, status: string){
+    const params = {
+      productId: productId,
+      version: version,
+      status: status
+    }
+    return this.httpClient.get<any>(this.BaseUrl+"/getByProductAndStatus",{params});
   }
 }

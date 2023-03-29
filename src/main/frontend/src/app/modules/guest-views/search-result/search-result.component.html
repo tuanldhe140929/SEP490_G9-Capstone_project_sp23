@@ -2,12 +2,7 @@
 <!-- ============== SECTION PAGETOP ============== -->
 <section class="bg-primary py-5">
     <div class="container">
-      <h2 class="text-white">Kết quả tìm kiếm</h2>
-      <ol class="breadcrumb ondark mb-0">
-      <li class="breadcrumb-item"><a href="#">Home</a></li>
-      <li class="breadcrumb-item"><a href="#">Library</a></li>
-      <li class="breadcrumb-item active" aria-current="page">Data</li>
-      </ol>
+      <h2 class="text-white">Kết quả tìm kiếm cho "{{keyword}}"</h2>
     </div> <!-- container //  -->
     </section>
     <!-- ============== SECTION PAGETOP END// ============== -->
@@ -50,7 +45,7 @@
       </div> <!-- collapse.// -->
       </article> <!-- filter-group // -->
     
-      <!-- <article class="filter-group">
+      <article class="filter-group">
       <header class="card-header">
         <a href="#" class="title" data-bs-toggle="collapse" data-bs-target="#collapse_aside_brands">
         <i class="icon-control fa fa-chevron-down"></i>  Nhãn
@@ -59,12 +54,12 @@
       <div class="collapse show" id="collapse_aside_brands">
         <div class="card-body">
           <label class="form-check mb-2" *ngFor="let tag of tagList">
-          <input class="form-check-input" name="choosetag" type="checkbox" [(ngModel)]="chosenTags" [value]="tag.id">
+          <input class="form-check-input" name="choosetag" type="checkbox" [value]="tag.id" (change)="updateCheckedValues($event)">
           <span class="form-check-label"> {{tag.name}} </span>
           </label> 
         </div> 
       </div> 
-      </article> -->
+      </article>
     
       <article class="filter-group">
       <header class="card-header">
@@ -162,7 +157,7 @@
                       </li>
                       </ul>
                   </nav> -->
-                  <div class="mt-8 py-5 flex justify-center items-center" *ngIf="productList.length>0">
+                  <div class="mt-8 py-5 flex justify-center items-center" *ngIf="resultList.length>0">
                     <pagination-controls (pageChange)="p = $event"></pagination-controls>
                   </div>
                   </footer>

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Transaction, TransactionStatus } from '../DTOS/Transaction';
+import { Transaction, TransactionStatus } from '../dtos/Transaction';
 
 const baseUrl = 'http://localhost:9000/transaction';
 @Injectable({

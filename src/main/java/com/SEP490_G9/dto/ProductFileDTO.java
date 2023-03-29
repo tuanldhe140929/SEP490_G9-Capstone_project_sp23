@@ -1,5 +1,7 @@
 package com.SEP490_G9.dto;
 
+import java.util.Date;
+
 import com.SEP490_G9.entities.ProductFile;
 
 public class ProductFileDTO {
@@ -20,6 +22,16 @@ public class ProductFileDTO {
 
 	private boolean isLastFile;
 
+	private boolean enabled;
+
+	private boolean newUploaded;
+
+	private boolean reviewed;
+
+	private Date createdDate;
+
+	private Date lastModified;
+
 	public ProductFileDTO() {
 		// TODO Auto-generated constructor stub
 	}
@@ -30,6 +42,11 @@ public class ProductFileDTO {
 		this.name = productFile.getName();
 		this.type = productFile.getType();
 		this.size = productFile.getSize();
+		this.enabled = productFile.isEnabled();
+		this.reviewed = productFile.isReviewed();
+		this.newUploaded = productFile.isNewUploaded();
+		this.createdDate = productFile.getCreatedDate();
+		this.lastModified = productFile.getLastModified();
 		this.isLastFile = isLastFile;
 	}
 
@@ -39,8 +56,44 @@ public class ProductFileDTO {
 		this.name = productFile.getName();
 		this.type = productFile.getType();
 		this.size = productFile.getSize();
-
+		this.enabled = productFile.isEnabled();
+		this.reviewed = productFile.isReviewed();
+		this.newUploaded = productFile.isNewUploaded();
+		this.createdDate = productFile.getCreatedDate();
+		this.lastModified = productFile.getLastModified();
 		this.fileState = FileState.STORED;
+	}
+
+	public boolean isNewUploaded() {
+		return newUploaded;
+	}
+
+	public void setNewUploaded(boolean newUploaded) {
+		this.newUploaded = newUploaded;
+	}
+
+	public boolean isReviewed() {
+		return reviewed;
+	}
+
+	public void setReviewed(boolean reviewed) {
+		this.reviewed = reviewed;
+	}
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public Date getLastModified() {
+		return lastModified;
+	}
+
+	public void setLastModified(Date lastModified) {
+		this.lastModified = lastModified;
 	}
 
 	public Long getId() {
@@ -57,6 +110,14 @@ public class ProductFileDTO {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
 	}
 
 	public String getType() {

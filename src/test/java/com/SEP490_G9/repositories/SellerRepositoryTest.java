@@ -3,6 +3,7 @@ package com.SEP490_G9.repositories;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -33,6 +34,8 @@ class SellerRepositoryTest {
 	
 	@Autowired
 	UserRepository userRepo;
+	@Autowired
+	SellerRepository sellerRepo;
 	
 
 
@@ -41,26 +44,29 @@ class SellerRepositoryTest {
 	@Test
 	public void findByUsername() {
 		Seller s = new Seller();
-		s.setPhoneNumber("951123339");
-		s.setUsername("seller1");
+		s.setUsername("seller123");
 		s.setId((long)2);
 
 		int expectedvalue = 2;
 		
-		Seller result = sellerRepository.findByUsername("seller1");
+		Seller result = sellerRepository.findByUsername("seller123");
 		assertThat(result.getId()).isEqualTo(expectedvalue);
 	}
 	@Test
 	public void findById() {
 		Seller s = new Seller();
-		s.setPhoneNumber("951123339");
-		s.setUsername("seller1");
+
+		s.setUsername("seller123");
 		s.setId((long)2);
 		
-		String expectedvalue = "seller1";
+		String expectedvalue = "seller123";
 		Seller result = sellerRepository.findById((long)2);
 		assertThat(result.getUsername()).isEqualTo(expectedvalue);
-
+	}
+	@Test
+	public void findall( ) {
+		List<Seller> sellerlist = sellerRepository.findAll();
+		assertEquals(1, sellerlist.size());
 	}
 
 }

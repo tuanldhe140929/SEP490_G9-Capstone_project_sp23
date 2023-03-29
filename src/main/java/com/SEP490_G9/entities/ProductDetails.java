@@ -43,7 +43,7 @@ public class ProductDetails implements Serializable {
 	private String detailDescription;
 
 	@Column(name = "price")
-	private int price = 0;
+	private double price = 0;
 
 	@Column(name = "instruction")
 	private String instruction;
@@ -53,6 +53,9 @@ public class ProductDetails implements Serializable {
 
 	@Column(name = "last_update")
 	private Date lastModified;
+	
+	@Column(name = "flagged")
+	private boolean flagged;
 
 	@ManyToOne
 	@JoinColumn(name = "license_id")
@@ -96,6 +99,7 @@ public class ProductDetails implements Serializable {
 		this.license = productDetailsDTO.getLicense();
 		this.tags = productDetailsDTO.getTags();
 		this.detailDescription = productDetailsDTO.getDetails();
+		this.flagged = productDetailsDTO.isFlagged();
 
 	}
 
@@ -155,11 +159,13 @@ public class ProductDetails implements Serializable {
 		this.detailDescription = detailDescription;
 	}
 
-	public int getPrice() {
+	
+
+	public double getPrice() {
 		return price;
 	}
 
-	public void setPrice(int price) {
+	public void setPrice(double price) {
 		this.price = price;
 	}
 
@@ -243,4 +249,12 @@ public class ProductDetails implements Serializable {
 		this.approved = Status.valueOf(approved.toString().toUpperCase());
 	}
 
+	public boolean isFlagged() {
+		return flagged;
+	}
+
+	public void setFlagged(boolean flagged) {
+		this.flagged = flagged;
+	}
+	
 }

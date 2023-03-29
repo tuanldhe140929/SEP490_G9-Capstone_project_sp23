@@ -3,12 +3,12 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { User } from 'src/app/DTOS/User';
-import { ViolationType } from 'src/app/DTOS/ViolationType';
+import { User } from 'src/app/dtos/User';
+import { ViolationType } from 'src/app/dtos/ViolationType';
 import { ReportService } from 'src/app/services/report.service';
 import { StorageService } from 'src/app/services/storage.service';
 import { UserService } from 'src/app/services/user.service';
-import { ViolationTypeService } from 'src/app/services/violation-type.service';
+import { ViolationService } from 'src/app/services/violation.service';
 
 
 @Component({
@@ -23,13 +23,13 @@ export class ReportProductComponent implements OnInit{
   user: User = new User;
 
   constructor(
-    private vioTypeService: ViolationTypeService,
+    private violationService: ViolationService,
     private reportService: ReportService,
     private formBuilder: FormBuilder,
     private storageService: StorageService,
-    private userService: UserService,
     private router: Router,
     private toastr: ToastrService,
+    private userService:UserService,
     @Inject(MAT_DIALOG_DATA) public data: any){}
 
     violationTypeId: number;
@@ -41,7 +41,11 @@ export class ReportProductComponent implements OnInit{
   vioTypeList: ViolationType[] = [];
 
   ngOnInit(): void {
-    this.getAllVioTypes();
+    this.violationService.getAllTypes().subscribe(
+      response => {
+        this.vioTypeList = response;
+      }
+    )
     this.productId = this.data.productId;
     this.userService.getCurrentUserInfo().subscribe(
       data => {
@@ -72,7 +76,7 @@ export class ReportProductComponent implements OnInit{
   }
 
   getAllVioTypes(){
-    this.vioTypeService.getAllTypes().subscribe(
+    this.violationService.getAllTypes().subscribe(
       response => {
         this.vioTypeList = response;
       }
@@ -84,12 +88,28 @@ export class ReportProductComponent implements OnInit{
   }
 
   toSendReport(){
-      this.reportService.sendReport(this.data.productId, this.userId, this.description, this.violationTypeId).subscribe(
+      this.reportService.sendReport(this.data.productId, this.userId, this.data.version , this.description, this.violationTypeId).subscribe(
         data =>{
           console.log(data);
         }
       )
       this.toastr.success("Gửi báo cáo thành công");
+  }
+
+  descriptionEmpty(): boolean{
+    if(this.description.length<=0){
+      return true
+    }else{
+      return false
+    }
+  }
+
+  descriptionExceed(): boolean{
+    if(this.description.length>255){
+      return true
+    }else{
+      return false
+    }
   }
 
   onDescriptionChange(){

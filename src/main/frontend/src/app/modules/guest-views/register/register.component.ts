@@ -3,7 +3,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { AuthResponse } from 'src/app/DTOS/AuthResponse';
+import { AuthResponse } from 'src/app/dtos/AuthResponse';
 import { AccountService } from 'src/app/services/account.service';
 import { StorageService } from 'src/app/services/storage.service';
 import { UserService } from 'src/app/services/user.service';
@@ -25,17 +25,10 @@ export class RegisterComponent implements OnInit {
 
   registerForm = this.formBuilder.group({
     "email": ['', [Validators.required, Validators.email]],
-    "username": ['', [Validators.required, Validators.minLength(3), Validators.maxLength(10),
-    					this.noWhitespaceValidator]],
+    "username": ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
     "password": ['', [Validators.required, Validators.minLength(5), Validators.maxLength(30)]],
     "repeat_password": ['', [Validators.required]]
   });
-  
-public noWhitespaceValidator(control: FormControl) {
-    const isWhitespace = (control.value || '').trim().includes(' ');
-    const isValid = !isWhitespace;
-    return isValid ? null : { 'whitespace': true };
-}
 
   onPasswordMatch() {
 
@@ -64,9 +57,19 @@ public noWhitespaceValidator(control: FormControl) {
   public onUsernameChange($event: any) {
 	  if($event.keyCode===32){
 		  $event.preventDefault();
-	  }
-	  this.username = this.username.toLowerCase();
-    this.registerForm.controls.username.setValue(this.username);
+    }
+    if ($event.ctrlKey && ($event.key === 'v' || $event.key === 'V')) {
+      $event.preventDefault();
+    }
+
+    if ($event.ctrlKey || $event.shiftKey) {
+      $event.preventDefault();
+    }
+    this.username = this.username.toLowerCase();
+    const regex = /^[a-zA-Z0-9]*$/;
+    if (!regex.test(this.username)) {
+      $event.preventDefault();
+    }
   }
 
   dismissError() {
@@ -89,7 +92,6 @@ public noWhitespaceValidator(control: FormControl) {
 
   public onRegister() {
     this.loading = true;
-    this.registerForm.controls.username.setValue(this.username);
     if (this.registerForm.valid) {
       
       this.userService.register(this.registerForm.value).subscribe(
@@ -111,9 +113,11 @@ public noWhitespaceValidator(control: FormControl) {
               this.message = "Email đã được đăng kí"
             }
             this.openModal2();
-          } else {
+          }
+           
+          if (error.status === 500) {
             this.message = "Đăng kí thành công, không thể gửi mail xác thực";
-            this.openModal2;
+            this.openModal2();
           }
         }
       );

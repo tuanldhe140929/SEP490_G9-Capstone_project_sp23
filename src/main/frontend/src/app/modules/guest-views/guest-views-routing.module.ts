@@ -8,42 +8,43 @@ import { RegisterComponent } from './register/register.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { SearchResultComponent } from './search-result/search-result.component';
 import { SellerProductListComponent } from './seller-product-list/seller-product-list.component';
+import { SellerSearchResultComponent } from './seller-search-result/seller-search-result.component';
 import { VerifyEmailComponent } from './verify-email/verify-email.component';
 
 const routes: Routes = [{
   path: 'login',
   component: LoginComponent,
-  title: 'Login'
+  title: 'Đăng nhập'
 },
   {
     path: 'forgotPassword',
     component: ResetPasswordComponent,
-    title: 'Reset password'
+    title: 'Đặt lại mật khẩu'
   },
   {
     path: 'register',
     component: RegisterComponent,
-    title: 'Create new account'
+    title: 'Tạo tài khoản mới'
   },
   {
-	path:  'homepage',
+	path:  'home',
 	component:HomeComponent,
-	title: 'Homepage'
+	title: 'Trang chủ DPM'
   },
   {
     path: 'auth/login-with-google',
     component: LoginWithGoogleComponent,
-    title: 'Google Login'
+    title: 'Đăng nhập bằng Google'
   },
   {
     path: 'auth/verify-email/:verifyLink',
     component: VerifyEmailComponent,
-    title: 'Verify Email'
+    title: 'Xác thực Email'
   },
   {
     path: 'collection/:sellerId',
     component: SellerProductListComponent,
-    title: "User product collection",
+    title: "Các sản phẩm của người dùng",
   }, {
     path: 'products/:productId',
     component: ProductDetailsComponent,
@@ -51,6 +52,11 @@ const routes: Routes = [{
   }, {
     path: 'result/:keyword',
     component: SearchResultComponent,
+    title: 'Kết quả tìm kiếm sản phẩm'
+  }, {
+    path: 'sellers/:keyword',
+    component: SellerSearchResultComponent,
+    title: 'Kết quả tìm kiếm người bán'
   }
 ];
 

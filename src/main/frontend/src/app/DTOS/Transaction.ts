@@ -5,10 +5,6 @@ export enum TransactionStatus{
 	CANCELED="CANCELED",APPROVED ="APPROVED"
 }
 
-export enum Type{
-	BUY="BUY",SELL="SELL"
-}
-
 export class Payer{
 	
 }
@@ -17,7 +13,6 @@ export class Transaction{
 	id:number;
 	amount:number;
 	status:TransactionStatus;
-	type:Type;
 	createdDate:Date;
 	lastModified:Date;
 	description:string;
@@ -31,7 +26,6 @@ export class Transaction{
     this.amount = -1;
     this.fee = new TransactionFee;
 		this.status = TransactionStatus.FAILED;
-		this.type = Type.SELL;
 		this.createdDate = new Date;
 		this.lastModified = new Date;
 		this.paypalId = -1;

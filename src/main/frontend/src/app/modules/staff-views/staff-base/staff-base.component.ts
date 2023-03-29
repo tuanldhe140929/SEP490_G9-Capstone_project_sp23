@@ -39,4 +39,5 @@ export class StaffBaseComponent {
     this.productApprovalChosen = false;
     this.reportListChosen = true;
   }
+  
 }

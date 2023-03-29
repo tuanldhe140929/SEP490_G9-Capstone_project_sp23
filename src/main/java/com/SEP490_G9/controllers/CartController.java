@@ -44,4 +44,10 @@ public class CartController {
 		CartDTO cart = cartService.removeAllProduct(productId);
 		return ResponseEntity.ok(cart);
 	}
+	
+	@GetMapping("/isUserPurchasedProduct")
+	public ResponseEntity<?> isUserPurchasedProduct(@RequestParam(name="userId")Long userId, @RequestParam(name="productId") Long productId){
+		boolean isUserPurchasedProduct = cartService.isUserPurchasedProduct(userId, productId);
+		return ResponseEntity.ok(isUserPurchasedProduct);
+	}
 }

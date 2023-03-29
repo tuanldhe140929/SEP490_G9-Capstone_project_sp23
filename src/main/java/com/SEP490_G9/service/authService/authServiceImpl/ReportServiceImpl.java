@@ -9,14 +9,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.SEP490_G9.entities.Product;
+import com.SEP490_G9.entities.ProductDetails;
 import com.SEP490_G9.entities.Report;
 import com.SEP490_G9.entities.User;
 import com.SEP490_G9.entities.ViolationType;
 import com.SEP490_G9.entities.embeddable.ReportItemKey;
+import com.SEP490_G9.repository.ProductDetailsRepository;
 import com.SEP490_G9.repository.ProductRepository;
 import com.SEP490_G9.repository.ReportRepository;
 import com.SEP490_G9.repository.UserRepository;
 import com.SEP490_G9.repository.ViolationTypeRepository;
+import com.SEP490_G9.service.ProductDetailsService;
+import com.SEP490_G9.service.ProductService;
 import com.SEP490_G9.service.ReportService;
 
 @Service
@@ -32,15 +36,22 @@ public class ReportServiceImpl implements ReportService {
 	private ProductRepository productRepository;
 	
 	@Autowired
+	private ProductDetailsService productDetailsService;
+	
+	@Autowired
+	private ProductDetailsRepository productDetailsRepository;
+	
+	@Autowired
 	private ViolationTypeRepository vioTypeRepository;
 
 	@Override
-	public Report sendReport (long productId, long accountId, String description, long violationTypeId) {
+	public Report sendReport (long productId, long accountId, String version, String description, long violationTypeId) {
 		Report report = new Report();
 		Product product = productRepository.findById(productId).get();
 		User user = userRepository.findById(accountId).get();
 		report.setProduct(product);
 		report.setUser(user);
+		report.setVersion(version);
 		Date date = new Date();
 		report.setCreated_date(date);
 		report.setDescription(description);
@@ -58,10 +69,10 @@ public class ReportServiceImpl implements ReportService {
 	}
 	
 	@Override
-	public List<Report> getByProduct(List<Report> reportList, Product product) {
+	public List<Report> getByProductDetails(List<Report> reportList, Product product, String version) {
 		List<Report> reportsByProduct = new ArrayList<>();
 		for(Report report: reportList) {
-			if(report.getProduct().equals(product)) {
+			if(report.getProduct().equals(product)&&report.getVersion().equalsIgnoreCase(version)) {
 				reportsByProduct.add(report);
 			}
 		}
@@ -80,13 +91,17 @@ public class ReportServiceImpl implements ReportService {
 	}
 
 	@Override
-	public List<Report> getByProductAndUser(long productId, long userId) {
+	public Report getByProductUserVersion(long productId, long userId, String version) {
 		Product product = productRepository.findById(productId).get();
 		User user = userRepository.findById(userId).get();
 		List<Report> allReports = getAllReports();
-		List<Report> reportsByProduct = getByProduct(allReports, product);
+		List<Report> reportsByProduct = getByProductDetails(allReports, product, version);
 		List<Report> reportsByUser = getByUser(reportsByProduct, user);
-		return reportsByUser;
+		if(reportsByUser.size()>0) {
+			return reportsByUser.get(0);
+		}else {
+			return null;
+		}
 	}
 
 	@Override
@@ -94,6 +109,60 @@ public class ReportServiceImpl implements ReportService {
 		Product product = productRepository.findById(productId).get();
 		List<Report> reportsByProduct = product.getReports();
 		return reportsByProduct;
+	}
+
+	@Override
+	public List<Report> updateReportStatus(long productId, String version, List<Long> userIdList, List<String> statusList) {
+		List<Report> updatedList = new ArrayList<>();
+		for(int i=0;i<userIdList.size();i++) {
+			long userId = userIdList.get(i);
+			String status = statusList.get(i);
+			Report report = getByProductUserVersion(productId, userId, version);
+			report.setStatus(status);
+			reportRepository.save(report);
+			Product product = productRepository.findById(productId).get();
+			ProductDetails pd = productDetailsService.getByProductIdAndVersion(productId, version);
+			for(String str: statusList) {
+				if(str.equalsIgnoreCase("ACCEPTED")) {
+					product.setEnabled(false);
+					pd.setFlagged(true);
+					break;
+				}
+			}
+			productDetailsRepository.save(pd);
+			productRepository.save(product);
+			updatedList.add(report);
+		}
+		return updatedList;
+	}
+
+	@Override
+	public List<Report> getByStatus(String status) {
+		List<Report> allReports = reportRepository.findAll();
+		List<Report> statusReports = new ArrayList<>();
+		for(Report report: allReports) {
+			if(report.getStatus().equalsIgnoreCase(status)) {
+				statusReports.add(report);
+			}
+		}
+		return statusReports;
+	}
+
+	@Override
+	public List<Report> getByStatusAndProduct(long productId, String version, String status) {
+		List<Report> allReports = getAllReports();
+		Product product = productRepository.findById(productId).get();
+		List<Report> allByProduct = getByProductDetails(allReports, product, version);
+		List<Report> allByStatus = new ArrayList<>();
+		for(Report report: allByProduct) {
+			if(status.equalsIgnoreCase("PENDING") && report.getStatus().equalsIgnoreCase("PENDING")) {
+				allByStatus.add(report);
+			}
+			if(status.equalsIgnoreCase("HANDLED") && (report.getStatus().equalsIgnoreCase("ACCEPTED")||report.getStatus().equalsIgnoreCase("DENIED"))) {
+				allByStatus.add(report);
+			}
+		}
+		return allByStatus;
 	}
 
 }

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -36,7 +37,13 @@ import com.SEP490_G9.service.UserService;
 public class ReportController {
 
 	@Autowired
-	ReportService reportService;
+	private ReportService reportService;
+
+
+	@GetMapping("/reports")
+	public List<Report> getAllEmployees() {
+		return reportService.getAllReports();
+	}
 	
 	@Autowired
 	ProductService productService;
@@ -45,20 +52,44 @@ public class ReportController {
 	UserService userService;
 	
 	@PostMapping("/sendReport")
-	public ResponseEntity<?> sendReport(@RequestParam(name = "productId") long productId, @RequestParam(name = "accountId") long accountId, @RequestParam(name = "description") String description, @RequestParam(name = "violationTypeId") long violationTypeId){
-		Report report = reportService.sendReport(productId, accountId, description, violationTypeId);
+	public ResponseEntity<?> sendReport(@RequestParam(name = "productId") long productId, @RequestParam(name = "accountId") long accountId, @RequestParam(name = "version") String version , @RequestParam(name = "description") String description, @RequestParam(name = "violationTypeId") long violationTypeId){
+		Report report = reportService.sendReport(productId, accountId, version, description, violationTypeId);
 		return ResponseEntity.ok(report);
 	}
 	
-	@GetMapping("/getByProductAndUser")
-	public ResponseEntity<?> getByReportAndUser(@RequestParam(name = "productId") long productId, @RequestParam(name = "accountId") long accountId){
-		List<Report> reportList = reportService.getByProductAndUser(productId, accountId);
-		if(reportList.isEmpty()) {
-			return ResponseEntity.ok(null);
-		}else {
-			Report report = reportList.get(0);
-			return ResponseEntity.ok(report);
-		}
+	@GetMapping("/getByProductUserVersion")
+	public ResponseEntity<?> getByReportAndUser(@RequestParam(name = "productId") long productId, @RequestParam(name = "accountId") long accountId, @RequestParam(name = "version") String version){
+		Report report = reportService.getByProductUserVersion(productId, accountId, version);
+		return ResponseEntity.ok(report);
+	}
+
+	@GetMapping("/getByStatus")
+	public ResponseEntity<?> getByStatus(@RequestParam(name = "status") String status){
+		List<Report> reportsByStatus = reportService.getByStatus(status);
+		return ResponseEntity.ok(reportsByStatus);
 	}
 	
+	@PutMapping("/updateReportStatus")
+	public ResponseEntity<?> updateReportStatus(@RequestParam(name = "productId") long productId, @RequestParam(name = "version") String version , @RequestParam(name = "userIdList") List<Long> userIdList, @RequestParam(name = "statusList") List<String> statusList){
+		List<Report> reportList = reportService.updateReportStatus(productId, version, userIdList, statusList);
+		return ResponseEntity.ok(reportList);
+	}
+	
+	@GetMapping("/getAllReports")
+	public ResponseEntity<?> getAllReports(){
+		List<Report> allReports = reportService.getAllReports();
+		return ResponseEntity.ok(allReports);
+	}
+	
+	@GetMapping("/getReportsByProduct")
+	public ResponseEntity<?> getReportsByProduct(@RequestParam(name = "productId")long productId){
+		List<Report> reportsByProduct = reportService.getProductReports(productId);
+		return ResponseEntity.ok(reportsByProduct);
+	}
+	
+	@GetMapping("/getByProductAndStatus")
+	public ResponseEntity<?> getByProductAndStatus(@RequestParam(name = "productId")long productId, @RequestParam(name = "version")String version, @RequestParam(name = "status")String status){
+		List<Report> reportsByProductAndStatus = reportService.getByStatusAndProduct(productId, version, status);
+		return ResponseEntity.ok(reportsByProductAndStatus);
+	}
 }

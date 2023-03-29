@@ -14,10 +14,8 @@
 <mat-sidenav-container>
     <mat-sidenav #sidebar mode="side">
         <mat-list>
-            <mat-list-item (click)="openDashboard()" [ngClass]="{chosenTab :dashboardChosen}"><a>Bảng thông tin</a></mat-list-item>
             <mat-list-item (click)="openManageStaffs()" [ngClass]="{chosenTab :manageStaffChosen}"><a>Quản lý nhân viên</a></mat-list-item>
-            <mat-list-item (click)="openCategories()" [ngClass]="{chosenTab :categoriesChosen}"><a>Quản lý phân loại sản phẩm</a></mat-list-item>
-            <mat-list-item (click)="openTags()" [ngClass]="{chosenTab :tagsChosen}"><a>Quản lý nhãn sản phẩm</a></mat-list-item>
+            <mat-list-item (click)="openReportedseller()" [ngClass]="{chosenTab :reportedSellerChosen}"><a>Quản lý người bán bị báo cáo</a></mat-list-item>
         </mat-list>
     </mat-sidenav>
     <mat-sidenav-content>

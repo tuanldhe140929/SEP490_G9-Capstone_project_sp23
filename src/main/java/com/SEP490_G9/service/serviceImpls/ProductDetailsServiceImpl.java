@@ -10,10 +10,12 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.SEP490_G9.common.Constant;
 import com.SEP490_G9.dto.ProductDetailsDTO;
-
+import com.SEP490_G9.entities.Account;
 import com.SEP490_G9.entities.Category;
 import com.SEP490_G9.entities.Preview;
 import com.SEP490_G9.entities.Product;
@@ -21,8 +23,10 @@ import com.SEP490_G9.entities.ProductDetails;
 import com.SEP490_G9.entities.ProductDetails.Status;
 import com.SEP490_G9.entities.ProductFile;
 import com.SEP490_G9.entities.Report;
+import com.SEP490_G9.entities.Role;
 import com.SEP490_G9.entities.Seller;
 import com.SEP490_G9.entities.Tag;
+import com.SEP490_G9.entities.UserDetailsImpl;
 import com.SEP490_G9.exception.DuplicateFieldException;
 import com.SEP490_G9.exception.NumberException;
 import com.SEP490_G9.exception.ResourceNotFoundException;
@@ -34,6 +38,7 @@ import com.SEP490_G9.repository.SellerRepository;
 import com.SEP490_G9.service.PreviewService;
 import com.SEP490_G9.service.ProductDetailsService;
 import com.SEP490_G9.service.ProductService;
+import com.SEP490_G9.service.ReportService;
 
 @Service
 public class ProductDetailsServiceImpl implements ProductDetailsService {
@@ -56,6 +61,9 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 
 	@Autowired
 	PreviewService previewService;
+	
+//	@Autowired
+//	ReportService reportService;
 
 	@Autowired
 	ProductFileRepository productFileRepo;
@@ -206,10 +214,20 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		}
 	}
 
-	// unusable, yet
 	@Override
-	public List<ProductDetails> getByTag(List<ProductDetails> listPd, List<Integer> tagId) {
-		return null;
+	public List<ProductDetails> getByTags(List<ProductDetails> listPd, List<Integer> tagIdList) {
+		List<ProductDetails> filteredByTags = new ArrayList<>();
+		for (ProductDetails pd : listPd) {
+			List<Tag> tagList = pd.getTags();
+			List<Integer> tagIdOfAProduct = new ArrayList<>();
+			for (Tag tag : tagList) {
+				tagIdOfAProduct.add(tag.getId());
+			}
+			if (tagIdOfAProduct.containsAll(tagIdList)) {
+				filteredByTags.add(pd);
+			}
+		}
+		return filteredByTags;
 	}
 
 	@Override
@@ -243,7 +261,19 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		if (ret == null) {
 			throw new ResourceNotFoundException("Product details", "version", product.getActiveVersion());
 		}
+		Account account = getCurrentAccount();
+		if (ret.getProduct().getSeller().getId() != account.getId()) {
+			if (ret.getApproved() != Status.APPROVED) {
+				throw new IllegalAccessError("Can not access this resource");
+			}
+		}
 		return ret;
+	}
+
+	public Account getCurrentAccount() {
+		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
+				.getAccount();
+		return account;
 	}
 
 	@Override
@@ -260,6 +290,22 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		ProductDetails ret = productDetailsRepo.findByProductIdAndProductVersionKeyVersion(productId, version);
 		if (ret == null) {
 			throw new ResourceNotFoundException("product", "id and version", productId + " " + version);
+		}
+		Account account = getCurrentAccount();
+		if (ret.getProduct().getSeller().getId() != account.getId() && !isStaff(account)) {
+			if (ret.getApproved() != Status.APPROVED) {
+				throw new IllegalAccessError("Can not access this resource");
+			}
+		}
+		return ret;
+	}
+
+	boolean isStaff(Account account) {
+		boolean ret = false;
+		for (Role role : account.getRoles()) {
+			if (role.getId() == Constant.STAFF_ROLE_ID) {
+				ret = true;
+			}
 		}
 		return ret;
 	}
@@ -306,7 +352,7 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		}
 
 		newPD.setCreatedDate(new Date());
-		newPD.setApproved(Status.PENDING);
+		newPD.setApproved(Status.NEW);
 		newPD.setDescription(productDetails.getDescription());
 		newPD.setDetailDescription(productDetails.getDetailDescription());
 		newPD.setName(productDetails.getName());
@@ -315,13 +361,15 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 
 		List<ProductFile> newPDFiles = new ArrayList<>();
 		for (ProductFile pfile : productDetails.getFiles()) {
-			ProductFile pf = new ProductFile();
-			pf.setName(pfile.getName());
-			pf.setProductDetails(newPD);
-			pf.setSize(pfile.getSize());
-			pf.setType(pfile.getType());
-			pf.setSource(pfile.getSource());
-			newPDFiles.add(pf);
+			if (pfile.isEnabled() && !pfile.isNewUploaded() && pfile.isReviewed()) {
+				ProductFile pf = new ProductFile();
+				pf.setName(pfile.getName());
+				pf.setProductDetails(newPD);
+				pf.setSize(pfile.getSize());
+				pf.setType(pfile.getType());
+				pf.setSource(pfile.getSource());
+				newPDFiles.add(pf);
+			}
 		}
 
 		List<Preview> newPDPreviews = new ArrayList<>();
@@ -409,7 +457,8 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 
 	// hien san pham theo tu khoa
 	@Override
-	public List<ProductDetails> getProductForSearching(String keyword, int categoryid, int min, int max) {
+	public List<ProductDetails> getProductForSearching(String keyword, int categoryid, List<Integer> tagIdList, int min,
+			int max) {
 		List<ProductDetails> allPd = getAll();
 		List<ProductDetails> allApprovedPd = getByApproved(allPd);
 		List<ProductDetails> allEnabledPd = getByEnabled(allApprovedPd);
@@ -417,14 +466,15 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		List<ProductDetails> allLatestPd = getByLatestVer(allPublishedPd);
 		List<ProductDetails> allKeywordPd = getByKeyword(allLatestPd, keyword);
 		List<ProductDetails> allCategoryPd = getByCategory(allKeywordPd, categoryid);
-		List<ProductDetails> finalResult = getByPriceRange(allCategoryPd, min, max);
+		List<ProductDetails> allTagsPd = getByTags(allCategoryPd, tagIdList);
+		List<ProductDetails> finalResult = getByPriceRange(allTagsPd, min, max);
 		return finalResult;
 	}
 
 	// hien san pham nguoi dung cho chinh no
 	@Override
-	public List<ProductDetails> getProductBySellerForSeller(long sellerId, String keyword, int categoryId, int min,
-			int max) {
+	public List<ProductDetails> getProductBySellerForSeller(long sellerId, String keyword, int categoryId,
+			List<Integer> tagidlist, int min, int max) {
 		List<ProductDetails> allPd = getAll();
 		List<ProductDetails> allEnabledPd = getByEnabled(allPd);
 		List<ProductDetails> allLatestPd = getByLatestVer(allEnabledPd);
@@ -432,13 +482,14 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		List<ProductDetails> allCategoryPd = getByCategory(allKeywordPd, categoryId);
 		List<ProductDetails> allPricePd = getByPriceRange(allCategoryPd, min, max);
 		List<ProductDetails> allSellerPd = getBySeller(allPricePd, sellerId);
-		return allSellerPd;
+		List<ProductDetails> finalResult = getByTags(allSellerPd, tagidlist);
+		return finalResult;
 	}
 
 	// hien san pham nguoi dung cho nguoi khac
 	@Override
-	public List<ProductDetails> getProductBySellerForUser(long sellerId, String keyword, int categoryId, int min,
-			int max) {
+	public List<ProductDetails> getProductBySellerForUser(long sellerId, String keyword, int categoryId,
+			List<Integer> tagidlist, int min, int max) {
 		List<ProductDetails> allPd = getAll();
 		List<ProductDetails> allApprovedPd = getByApproved(allPd);
 		List<ProductDetails> allEnabledPd = getByEnabled(allApprovedPd);
@@ -448,42 +499,89 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		List<ProductDetails> allCategoryPd = getByCategory(allKeywordPd, categoryId);
 		List<ProductDetails> allPricePd = getByPriceRange(allCategoryPd, min, max);
 		List<ProductDetails> allSellerPd = getBySeller(allPricePd, sellerId);
-		return allSellerPd;
+		List<ProductDetails> finalResult = getByTags(allSellerPd, tagidlist);
+		return finalResult;
 	}
 
 	// hien san pham cho nhan vien dua theo trang thai bao cao
 	@Override
 	public List<ProductDetails> getProductsByReportStatus(String status) {
-		List<ProductDetails> allPd = getAll();
-		List<ProductDetails> latestVer = getByLatestVer(allPd);
-		List<ProductDetails> allPdByReportStatus = new ArrayList<>();
-		for (ProductDetails pd : latestVer) {
-			Product product = pd.getProduct();
-			List<Report> reportList = reportRepo.findAll();
-			for (Report report : reportList) {
-				if (report.getProduct().equals(product) && report.getStatus().equalsIgnoreCase(status)) {
-					allPdByReportStatus.add(pd);
+//		List<ProductDetails> allPd = getAll();
+//		List<ProductDetails> latestVer = getByLatestVer(allPd);
+//		List<ProductDetails> allPdByReportStatus = new ArrayList<>();
+//		for (ProductDetails pd : latestVer) {
+//			Product product = pd.getProduct();
+//			List<Report> reportList = reportRepo.findAll();
+//			for (Report report : reportList) {
+//				if (status.equalsIgnoreCase("PENDING") && report.getProduct().equals(product) && report.getStatus().equalsIgnoreCase("PENDING")) {
+//					allPdByReportStatus.add(pd);
+//				}
+//				if (status.equalsIgnoreCase("HANDLED") && report.getProduct().equals(product) && (report.getStatus().equalsIgnoreCase("ACCEPTED")||report.getStatus().equalsIgnoreCase("DENIED"))) {
+//					allPdByReportStatus.add(pd);
+//				}
+//			}
+//		}
+//		return allPdByReportStatus.stream().distinct().toList();
+//		List<Report> allReports = reportRepo.findAll();
+//		List<ProductDetails> pdByStatus = new ArrayList<>();
+//		for(Report report: allReports) {
+//			Product product = report.getProduct();
+//			List<Report> reportsOfAProduct = product.getReports();
+//			ProductDetails pd = getActiveVersion(product.getId());
+//			if(status.equalsIgnoreCase("HANDLED")&&pd.isFlagged()) {
+//				pdByStatus.add(pd);
+//			}
+//			if(status.equalsIgnoreCase("PENDING")&&!pd.isFlagged()&&reportsOfAProduct.size()>0) {
+//				pdByStatus.add(pd);
+//			}
+//		}
+//		return pdByStatus.stream().distinct().toList();
+		
+		List<ProductDetails> finalResult = new ArrayList<>();
+		List<Report> allReports = reportRepo.findAll();
+		if(status.equalsIgnoreCase("PENDING")) {
+			List<ProductDetails> latestVerPd = getAllByLatestVersion();
+			for(ProductDetails pd: latestVerPd) {
+				Product product = pd.getProduct();
+				long productId = product.getId();
+				String latestVer = product.getActiveVersion();
+				for(Report report: allReports) {
+					if(report.getReportKey().getProductId()== productId && report.getVersion().equalsIgnoreCase(latestVer) && report.getStatus().equalsIgnoreCase("PENDING")) {
+						finalResult.add(pd);
+					}
+				}
+			}
+		}else {
+			List<ProductDetails> allPd = productDetailsRepo.findAll();
+			for(ProductDetails pd: allPd) {
+				Product product = pd.getProduct();
+				long productId = product.getId();
+				String version = pd.getVersion();
+				for(Report report: allReports) {
+					if(report.getReportKey().getProductId()== productId && report.getVersion().equalsIgnoreCase(version) && (report.getStatus().equalsIgnoreCase("ACCEPTED")||report.getStatus().equalsIgnoreCase("DENIED"))) {
+						finalResult.add(pd);
+					}
 				}
 			}
 		}
-		return allPdByReportStatus;
+		return finalResult;
 	}
 
 	@Override
 	public List<ProductDetails> getProductsByApprovalStatus(String status) {
 		List<ProductDetails> allPd = getAll();
 		List<ProductDetails> allStatusPd = new ArrayList<>();
-		for(ProductDetails pd: allPd) {
-			if(status.equalsIgnoreCase("APPROVED")&&pd.getApproved().equals(Status.APPROVED)) {
+		for (ProductDetails pd : allPd) {
+			if (status.equalsIgnoreCase("APPROVED") && pd.getApproved().equals(Status.APPROVED)) {
 				allStatusPd.add(pd);
 			}
-			if(status.equalsIgnoreCase("REJECTED")&&pd.getApproved().equals(Status.REJECTED)) {
+			if (status.equalsIgnoreCase("REJECTED") && pd.getApproved().equals(Status.REJECTED)) {
 				allStatusPd.add(pd);
 			}
-			if(status.equalsIgnoreCase("PENDING")&&pd.getApproved().equals(Status.PENDING)) {
+			if (status.equalsIgnoreCase("PENDING") && pd.getApproved().equals(Status.PENDING)) {
 				allStatusPd.add(pd);
 			}
-			if(status.equalsIgnoreCase("NEW")&&pd.getApproved().equals(Status.NEW)) {
+			if (status.equalsIgnoreCase("NEW") && pd.getApproved().equals(Status.NEW)) {
 				allStatusPd.add(pd);
 			}
 		}
@@ -493,12 +591,90 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 	@Override
 	public ProductDetails updateApprovalStatus(long productId, String version, String status) {
 		ProductDetails pd = getByProductIdAndVersion(productId, version);
-		if(status.equals("APPROVED")) {
-			pd.setApproved(Status.APPROVED);
-		}else {
-			pd.setApproved(Status.REJECTED);
+		if (pd == null) {
+			throw new ResourceNotFoundException("product details", "id and version",
+					"id: " + productId + ", version:" + version);
 		}
+
+		List<ProductFile> newFiles = new ArrayList<>();
+		List<ProductFile> originalFile = new ArrayList<>();
+		for (ProductFile files : pd.getFiles()) {
+			if (files.isNewUploaded()) {
+				newFiles.add(files);
+			}
+			if (!files.isNewUploaded()) {
+				originalFile.add(files);
+			}
+		}
+		switch (status) {
+		case "APPROVED":
+			pd.setApproved(Status.APPROVED);
+
+			for (ProductFile file : newFiles) {
+				file.setNewUploaded(false);
+				file.setReviewed(true);
+			}
+
+			for (ProductFile file : originalFile) {
+				file.setNewUploaded(false);
+				file.setReviewed(true);
+			}
+			break;
+		case "REJECTED":
+			pd.setApproved(Status.REJECTED);
+			for (ProductFile file : newFiles) {
+				pd.getFiles().remove(file);
+			}
+
+			for (ProductFile file : originalFile) {
+				file.setNewUploaded(false);
+				file.setReviewed(true);
+				if (!file.isEnabled()) {
+					file.setEnabled(true);
+				}
+			}
+			break;
+		case "PENDING":
+			pd.setApproved(Status.PENDING);
+			break;
+		case "NEW":
+			pd.setApproved(Status.NEW);
+			for (ProductFile file : originalFile) {
+				file.setNewUploaded(false);
+			}
+			break;
+		}
+
 		productDetailsRepo.save(pd);
 		return pd;
+	}
+
+	@Override
+	public List<ProductDetails> getAllByLatestVersion() {
+		List<ProductDetails> allPd = getAll();
+		List<ProductDetails> approvedPd = getByApproved(allPd);
+		List<ProductDetails> allLatestVer = getByLatestVer(approvedPd);
+		return allLatestVer;
+	}
+
+	@Override
+	public List<ProductDetails> getHotProduct(Long productId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ProductDetails getActiveVersionForDownload(Long productId) {
+		Product product = productRepo.findById(productId).orElseThrow();
+		ProductDetails ret = null;
+		for (ProductDetails pd : product.getProductDetails()) {
+			if (pd.getVersion().equals(product.getActiveVersion())) {
+				ret = pd;
+			}
+		}
+		if (ret == null) {
+			throw new ResourceNotFoundException("Product details", "version", product.getActiveVersion());
+		}
+		return ret;
 	}
 }

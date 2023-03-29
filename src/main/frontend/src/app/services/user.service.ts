@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { User } from '../DTOS/User';
+import { User } from '../dtos/User';
 
 const baseUrl = "http://localhost:9000/user";
 const httpOptions: Object = {
@@ -76,5 +76,9 @@ export class UserService {
   
   loginWithGoogle(body: any): Observable<any> {
     return this.httpClient.post<any>(baseUrl + "/loginWithGoogle", body, httpOptions);
+  }
+
+  getAllUsers(): Observable<any>{
+    return this.httpClient.get<any>(baseUrl+"/getAllUsers");
   }
 }

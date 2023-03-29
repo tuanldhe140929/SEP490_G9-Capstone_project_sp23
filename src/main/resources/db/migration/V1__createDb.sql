@@ -11,7 +11,7 @@ END $$;
   IF NOT EXISTS (
     SELECT 1 FROM pg_type WHERE typname = 'Transaction_Status'
   ) THEN								
-    CREATE TYPE TransactionStatus AS ENUM('CREATED', 'COMPLETED', 'CANCELED', 'FAILED','APPROVED' , 'UNDEFINED','EXPIRED');
+    CREATE TYPE TransactionStatus AS ENUM('CREATED', 'COMPLETED', 'CANCELED', 'FAILED','APPROVED','EXPIRED');
   END IF;
 END $$;
 
@@ -19,12 +19,13 @@ END $$;
   IF NOT EXISTS (
     SELECT 1 FROM pg_type WHERE typname = 'Payout_Status'
   ) THEN
-    CREATE TYPE PayoutStatus AS ENUM('PENDING', 'SUCCESS', 'DENIED', 'FAILED', 'CANCELED', 'CREATED' , 'UNDEFINED','PROCESSING');
+    CREATE TYPE PayoutStatus AS ENUM('SUCCESS', 'FAILED', 'CANCELED', 'CREATED', 'PROCESSING');
   END IF;
 END $$;
 
  create sequence payouts_seq start with 1 increment by 50;
  create sequence accounts_seq start with 1 increment by 50;
+  create sequence violations_seq start with 1 increment by 50;
  create sequence carts_seq start with 1 increment by 50;
  create sequence files_seq start with 1 increment by 50;
  create sequence previews_seq start with 1 increment by 50;
@@ -36,21 +37,28 @@ END $$;
  create table cart_items (cart_id bigint not null, product_id bigint not null, version varchar(255) not null, primary key (cart_id, product_id, version));
  create table carts (id bigint not null, account_id bigint not null, primary key (id));
  create table categories (id serial not null, name varchar(255), primary key (id));
- create table files (id bigint not null, name varchar(255), size bigint, source varchar(255), type varchar(255), product_id bigint not null, version varchar(255) not null, primary key (id));
+ create table files (id bigint not null, name varchar(255), size bigint, source varchar(255), type varchar(255),enabled boolean, new_uploaded boolean, reviewed boolean, created_date timestamp(6), last_modified timestamp(6), product_id bigint not null, version varchar(255) not null, primary key (id));
  create table licenses (id serial not null, acrynosm varchar(255), details varchar(1024), name varchar(255), reference_link varchar(255), primary key (id));
  create table payouts (id bigint not null, amount float(53), created_date timestamp(6), payout_fee real,batch_id varchar(255), description varchar(255), last_modified timestamp(6), payout_status varchar(255), account_id bigint, transaction_id bigint, primary key (id));
  create table previews (id bigint not null, source varchar(255), type varchar(255), product_id bigint not null, version varchar(255) not null, primary key (id));
- create table product_details (product_id bigint not null, version varchar(255) not null, cover_image varchar(255), upload_date timestamp(6), status Status not null, description varchar(100), detail_description varchar(255), instruction varchar(255), last_update timestamp(6), name varchar(30), price integer, category_id integer, engine_id integer, license_id integer, primary key (product_id, version));
+ create table product_details (product_id bigint not null, version varchar(255) not null, cover_image varchar(255), upload_date timestamp(6), status Status not null, description varchar(100), detail_description varchar(255), instruction varchar(255), last_update timestamp(6), name varchar(30), price real, category_id integer, engine_id integer, license_id integer, flagged boolean, primary key (product_id, version));
  create table product_details_tag (product_id bigint not null, version varchar(255) not null, tag_id integer not null);
  create table products (id bigint not null, active_version varchar(255), enabled boolean, draft boolean, seller_id bigint not null, primary key (id));
  create table refresh_token (id bigint not null, expiry_date timestamp(6) with time zone not null, token varchar(255) not null, account_id bigint not null, primary key (id));
- create table reports (product_id bigint not null, account_id bigint not null, created_date timestamp(6) not null, description varchar(255) not null, status varchar(255) not null, violation_type_id bigint, primary key (product_id, account_id));
+ create table reports (product_id bigint not null, account_id bigint not null, version varchar(6) not null, created_date timestamp(6) not null, description varchar(255) not null, status varchar(255) not null, violation_type_id bigint, primary key (product_id, account_id, version));
  create table roles (id serial not null, name varchar(255) not null, primary key (id));
  create table sellers (paypal_email varchar(255), seller_enabled boolean, account_id bigint not null, primary key (account_id));
  create table tags (id serial not null, name varchar(255), primary key (id));
  create table transaction_fees (id serial not null, percentage integer, primary key (id));
  create table transactions (id bigserial not null, paypal_id varchar(255), amount real not null, description varchar(255), created_date timestamp(6) not null,last_modified timestamp(6), cart_id bigint not null, transaction_fee_id integer, status TransactionStatus not null, primary key (id));
  create table users (avatar varchar(255), email_verified boolean, first_name varchar(255), last_name varchar(255), username varchar(30) not null, account_id bigint not null, primary key (account_id));
+
+ create table violations(id bigint not null, created_date timestamp(6), description varchar(255), account_id bigint); 
+  alter table if exists violations add constraint FKkiwnrvd09n4d8d81hjbwl49xv foreign key (account_id) references accounts;
+ create table rates (account_id bigint not null, product_id bigint not null, date date, stars integer, primary key (account_id, product_id));
+ alter table if exists rates add constraint FKkiwnrvd09n4d8d81hjbwl41xv foreign key (product_id) references products;
+ alter table if exists rates add constraint FKbvjnid289x18balux0uumuh7f foreign key (account_id) references users;
+
  create table violation_types (id bigserial not null, name varchar(255) not null, primary key (id));
  alter table if exists accounts add constraint UK_n7ihswpy07ci568w34q0oi8he unique (email);
  alter table if exists refresh_token add constraint UK_r4k4edos30bx9neoq81mdvwph unique (token);

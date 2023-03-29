@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort, Sort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
-import { Tag } from 'src/app/DTOS/Tag';
+import { Tag } from 'src/app/dtos/Tag';
 import { TagService } from 'src/app/services/tag.service';
 import { AddTagComponent } from './add-tag/add-tag.component';
 import { UpdateTagComponent } from './update-tag/update-tag.component';

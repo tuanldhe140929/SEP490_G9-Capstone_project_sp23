@@ -5,9 +5,9 @@ import {MatSort, Sort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
-import { Account } from 'src/app/DTOS/Account';
-import { Category } from 'src/app/DTOS/Category';
-import { Product } from 'src/app/DTOS/Product';
+import { Account } from 'src/app/dtos/Account';
+import { Category } from 'src/app/dtos/Category';
+import { Product } from 'src/app/dtos/Product';
 import { CategoryService } from 'src/app/services/category.service';
 import { ProductService } from 'src/app/services/product.service';
 import { ApprovalProductDetailsComponent } from './approval-product-details/approval-product-details.component';
@@ -18,7 +18,7 @@ import { UpdateApprovalComponent } from './update-approval/update-approval.compo
   styleUrls: ['./product-approval.component.css']
 })
 export class ProductApprovalComponent {
-  selectedOption: string = "NEW";  
+  selectedOption: string = "PENDING";  
   displayedColumns: string[] = ['Mã sản phẩm', 'Phiên bản','Ngày đăng','Chi tiết'];
   dataSource: MatTableDataSource<Product>;
 
@@ -29,7 +29,7 @@ export class ProductApprovalComponent {
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(private productService: ProductService, private dialog: MatDialog, private router: Router) {
-    this.productService.getByApprovalStatus("NEW").subscribe(response => {
+    this.productService.getByApprovalStatus("PENDING").subscribe(response => {
       this.dataSource = new MatTableDataSource(response);
       this.productList = response;
       this.dataSource.paginator = this.paginator;
@@ -37,7 +37,6 @@ export class ProductApprovalComponent {
       for(let i=0;i<this.productList.length;i++){
         this.nameList.push(this.productList[i].name);
       }
-      console.log(this.nameList.length)
     })
 
     // Assign the data to the data source for the table to render
@@ -90,8 +89,6 @@ export class ProductApprovalComponent {
   }
 
   openDetails(productId: number, productName: string, version: string){
-    // const url = this.router.createUrlTree(["/products/"+productId]);
-    // window.open(url.toString(), '_blank');
     const dialogRef = this.dialog.open(ApprovalProductDetailsComponent, {
       data: {
         productId: productId,

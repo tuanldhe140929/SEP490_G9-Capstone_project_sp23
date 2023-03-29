@@ -5,13 +5,14 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class ViolationTypeService {
+export class ViolationService {
 
-  getAllTypesUrl = "http://localhost:9000/violation/allTypes";
+  baseUrl = "http://localhost:9000/violation/";
 
   constructor(private httpClient: HttpClient) { }
 
   getAllTypes(): Observable<any>{
-    return this.httpClient.get<any>(this.getAllTypesUrl);
+    return this.httpClient.get<any>(this.baseUrl+"getAllVioTypes");
   }
+  
 }

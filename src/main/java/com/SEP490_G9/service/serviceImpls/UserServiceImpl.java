@@ -5,6 +5,7 @@ import java.io.File;
 
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -184,6 +185,12 @@ public class UserServiceImpl implements UserService {
 
 	public void setROOT_LOCATION(String rOOT_LOCATION) {
 		ROOT_LOCATION = rOOT_LOCATION;
+	}
+
+	@Override
+	public List<User> getAllUsers() {
+		List<User> allUsers = userRepository.findAll();
+		return allUsers;
 	}
 
 }

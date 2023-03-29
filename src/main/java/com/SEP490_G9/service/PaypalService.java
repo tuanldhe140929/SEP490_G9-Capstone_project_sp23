@@ -22,20 +22,22 @@ import com.paypal.base.rest.PayPalRESTException;
 
 public interface PaypalService {
 
-	public Payment createPayment(Double total, String currency, String method, String intent, String description,
-			String cancelUrl, String successUrl);
+	public Payment createPayment(com.SEP490_G9.entities.Transaction t);
 
 	public Payment executePayment(String paymentId, String payerId);
 
-	String checkPaymentStatus(String paymentId);
+	Payment getPaymentByPaypalId(String paymentId);
 
 	public Payer getPayerById(String paymentId);
 
 	public PayoutBatch executePayout(String email, Double total);
 
-	String checkPayoutStatus(String batchId);
+	public PayoutBatch getPayoutByBatchId(String batchId);
 
-	String checkPayoutFee(String batchId);
+
 	
 	String getPayPalAccessToken() throws PayPalRESTException;
+	String getPayoutFee(String batchId);
+
+
 }

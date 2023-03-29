@@ -1,18 +1,20 @@
 <div class="addReportContainer">
     <form [formGroup]="addReportForm" (submit)="toSendReport()">
-        <h2>Báo cáo sản phẩm</h2>
+        <h2>Báo cáo sản phẩm này</h2>
         <p>Lý do vi phạm:</p>
         <select #violation (change)="onChange(violation.value)" formControlName="violationtype">
             <option *ngFor="let type of vioTypeList" [value]="type.id">{{type.name}}</option>
         </select>
         <br>
         <div class="form-group">
-            <p>Mô tả chi tiết:</p>
+            <p>Mô tả chi tiết (vui lòng không để quá 255 ký tự) :</p>
             <textarea [(ngModel)]="description" (input)="onDescriptionChange()" formControlName="description"></textarea>
         </div>
+        <small *ngIf="descriptionEmpty()" style="color: red;">Vui lòng mô tả chi tiết vi phạm</small>
+        <small *ngIf="descriptionExceed()" style="color: red">Vui lòng không để mô tả quá 255 ký tự</small>
         <div class="form-group" align="end">
             <button class="btn btn-warning" mat-dialog-close="">Hủy</button>
-            <button class="btn btn-primary" type="submit" [disabled]="violationTypeId==0" mat-dialog-close="">Gửi báo cáo</button>
+            <button class="btn btn-primary" type="submit" [disabled]="violationTypeId==0||descriptionEmpty()||descriptionExceed()" mat-dialog-close="">Gửi báo cáo</button>
         </div>
         
     </form>

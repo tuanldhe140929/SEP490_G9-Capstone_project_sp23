@@ -4,7 +4,7 @@
     <form [formGroup]="addCategoryForm" (submit)="addCategory()">
         <div class="form-group">
             <label>Tên phân loại</label>
-            <input type="text" class="form-control" formControlName="name" (change)="checkNameExists()">
+            <input type="text" class="form-control" [(ngModel)]="categoryName" formControlName="name" (change)="checkNameExists()">
             <div *ngIf="form.controls.name.invalid&&form.controls.name.touched; then nameNotOk else nameOk"></div>
             <ng-template #nameNotOk><small>Tên phân loại không hợp lệ</small></ng-template>
             <ng-template #nameOk><small>

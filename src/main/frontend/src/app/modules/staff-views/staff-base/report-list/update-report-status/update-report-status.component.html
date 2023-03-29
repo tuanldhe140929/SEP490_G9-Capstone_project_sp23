@@ -1,0 +1,46 @@
+<div class="mat-elevation-z8">
+    <h1>Các báo cáo của sản phẩm này</h1>
+    <p *ngIf="dataInjected.status=='PENDING'">Hãy đánh dấu tất cả các báo cáo mà bạn đồng ý</p>
+    <p *ngIf="dataInjected.status=='HANDLED'">Danh sách các báo cáo đã được xử lý</p>
+    <table mat-table [dataSource]="dataSource">
+  
+      <!-- Position Column -->
+      <ng-container matColumnDef="username">
+        <th mat-header-cell *matHeaderCellDef> Tên người báo cáo </th>
+        <td mat-cell *matCellDef="let element"> {{element.username}} </td>
+      </ng-container>
+  
+      <!-- Name Column -->
+      <ng-container matColumnDef="violationType">
+        <th mat-header-cell *matHeaderCellDef> Loại vi phạm </th>
+        <td mat-cell *matCellDef="let element"> {{element.violationTypeName}} </td>
+      </ng-container>
+  
+      <!-- Weight Column -->
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef> Chi tiết </th>
+        <td mat-cell *matCellDef="let element"> <button class="btn btn-success" (click)="openReportDescription(element.username, element.violationTypeName, element.description, element.createdDate)">Mở</button> </td>
+      </ng-container>
+  
+      <!-- Checkbox Column -->
+      <ng-container matColumnDef="checkbox">
+        <th mat-header-cell *matHeaderCellDef> Đồng ý </th>
+        <td mat-cell *matCellDef="let element">
+          <mat-checkbox *ngIf="dataInjected.status=='PENDING'" [(ngModel)]="element.checked"></mat-checkbox>
+          <mat-checkbox *ngIf="dataInjected.status=='HANDLED'" [checked]="element.status=='ACCEPTED'" disabled></mat-checkbox>
+          </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)"></tr>
+    </table>
+  
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]"
+                   showFirstLastButtons
+                   aria-label="Select page of periodic elements">
+    </mat-paginator>
+    <div align="end">
+        <button class="btn btn-warning" mat-dialog-close>Đóng</button>
+        <button *ngIf="dataInjected.status=='PENDING'" class="btn btn-success" (click)="updateStatus()" mat-dialog-close>Xác nhận</button>
+    </div>
+  </div>

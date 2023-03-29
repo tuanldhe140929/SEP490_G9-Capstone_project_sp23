@@ -1,15 +1,18 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Category } from 'src/app/DTOS/Category';
-import { Product } from 'src/app/DTOS/Product';
-import { Seller } from 'src/app/DTOS/Seller';
-import { User } from 'src/app/DTOS/User';
+import { Category } from 'src/app/dtos/Category';
+import { Product } from 'src/app/dtos/Product';
+import { Seller } from 'src/app/dtos/Seller';
+import { User } from 'src/app/dtos/User';
 import { CategoryService } from 'src/app/services/category.service';
 import { ProductService } from 'src/app/services/product.service';
 import { SellerService } from 'src/app/services/seller.service';
 import { StorageService } from 'src/app/services/storage.service';
+import { TagService } from 'src/app/services/tag.service';
 import { UserService } from 'src/app/services/user.service';
+import { DeleteProductComponent } from './delete-product/delete-product.component';
 
 @Component({
   selector: 'app-seller-product-list',
@@ -18,15 +21,14 @@ import { UserService } from 'src/app/services/user.service';
 })
 export class SellerProductListComponent implements OnInit {
 
-  @ViewChild('confirmDelete', { static: false }) private confirmDelete: any;
-
   @ViewChild('infoModal', { static: false }) private infoModal: any;
 
-  sellerid: number
+  sellerid: number;
   productList: Product[] = [];
   displayForSeller: Product[] = [];
   displayForUser: Product[] = [];
   categoryList: Category[] = [];
+  tagList: Category[] = [];
   minprice: number = 0;
   maxprice: number = 10000000;
   chosenCategory: number = 0;
@@ -44,27 +46,60 @@ export class SellerProductListComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private productService: ProductService,
     private categoryService: CategoryService,
+    private tagService: TagService,
     private router: Router,
     private sellerService: SellerService,
     private storageService: StorageService,
     private userService: UserService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
     this.sellerid = Number(this.activatedRoute.snapshot.paramMap.get('sellerId'));
-    this.checkIfIsSeller();
-    this.productService.getProductsBySellerForSeller(this.sellerid, "", 0, 0, 10000000).subscribe(
-      data => {
-        this.productList = data;
-      }
-    )
+    this.sellerService.getSellerById(this.sellerid).subscribe(data => {
+      this.seller = data;
+      this.getSellerAvatar();
+    });
+    if(this.storageService.isLoggedIn()){
+      this.userService.getCurrentUserInfo().subscribe(data => {
+        this.user = data;
+        if(this.user.id == this.sellerid){
+          this.productService.getProductsBySellerForSeller(this.sellerid, "", 0, [],0, 10000000).subscribe(
+            data => {
+              this.productList = data;
+              this.sellerStatus = true;
+            }
+          )
+        }else{
+          this.productService.getProductsBySellerForUser(this.sellerid, "", 0, [],0, 10000000).subscribe(
+            data => {
+              console.log(data);
+              this.productList = data;
+              this.sellerStatus = false;
+            },
+            error => {
+              console.log(error);
+            }
+          )
+        }
+      })
+    }else{
+      this.productService.getProductsBySellerForUser(this.sellerid, "", 0,[], 0, 10000000).subscribe(
+        data => {
+          this.productList = data;
+          this.sellerStatus = false;
+        }
+      )
+    }
+    
     // this.productService.getProductsBySellerForUser(this.sellerid, "", 0, 0, 10000000).subscribe(
     //   data => {
     //     this.displayForUser = data;
     //   }
     // )
     this.getAllCategories();
+    this.getAllTags();
     this.getSellerById();
   }
 
@@ -72,6 +107,14 @@ export class SellerProductListComponent implements OnInit {
     this.categoryService.getAllCategories().subscribe(
       data => {
         this.categoryList = data;
+      }
+    )
+  }
+
+  getAllTags(){
+    this.tagService.getAllTags().subscribe(
+      data => {
+        this.tagList = data;
       }
     )
   }
@@ -109,7 +152,6 @@ export class SellerProductListComponent implements OnInit {
   }
 
   getCoverImage(product: Product): string {
-    console.log(product.coverImage == null);
     if (product.coverImage != null) {
       return 'http://localhost:9000/public/serveMedia/image?source=' + product.coverImage.replace(/\\/g, '/');
     } else {
@@ -144,19 +186,39 @@ export class SellerProductListComponent implements OnInit {
   }
 
   refresh() {
-    if(this.sellerStatus){
-      this.productService.getProductsBySellerForSeller(this.sellerid, "", 0, 0, 10000000).subscribe(
-        data => {
-          this.productList = data;
+    console.log(this.checkedTags);
+    if(this.storageService.isLoggedIn()){
+      this.userService.getCurrentUserInfo().subscribe(data => {
+        this.user = data;
+        if(this.user.id == this.sellerid){
+          this.productService.getProductsBySellerForSeller(this.sellerid, this.keyword, this.chosenCategory, this.checkedTags, this.minprice, this.maxprice).subscribe(
+            data => {
+              this.productList = data;
+              this.sellerStatus = true;
+            }
+          )
+        }else{
+          this.productService.getProductsBySellerForUser(this.sellerid, this.keyword, this.chosenCategory, this.checkedTags, this.minprice, this.maxprice).subscribe(
+            data => {
+              this.productList = data;
+              this.sellerStatus = false;
+            }
+          )
         }
-      )
+      })
     }else{
-      this.productService.getProductsBySellerForUser(this.sellerid, "", 0, 0, 10000000).subscribe(
+      this.productService.getProductsBySellerForUser(this.sellerid, this.keyword, this.chosenCategory, this.checkedTags, this.minprice, this.maxprice).subscribe(
         data => {
           this.productList = data;
+          this.sellerStatus = false;
         }
       )
     }
+    // this.productService.getProductsBySellerForSeller(this.sellerid, this.keyword, this.chosenCategory, [], this.minprice, this.maxprice).subscribe(
+    //   data => {
+    //     this.productList = data;
+    //   }
+    // )
   }
 
   createNewProduct() {
@@ -173,20 +235,28 @@ export class SellerProductListComponent implements OnInit {
     this.router.navigate(['product/update/' + productId]);
   }
 
-  deleteProduct(product: Product) {
-    this.productService.deleteProduct(product).subscribe(
+  deleteProduct(id: number) {
+    console.log(id);
+    this.productService.deleteProduct(id).subscribe(
       data => {
         if (data) {
           var index = -1;
           for (let i = 0; i < this.productList.length; i++) {
-            if (this.productList[i].id == product.id) {
+            console.log(i);
+            if (this.productList[i].id == id) {
+              console.log(this.productList[i].id);
+              console.log(id);
+              console.log(i);
               index = i;
-              break;
             }
           }
           if (index != -1) {
             this.productList.slice(index, 1);
+            console.log(index);
           }
+         
+          console.log(this.productList);
+          this.dismissModal();
         }
       },
       error => {
@@ -195,9 +265,20 @@ export class SellerProductListComponent implements OnInit {
     );
   }
 
-  openConfirmDelete() {
-    this.modalService.open(this.confirmDelete, { centered: true });
-  }
+  openConfirmDelete(productId: number) {
+    const dialogRef = this.dialog.open(DeleteProductComponent, {
+      data: {
+        productId: productId
+       }
+     });
+     dialogRef.afterClosed().subscribe(result => {
+       console.log(`Dialog result: ${result}`);
+       if (!result) {
+         this.openInfoModal();
+       }
+       setTimeout(() => this.refresh(), 400)
+     });
+   }
 
   dismissModal() {
     this.modalService.dismissAll();
@@ -205,5 +286,23 @@ export class SellerProductListComponent implements OnInit {
 
   openInfoModal() {
     this.modalService.open(this.infoModal, { centered: true });
+  }
+
+  getSellerAvatar(): string{
+    if (this.seller!=null && this.seller.avatar != null && this.seller.id != -1) {
+      return 'http://localhost:9000/public/serveMedia/image?source=' + this.seller.avatar.replace(/\\/g, '/');
+    } else {
+      return 'assets/images/noavatar.png'
+    }
+  }
+
+  checkedTags: number[] = [];
+  updateCheckedValues(event: any){
+    const value = event.target.value;
+    if(event.target.checked){
+      this.checkedTags.push(value);
+    }else{
+      this.checkedTags = this.checkedTags.filter(v => v !== value);
+    }
   }
 }

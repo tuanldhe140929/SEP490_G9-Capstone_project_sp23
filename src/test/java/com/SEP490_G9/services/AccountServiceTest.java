@@ -111,6 +111,7 @@ class AccountServiceTest {
 		assertThat(result.getEmail()).isEqualTo(expectedEmail);
 	}
 
+	@Test
 	void testGetById() {
 		Long expectedId = 1L;
 		Account expected = new Account();

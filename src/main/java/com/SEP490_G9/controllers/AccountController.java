@@ -68,7 +68,8 @@ public class AccountController {
 	PasswordGenerator passwordGenerator;
 
 	@RequestMapping(value = "login", method = RequestMethod.POST)
-	public ResponseEntity<?> login(@Valid @RequestBody AuthRequest authRequest, HttpServletResponse response) {
+	public ResponseEntity<?> login(@Valid @RequestBody AuthRequest authRequest, HttpServletResponse response,
+			HttpServletRequest request) {
 		AuthResponse authResponse = null;
 
 		Authentication authentication = authenticationProvider.authenticate(
@@ -82,8 +83,13 @@ public class AccountController {
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
 				.getAccount();
+		HttpSession session = request.getSession(true);
+
+		session.setAttribute("key", "value");
+		System.out.println("on login" + session.getId());
 
 		RefreshToken refreshToken = refreshTokenService.createRefreshToken(account);
+
 		Cookie cookie = new Cookie("refreshToken", refreshToken.getToken());
 		cookie.setMaxAge(REFRESH_TOKEN_VALIDITY);
 		cookie.setDomain("localhost");
@@ -105,7 +111,8 @@ public class AccountController {
 	}
 
 	@RequestMapping(value = "logout", method = RequestMethod.GET)
-	public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
+	public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam(name="token") String token) {
 
 		Cookie cookie = new Cookie("refreshToken", null);
 		cookie.setPath("/");
@@ -113,9 +120,8 @@ public class AccountController {
 		cookie.setHttpOnly(true);
 		cookie.setSecure(true);
 		cookie.setMaxAge(0);
+		jwtUtil.invalidateToken(token);
 		response.addCookie(cookie);
-		session.invalidate();
-		request.getSession().invalidate();
 		SecurityContextHolder.getContext().setAuthentication(null);
 		return ResponseEntity.ok(null);
 	}
@@ -142,8 +148,14 @@ public class AccountController {
 	}
 
 	@PutMapping("updateStaffStatus")
-	public ResponseEntity<?> updateStaffStatus(@PathVariable(name = "id") Long id) {
+	public ResponseEntity<?> updateStaffStatus(@RequestParam(name="id") long id) {
 		Account updatedStaff = accountService.updateStaffStatus(id);
 		return ResponseEntity.ok(updatedStaff);
+	}
+	
+	@GetMapping("allAccounts")
+	public ResponseEntity<?> getAllAccounts(){
+		List<Account> allAccounts = accountService.getAllAccounts();
+		return ResponseEntity.ok(allAccounts);
 	}
 }
