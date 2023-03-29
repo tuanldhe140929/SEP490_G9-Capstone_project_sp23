@@ -20,7 +20,7 @@ public class Payout {
 	public enum Status {
 		SUCCESS, FAILED, CANCELED, CREATED, PROCESSING
 	}
-
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;

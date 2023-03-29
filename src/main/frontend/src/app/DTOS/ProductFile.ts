@@ -11,12 +11,22 @@ export class ProductFile{
   size: number;
   lastFile:boolean
   fileState: FileState;
+  createdDate: Date;
+  lastModified: Date;
+  newUploaded: boolean;
+  reviewed: boolean;
+  enabled: boolean;
 		constructor(){
 			this.id=-1;
 			this.name="";
       this.type = "";
       this.lastFile = false;
       this.size = -1;
+      this.createdDate = new Date;
+      this.lastModified = new Date;
+      this.reviewed = false;
+      this.enabled = false;
+      this.newUploaded = false;
       this.fileState = FileState.STORED;
     }
 

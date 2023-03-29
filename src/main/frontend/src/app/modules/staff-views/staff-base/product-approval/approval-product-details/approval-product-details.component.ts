@@ -4,13 +4,13 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { AuthResponse } from 'src/app/DTOS/AuthResponse';
-import { Preview } from 'src/app/DTOS/Preview';
-import { Product } from 'src/app/DTOS/Product';
-import { Report } from 'src/app/DTOS/Report';
-import { Seller } from 'src/app/DTOS/Seller';
-import { Tag } from 'src/app/DTOS/Tag';
-import { User } from 'src/app/DTOS/User';
+import { AuthResponse } from 'src/app/dtos/AuthResponse';
+import { Preview } from 'src/app/dtos/Preview';
+import { Product } from 'src/app/dtos/Product';
+import { Report } from 'src/app/dtos/Report';
+import { Seller } from 'src/app/dtos/Seller';
+import { Tag } from 'src/app/dtos/Tag';
+import { User } from 'src/app/dtos/User';
 import { CartService } from 'src/app/services/cart.service';
 import { ProductFileService } from 'src/app/services/product-file.service';
 import { ProductService } from 'src/app/services/product.service';
@@ -224,7 +224,12 @@ export class ApprovalProductDetailsComponent implements OnInit {
   get TotalSize() {
     var totalSize = 0;
     for (let i = 0; i < this.product.files.length; i++) {
-      totalSize += this.product.files[i].size;
+   
+        var pf = this.product.files[i];
+      if (pf.enabled) {
+        totalSize += pf.size;
+        }
+
     }
     return this.formatFileSize(totalSize);
   }
@@ -338,6 +343,16 @@ export class ApprovalProductDetailsComponent implements OnInit {
     );
   }
 
+  getFilesCount(): number {
+    var count = 0;
+    for (let i = 0; i < this.product.files.length; i++) {
+      var pf = this.product.files[i];
+      if (pf.enabled) {
+        count++;
+      }
+    }
+    return count;
+  }
   generateDownloadToken() {
     var token = "";
     this.productFileService.generateDownloadToken(0, this.product.id).subscribe(

@@ -84,4 +84,6 @@ public interface ProductDetailsService {
 	public List<ProductDetails> getAllByLatestVersion();
 	
 	public List<ProductDetails>getHotProduct(Long productId);
+
+	public ProductDetails getActiveVersionForDownload(Long productId);
 }

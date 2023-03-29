@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthResponse } from 'src/app/DTOS/AuthResponse';
+import { AuthResponse } from 'src/app/dtos/AuthResponse';
 import { AccountService } from 'src/app/services/account.service';
 import { StorageService } from 'src/app/services/storage.service';
 

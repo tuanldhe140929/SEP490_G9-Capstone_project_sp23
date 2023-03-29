@@ -23,7 +23,7 @@ export class LoginWithGoogleComponent implements OnInit {
     if (code != null) {
       this.userService.loginWithGoogle(code).subscribe(
         (response) => {
-          this.router.navigate(['login']);
+          this.router.navigate(['homepage']);
           this.storageService.saveUser(response.body);
           this.storageService.saveToken(response.body.accessToken);
         }

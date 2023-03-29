@@ -60,6 +60,14 @@ public class ProductDTO {
 		return productDetails;
 	}
 
+	public boolean isDraft() {
+		return draft;
+	}
+
+	public void setDraft(boolean draft) {
+		this.draft = draft;
+	}
+
 	public void setProductDetails(List<ProductDetailsDTO> productDetails) {
 		this.productDetails = productDetails;
 	}

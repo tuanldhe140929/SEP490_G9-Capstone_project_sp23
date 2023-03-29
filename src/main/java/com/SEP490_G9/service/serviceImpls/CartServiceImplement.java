@@ -68,11 +68,15 @@ public class CartServiceImplement implements CartService {
 		}
 
 		for (CartItem item : cart.getItems()) {
-			if (item.getProductDetails().getProduct().getId() == productId) {
+			if (item.getProductDetails().getProduct().getId().equals(productId)) {
+				System.out.println("asdasd");
 				throw new IllegalArgumentException("Cart already has item");
 			}
 		}
 		ProductDetails activeVersion = productDetailsService.getActiveVersion(productId);
+		if (cart.getUser().getId().equals(activeVersion.getProduct().getSeller().getId())) {
+			throw new IllegalArgumentException("Cannot add your own product");
+		}
 		CartItem item = new CartItem(cart, activeVersion);
 		cartItemRepository.save(item);
 		cart.addItem(item);
@@ -148,12 +152,13 @@ public class CartServiceImplement implements CartService {
 			ret = createCart(cart);
 		} else {
 			Cart cart = cartRepository.findFirstByUserOrderByIdDesc(user);
+
 			boolean cartIsPurchased = isCartHadPurchased(cart.getId());
 			// cart da thanh toan thi tao cart moi
 			if (cartIsPurchased) {
 				Cart newCart = new Cart();
 				newCart.setUser(user);
-				ret = createCart(cart);
+				ret = createCart(newCart);
 				// cart chua thanh toan thi update lai active version
 			} else {
 				List<CartItem> updatedItems = new ArrayList<>();
@@ -212,8 +217,7 @@ public class CartServiceImplement implements CartService {
 		for (Cart cart : purchasedCart) {
 			for (CartItem item : cart.getItems()) {
 				if (item.getProductDetails().getProduct().getId() == productId)
-					;
-				ret = true;
+					ret = true;
 			}
 		}
 		return ret;

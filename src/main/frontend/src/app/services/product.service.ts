@@ -1,9 +1,10 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { License } from '../DTOS/License';
-import { Product } from '../DTOS/Product';
-import { ProductDTO } from '../DTOS/ProductDTO';
+import { Router } from '@angular/router';
+import { catchError, Observable, of, throwError } from 'rxjs';
+import { License } from '../dtos/License';
+import { Product } from '../dtos/Product';
+import { ProductDTO } from '../dtos/ProductDTO';
 
 const baseUrl = "http://localhost:9000/productDetails";
 const baseUrlProduct = "http://localhost:9000/product";
@@ -13,7 +14,7 @@ const baseUrlProduct = "http://localhost:9000/product";
 export class ProductService {
 
   public getAllLicense():Observable<License[]>{
-	  return this.httpClient.get<License[]>(baseUrl+'/getLicense');
+    return this.httpClient.get<License[]>(baseUrlProduct+'/getLicense');
   }
 
   getProductByIdAndVersion(productId: number, version: string): Observable<Product> {
@@ -36,16 +37,24 @@ export class ProductService {
   }
 
   deleteProduct(id: number): Observable<boolean> {
-    return this.httpClient.delete<boolean>(baseUrlProduct + "/deleteProduct/" + id);
+    return this.httpClient.delete<boolean>(baseUrlProduct + "/deleteProduct/" + id);//.pipe(catchError(x => this.handleException(x)));
   }
   createNewProduct(sellerid: number): Observable<ProductDTO> {
     return this.httpClient.post<ProductDTO>(baseUrlProduct+"/createNewProduct", null);
   }
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient,private router: Router) { }
 
   public getProductById(productId: number): Observable<Product> {
     return this.httpClient.get<Product>(baseUrl + "/getActiveVersion", {
+      params: {
+        productId: productId
+      }
+    });
+  }
+
+  public getProductByIdForDownload(productId: number): Observable<Product> {
+    return this.httpClient.get<Product>(baseUrl + "/getActiveVersionForDownload", {
       params: {
         productId: productId
       }
@@ -104,6 +113,8 @@ export class ProductService {
     return this.httpClient.get<any>("http://localhost:9000/productDetails/getByApprovalStatus",{params})
   }
 
+
+
   updateApprovalStatus(productId: number, version: string, status: string): Observable<any>{
     const params = {
       productId: productId,
@@ -133,5 +144,34 @@ export class ProductService {
   }
   getAllProductForHome(){
     return this.httpClient.get<any>("http://localhost:9000/productDetails/GetAllProductForHomePage");
+  }
+
+  private handleException(err: HttpErrorResponse): Observable<any> {
+    if (err.status === 403) {
+      this.router.navigateByUrl('error');
+    } else if (err.status === 0) {
+      this.router.navigateByUrl('error');
+    } else if (err.status === 404) {
+      this.router.navigateByUrl('error');
+    }
+    return throwError(err);
+  }
+
+  public verifyProduct(id:number,version:string): Observable<Product> {
+    return this.httpClient.post<Product>(baseUrl + '/verifyProduct', null, {
+      params: {
+        productId: id,
+        version: version
+      }
+    });
+  }
+
+  public cancelVerifyProduct(id: number, version: string): Observable<Product> {
+    return this.httpClient.post<Product>(baseUrl + '/cancelVerifyProduct', null, {
+      params: {
+        productId: id,
+        version: version
+      }
+    });
   }
 }

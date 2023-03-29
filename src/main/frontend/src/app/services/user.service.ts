@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { User } from '../DTOS/User';
+import { User } from '../dtos/User';
 
 const baseUrl = "http://localhost:9000/user";
 const httpOptions: Object = {

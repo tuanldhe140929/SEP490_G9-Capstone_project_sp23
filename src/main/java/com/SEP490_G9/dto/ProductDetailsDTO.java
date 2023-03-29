@@ -48,7 +48,7 @@ public class ProductDetailsDTO {
 
 	private boolean draft = true;
 
-	private int price = 0;
+	private double price = 0;
 
 	private PreviewDTO previewVideo;
 
@@ -193,11 +193,13 @@ public class ProductDetailsDTO {
 		this.draft = draft;
 	}
 
-	public int getPrice() {
+
+
+	public double getPrice() {
 		return price;
 	}
 
-	public void setPrice(int price) {
+	public void setPrice(double price) {
 		this.price = price;
 	}
 

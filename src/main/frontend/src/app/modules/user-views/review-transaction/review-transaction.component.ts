@@ -2,7 +2,7 @@ import { OnInit, ViewChild } from '@angular/core';
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Transaction, TransactionStatus } from '../../../DTOS/Transaction';
+import { Transaction, TransactionStatus } from '../../../dtos/Transaction';
 import { TransactionService } from '../../../services/transaction.service';
 
 @Component({

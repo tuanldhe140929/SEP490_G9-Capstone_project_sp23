@@ -2,16 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { map, Observable, startWith } from 'rxjs';
-import { Product } from 'src/app/DTOS/Product';
-import { User } from 'src/app/DTOS/User';
+import { Product } from 'src/app/dtos/Product';
 import { ProductService } from 'src/app/services/product.service';
 import { StorageService } from 'src/app/services/storage.service';
 import { UserService } from 'src/app/services/user.service';
 import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { Role } from '../../../DTOS/Role';
 import { AccountService } from 'src/app/services/account.service';
 import { SellerService } from 'src/app/services/seller.service';
-import { Seller } from 'src/app/DTOS/Seller';
+import { Seller } from 'src/app/dtos/Seller';
+import { User } from '../../../dtos/User';
 
 const removeMark = require("vietnamese-tonemarkless");
 

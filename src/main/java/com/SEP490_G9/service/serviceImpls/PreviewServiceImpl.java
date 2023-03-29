@@ -14,6 +14,7 @@ import com.SEP490_G9.entities.Preview;
 import com.SEP490_G9.entities.Product;
 import com.SEP490_G9.entities.ProductDetails;
 import com.SEP490_G9.entities.Seller;
+import com.SEP490_G9.entities.ProductDetails.Status;
 import com.SEP490_G9.exception.FileUploadException;
 import com.SEP490_G9.exception.ResourceNotFoundException;
 import com.SEP490_G9.repository.PreviewRepository;
@@ -100,7 +101,9 @@ public class PreviewServiceImpl implements PreviewService {
 			Preview preview = new Preview();
 			ProductDetails productDetails = productDetailsRepo.findByProductIdAndProductVersionKeyVersion(productId,
 					version);
-
+			if(productDetails.getApproved()!=Status.NEW) {
+				throw new IllegalArgumentException("Cannot edit this version");
+			}
 			String previewPictureLocation = getPreviewsLocation(productDetails);
 			File previewPicturesDir = new File(ROOT_LOCATION + previewPictureLocation);
 			previewPicturesDir.mkdirs();

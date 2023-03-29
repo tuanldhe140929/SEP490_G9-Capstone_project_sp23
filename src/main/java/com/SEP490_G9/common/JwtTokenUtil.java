@@ -3,7 +3,9 @@ package com.SEP490_G9.common;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -73,7 +75,18 @@ public class JwtTokenUtil implements Serializable {
 	// validate token
 	public Boolean validateToken(String token, UserDetails userDetails) {
 		final String username = getEmailFromToken(token);
-		return (username.equals(userDetails.getUsername()) && isTokenExpired(token));
+		return (username.equals(userDetails.getUsername()) && isTokenExpired(token) || isTokenBlacklist(token));
 	}
+	
+	private Boolean isTokenBlacklist(String token) {
+		return invalidatedTokens.contains(token);
+	}
+	 // A cache to store invalidated tokens
+    private final Set<String> invalidatedTokens = new HashSet<>();
+
+    // Invalidate a token by adding it to the cache of invalidated tokens
+    public void invalidateToken(String token) {
+        invalidatedTokens.add(token);
+    }
 
 }

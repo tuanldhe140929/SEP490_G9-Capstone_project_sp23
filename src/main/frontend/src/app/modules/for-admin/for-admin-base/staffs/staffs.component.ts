@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Account } from 'src/app/DTOS/Account';
+import { Account } from 'src/app/dtos/Account';
 import { AccountService } from 'src/app/services/account.service';
 import { AddStaffComponent } from './add-staff/add-staff.component';
 import { UpdateStaffStatusComponent } from './update-staff-status/update-staff-status.component';

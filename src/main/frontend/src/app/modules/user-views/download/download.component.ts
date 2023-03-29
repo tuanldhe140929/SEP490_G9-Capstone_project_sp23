@@ -1,8 +1,8 @@
 import { OnInit } from '@angular/core';
 import { Component } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
-import { Product } from '../../../DTOS/Product';
-import { ProductFile } from '../../../DTOS/ProductFile';
+import { Product } from '../../../dtos/Product';
+import { ProductFile } from '../../../dtos/ProductFile';
 import { ProductFileService } from '../../../services/product-file.service';
 import { ProductService } from '../../../services/product.service';
 
@@ -37,7 +37,7 @@ export class DownloadComponent implements OnInit {
     }
   }
   getProduct(productId: number) {
-    const getProductReq = this.productService.getProductById(productId);
+    const getProductReq = this.productService.getProductByIdForDownload(productId);
     getProductReq.subscribe(
       (data) => {
         this.product = data;

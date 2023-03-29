@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Report } from '../../../DTOS/Report';
+import { Report } from '../../../dtos/Report';
 
 @Component({
   selector: 'app-reported-product-list',

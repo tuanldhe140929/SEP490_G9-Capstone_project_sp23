@@ -196,19 +196,15 @@
 
                 </div>
               </div>
-            </div>
-            <div class="row metadata_details">
-              <div class="col-5"><label>Game engine</label></div>
-              <div class="col-7">ABC Engine</div>
-            </div>
+            </div>  
           </div>
 
           <hr>
           <div class="row cart" style="display:flex; height:60px;">
-            <div *ngIf="!isOwner" class="add_to_cart" style="width:80%; padding-right:0; color:lightgrey;"><button class="add_to_cart_btn" (click)="addToCart()" style="letter-spacing: 2px;">Thêm vào giỏ hàng</button></div>
-            <div *ngIf="isOwner" class="add_to_cart" style="width:80%; padding-right:0; color:lightgrey;"><button class="add_to_cart_btn" style="letter-spacing: 2px;">Chỉnh sửa</button></div>
-            <div *ngIf="!isOwner" class="buy_now" style="width: 20%; color: lightgrey;"><button class="buy_now_btn" style="letter-spacing: 2px;">Mua ngay</button></div>
-            <div *ngIf="isOwner" class="buy_now" style="width: 20%; color: lightgrey;"><button class="buy_now_btn" style="letter-spacing: 2px;">Xóa</button></div>
+            <div *ngIf="!isOwner && !isPurchased" class="add_to_cart" style="width:80%; padding-right:0; color:lightgrey;"><button class="add_to_cart_btn" (click)="addToCart()" style="letter-spacing: 2px;">Thêm vào giỏ hàng</button></div>
+            <div *ngIf="!isOwner && isPurchased" class="add_to_cart" style="width:80%; padding-right:0; color:lightgrey;"><button class="add_to_cart_btn" (click)="generateDownloadToken()" style="letter-spacing: 2px;">Tải xuống</button></div>
+
+            <div *ngIf="!isOwner && !isPurchased" class="buy_now" style="width: 20%; color: lightgrey;"><button class="buy_now_btn" style="letter-spacing: 2px;" (click) ="buyNow()">Mua ngay</button></div>
           </div>
           <div class="row files_metadata" style="margin-top:20px;">
             <div class="" style="font-weight:600; font-size:20px;">Các tệp có thể tải xuống</div>
@@ -228,7 +224,7 @@
                   <table class="table border table-hover">
                     <tr>
                       <th>Số lượng tệp</th>
-                      <td>{{product.files.length}} tệp</td>
+                      <td>{{getFilesCount()}} tệp</td>
                     </tr>
                     <tr>
                       <th>Tổng dung lượng</th>
@@ -242,7 +238,9 @@
                 </article> <!-- tab-content.// -->
                 <article id="tab_details" class="tab-pane card-body">
                   <div *ngFor="let file of product.files" style="margin-bottom:12px;">
+                  <div *ngIf="(file.enabled==true && file.newUploaded==false && file.reviewed==true) || (file.enabled == false && file.newUploaded == false && file.reviewed == false)">
                     <strong class="upload_display_name">{{file.name}}</strong>&#183;<span class="file_size">{{formatFileSize(file.size)}}</span>
+                    </div>
                   </div>
                 </article>
               </div>
@@ -257,5 +255,5 @@
 <!-- ============== SECTION CONTENT END// ============== -->
 <!-- ============== SECTION  ============== -->
 <!-- =============== SECTION  END// ============== -->
-
+<button (click)="generateDownloadToken()">Download</button>
 <app-footer></app-footer>

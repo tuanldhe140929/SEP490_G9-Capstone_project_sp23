@@ -20,18 +20,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.security.access.AuthorizationServiceException;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.SEP490_G9.common.Constant;
 import com.SEP490_G9.common.Md5Hash;
 import com.SEP490_G9.common.VirusTotalAPI;
 import com.SEP490_G9.dto.ProductFileDTO;
+import com.SEP490_G9.entities.Account;
 import com.SEP490_G9.entities.CartItem;
 import com.SEP490_G9.entities.Product;
 import com.SEP490_G9.entities.ProductDetails;
 import com.SEP490_G9.entities.ProductFile;
+import com.SEP490_G9.entities.Role;
 import com.SEP490_G9.entities.Seller;
 import com.SEP490_G9.entities.Transaction;
+import com.SEP490_G9.entities.UserDetailsImpl;
+import com.SEP490_G9.entities.ProductDetails.Status;
 import com.SEP490_G9.exception.DuplicateFieldException;
 import com.SEP490_G9.exception.FileUploadException;
 import com.SEP490_G9.exception.ResourceNotFoundException;
@@ -74,10 +82,6 @@ public class ProductFileServiceImpl implements ProductFileService {
 
 	@Override
 	public ProductFile createProductFile(ProductFile productFile) {
-		if (productFileRepo.existsByNameAndProductDetails(productFile.getName(), productFile.getProductDetails())) {
-			throw new DuplicateFieldException("file name", productFile.getName());
-		}
-
 		return productFileRepo.save(productFile);
 	}
 
@@ -107,28 +111,27 @@ public class ProductFileServiceImpl implements ProductFileService {
 
 	@Transactional
 	@Override
-	public ProductFileDTO deleteById(Long fileId) {
+	public ProductFile deleteById(Long fileId) {
 		if (!productFileRepo.existsById(fileId)) {
 			throw new ResourceNotFoundException("product file", "id", fileId);
 		}
 
 		ProductFile pf = getById(fileId);
-		
-		long id = pf.getProductDetails().getProduct().getId();
-		int filesSize = pf.getProductDetails().getFiles().size();
-		String version = pf.getProductDetails().getVersion();
-		ProductFileDTO dto = new ProductFileDTO(pf, false);
-		
-		ProductDetails pd = productDetailsService.getByProductIdAndVersion(id, version);
-		productFileRepo.deleteById(fileId);
-		filesSize--;
-		Product product = productRepo.findById(id).orElseThrow();
-		if (filesSize <= 0 && pd.getVersion().equalsIgnoreCase(product.getActiveVersion())) {
-			product.setDraft(true);
-			dto.setLastFile(true);
-			productRepo.save(product);
+		ProductDetails pd = pf.getProductDetails();
+		if (pd.getApproved() != Status.NEW) {
+			throw new IllegalArgumentException("Cannot edit this version");
 		}
-		return dto;
+		if (pf.isNewUploaded()) {
+			pf.setEnabled(false);
+			pf.setNewUploaded(true);
+			pf.setReviewed(false);
+		} else {
+			pf.setEnabled(false);
+			pf.setNewUploaded(false);
+			pf.setReviewed(false);
+		}
+		productFileRepo.save(pf);
+		return pf;
 	}
 
 	@Override
@@ -146,15 +149,13 @@ public class ProductFileServiceImpl implements ProductFileService {
 		ret.setFileState(ProductFileDTO.FileState.UPLOADING);
 
 		ProductDetails productDetails = productDetailsService.getByProductIdAndVersion(productId, version);
-
+		if (productDetails.getApproved() != Status.NEW) {
+			throw new IllegalArgumentException("Cannot edit this version");
+		}
 		if (productFile.getSize() == 0) {
 			throw new FileUploadException("File size:" + productFile.getSize());
 		}
-		for (ProductFile file : productDetails.getFiles()) {
-			if (file.getName().equalsIgnoreCase(productFile.getName())) {
-				throw new FileUploadException("File exist:" + file.getName());
-			}
-		}
+	
 		if ((productDetails.getFiles().size() + 1) >= 10) {
 			throw new FileUploadException("Exeeded max file count");
 		}
@@ -179,6 +180,9 @@ public class ProductFileServiceImpl implements ProductFileService {
 			fileDir.mkdirs();
 			String storedPath = fileIOService.storeV2(productFile, ROOT_LOCATION + fileLocation);
 			ProductFile pf = new ProductFile(storedPath.replace(ROOT_LOCATION, ""), productFile, productDetails);
+			pf.setEnabled(true);
+			pf.setNewUploaded(true);
+			pf.setReviewed(false);
 			System.out.println(pf.getName());
 			ProductFile savedFile = createProductFile(pf);
 			ret = new ProductFileDTO(savedFile);
@@ -240,14 +244,21 @@ public class ProductFileServiceImpl implements ProductFileService {
 
 	@Override
 	public ByteArrayResource downloadFile(Long userId, Long productId, String token) {
-		System.out.println("download");
-		if (!downloadTokenUtil.validateToken(userId, productId, token)) {
-			System.out.println("not pass");
+
+		if (token.isEmpty()) {
+			UserDetailsImpl authentication = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication()
+					.getPrincipal());
+
+			if (!isStaff(authentication.getAccount())) {
+				System.out.println("checkin");
+				throw new IllegalAccessError("You don't have right to download this product");
+			}
+		} else {
+			if (!downloadTokenUtil.validateToken(userId, productId, token)) {
+				throw new IllegalAccessError("You don't have right to download this product");
+			}
 		}
-		System.out.println("pass");
-
 		List<File> productFiles = new ArrayList<>();
-
 		ProductDetails activeVersion = null;
 		Product p = productRepo.findById(productId).orElseThrow();
 
@@ -259,8 +270,9 @@ public class ProductFileServiceImpl implements ProductFileService {
 		}
 		List<ProductFile> pfs = activeVersion.getFiles();
 		for (ProductFile pf : pfs) {
-			System.out.println(pf.getSource());
-			productFiles.add(new File(ROOT_LOCATION + pf.getSource()));
+			if ((pf.isEnabled() && !pf.isNewUploaded() && pf.isReviewed())
+					|| (!pf.isEnabled() && !pf.isNewUploaded() && !pf.isReviewed()))
+				productFiles.add(new File(ROOT_LOCATION + pf.getSource()));
 		}
 
 		// Compress the files into a zip archive
@@ -299,6 +311,16 @@ public class ProductFileServiceImpl implements ProductFileService {
 			}
 		};
 		return resource;
+	}
+
+	boolean isStaff(Account account) {
+		boolean ret = false;
+		for (Role role : account.getRoles()) {
+			if (role.getId() == Constant.STAFF_ROLE_ID) {
+				ret = true;
+			}
+		}
+		return ret;
 	}
 
 	@Override

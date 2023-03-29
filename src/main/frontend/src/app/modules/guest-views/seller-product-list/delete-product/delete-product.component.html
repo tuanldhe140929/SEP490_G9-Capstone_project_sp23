@@ -1,11 +1,12 @@
 <div class="updateApprovalContainer" style="width: 400px; height:auto;">
   <mat-dialog-content style="padding:auto;">
     <div>
-      <span style="color: black;">Bạn có muốn xóa sản phẩm ?{{data.productId}}</span>
+      <span style="color: black;">Bạn có muốn xóa sản phẩm ?</span>
     </div>
     <div class="form-group" style="float:right; width:auto;">
       <button class="actionBtn" (click)="onDelete(data.productId)" [mat-dialog-close]="true">Duyệt</button>
       <button class="dismissBtn" [mat-dialog-close]="true">Từ chối</button>
     </div>
   </mat-dialog-content>
+
 </div>

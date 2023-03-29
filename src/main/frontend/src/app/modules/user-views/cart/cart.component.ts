@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Cart } from 'src/app/DTOS/Cart';
-import { CartItem } from 'src/app/DTOS/CartItem';
-import { Product } from 'src/app/DTOS/Product';
-import { Transaction, TransactionStatus } from 'src/app/DTOS/Transaction';
+import { Cart } from 'src/app/dtos/Cart';
+import { CartItem } from 'src/app/dtos/CartItem';
+import { Product } from 'src/app/dtos/Product';
+import { Transaction, TransactionStatus } from 'src/app/dtos/Transaction';
 import { CartService } from 'src/app/services/cart.service';
 import { TransactionService } from 'src/app/services/transaction.service';
 
@@ -82,7 +82,9 @@ export class CartComponent implements OnInit {
         this.fetchTransactionStatus();
       },
       error => {
-        console.log(error);
+        this.isLoading = false;
+        this.info = "Không thể thực hiện hành động";
+        this.openInfoModal();
       }
     )
   }
@@ -132,6 +134,7 @@ export class CartComponent implements OnInit {
     this.modalService.open(this.infoModal, { centered: true });
   }
   dismiss() {
+    window.location.reload();
     this.modalService.dismissAll();
   }
 
