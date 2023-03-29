@@ -11,6 +11,8 @@ import { CategoryService } from 'src/app/services/category.service';
 })
 export class AddCategoryComponent {
 
+  categoryName: string = "";
+
   constructor(private formBuilder: FormBuilder, private categoryService: CategoryService, private toastr: ToastrService, @Inject(MAT_DIALOG_DATA) public data: {nameList: string[]}){}
 
   addCategoryForm = this.formBuilder.group({
@@ -26,6 +28,7 @@ export class AddCategoryComponent {
   }
 
   checkNameExists(){
+    console.log(this.categoryName);
     for(let i=0;i<this.data.nameList.length;i++){
       if(this.name.value?.toLowerCase().trim()==this.data.nameList[i].toLowerCase().trim()){
         return true;

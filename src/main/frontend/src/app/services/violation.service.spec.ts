@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { ViolationTypeService } from './violation-type.service';
+import { ViolationService } from './violation.service';
 
-describe('ViolationTypeService', () => {
-  let service: ViolationTypeService;
+describe('ViolationService', () => {
+  let service: ViolationService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(ViolationTypeService);
+    service = TestBed.inject(ViolationService);
   });
 
   it('should be created', () => {

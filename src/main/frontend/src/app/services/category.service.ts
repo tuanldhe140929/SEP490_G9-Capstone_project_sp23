@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class CategoryService {
 
-  private apiServerUrlManageCategory = "http://localhost:9000/private/manageCategory";
+  private apiServerUrlManageCategory = "http://localhost:9000/category";
 
   constructor(private httpClient: HttpClient) { }
 
@@ -16,10 +16,10 @@ export class CategoryService {
   }
 
   addCategory(body: any): Observable<any>{
-    return this.httpClient.post<any>(`${this.apiServerUrlManageCategory}/addCategory`,body);
+    return this.httpClient.post<any>(this.apiServerUrlManageCategory+'/addCategory',body);
   }
 
   updateCategory(body: any, id: number): Observable<any>{
-    return this.httpClient.put<any>(`${this.apiServerUrlManageCategory}/updateCategory/${id}`,body);
+    return this.httpClient.put<any>(`${this.apiServerUrlManageCategory}/updateCategory/${id}`, null,body);
   }
 }

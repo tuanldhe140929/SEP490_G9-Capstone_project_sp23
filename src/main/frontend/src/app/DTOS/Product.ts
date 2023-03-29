@@ -33,7 +33,7 @@ export class Product {
   activeVersion: string;
   files: ProductFile[];
   seller: Seller;
-
+  flagged: boolean;
   tags: Tag[];
   category: Category;
 
@@ -59,5 +59,6 @@ export class Product {
     this.createdDate = new Date();
     this.lastModified = new Date();
 	this.engine = new Engine();
+    this.flagged = false;
   }
 }

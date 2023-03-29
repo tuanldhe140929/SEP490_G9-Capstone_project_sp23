@@ -32,7 +32,7 @@ public class Report {
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "product_id", referencedColumnName = "id")
 	private Product product;
-
+	
 	@Column(name = "description", unique = false, nullable = false, insertable = true)
 	private String description;
 
@@ -45,8 +45,7 @@ public class Report {
 	@ManyToOne(fetch = FetchType.EAGER)
 
 
-	@JoinColumn(name = "violation_type_id", unique = false, nullable = false) // sual lai la false
-
+	@JoinColumn(name = "violation_type_id", unique = false, nullable = false) 
 	private ViolationType violation_types;
 
 	public Report() {
@@ -57,6 +56,7 @@ public class Report {
 		ReportItemKey keyitem = new ReportItemKey();
 		keyitem.setUserId(repo.getUserId());
 		keyitem.setProductId(repo.getProductId());
+		keyitem.setVersion(repo.getVersion());
 		this.reportKey=keyitem;
 		this.description = repo.getDescription();
 		this.created_date = repo.getCreated_date();
@@ -75,9 +75,7 @@ public class Report {
 		this.violation_types = violation_types;
 	}
 
-	public ReportItemKey getReportKey() {
-		return reportKey;
-	}
+	
 
 	public void setCartItemKey(ReportItemKey reportKey) {
 		this.reportKey = reportKey;
@@ -130,5 +128,20 @@ public class Report {
 	public void setViolation_types(ViolationType violation_types) {
 		this.violation_types = violation_types;
 	}
+	
+	public ReportItemKey getReportKey() {
+		return reportKey;
+	}
+	
+	public void setReportKey(ReportItemKey reportKey) {
+		this.reportKey = reportKey;
+	}
 
+	public String getVersion() {
+		return reportKey.getVersion();
+	}
+	
+	public void setVersion(String version) {
+		this.reportKey.setVersion(version);
+	}
 }

@@ -41,6 +41,6 @@
     </mat-paginator>
     <div align="end">
         <button class="btn btn-warning" mat-dialog-close>Đóng</button>
-        <button *ngIf="dataInjected.status=='PENDING'" class="btn btn-success" (click)="updateStatus()">Xác nhận</button>
+        <button *ngIf="dataInjected.status=='PENDING'" class="btn btn-success" (click)="updateStatus()" mat-dialog-close>Xác nhận</button>
     </div>
   </div>

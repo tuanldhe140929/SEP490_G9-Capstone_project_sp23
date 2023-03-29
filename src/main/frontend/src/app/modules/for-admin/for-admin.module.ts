@@ -27,6 +27,7 @@ import { TagsComponent } from './for-admin-base/tags/tags.component';
 import { UpdateCategoryComponent } from './for-admin-base/categories/update-category/update-category.component';
 import { AddTagComponent } from './for-admin-base/tags/add-tag/add-tag.component';
 import { UpdateTagComponent } from './for-admin-base/tags/update-tag/update-tag.component';
+import { ReportedSellerListsComponent } from './for-admin-base/reported-seller-lists/reported-seller-lists.component';
 
 
 @NgModule({
@@ -42,6 +43,7 @@ import { UpdateTagComponent } from './for-admin-base/tags/update-tag/update-tag.
     UpdateCategoryComponent,
     AddTagComponent,
     UpdateTagComponent,
+    ReportedSellerListsComponent,
   ],
   imports: [
     CommonModule,

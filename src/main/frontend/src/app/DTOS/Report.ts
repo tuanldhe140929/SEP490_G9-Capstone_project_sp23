@@ -6,6 +6,7 @@ import { ViolationType } from "./ViolationType";
 export class Report {
       user: User;
       product: Product;
+      version: String;
       description: string;
       created_date: string;
       violation_types: ViolationType;

@@ -100,9 +100,6 @@ export class ApprovalProductDetailsComponent implements OnInit {
           }else{
             this.isOwner == false;
           }
-          this.reportService.getReportByProductAndUser(this.productId, this.visitorId).subscribe((data: any) => {
-            this.report = data;
-          })
         }
       )
     }

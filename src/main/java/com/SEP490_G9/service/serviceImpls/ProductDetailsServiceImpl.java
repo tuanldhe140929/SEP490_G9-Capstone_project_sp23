@@ -38,6 +38,7 @@ import com.SEP490_G9.repository.SellerRepository;
 import com.SEP490_G9.service.PreviewService;
 import com.SEP490_G9.service.ProductDetailsService;
 import com.SEP490_G9.service.ProductService;
+import com.SEP490_G9.service.ReportService;
 
 @Service
 public class ProductDetailsServiceImpl implements ProductDetailsService {
@@ -60,6 +61,9 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 
 	@Autowired
 	PreviewService previewService;
+	
+//	@Autowired
+//	ReportService reportService;
 
 	@Autowired
 	ProductFileRepository productFileRepo;
@@ -502,25 +506,65 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 	// hien san pham cho nhan vien dua theo trang thai bao cao
 	@Override
 	public List<ProductDetails> getProductsByReportStatus(String status) {
-		List<ProductDetails> allPd = getAll();
-		List<ProductDetails> latestVer = getByLatestVer(allPd);
-		List<ProductDetails> allPdByReportStatus = new ArrayList<>();
-		for (ProductDetails pd : latestVer) {
-			Product product = pd.getProduct();
-			List<Report> reportList = reportRepo.findAll();
-			for (Report report : reportList) {
-				if (status.equalsIgnoreCase("PENDING") && report.getProduct().equals(product)
-						&& report.getStatus().equalsIgnoreCase("PENDING")) {
-					allPdByReportStatus.add(pd);
+//		List<ProductDetails> allPd = getAll();
+//		List<ProductDetails> latestVer = getByLatestVer(allPd);
+//		List<ProductDetails> allPdByReportStatus = new ArrayList<>();
+//		for (ProductDetails pd : latestVer) {
+//			Product product = pd.getProduct();
+//			List<Report> reportList = reportRepo.findAll();
+//			for (Report report : reportList) {
+//				if (status.equalsIgnoreCase("PENDING") && report.getProduct().equals(product) && report.getStatus().equalsIgnoreCase("PENDING")) {
+//					allPdByReportStatus.add(pd);
+//				}
+//				if (status.equalsIgnoreCase("HANDLED") && report.getProduct().equals(product) && (report.getStatus().equalsIgnoreCase("ACCEPTED")||report.getStatus().equalsIgnoreCase("DENIED"))) {
+//					allPdByReportStatus.add(pd);
+//				}
+//			}
+//		}
+//		return allPdByReportStatus.stream().distinct().toList();
+//		List<Report> allReports = reportRepo.findAll();
+//		List<ProductDetails> pdByStatus = new ArrayList<>();
+//		for(Report report: allReports) {
+//			Product product = report.getProduct();
+//			List<Report> reportsOfAProduct = product.getReports();
+//			ProductDetails pd = getActiveVersion(product.getId());
+//			if(status.equalsIgnoreCase("HANDLED")&&pd.isFlagged()) {
+//				pdByStatus.add(pd);
+//			}
+//			if(status.equalsIgnoreCase("PENDING")&&!pd.isFlagged()&&reportsOfAProduct.size()>0) {
+//				pdByStatus.add(pd);
+//			}
+//		}
+//		return pdByStatus.stream().distinct().toList();
+		
+		List<ProductDetails> finalResult = new ArrayList<>();
+		List<Report> allReports = reportRepo.findAll();
+		if(status.equalsIgnoreCase("PENDING")) {
+			List<ProductDetails> latestVerPd = getAllByLatestVersion();
+			for(ProductDetails pd: latestVerPd) {
+				Product product = pd.getProduct();
+				long productId = product.getId();
+				String latestVer = product.getActiveVersion();
+				for(Report report: allReports) {
+					if(report.getReportKey().getProductId()== productId && report.getVersion().equalsIgnoreCase(latestVer) && report.getStatus().equalsIgnoreCase("PENDING")) {
+						finalResult.add(pd);
+					}
 				}
-				if (status.equalsIgnoreCase("HANDLED") && report.getProduct().equals(product)
-						&& (report.getStatus().equalsIgnoreCase("ACCEPTED")
-								|| report.getStatus().equalsIgnoreCase("DENIED"))) {
-					allPdByReportStatus.add(pd);
+			}
+		}else {
+			List<ProductDetails> allPd = productDetailsRepo.findAll();
+			for(ProductDetails pd: allPd) {
+				Product product = pd.getProduct();
+				long productId = product.getId();
+				String version = pd.getVersion();
+				for(Report report: allReports) {
+					if(report.getReportKey().getProductId()== productId && report.getVersion().equalsIgnoreCase(version) && (report.getStatus().equalsIgnoreCase("ACCEPTED")||report.getStatus().equalsIgnoreCase("DENIED"))) {
+						finalResult.add(pd);
+					}
 				}
 			}
 		}
-		return allPdByReportStatus.stream().distinct().toList();
+		return finalResult;
 	}
 
 	@Override

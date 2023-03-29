@@ -5,14 +5,16 @@ import java.io.Serializable;
 public class ReportItemKey implements Serializable {
 	private Long userId;
 	private Long productId;
+	private String version;
 
 	public ReportItemKey() {
 
 	}
 
-	public ReportItemKey(Long uderId, Long productId) {
+	public ReportItemKey(Long uderId, Long productId, String version) {
 		this.userId = uderId;
 		this.productId = productId;
+		this.version = version;
 	}
 
 	public Long getUserId() {
@@ -29,6 +31,14 @@ public class ReportItemKey implements Serializable {
 
 	public void setProductId(Long productId) {
 		this.productId = productId;
+	}
+	
+	public String getVersion() {
+		return version;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
 	}
 
 	@Override

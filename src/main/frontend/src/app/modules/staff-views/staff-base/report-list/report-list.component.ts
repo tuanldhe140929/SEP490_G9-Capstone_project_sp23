@@ -34,7 +34,7 @@ interface ReportEntity{
   styleUrls: ['./report-list.component.css']
 })
 export class ReportListComponent {
-  displayedColumns: string[] = ['Mã sản phẩm','Tên sản phẩm','Chi tiết'];
+  displayedColumns: string[] = ['Mã sản phẩm','Tên sản phẩm','Phiên bản','Chi tiết'];
   dataSource: MatTableDataSource<Product>;
 
   reportList: ReportEntity[] = [];
@@ -160,10 +160,11 @@ export class ReportListComponent {
     this.refresh(status);
   }
 
-  openDetails(productId: string){
+  openDetails(productId: string, version: string){
     const dialogRef = this.dialog.open(ReportedProductDetailsComponent, {
       data: {
         productId: productId,
+        version: version,
         status: this.selectedOption
       },
       height: "90%",

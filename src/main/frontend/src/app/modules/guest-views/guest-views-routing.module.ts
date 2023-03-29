@@ -27,7 +27,7 @@ const routes: Routes = [{
     title: 'Tạo tài khoản mới'
   },
   {
-	path:  'homepage',
+	path:  'home',
 	component:HomeComponent,
 	title: 'Trang chủ DPM'
   },

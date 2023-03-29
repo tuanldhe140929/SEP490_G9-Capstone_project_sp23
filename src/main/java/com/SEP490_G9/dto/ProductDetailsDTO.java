@@ -64,6 +64,8 @@ public class ProductDetailsDTO {
 	private Category category;
 
 	private List<ProductFileDTO> files = new ArrayList<ProductFileDTO>();
+	
+	private boolean flagged;
 
 	public ProductDetailsDTO() {
 		// TODO Auto-generated constructor stub
@@ -96,6 +98,7 @@ public class ProductDetailsDTO {
 			dto.setFileState(ProductFileDTO.FileState.STORED);
 			this.files.add(dto);
 		}
+		this.flagged = productDetails.isFlagged();
 	}
 
 	private List<PreviewDTO> getPreviewPicturesSource(ProductDetails productDetails) {
@@ -281,6 +284,14 @@ public class ProductDetailsDTO {
 
 	public void setApproved(Status approved) {
 		this.approved = approved;
+	}
+
+	public boolean isFlagged() {
+		return flagged;
+	}
+
+	public void setFlagged(boolean flagged) {
+		this.flagged = flagged;
 	}
 
 }

@@ -7,7 +7,7 @@ import { ViolationType } from 'src/app/dtos/ViolationType';
 import { ProductService } from 'src/app/services/product.service';
 import { ReportService } from 'src/app/services/report.service';
 import { UserService } from 'src/app/services/user.service';
-import { ViolationTypeService } from 'src/app/services/violation-type.service';
+import { ViolationService} from 'src/app/services/violation.service';
 import {AfterViewInit, ViewChild} from '@angular/core';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
@@ -41,17 +41,18 @@ export class UpdateReportStatusComponent implements AfterViewInit{
   selection = new SelectionModel<ReportEntity>(true, []);
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public dataInjected: {productId: number, status: string}, 
+    @Inject(MAT_DIALOG_DATA) public dataInjected: {productId: number, version: string, status: string}, 
     private reportService: ReportService,
     private userService: UserService,
-    private violationTypeService: ViolationTypeService,
-    private dialog: MatDialog, 
+    private violationService: ViolationService,
+    private dialog: MatDialog,
+    private toastr: ToastrService 
   ){
-    this.reportService.getByProductAndStatus(dataInjected.productId, dataInjected.status).subscribe(reports => {
+    this.reportService.getByProductAndStatus(dataInjected.productId, dataInjected.version, dataInjected.status).subscribe(reports => {
       this.reportList = reports
       this.userService.getAllUsers().subscribe(users => {
         this.userList = users
-        this.violationTypeService.getAllTypes().subscribe(violationtypes => {
+        this.violationService.getAllTypes().subscribe(violationtypes => {
           this.violationTypeList = violationtypes
           const reportEntities : ReportEntity[] = reports.map((report: Report) => {
             const user = users.find((u: User) => {u.id === report.user.id});
@@ -101,11 +102,11 @@ export class UpdateReportStatusComponent implements AfterViewInit{
       userIdList.push(userData.userId);
       statusList.push(userData.checked ? "ACCEPTED":"DENIED");
     }
-    this.reportService.updateReportStatus(this.dataInjected.productId, userIdList, statusList).subscribe(data => {
+    this.reportService.updateReportStatus(this.dataInjected.productId, this.dataInjected.version, userIdList, statusList).subscribe(data => {
       console.log(data);
+      this.toastr.success('Cập nhật trạng thái báo cáo thành công');
     })
-    alert('Đã cập nhật tình trạng báo cáo');
-    window.location.reload();
+    
   }
 
   ngAfterViewInit() {
