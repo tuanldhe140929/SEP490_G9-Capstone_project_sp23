@@ -28,18 +28,18 @@ const routes: Routes = [
         component: StaffsComponent,
         pathMatch: 'full'
       },
-      {
-        path: '',
-        outlet: 'categories',
-        component: CategoriesComponent,
-        pathMatch: 'full'
-      },
-      {
-        path: '',
-        outlet: 'tags',
-        component: TagsComponent,
-        pathMatch: 'full'
-      },
+      // {
+      //   path: '',
+      //   outlet: 'categories',
+      //   component: CategoriesComponent,
+      //   pathMatch: 'full'
+      // },
+      // {
+      //   path: '',
+      //   outlet: 'tags',
+      //   component: TagsComponent,
+      //   pathMatch: 'full'
+      // },
       {
         path: '',
         outlet: 'reportedsellerlist',
