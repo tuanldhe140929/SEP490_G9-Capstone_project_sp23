@@ -30,6 +30,21 @@ public class ProductFile {
 	@Column(name = "size")
 	private Long size;
 
+	@Column(name="created_date")
+	private Date createdDate;
+	
+	@Column(name="last_modified")
+	private Date lastModified;
+	
+	@Column(name="enabled")
+	private boolean enabled;
+	
+	@Column(name="new_uploaded")
+	private boolean newUploaded;
+	
+	@Column(name="reviewed")
+	private boolean reviewed;
+	
 	@ManyToOne
 	@JoinColumns({ @JoinColumn(name = "product_id", nullable = false),
 			@JoinColumn(name = "version", nullable = false) })
@@ -53,6 +68,39 @@ public class ProductFile {
 		this.type = file.getContentType();
 		this.size = file.getSize();
 		this.productDetails = productDetails;
+	}
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public Date getLastModified() {
+		return lastModified;
+	}
+
+	public void setLastModified(Date lastModified) {
+		this.lastModified = lastModified;
+	}
+
+
+	public boolean isNewUploaded() {
+		return newUploaded;
+	}
+
+	public void setNewUploaded(boolean newUploaded) {
+		this.newUploaded = newUploaded;
+	}
+
+	public boolean isReviewed() {
+		return reviewed;
+	}
+
+	public void setReviewed(boolean reviewed) {
+		this.reviewed = reviewed;
 	}
 
 	public ProductDetails getProductDetails() {
@@ -101,6 +149,14 @@ public class ProductFile {
 
 	public void setSize(Long size) {
 		this.size = size;
+	}
+
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
 	}
 
 }

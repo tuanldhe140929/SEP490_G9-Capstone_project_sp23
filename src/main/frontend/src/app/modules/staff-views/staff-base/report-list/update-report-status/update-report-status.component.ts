@@ -1,9 +1,9 @@
 import { Component, Inject , OnInit} from '@angular/core';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
-import { Report } from 'src/app/DTOS/Report';
-import { User } from 'src/app/DTOS/User';
-import { ViolationType } from 'src/app/DTOS/ViolationType';
+import { Report } from 'src/app/dtos/Report';
+import { User } from 'src/app/dtos/User';
+import { ViolationType } from 'src/app/dtos/ViolationType';
 import { ProductService } from 'src/app/services/product.service';
 import { ReportService } from 'src/app/services/report.service';
 import { UserService } from 'src/app/services/user.service';

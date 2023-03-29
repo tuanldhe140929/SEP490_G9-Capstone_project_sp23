@@ -4,16 +4,16 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Report } from 'src/app/DTOS/Report';
-import { Seller } from 'src/app/DTOS/Seller';
+import { Report } from 'src/app/dtos/Report';
+import { Seller } from 'src/app/dtos/Seller';
 import { ReportService } from 'src/app/services/report.service';
 import { UserService } from 'src/app/services/user.service';
-import { AuthResponse } from '../../../DTOS/AuthResponse';
-import { Preview } from '../../../DTOS/Preview';
-import { Product } from '../../../DTOS/Product';
-import { ProductFile } from '../../../DTOS/ProductFile';
-import { Tag } from '../../../DTOS/Tag';
-import { User } from '../../../DTOS/User';
+import { AuthResponse } from '../../../dtos/AuthResponse';
+import { Preview } from '../../../dtos/Preview';
+import { Product } from '../../../dtos/Product';
+import { ProductFile } from '../../../dtos/ProductFile';
+import { Tag } from '../../../dtos/Tag';
+import { User } from '../../../dtos/User';
 import { CartService } from '../../../services/cart.service';
 import { ProductFileService } from '../../../services/product-file.service';
 import { ProductService } from '../../../services/product.service';
@@ -88,7 +88,7 @@ export class ProductDetailsComponent implements OnInit {
     private reportService: ReportService) {
   }
 
-
+  isPurchased = false;
   ngOnInit(): void {
 
     // this.getProduct();
@@ -106,6 +106,18 @@ export class ProductDetailsComponent implements OnInit {
           if (this.DescriptionTab) {
             this.DescriptionTab.innerHTML = this.product.details;
           }
+
+          this.cartService.isPurchasedByUser(this.visitor.id, this.product.id).subscribe(
+            data => {
+              this.isPurchased = data;
+            },
+            error => {
+
+            }
+          )
+        
+      
+
           this.owner = data.seller;
           this.getSellerTotalProductCount(this.owner.id);
           this.getProfileImage();
@@ -234,7 +246,7 @@ export class ProductDetailsComponent implements OnInit {
 
         },
         error => {
-          console.log(error);
+          this.router.navigate(['error']);
         })
     }
   }
@@ -259,14 +271,6 @@ export class ProductDetailsComponent implements OnInit {
 
   getPreviewPictureSource(): string {
     return 'http://localhost:9000/public/serveMedia/image?source=' + this.currentPreview.preview.source.replace(/\\/g, '/');
-  }
-
-  get TotalSize() {
-    var totalSize = 0;
-    for (let i = 0; i < this.product.files.length; i++) {
-      totalSize += this.product.files[i].size;
-    }
-    return this.formatFileSize(totalSize);
   }
 
   get TotalPreviewCount() {
@@ -393,18 +397,44 @@ export class ProductDetailsComponent implements OnInit {
     }
 
     this.cartService.addToCart(this.product.id).subscribe(
-      () => {
+      (data) => {
         // Success, show a message to the user
         // this.toastr.success('Sản phẩm đã được thêm vào giỏ hàng.')
         alert('Sản phẩm đã được thêm vào giỏ hàng.');
       },
-      () => {
+      (err) => {
+        console.log(err);
         // Error, show an error message to the user
         // this.toastr.error('Đã có lỗi xảy ra, vui lòng thử lại sau.')
         alert('Đã có lỗi xảy ra, vui lòng thử lại sau.');
       }
     );
   }
+
+  getFilesCount(): number {
+    var count = 0;
+    for (let i = 0; i < this.product.files.length; i++) {
+      var pf = this.product.files[i];
+      if ((pf.enabled && pf.reviewed && !pf.newUploaded) ||
+        !pf.enabled && !pf.reviewed && !pf.newUploaded) {
+        count++;
+      }
+    }
+    return count;
+  }
+
+  get TotalSize() {
+    var totalSize = 0;
+    for (let i = 0; i < this.product.files.length; i++) {
+      var pf = this.product.files[i];
+      if ((pf.enabled && pf.reviewed && !pf.newUploaded) ||
+        !pf.enabled && !pf.reviewed && !pf.newUploaded) {
+        totalSize += pf.size;
+      }
+    }
+    return this.formatFileSize(totalSize);
+  }
+
 
   generateDownloadToken() {
     var token = "";
@@ -423,4 +453,24 @@ export class ProductDetailsComponent implements OnInit {
     })
   }
 
-}
+  buyNow() {
+    if (!this.storageService.isLoggedIn()) {
+      // If user is not logged in, redirect to login page
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    this.cartService.addToCart(this.product.id).subscribe(
+      (data) => {
+        this.router.navigate(['cart']);
+      },
+      (err) => {
+        console.log(err);
+        // Error, show an error message to the user
+        // this.toastr.error('Đã có lỗi xảy ra, vui lòng thử lại sau.')
+        alert('Đã có lỗi xảy ra, vui lòng thử lại sau.');
+      }
+    );
+  }
+  }
+

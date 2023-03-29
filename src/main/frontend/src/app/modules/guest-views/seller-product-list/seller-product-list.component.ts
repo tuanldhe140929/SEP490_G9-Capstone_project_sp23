@@ -2,10 +2,10 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Category } from 'src/app/DTOS/Category';
-import { Product } from 'src/app/DTOS/Product';
-import { Seller } from 'src/app/DTOS/Seller';
-import { User } from 'src/app/DTOS/User';
+import { Category } from 'src/app/dtos/Category';
+import { Product } from 'src/app/dtos/Product';
+import { Seller } from 'src/app/dtos/Seller';
+import { User } from 'src/app/dtos/User';
 import { CategoryService } from 'src/app/services/category.service';
 import { ProductService } from 'src/app/services/product.service';
 import { SellerService } from 'src/app/services/seller.service';
@@ -74,8 +74,12 @@ export class SellerProductListComponent implements OnInit {
         }else{
           this.productService.getProductsBySellerForUser(this.sellerid, "", 0, [],0, 10000000).subscribe(
             data => {
+              console.log(data);
               this.productList = data;
               this.sellerStatus = false;
+            },
+            error => {
+              console.log(error);
             }
           )
         }
@@ -269,7 +273,10 @@ export class SellerProductListComponent implements OnInit {
      });
      dialogRef.afterClosed().subscribe(result => {
        console.log(`Dialog result: ${result}`);
-       setTimeout(() => this.refresh(),400)
+       if (!result) {
+         this.openInfoModal();
+       }
+       setTimeout(() => this.refresh(), 400)
      });
    }
 

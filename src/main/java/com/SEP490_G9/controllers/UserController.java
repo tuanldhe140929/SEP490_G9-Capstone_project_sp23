@@ -105,17 +105,20 @@ public class UserController {
 			throws ClientProtocolException, IOException {
 		System.out.println(code);
 		User googleLoginUser = googleUtil.getUserInfo(code);
-		String randomPassword = passwordGenerator.generatePassword(8).toString();
-		String encodedPassword = new BCryptPasswordEncoder().encode(randomPassword);
-		googleLoginUser.setPassword(encodedPassword);
-		googleLoginUser.setUsername(googleLoginUser.getEmail().substring(0, googleLoginUser.getEmail().indexOf("@")));
-		googleLoginUser.setCreatedDate(new Date());
-		googleLoginUser.setEmailVerified(true);
-		googleLoginUser.setEnabled(true);
-		List<Role> userRoles = new ArrayList<>();
-		userRoles.add(roleService.getRoleById(Constant.USER_ROLE_ID));
-		googleLoginUser.setRoles(userRoles);
-		User saved = userService.createUser(googleLoginUser);
+		if(userService.getByEmail(googleLoginUser.getEmail())!=null) {
+			String randomPassword = passwordGenerator.generatePassword(8).toString();
+			String encodedPassword = new BCryptPasswordEncoder().encode(randomPassword);
+			googleLoginUser.setPassword(encodedPassword);
+			googleLoginUser.setUsername(googleLoginUser.getEmail().substring(0, googleLoginUser.getEmail().indexOf("@")));
+			googleLoginUser.setCreatedDate(new Date());
+			googleLoginUser.setEmailVerified(true);
+			googleLoginUser.setEnabled(true);
+			List<Role> userRoles = new ArrayList<>();
+			userRoles.add(roleService.getRoleById(Constant.USER_ROLE_ID));
+			googleLoginUser.setRoles(userRoles);
+			User saved = userService.createUser(googleLoginUser);	
+		}
+		
 		Account account = accountService.getByEmail(googleLoginUser.getEmail());
 
 		UserDetailsImpl userDetails = new UserDetailsImpl();
@@ -140,22 +143,6 @@ public class UserController {
 			roles.add(authority.toString());
 		}
 		return ResponseEntity.ok(new AuthResponse(account.getEmail(), jwt, roles));
-	}
-
-	@RequestMapping(value = "logout", method = RequestMethod.GET)
-	public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
-
-		Cookie cookie = new Cookie("refreshToken", null);
-		cookie.setPath("/");
-		cookie.setDomain("localhost");
-		cookie.setHttpOnly(true);
-		cookie.setSecure(true);
-		cookie.setMaxAge(0);
-		response.addCookie(cookie);
-		session.invalidate();
-		request.getSession().invalidate();
-		SecurityContextHolder.getContext().setAuthentication(null);
-		return ResponseEntity.ok(null);
 	}
 
 	@RequestMapping(value = "sendVerifyEmail", method = RequestMethod.GET)

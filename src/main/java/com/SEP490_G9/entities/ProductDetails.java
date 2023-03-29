@@ -43,7 +43,7 @@ public class ProductDetails implements Serializable {
 	private String detailDescription;
 
 	@Column(name = "price")
-	private int price = 0;
+	private double price = 0;
 
 	@Column(name = "instruction")
 	private String instruction;
@@ -159,11 +159,13 @@ public class ProductDetails implements Serializable {
 		this.detailDescription = detailDescription;
 	}
 
-	public int getPrice() {
+	
+
+	public double getPrice() {
 		return price;
 	}
 
-	public void setPrice(int price) {
+	public void setPrice(double price) {
 		this.price = price;
 	}
 

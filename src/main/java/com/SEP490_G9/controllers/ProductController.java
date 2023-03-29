@@ -77,7 +77,7 @@ public class ProductController {
 	public ResponseEntity<?> createNewProduct() {
 		Product product = new Product();
 		product.setEnabled(true);
-		product.setDraft(true);
+		product.setDraft(false);
 		product.setActiveVersion(FIRST_PRODUCT_VERSION);
 		Product createdProduct = productService.createProduct(product);
 		ProductDTO productDTO = new ProductDTO(createdProduct);

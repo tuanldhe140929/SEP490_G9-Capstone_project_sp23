@@ -81,6 +81,7 @@ public class ProductFileController {
 			throws IOException, InterruptedException, ExecutionException {
 
 		ProductFileDTO ret = new ProductFileDTO();
+		System.out.println(productId +"   "+version);
 		ret = productFileService.uploadFile(productId, version, productFile);
 		return ResponseEntity.ok(ret);
 	}
@@ -88,8 +89,9 @@ public class ProductFileController {
 	@PostMapping(value = "deleteProductFile")
 	public ResponseEntity<?> deleteProductFile(@RequestParam(name = "productId", required = true) Long productId,
 			@RequestParam(name = "fileId", required = true) Long fileId) throws IOException {
-		ProductFileDTO dto = null;
-		dto = productFileService.deleteById(fileId);
+		ProductFile file = null;
+		file = productFileService.deleteById(fileId);
+		ProductFileDTO dto = new ProductFileDTO(file, false);
 		return ResponseEntity.ok(dto);
 	}
 
@@ -105,13 +107,15 @@ public class ProductFileController {
 	}
 
 	@GetMapping("download")
-	public ResponseEntity<ByteArrayResource> downloadProduct(@RequestParam(name="productId",required=true) Long productId, @RequestParam(name="token",required = true) String token) {
+	public ResponseEntity<ByteArrayResource> downloadProduct(
+			@RequestParam(name = "productId", required = true) Long productId,
+			@RequestParam(name = "token", required = true) String token) {
 		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
 				.getAccount();
-		System.out.println("recieving"+token);
+		System.out.println("recieving" + token);
 		ByteArrayResource resource = productFileService.downloadFile(account.getId(), productId, token);
 		byte[] data = resource.getByteArray();
-		
+
 		return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=product.zip")
 				.contentType(MediaType.APPLICATION_OCTET_STREAM).contentLength(data.length).body(resource);
 	}

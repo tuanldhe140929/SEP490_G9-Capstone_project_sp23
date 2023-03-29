@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Preview } from '../DTOS/Preview';
+import { Preview } from '../dtos/Preview';
 
 const baseUrl = "http://localhost:9000/preview"
 

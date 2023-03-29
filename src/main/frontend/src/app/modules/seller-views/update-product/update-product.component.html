@@ -1,31 +1,39 @@
 <div class="container-fluid grad">
   <div class="row padded" style="width:93%; background:white; margin:auto;margin-bottom:5%;">
     <div class="row" style="border-bottom:0.5px solid grey; margin:auto;">
-      <h2>Upload new product</h2>
+      <div style="display:flex;">
+        <div class="col-3" style="float:left;">
+          <h2>Cập nhật sản phẩm</h2>
+        </div>
+        <div class="col-9">
+          <div class="status" style="float:right; width:400px;"><h5>Trạng thái: </h5><h5 style="font-size:17px;">{{getApproved(product.approved)}}</h5></div>
+          <div class="draft"> </div>
+        </div>
+      </div>
     </div>
     <form (ngSubmit)="saveProduct()">
       <div class="row" style="margin-top:3%;">
         <div class="row columns">
           <div class="left_col col-8" style="border-right:1px solid black">
             <div class="input_row">
-              <div><label for="product_version">Version</label></div>
+              <div><label for="product_version">Phiên bản</label></div>
               <div><input type="text" value="{{product.version}}" id="product_version" name="product_version" readonly (click)="openSpecifyVersionModal()" style="cursor:pointer;" /></div>
             </div>
             <div class="input_row">
-              <div><label for="product_name">Title</label></div>
+              <div><label for="product_name">Tên sản phẩm</label></div>
               <div><input type="text" [(ngModel)]="product.name" id="product_name" name="product_name" autocomplete="off" /></div>
             </div>
             <div class="input_row description">
-              <div><label for="description">Description</label>&#45;<small>Short description for your product</small> </div>
+              <div><label for="description">Mô tả ngắn gọn</label>&#45;<small>Mô tả này sẽ xuất hiện cùng với ảnh bìa của sản phẩm</small> </div>
               <div><input id="description" type="text" placeholder="Optional" [(ngModel)]="product.description" name="description" autocomplete="off" /></div>
             </div>
             <div class="input_row classification_picker">
               <div class="classification_picker_label">
                 <div>
-                  <label for="type_list">Category</label>
+                  <label for="type_list">Phân loại</label>
                 </div>
                 <div>
-                  <small>What are you uploading</small>
+                  <small>Thể loại chính của sản phẩm này</small>
                 </div>
               </div>
               <div class="">
@@ -40,15 +48,15 @@
             </div>
             <div class="input_row tag_picker">
               <div class="tag_picker_label">
-                <div><label for="tag_input">Tags</label></div>
-                <div><small>Select one or multiple tags. Prefer choose existing tag than create new one</small></div>
+                <div><label for="tag_input">Nhãn</label></div>
+                <div><small>Gián nhãn cho sản phẩm của bạn để người dùng khác có thể dễ dàng tìm thấy</small></div>
               </div>
               <div class="selectize_group">
                 <div class="selectize-control tag_input multi plugin-remove_button">
                   <div class="selectize-input items not-full has-options">
                     <select id="tag_input input_row" (change)="onTagSelect($event)" style="padding: 8px; appearance: none;">
                       <option *ngFor="let tag of tagList; index as i;" value="{{tag.id}}">{{tag.name}}</option>
-                      <option id="default_tag" value="0" selected>Select one or multiple tags</option>
+                      <option id="default_tag" value="0" selected>Chọn một hoặc nhiều nhãn</option>
                     </select>
                   </div>
                   <div class="selectize-dropdown multi tag_input plugin-remove_button">
@@ -67,23 +75,23 @@
               </div>
             </div>
             <section class="price_picker">
-              <h2>Pricing</h2>
+              <h2>Giá sản phẩm</h2>
               <div class="price_picker_drop">
                 <div class="game_edit_price_picker_widget" (click)="onChoosePricingOption($event)">
                   <div class="payment_modes">
                     <button id="pay_btn" type="button" class="payment_mode_paid">
                       <span class="icon"></span>
-                      Paid
+                      Trả tiền
                     </button>
                     <button type="button" class="payment_mode_no_paid" id="no_payment_btn">
                       <span class="icon icon-checkbox-unchecked"></span>
-                      No payment
+                      Miễn phí
                     </button>
                   </div>
                   <div class="describe">
                     <div class="paid" id="paid">
                       <div class="input_row">
-                        <div><label>Minimum price<span class="sub"> - Minimum price to get access to download this product</span></label></div>
+                        <div><label>Trả tiền<span class="sub"> - Người dùng khác phải trả tiền cho bạn để sử dụng sản phẩm này</span></label></div>
                         <div>
                           <div class="input-group">
                             <input id="price-input"
@@ -104,7 +112,7 @@
                     </div>
                     <div class="no_payment" id="no_payment">
                       <div class="input_row">
-                        <div><label>No payments<span class="sub"> - This product is free to download  </span></label></div>
+                        <div><label>Miễn phí<span class="sub"> - Sản phẩm này miễn phí  </span></label></div>
                       </div>
                     </div>
                   </div>
@@ -114,15 +122,15 @@
             <div class="input_row classification_picker">
               <div class="classification_picker_label">
                 <div>
-                  <h5 for="type_list" style="font-weight: 600;">License</h5>
+                  <h5 for="type_list" style="font-weight: 600;">Giấy phép</h5>
                 </div>
                 <div>
-                  <small>License for this product's user</small>
+                  <small>Những người sử dụng sản phẩm này có quyền gì?</small>
                 </div>
               </div>
               <div class="">
                 <select class="classification_picker_body" id="license_list" name="type" [(ngModel)]="productLicense">
-                  <option value="0" selected>No license</option>
+                  <option value="0" selected>Không giấy phép</option>
                   <option *ngFor="let license of licenseList index as i;" value="{{license.id}}"
                           [attr.selected]="isTypeSelected(license.id)">
                     {{license.name}} - {{license.acrynosm}}
@@ -195,33 +203,37 @@
               </div>
               <p class="upload_limit">Giới hạn độ lớn tệp: 1GB</p>
             </section>
-            <h2>Details</h2>
+            <h2>Chi tiết</h2>
             <div class="input_row">
               <div class="details_text_area_label">
-                <div><label for="tag_input">Description</label>&#45;<small>This is the content of your product detail page</small></div>
+                <div><label for="tag_input">Mô tả</label>&nbsp;&#45;&nbsp;<small>Mô tả chi tiết về sản phẩm</small></div>
                 <ckeditor [editor]="detailsEditor" [(ngModel)]="productDetails" [ngModelOptions]="{standalone: true}"></ckeditor>
               </div>
             </div>
             <div class="input_row">
               <div class="instruction_text_area_label">
-                <div><label for="tag_input">Download and install instruction</label>&#45;<small>Content of a text file come along with this product</small></div>
+                <div><label for="tag_input">Hướng dẫn tải và cài đặt</label>&nbsp;&#45;&nbsp;<small>Sản phẩm này có yêu cầu cài đặt gì đặc biệt không?</small></div>
               </div>
               <textarea id="instruction_details" [value]="product.instruction" style="min-height:200px;width:100%;resize:none"></textarea>
             </div>
-            <div class="draft_picker" style="font-weight:600">
+<!--            <div class="draft_picker" style="font-weight:600">
               <div class="draft_picker_label">
-                <div><label for="draft_pick">Publicity</label></div>
+                <div><label for="draft_pick">Hiển thị</label></div>
               </div>
               <div class="draft_pick">
                 <input id="draft" value="true" type="radio" (click)="onDraftSelect($event)" />
-                <label for="draft">Draft</label>&#45;<small>You can edit this product and publish it later</small>
+                <label for="draft">Bản nháp</label>&nbsp;&#45;&nbsp;<small>Chỉ mình bạn có thể nhìn thấy sản phẩm này</small>
               </div>
               <div>
                 <input id="publish" value="false" type="radio" (click)="onDraftSelect($event)" />
-                <label for="publish">Publish</label>&#45;<small>This product is publish, others can see it</small>
+                <label for="publish">Xuất bản</label>&nbsp;&#45;&nbsp;<small>Những người khác có thể xem và mua sản phẩm này</small>
               </div>
+            </div>-->
+            <div style="display:flex;">
+              <!--<input class="button add_file_btn" style="" type="submit" value="Lưu" />-->
+              <div *ngIf="product.approved==ProductStatus.NEW" class="button add_file_btn" (click)="setPending()">Cập nhật</div>
+              <div *ngIf="product.approved==ProductStatus.PENDING || product.approved ==ProductStatus.REJECTED || product.approved==ProductStatus.APPROVED" class="button add_file_btn" (click)="setNew()">Tiếp tục cập nhật</div> 
             </div>
-            <input type="submit" />
           </div>
           <div class="right_col col-4">
             <div class="cover_uploader drop" id="cover_img_container">

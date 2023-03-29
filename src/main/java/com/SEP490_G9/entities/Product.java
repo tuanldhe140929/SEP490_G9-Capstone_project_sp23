@@ -36,7 +36,7 @@ public class Product implements Serializable {
 	private List<ProductDetails> productDetails = new ArrayList<>();
 
 	@Column(name = "draft")
-	private boolean draft;
+	private boolean draft = false;
 
 	@OneToMany(mappedBy = "product")
 	private List<Report> reports = new ArrayList<>();

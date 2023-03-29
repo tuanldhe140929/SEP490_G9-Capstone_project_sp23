@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { Report } from 'src/app/DTOS/Report';
 import { AuthGuard } from '../../guards/auth.guard';
 import { CheckOutComponent } from '../for-users/check-out/check-out.component';
 import { CartComponent } from './cart/cart.component';

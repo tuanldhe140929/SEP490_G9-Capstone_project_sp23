@@ -22,19 +22,13 @@
             </div>
             <div class="input_row">
               <div><label for="username">Tên người dùng</label></div>
-              <div><input id="username" [(ngModel)]="username" [ngModelOptions]="{standalone: true}" (keydown)="onUsernameChange($event)"></div>
+              <div><input id="username"formControlName="username" (keydown)="onUsernameChange($event)"></div>
               <div class="msg">
                 <div class="invalid" *ngIf="Form.username.invalid && Form.username.touched">
                   <div *ngIf="Form.username.errors?.['required']"><small>Vui lòng nhập tên người dùng</small> </div>
-                  <div *ngIf="Form.username.errors?.['minlength']||Form.username.errors?.['maxlength']"><small>Tên người dùng phải từ 8 đến 30 ký tự</small> </div>
-                  <div *ngIf="Form.username.errors?.['whitespace'] && !Form.username.errors?.['required'] && !(Form.username.errors?.['minlength']||Form.username.errors?.['maxlength'])"><small>Username must not contains spaces</small></div>
+                  <div *ngIf="Form.username.errors?.['minlength']||Form.username.errors?.['maxlength']"><small>Tên người dùng phải từ 3 đến 30 ký tự</small> </div>
                 </div>
               </div>
-            </div>
-            <div class="display_row">
-              <div style="text-align:center"><label for="profileUrl" style="font-weight:600;font-size:14px; text-align:center;">Trang cá nhân của bạn sẽ là:</label></div>
-              <div style="background-color: #fafafa; text-align:center;"><p id="profileUrl">http://localhost:4200/{{username}}</p></div>
-              <div class="msg"></div>
             </div>
             <div class="input_row">
               <div><label for="password">Mật khẩu</label></div>

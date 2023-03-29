@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
 import org.springframework.http.HttpStatus;
@@ -55,7 +56,7 @@ public class CommonExceptionHandler {
 	}
 
 	@ExceptionHandler(ResourceNotFoundException.class)
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ResponseStatus(HttpStatus.NOT_FOUND)
 	public ErrorResponse resolveException(ResourceNotFoundException exception) {
 		ErrorResponse errorResponse = exception.getErrorResponse();
 		System.out.println("Resource not found");
@@ -203,6 +204,16 @@ public class CommonExceptionHandler {
 		msgs.add(ex.getMessage());
 		errorResponse.setMessages(msgs);
 		errorResponse.setStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+		return errorResponse;
+	}
+	@ExceptionHandler(NoSuchElementException.class)
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	public final ErrorResponse exceptionResolve(NoSuchElementException ex) {
+		ErrorResponse errorResponse = new ErrorResponse();
+		List<String> msgs = new ArrayList<>();
+		msgs.add(ex.getMessage());
+		errorResponse.setMessages(msgs);
+		errorResponse.setStatus(HttpStatus.NOT_FOUND);
 		return errorResponse;
 	}
 //	@ExceptionHandler({ CustomException.class })

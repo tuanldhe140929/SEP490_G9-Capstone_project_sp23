@@ -1,8 +1,8 @@
 import { OnInit } from '@angular/core';
 import { Component } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
-import { Product } from '../../../DTOS/Product';
-import { ProductFile } from '../../../DTOS/ProductFile';
+import { Product } from '../../../dtos/Product';
+import { ProductFile } from '../../../dtos/ProductFile';
 import { ProductService } from '../../../services/product.service';
 
 @Component({

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AuthResponse } from '../DTOS/AuthResponse';
+import { AuthResponse } from '../dtos/AuthResponse';
 const AUTH_RESPONSE_KEY = 'auth-user';
 const TOKEN_KEY = 'auth-token';
 const REGISTERED_EMAIL_KEY = 'registered-email'
