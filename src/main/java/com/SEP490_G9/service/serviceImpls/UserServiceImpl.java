@@ -1,6 +1,8 @@
 package com.SEP490_G9.service.serviceImpls;
 
+
 import java.io.File;
+
 
 import java.io.IOException;
 
@@ -147,31 +149,31 @@ public class UserServiceImpl implements UserService {
 		userRepository.save(user);
 		return user;
 	}
-	@Override
-	public boolean isPayPalUser(String userEmail) {
-	    String accessToken;
-	    try {
-	        // Retrieve access token
-	        accessToken = paypalimpl.getPayPalAccessToken();
-	    } catch (PayPalRESTException e) {
-	        System.err.println(e.getDetails());
-	        return false;
-	    }
-
-	    try {
-	        // Get user info using access token
-	    	User userInfo = new User().getUserInfo(accessToken.get, userEmail);
-	        return (userInfo != null);
-	    } catch (PayPalRESTException e) {
-	        System.err.println(e.getDetails());
-	        return false;
-	    }
-	     
-	   
-
-
-	    return false;
-	}
+//	@Override
+//	public boolean isPayPalUser(String userEmail) {
+//	    String accessToken;
+//	    try {
+//	        // Retrieve access token
+//	        accessToken = paypalimpl.getPayPalAccessToken();
+//	    } catch (PayPalRESTException e) {
+//	        System.err.println(e.getDetails());
+//	        return false;
+//	    }
+//
+//	    try {
+//	        // Get user info using access token
+//	    	User userInfo = new User().getUserInfo(accessToken.get, userEmail);
+//	        return (userInfo != null);
+//	    } catch (PayPalRESTException e) {
+//	        System.err.println(e.getDetails());
+//	        return false;
+//	    }
+//	     
+//	   
+//
+//
+//	    return false;
+//	}
 
 	
 	
