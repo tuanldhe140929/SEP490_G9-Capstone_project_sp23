@@ -1,11 +1,11 @@
 import { AppComponent } from 'src/app/app.component';
 import { HttpClient } from '@angular/common/http';
-import { AuthResponse } from 'src/app/DTOS/AuthResponse';
+import { AuthResponse } from 'src/app/dtos/AuthResponse';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { User } from 'src/app/DTOS/User';
+import { User } from 'src/app/dtos/User';
 import { StorageService } from 'src/app/services/storage.service';
 import { UserService } from 'src/app/services/user.service';
 

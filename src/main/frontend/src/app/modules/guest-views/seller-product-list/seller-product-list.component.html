@@ -6,7 +6,7 @@
       <div class="col-2">
         <img [src]="getSellerAvatar()" width="150" height="150">
       </div>
-      <div class="col-2">
+      <div class="col-2" *ngIf ="(seller!=null)">
         <b style="color: white; font-size: 40px;">{{seller.username}}</b>
         <br>
         <p style="color: white; font-size: 30px;">{{seller.email}}</p>
@@ -230,8 +230,8 @@
     <button type="button" class="btn-close" aria-label="Close" (click)="dismissModal()"></button>
   </div>
   <div class="modal-body">
-    <small style="color:red;">Không thể xóa được sản phẩm, hãy thử lại<br /></small>
-    <div style="display: flex; width: auto; float: right;" class="delete_action_btns">
+    <small style="color:red;">Sản phẩm không tồn tại<br /></small>
+    <div style="display: flex; width: auto; float: right;" class="delete_action_btns" (click)="dismissModal()">
       <button style="" class="actionBtn">OK</button>
     </div>
   </div>

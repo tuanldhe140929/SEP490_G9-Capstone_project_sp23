@@ -25,6 +25,7 @@ import com.SEP490_G9.entities.Product;
 import com.SEP490_G9.entities.ProductDetails;
 import com.SEP490_G9.entities.Seller;
 import com.SEP490_G9.entities.UserDetailsImpl;
+import com.SEP490_G9.entities.ProductDetails.Status;
 import com.SEP490_G9.exception.FileUploadException;
 import com.SEP490_G9.repository.PreviewRepository;
 import com.SEP490_G9.service.FileIOService;
@@ -32,7 +33,6 @@ import com.SEP490_G9.service.PreviewService;
 import com.SEP490_G9.service.ProductDetailsService;
 import com.SEP490_G9.service.ProductService;
 import com.SEP490_G9.service.SellerService;
-import com.SEP490_G9.common.StorageUtil;
 
 @RequestMapping(value = "/preview")
 @RestController
@@ -67,6 +67,9 @@ public class PreviewController {
 			throws IOException {
 		List<PreviewDTO> ret = new ArrayList<>();
 		Preview preview = previewService.getById(previewId);
+		if (preview.getProductDetails().getApproved() != Status.NEW) {
+			throw new IllegalArgumentException("Cannot edit this version");
+		}
 		previewService.deleteById(previewId);
 		List<Preview> returnData = previewService.getByProductDetailsAndType(preview.getProductDetails(), "picture");
 		for (Preview p : returnData) {

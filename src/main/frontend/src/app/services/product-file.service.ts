@@ -1,7 +1,7 @@
 import { HttpClient, HttpEvent, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ProductFile } from '../DTOS/ProductFile';
+import { ProductFile } from '../dtos/ProductFile';
 
 const baseUrl = "http://localhost:9000/productFile"
 

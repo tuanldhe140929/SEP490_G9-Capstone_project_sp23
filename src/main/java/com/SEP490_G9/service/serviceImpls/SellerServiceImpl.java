@@ -108,5 +108,17 @@ public class SellerServiceImpl implements SellerService {
 		List<Seller> allByKeyword = getSellersByKeyword(allEnabled, keyword);
 		return allByKeyword;
 	}
+
+	@Override
+	public List<Seller> getFlaggedSellers() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Seller> getPurchasedProduct(long sellerId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 }

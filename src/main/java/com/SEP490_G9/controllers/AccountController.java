@@ -111,16 +111,17 @@ public class AccountController {
 	}
 
 	@RequestMapping(value = "logout", method = RequestMethod.GET)
-	public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
+	public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam(name="token") String token) {
+
 		Cookie cookie = new Cookie("refreshToken", null);
 		cookie.setPath("/");
 		cookie.setDomain("localhost");
 		cookie.setHttpOnly(true);
 		cookie.setSecure(true);
 		cookie.setMaxAge(0);
+		jwtUtil.invalidateToken(token);
 		response.addCookie(cookie);
-		session.invalidate();
-		request.getSession().invalidate();
 		SecurityContextHolder.getContext().setAuthentication(null);
 		return ResponseEntity.ok(null);
 	}

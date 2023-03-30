@@ -4,14 +4,14 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { AuthResponse } from 'src/app/DTOS/AuthResponse';
-import { Preview } from 'src/app/DTOS/Preview';
-import { Product } from 'src/app/DTOS/Product';
-import { Report } from 'src/app/DTOS/Report';
-import { Seller } from 'src/app/DTOS/Seller';
-import { Tag } from 'src/app/DTOS/Tag';
-import { User } from 'src/app/DTOS/User';
-import { ViolationType } from 'src/app/DTOS/ViolationType';
+import { AuthResponse } from 'src/app/dtos/AuthResponse';
+import { Preview } from 'src/app/dtos/Preview';
+import { Product } from 'src/app/dtos/Product';
+import { Report } from 'src/app/dtos/Report';
+import { Seller } from 'src/app/dtos/Seller';
+import { Tag } from 'src/app/dtos/Tag';
+import { User } from 'src/app/dtos/User';
+import { ViolationType } from 'src/app/dtos/ViolationType';
 import { CartService } from 'src/app/services/cart.service';
 import { ProductFileService } from 'src/app/services/product-file.service';
 import { ProductService } from 'src/app/services/product.service';
@@ -74,7 +74,7 @@ export class ReportedProductDetailsComponent implements OnInit {
 
   displayPreviews: DisplayPreview[] = [];
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: {productId: number, status: string}, 
+    @Inject(MAT_DIALOG_DATA) public data: {productId: number, version: string, status: string}, 
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private storageService: StorageService,
@@ -370,6 +370,7 @@ export class ReportedProductDetailsComponent implements OnInit {
     const dialogRef = this.dialog.open(UpdateReportStatusComponent, {
       data: {
         productId: this.productId,
+        version: this.data.version,
         status: this.data.status
       },
       width: '80%'

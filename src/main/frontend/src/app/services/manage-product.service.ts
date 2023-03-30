@@ -1,13 +1,8 @@
 import { HttpClient, HttpEvent } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Product } from '../DTOS/Product';
-import { User } from '../DTOS/User';
-import { Category } from '../DTOS/Category';
-import { Tag } from '../DTOS/Tag';
-import { Preview } from '../DTOS/Preview';
-import { ProductFile } from '../DTOS/ProductFile';
-import { License } from '../DTOS/License';
+import { Product } from '../dtos/Product';
+import { License } from '../dtos/License';
 const baseUrl = 'http://localhost:9000/product';
 const serveMediaUrl = "http://localhost:9000/public/serveMedia";
 const licenseBaseUrl = "http://localhost:9000/license";
@@ -70,11 +65,7 @@ export class ManageProductService {
   }
 
   getLicense(data: any, instructionDetail: string): Observable<License[]> {
-    return this.httpClient.post<License[]>(baseUrl + '/updateProduct', data, {
-      params: {
-        instruction: instructionDetail
-      }
-    });
+    return this.httpClient.get<License[]>(baseUrl + '/getLicense');
   }
 
   /*  getPreviewVideo(previewId: number): any {

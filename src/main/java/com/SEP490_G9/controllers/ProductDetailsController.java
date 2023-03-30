@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.SEP490_G9.dto.ProductDetailsDTO;
 import com.SEP490_G9.entities.Product;
 import com.SEP490_G9.entities.ProductDetails;
+import com.SEP490_G9.entities.ProductDetails.Status;
 import com.SEP490_G9.repository.ProductDetailsRepository;
 import com.SEP490_G9.service.ProductDetailsService;
 import com.SEP490_G9.service.ProductService;
@@ -33,15 +34,16 @@ public class ProductDetailsController {
 
 	@Autowired
 	ProductDetailsRepository productDetailsRepo;
-	
+
 	@Autowired
 	ProductService productService;
-	
+
 	@GetMapping(value = "/getProductsForSearching")
 	public ResponseEntity<?> getFilteredProducts(@RequestParam("keyword") String keyword,
-			@RequestParam("categoryid") int categoryid, @RequestParam("tagidlist") List<Integer> tagidlist , @RequestParam("min") int min, @RequestParam("max") int max) {
-		List<ProductDetails> filteredProducts = productDetailsService.getProductForSearching(keyword, categoryid, tagidlist, min,
-				max);
+			@RequestParam("categoryid") int categoryid, @RequestParam("tagidlist") List<Integer> tagidlist,
+			@RequestParam("min") int min, @RequestParam("max") int max) {
+		List<ProductDetails> filteredProducts = productDetailsService.getProductForSearching(keyword, categoryid,
+				tagidlist, min, max);
 		List<ProductDetailsDTO> filteredProductsDto = new ArrayList<>();
 		for (ProductDetails result : filteredProducts) {
 			filteredProductsDto.add(new ProductDetailsDTO(result));
@@ -49,38 +51,39 @@ public class ProductDetailsController {
 		return ResponseEntity.ok(filteredProductsDto);
 	}
 
-
 	@GetMapping(value = "/getAllProducts")
-	public ResponseEntity<?> getAllProducts(){
+	public ResponseEntity<?> getAllProducts() {
 		List<ProductDetails> allProducts = productDetailsService.getAll();
 		List<ProductDetailsDTO> allProductsDto = new ArrayList<>();
-		for(ProductDetails product: allProducts) {
+		for (ProductDetails product : allProducts) {
 			allProductsDto.add(new ProductDetailsDTO(product));
 		}
 		return ResponseEntity.ok(allProductsDto);
 	}
-	
 
 	@GetMapping(value = "/getProductsBySellerForSeller")
 	public ResponseEntity<?> getProductsBySellerForSeller(@RequestParam("sellerid") Long sellerid,
 			@RequestParam("keyword") String keyword, @RequestParam("categoryid") int categoryid,
-			@RequestParam("tagidlist") List<Integer> tagidlist ,@RequestParam("min") int min, @RequestParam("max") int max) {
-		List<ProductDetails> finalList = productDetailsService.getProductBySellerForSeller(sellerid, keyword, categoryid, tagidlist, min,
-				max);
+			@RequestParam("tagidlist") List<Integer> tagidlist, @RequestParam("min") int min,
+			@RequestParam("max") int max) {
+		List<ProductDetails> finalList = productDetailsService.getProductBySellerForSeller(sellerid, keyword,
+				categoryid, tagidlist, min, max);
 		List<ProductDetailsDTO> finalListDto = new ArrayList<>();
 		for (ProductDetails result : finalList) {
 			finalListDto.add(new ProductDetailsDTO(result));
 		}
 		return ResponseEntity.ok(finalListDto);
 	}
-	
+
 	@GetMapping(value = "/getProductsBySellerForUser")
 	public ResponseEntity<?> getProductsBySellerForUser(@RequestParam("sellerid") Long sellerid,
 			@RequestParam("keyword") String keyword, @RequestParam("categoryid") int categoryid,
-			@RequestParam("tagidlist") List<Integer> tagidlist,@RequestParam("min") int min, @RequestParam("max") int max){
-		List<ProductDetails> finalList = productDetailsService.getProductBySellerForUser(sellerid, keyword, categoryid, tagidlist, min, max);
+			@RequestParam("tagidlist") List<Integer> tagidlist, @RequestParam("min") int min,
+			@RequestParam("max") int max) {
+		List<ProductDetails> finalList = productDetailsService.getProductBySellerForUser(sellerid, keyword, categoryid,
+				tagidlist, min, max);
 		List<ProductDetailsDTO> finalListDto = new ArrayList<>();
-		for(ProductDetails result: finalList) {
+		for (ProductDetails result : finalList) {
 			finalListDto.add(new ProductDetailsDTO(result));
 		}
 		return ResponseEntity.ok(finalListDto);
@@ -103,7 +106,14 @@ public class ProductDetailsController {
 		ProductDetailsDTO dto = new ProductDetailsDTO(pd);
 		return ResponseEntity.ok(dto);
 	}
-
+	
+	@GetMapping(value="getActiveVersionForDownload")
+	public ResponseEntity<?> getActiveVersionForDownload(@RequestParam(name = "productId") Long productId) {
+		ProductDetails pd = productDetailsService.getActiveVersionForDownload(productId);
+		ProductDetailsDTO dto = new ProductDetailsDTO(pd);
+		return ResponseEntity.ok(dto);
+	}
+	
 	@GetMapping(value = "getAllVersion")
 	public ResponseEntity<?> getAllVersion(@RequestParam(name = "productId", required = true) Long productId) {
 		List<ProductDetails> productDetailss = productDetailsService.getAllByProductId(productId);
@@ -123,6 +133,24 @@ public class ProductDetailsController {
 		return ResponseEntity.ok(ret);
 	}
 
+	@PostMapping(value = "verifyProduct")
+	public ResponseEntity<?> verfyProduct(@RequestParam(name = "productId", required = true) Long productId,
+			@RequestParam(name = "version", required = true) String version) {
+		ProductDetails pd = productDetailsService.updateApprovalStatus(productId, version, "PENDING");
+		ProductDetailsDTO ret = new ProductDetailsDTO(pd);
+		return ResponseEntity.ok(ret);
+	}
+	
+	@PostMapping(value = "cancelVerifyProduct")
+	public ResponseEntity<?> cancelVerfyProduct(@RequestParam(name = "productId", required = true) Long productId,
+			@RequestParam(name = "version", required = true) String version) {
+		ProductDetails pd = productDetailsService.updateApprovalStatus(productId, version, "NEW");
+		ProductDetailsDTO ret = new ProductDetailsDTO(pd);
+		return ResponseEntity.ok(ret);
+	}
+	
+	
+
 	@PostMapping(value = "createNewVersionV2")
 	public ResponseEntity<?> createNewVersionV2(@RequestBody ProductDetailsDTO productDetailsDTO,
 			@RequestParam(name = "newVersion", required = true) String newVersion) {
@@ -130,13 +158,17 @@ public class ProductDetailsController {
 		ProductDetailsDTO dto = new ProductDetailsDTO(newPD);
 		return ResponseEntity.ok(dto);
 	}
-	
+
 	@PostMapping(value = "updateProduct")
 	public ResponseEntity<?> updateProduct(@Valid @RequestBody ProductDetailsDTO productDetailsDTO,
 			@RequestParam(name = "instruction") String instructionDetails) {
 		ProductDetailsDTO ret = null;
 		ProductDetails notEdited = productDetailsRepo
 				.findByProductIdAndProductVersionKeyVersion(productDetailsDTO.getId(), productDetailsDTO.getVersion());
+		if(notEdited.getApproved()!=Status.NEW) {
+			throw new IllegalArgumentException("Cannot edit this version");
+		}
+		
 		notEdited.setLastModified(new Date());
 		Product product = notEdited.getProduct();
 		notEdited.setTags(productDetailsDTO.getTags());
@@ -158,7 +190,6 @@ public class ProductDetailsController {
 
 		notEdited.setName(productDetailsDTO.getName().trim());
 		notEdited.setPrice(productDetailsDTO.getPrice());
-		product.setDraft(productDetailsDTO.isDraft());
 		notEdited.setInstruction(instructionDetails.trim());
 
 		productService.updateProduct(product);
@@ -170,51 +201,51 @@ public class ProductDetailsController {
 	}
 
 	@GetMapping(value = "getProductsByReportStatus")
-	public ResponseEntity<?> getProductsByReportStatus(@RequestParam(name = "status") String status){
+	public ResponseEntity<?> getProductsByReportStatus(@RequestParam(name = "status") String status) {
 		List<ProductDetails> reportList = productDetailsService.getProductsByReportStatus(status);
 		List<ProductDetailsDTO> allDtoPd = new ArrayList<>();
-		for(ProductDetails pd: reportList) {
+		for (ProductDetails pd : reportList) {
 			allDtoPd.add(new ProductDetailsDTO(pd));
 		}
 		return ResponseEntity.ok(allDtoPd);
 	}
-	
 
 	@GetMapping(value = "getByApprovalStatus")
-	public ResponseEntity<?> getByApprovalStatus(@RequestParam(name = "status") String status){
+	public ResponseEntity<?> getByApprovalStatus(@RequestParam(name = "status") String status) {
 		List<ProductDetails> allStatusPd = productDetailsService.getProductsByApprovalStatus(status);
 		List<ProductDetailsDTO> allDtoPd = new ArrayList<>();
-		for(ProductDetails pd: allStatusPd) {
+		for (ProductDetails pd : allStatusPd) {
 			allDtoPd.add(new ProductDetailsDTO(pd));
 		}
 		return ResponseEntity.ok(allDtoPd);
 	}
-	
+
 	@PutMapping(value = "updateApprovalStatus")
-	public ResponseEntity<?> updateApprovalStatus(@RequestParam(name = "productId") long productId, @RequestParam(name = "version")String version, @RequestParam(name = "status") String status){
+	public ResponseEntity<?> updateApprovalStatus(@RequestParam(name = "productId") long productId,
+			@RequestParam(name = "version") String version, @RequestParam(name = "status") String status) {
 		ProductDetails pd = productDetailsService.updateApprovalStatus(productId, version, status);
 		return ResponseEntity.ok(pd);
 	}
-	
+
 	@GetMapping(value = "allProductsLatestVers")
-	public ResponseEntity<?> allProductsLatestVer(){
+	public ResponseEntity<?> allProductsLatestVer() {
 		List<ProductDetails> allProductsLatestVer = productDetailsService.getAllByLatestVersion();
 		List<ProductDetailsDTO> allDtoPd = new ArrayList<>();
-		for(ProductDetails pd: allProductsLatestVer) {
+		for (ProductDetails pd : allProductsLatestVer) {
 			allDtoPd.add(new ProductDetailsDTO(pd));
 		}
 		return ResponseEntity.ok(allDtoPd);
 	}
 
-	@GetMapping (value ="GetAllProductForHomePage")
-	public ResponseEntity<?> GetAllProductForHomePage(){
+	@GetMapping(value = "GetAllProductForHomePage")
+	public ResponseEntity<?> GetAllProductForHomePage() {
 		List<ProductDetails> allProducts = productDetailsService.getAll();
 		List<ProductDetails> approvedProducts = productDetailsService.getByApproved(allProducts);
 		List<ProductDetails> lastestProducts = productDetailsService.getByLatestVer(approvedProducts);
 		List<ProductDetails> EnabledProducts = productDetailsService.getByEnabled(lastestProducts);
 		List<ProductDetails> PublishedProducts = productDetailsService.getByPublished(EnabledProducts);
 		List<ProductDetailsDTO> allProductsDTO = new ArrayList<>();
-		for(ProductDetails p : lastestProducts) {
+		for (ProductDetails p : lastestProducts) {
 			allProductsDTO.add(new ProductDetailsDTO(p));
 		}
 		return ResponseEntity.ok(allProductsDTO);

@@ -2,8 +2,8 @@ import { Inject, OnInit } from '@angular/core';
 import { Component } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
-import { Product } from 'src/app/DTOS/Product';
-import { ProductFile } from 'src/app/DTOS/ProductFile';
+import { Product } from 'src/app/dtos/Product';
+import { ProductFile } from 'src/app/dtos/ProductFile';
 import { ProductFileService } from 'src/app/services/product-file.service';
 import { ProductService } from 'src/app/services/product.service';
 

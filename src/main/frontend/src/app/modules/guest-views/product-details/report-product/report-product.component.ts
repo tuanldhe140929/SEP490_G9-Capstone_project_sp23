@@ -3,8 +3,8 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { User } from 'src/app/DTOS/User';
-import { ViolationType } from 'src/app/DTOS/ViolationType';
+import { User } from 'src/app/dtos/User';
+import { ViolationType } from 'src/app/dtos/ViolationType';
 import { ReportService } from 'src/app/services/report.service';
 import { StorageService } from 'src/app/services/storage.service';
 import { UserService } from 'src/app/services/user.service';
@@ -88,7 +88,7 @@ export class ReportProductComponent implements OnInit{
   }
 
   toSendReport(){
-      this.reportService.sendReport(this.data.productId, this.userId, this.description, this.violationTypeId).subscribe(
+      this.reportService.sendReport(this.data.productId, this.userId, this.data.version , this.description, this.violationTypeId).subscribe(
         data =>{
           console.log(data);
         }
