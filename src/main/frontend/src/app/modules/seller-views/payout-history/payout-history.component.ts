@@ -1,6 +1,8 @@
+import { StorageService } from 'src/app/services/storage.service';
+import { AuthResponse } from 'src/app/dtos/AuthResponse';
 
 import { Component } from '@angular/core';
-import { Payout } from 'src/app/DTOS/Payout';
+import { Payout } from 'src/app/dtos/Payout';
 import { PayoutService } from 'src/app/services/payout.service';
 
 @Component({
@@ -9,12 +11,15 @@ import { PayoutService } from 'src/app/services/payout.service';
   styleUrls: ['./payout-history.component.css']
 })
 export class PayoutHistoryComponent {
+  authResponse: AuthResponse = new AuthResponse;
   payoutlist: Payout[] = [];
   constructor(
+    private storageService: StorageService,
     private payoutService: PayoutService
   ){}
  
   ngOnInit(): void {
+
     this.getPayoutHistory();
  } 
 

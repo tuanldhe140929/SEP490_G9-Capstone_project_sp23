@@ -18,29 +18,31 @@ import { VgBufferingModule } from '@videogular/ngx-videogular/buffering';
 import { SellerGuardGuard } from '../../guards/seller-guard.guard';
 import { DecimalPipe } from '@angular/common';
 import { PayoutHistoryComponent } from './payout-history/payout-history.component';
+import { CommonViewsModule } from "../common-views/common-views.module";
 
 
 @NgModule({
-  declarations: [
-    UpdateProductComponent,
-    PayoutHistoryComponent
-  ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    SellerViewsRoutingModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatIconModule,
-    MatProgressBarModule,
-    MatAutocompleteModule,
-    MatFormFieldModule,
-    CKEditorModule,
-    VgCoreModule,
-    VgControlsModule,
-    VgOverlayPlayModule,
-    VgBufferingModule
-  ],
-  providers: [SellerGuardGuard, DecimalPipe]
+    declarations: [
+        UpdateProductComponent,
+        PayoutHistoryComponent
+    ],
+    providers: [SellerGuardGuard, DecimalPipe],
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        SellerViewsRoutingModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatIconModule,
+        MatProgressBarModule,
+        MatAutocompleteModule,
+        MatFormFieldModule,
+        CKEditorModule,
+        VgCoreModule,
+        VgControlsModule,
+        VgOverlayPlayModule,
+        VgBufferingModule,
+        CommonViewsModule
+    ]
 })
 export class SellerViewsModule { }

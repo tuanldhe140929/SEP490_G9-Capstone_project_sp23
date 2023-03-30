@@ -1,15 +1,26 @@
+<app-header></app-header>
 <h1>Payout history</h1>
-<div class="mat-elevation-z8">
+<div class="mat-elevation-z8" *ngFor ="let payout of payoutlist">
     <table mat-table>
-  
+        <ng-container matColumnDef="Id">
+            <th mat-header-cell> ID </th>
+            <td mat-cell> {{payout.id}} </td>
+          </ng-container>
 
-      <ng-container matColumnDef="Email">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header="email"> Email </th>
-        <td mat-cell *matCellDef="let row"> {{row.email}} </td>
+      <ng-container matColumnDef="amount">
+        <th mat-header-cell > Amount </th>
+        <td mat-cell > {{payout.amount}} </td>
       </ng-container>
   
-
-      <ng-container matColumnDef="Ngày tạo">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header="accountCreatedDate"> Ngày tạo </th>
-        <td mat-cell *matCellDef="let row"> {{row.createdDate}} </td>
+      <ng-container matColumnDef="createdDate">
+        <th mat-header-cell > createdDate </th>
+        <td mat-cell > {{payout.createdDate}} </td>
       </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell > Status </th>
+        <td mat-cell > {{payout.status}} </td>
+      </ng-container>
+    </table>
+<app-footer></app-footer>
+    
