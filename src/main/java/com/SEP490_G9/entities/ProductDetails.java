@@ -39,10 +39,10 @@ public class ProductDetails implements Serializable {
 	@Column(name = "cover_image")
 	private String coverImage;
 
-	@Column(name = "detailDescription")
+	@Column(name = "detailDescription", length = 1000)
 	private String detailDescription;
 
-	@Column(name = "price")
+	@Column(name = "price", nullable = false)
 	private double price = 0;
 
 	@Column(name = "instruction")

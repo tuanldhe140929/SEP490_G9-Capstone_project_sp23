@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.SEP490_G9.common.Constant;
-import com.SEP490_G9.common.GoogleAPI;
 import com.SEP490_G9.common.JwtTokenUtil;
 import com.SEP490_G9.common.PasswordGenerator;
 import com.SEP490_G9.dto.AuthResponse;
@@ -33,6 +32,7 @@ import com.SEP490_G9.entities.Role;
 import com.SEP490_G9.entities.User;
 import com.SEP490_G9.entities.UserDetailsImpl;
 import com.SEP490_G9.service.AccountService;
+import com.SEP490_G9.service.GoogleAuthService;
 import com.SEP490_G9.service.RoleService;
 import com.SEP490_G9.service.UserService;
 import com.SEP490_G9.service.authService.EmailService;
@@ -67,7 +67,7 @@ public class UserController {
 	RefreshTokenService refreshTokenService;
 
 	@Autowired
-	GoogleAPI googleUtil;
+	GoogleAuthService googleAuthService;
 
 	@Autowired
 	PasswordGenerator passwordGenerator;
@@ -104,7 +104,7 @@ public class UserController {
 	public ResponseEntity<?> loginWithGoogle(@RequestBody final String code, HttpServletResponse response)
 			throws ClientProtocolException, IOException {
 		System.out.println(code);
-		User googleLoginUser = googleUtil.getUserInfo(code);
+		User googleLoginUser = googleAuthService.getUserInfo(code);
 		if(userService.getByEmail(googleLoginUser.getEmail())!=null) {
 			String randomPassword = passwordGenerator.generatePassword(8).toString();
 			String encodedPassword = new BCryptPasswordEncoder().encode(randomPassword);
