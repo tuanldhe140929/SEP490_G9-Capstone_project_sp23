@@ -21,10 +21,9 @@ public class PayoutController {
 	
 @Autowired
 PayoutService payoutService;
-@Autowired
-PayoutDTO payoutDTO;
 
-@GetMapping("getPurchasedProduct")
+
+@GetMapping("getPayoutHistory")
 public ResponseEntity<?> getPayoutHistory(){
 	List<Payout> allStatusPayout = payoutService.getPayoutHistory();
 	List<PayoutDTO> allDtoPayout = new ArrayList<>();

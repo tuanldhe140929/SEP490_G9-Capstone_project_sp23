@@ -17,11 +17,13 @@ import { VgOverlayPlayModule } from '@videogular/ngx-videogular/overlay-play';
 import { VgBufferingModule } from '@videogular/ngx-videogular/buffering';
 import { SellerGuardGuard } from '../../guards/seller-guard.guard';
 import { DecimalPipe } from '@angular/common';
+import { PayoutHistoryComponent } from './payout-history/payout-history.component';
 
 
 @NgModule({
   declarations: [
-    UpdateProductComponent
+    UpdateProductComponent,
+    PayoutHistoryComponent
   ],
   imports: [
     BrowserModule,

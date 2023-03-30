@@ -27,4 +27,5 @@ export class SellerService {
     }
     return this.httpClient.get<any>(baseUrl+'/getSellersForSearching',{params})
   }
+  
 }
