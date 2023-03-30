@@ -271,8 +271,7 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 	}
 
 	public Account getCurrentAccount() {
-		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
-				.getAccount();
+		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getAccount();
 		return account;
 	}
 

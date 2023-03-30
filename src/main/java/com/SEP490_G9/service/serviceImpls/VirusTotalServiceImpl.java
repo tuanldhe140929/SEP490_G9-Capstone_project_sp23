@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.SEP490_G9.exception.FileUploadException;
+import com.SEP490_G9.exception.InternalServerException;
 import com.SEP490_G9.service.VirusTotalService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -40,9 +41,14 @@ public class VirusTotalServiceImpl implements VirusTotalService {
 	private final String ANALYSIS_ENDPOINT = "https://www.virustotal.com/api/v3/analyses/";
 
 	@Override
-	public boolean scanFile(File file) throws IOException {
+	public boolean scanFile(File file) {
 		long startTime = System.currentTimeMillis();
-		List<byte[]> chunks = splitFileIntoChunks(file.getPath().toString());
+		List<byte[]> chunks;
+		try {
+			chunks = splitFileIntoChunks(file.getPath().toString());
+		} catch (IOException e1) {
+			throw new InternalServerException("Error when split file");
+		}
 
 		List<Boolean> isChunksSafe = new ArrayList<>();
 		List<Future<Boolean>> futures = new ArrayList<>();
@@ -53,8 +59,8 @@ public class VirusTotalServiceImpl implements VirusTotalService {
 				long uploadChunkStart = System.currentTimeMillis();
 				String analysisId = uploadChunk(UPLOAD_ENDPOINT, chunk);
 				long uploadChunkEnd = System.currentTimeMillis();
-				System.out.println("upload chunk " + (chunks.indexOf(chunk) + 1) + " takes "
-						+ (uploadChunkEnd - uploadChunkStart) / 1000 + "s");
+				//System.out.println("upload chunk " + (chunks.indexOf(chunk) + 1) + " takes "
+			//			+ (uploadChunkEnd - uploadChunkStart) / 1000 + "s");
 
 				boolean isChunkSafe = getAnalysis(analysisId, chunks.indexOf(chunk));
 				long analysisEnd = System.currentTimeMillis();
@@ -83,7 +89,7 @@ public class VirusTotalServiceImpl implements VirusTotalService {
 		}
 
 		long finishTime = System.currentTimeMillis();
-		System.out.println("total: " + (finishTime - startTime) / 1000);
+		//System.out.println("total: " + (finishTime - startTime) / 1000);
 		return isMalicious;
 	}
 
@@ -94,33 +100,21 @@ public class VirusTotalServiceImpl implements VirusTotalService {
 		while (notCompleted) {
 			Request request = new Request.Builder().url(ANALYSIS_ENDPOINT + analysisId).get()
 					.addHeader("accept", "application/json").addHeader("x-apikey", virusTotalKey).build();
-
+			System.out.println("Request URL: " + request.url());
+			System.out.println("Request method: " + request.method());
+			System.out.println("Request headers: " + request.headers());
+			System.out.println("Request body: " + request.body());
 			try {
 				Response response = client.newCall(request).execute();
 				ObjectMapper objectMapper = new ObjectMapper();
 				JsonNode rootNode = objectMapper.readTree(response.body().string());
-				// System.out.println(rootNode.toPrettyString());
+				System.out.println(rootNode.toPrettyString());
 				// Check if the analysis is completed
-
-//				{
-//					  "error" : {
-//					    "message" : "Quota exceeded",
-//					    "code" : "QuotaExceededError"
-//					  }
-//					}
-//					gettin analysis
-//					{
-//					  "error" : {
-//					    "message" : "Quota exceeded",
-//					    "code" : "QuotaExceededError"
-//					  }
-//					}
-
 				String status = rootNode.get("data").get("attributes").get("status").asText();
 				if (status.equals("completed")) {
 					// Print out the JSON object
 					notCompleted = false;
-					System.out.println(index);
+					//System.out.println(index);
 
 					int malicious = rootNode.get("data").get("attributes").get("stats").get("malicious").asInt();
 					if (malicious == 0) {
@@ -154,11 +148,13 @@ public class VirusTotalServiceImpl implements VirusTotalService {
 		Request request = new Request.Builder().url(url).post(requestBody).addHeader("accept", "application/json")
 				.addHeader("x-apikey", virusTotalKey).build();
 		String id = "";
+
+		// Print out the response information
 		try {
 			Response response = client.newCall(request).execute();
 
-			ObjectMapper objectMapper = new ObjectMapper();
-			JsonNode rootNode = objectMapper.readTree(response.body().string());
+		ObjectMapper objectMapper = new ObjectMapper();
+		JsonNode rootNode = objectMapper.readTree(response.body().string());
 
 			// Get the value of the "id" attribute
 			id = rootNode.get("data").get("id").asText();
@@ -187,8 +183,7 @@ public class VirusTotalServiceImpl implements VirusTotalService {
 				chunks.add(chunk);
 			}
 		}
-		System.out.println("chunk: " + chunks.size());
+		//System.out.println("chunk: " + chunks.size());
 		return chunks;
 	}
-
 }

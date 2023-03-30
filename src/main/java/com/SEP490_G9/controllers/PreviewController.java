@@ -33,7 +33,6 @@ import com.SEP490_G9.service.PreviewService;
 import com.SEP490_G9.service.ProductDetailsService;
 import com.SEP490_G9.service.ProductService;
 import com.SEP490_G9.service.SellerService;
-import com.SEP490_G9.common.StorageUtil;
 
 @RequestMapping(value = "/preview")
 @RestController

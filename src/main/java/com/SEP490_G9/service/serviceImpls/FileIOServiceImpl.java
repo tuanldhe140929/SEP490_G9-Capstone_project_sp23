@@ -23,12 +23,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.SEP490_G9.exception.InternalServerException;
 import com.SEP490_G9.service.FileIOService;
-import com.SEP490_G9.common.StorageUtil;
 
 @Service
 public class FileIOServiceImpl implements FileIOService {
-
-	private Path rootLocation;
 
 	@Value("${root.location}")
 	String ROOT_LOCATION;
@@ -77,57 +74,6 @@ public class FileIOServiceImpl implements FileIOService {
 			} catch (IOException e) {
 				throw new InternalServerException("Failed to store file.", e);
 			}
-		}
-	}
-
-	@Override
-	public Stream<Path> loadAll() {
-		try {
-			return Files.walk(this.rootLocation, 1).filter(path -> !path.equals(this.rootLocation))
-					.map(this.rootLocation::relativize);
-		} catch (IOException e) {
-			throw new InternalServerException("Failed to read stored files", e);
-		}
-	}
-
-	@Override
-	public void deleteAll() {
-		FileSystemUtils.deleteRecursively(rootLocation.toFile());
-	}
-
-	@Override
-	public Path load(String filename) {
-		return rootLocation.resolve(filename);
-	}
-
-	@Override
-	public Resource loadAsResource(String filename) {
-		try {
-			Path file = load(filename);
-			Resource resource = new UrlResource(file.toUri());
-			if (resource.exists() || resource.isReadable()) {
-				return resource;
-			} else {
-				throw new InternalServerException("Could not read file: " + filename);
-
-			}
-		} catch (MalformedURLException e) {
-			throw new InternalServerException("Could not read file: " + filename, e);
-		}
-	}
-
-	@Override
-	public MultipartFile loadAsMultipartFile(String filename) {
-		try {
-			Path path = load(filename);
-			File file = new File("");
-			MultipartFile multipartFile = null;
-
-			ClassPathResource imgFile = new ClassPathResource("image/sid.jpg");
-
-			return multipartFile;
-		} catch (Exception e) {
-			throw new InternalServerException("Could not read file: " + filename, e);
 		}
 	}
 }
