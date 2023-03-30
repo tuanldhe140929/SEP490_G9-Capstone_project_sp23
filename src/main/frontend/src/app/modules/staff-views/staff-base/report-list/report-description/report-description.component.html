@@ -2,21 +2,25 @@
     <h2>Chi tiết báo cáo</h2>
     <div>
         <label>Người báo cáo: </label>
-        {{data.username}}
+        <b>{{data.username}}</b>
+    </div>
+    <div>
+        <label>Phiên bản sản phẩm lúc báo cáo: </label>
+        <b>{{data.version}}</b>
     </div>
     <div>
         <label>Loại vi phạm: </label>
-        {{data.violationTypeName}}
+        <b>{{data.violationTypeName}}</b>
     </div>
     <div>
         <label>Nội dung: </label>
         <article>
-            {{data.description}} 
+            <b>{{data.description}}</b>
         </article>
     </div>
     <div>
         <label>Ngày báo cáo: </label>
-        {{data.reportedDate}} 
+        <b>{{data.reportedDate}}</b>
     </div>
     <div align="end">
         <button class="btn btn-warning" mat-dialog-close>Đóng</button>

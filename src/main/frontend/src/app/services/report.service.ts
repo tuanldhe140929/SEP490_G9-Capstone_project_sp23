@@ -55,4 +55,12 @@ export class ReportService {
     }
     return this.httpClient.get<any>(this.BaseUrl+"/getByProductAndStatus",{params});
   }
+
+  getByProductsAllVersions(productId: number, status: string){
+    const params = {
+      productId: productId,
+      status: status
+    }
+    return this.httpClient.get<any>(this.BaseUrl+"/getByAllVersionsAndStatus",{params});
+  }
 }
