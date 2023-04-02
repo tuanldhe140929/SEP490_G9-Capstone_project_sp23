@@ -13,5 +13,7 @@ public interface SellerRepository extends JpaRepository<Seller, Long> {
 	Seller findById(long id);
 	
 	List <Seller> findAll();
+
+	Seller findByPaypalEmail(String paypalEmail);
 	
 }

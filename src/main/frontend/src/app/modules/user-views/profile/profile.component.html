@@ -91,13 +91,15 @@
                                         routerLink="/changepassword" routerLinkActive="active"
                                         ariaCurrentWhenActive="page"> Đổi mật khẩu</a></button>
                                 <button (click)="UpdateInfo()" class="btn btn-lg btn-success" type="text">
-                                    Cập nhật thông tin</button>
+                                    Cập nhật thông tin</button>                        
+                                    <button class="btn btn-lg btn-success" type="reset">
+                                        <i class="glyphicon glyphicon-repeat"></i> 
+                                        <a routerLink="/seller/createNewSeller" routerLinkActive="active" ariaCurrentWhenActive="page" style="color: white; text-decoration: none;">xác thực tài khoản</a>
+                                      </button> 
+
                                 <!-- here -->
 
-                                <p>Click the button below to log in with PayPal:</p>
-                                <a
-                                    href="https://www.sandbox.paypal.com/connect/?flowEntry=static&client_id=AXeBEqb1kDGW5dIr6LfFb5VUAq1O71dUvAnF_cni3TATp2fUv-94ZMl1sqpJFGowcDfcfo2y5EX1jXYF&response_type=code&scope=email&redirect_uri=https://9b63-123-17-133-64.ap.ngrok.io/hompage&state=1">
-                                    PayPal Login</a>
+                               
 
                                 <!-- to here -->
                             </div>

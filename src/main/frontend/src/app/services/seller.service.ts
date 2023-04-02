@@ -27,4 +27,15 @@ export class SellerService {
     }
     return this.httpClient.get<any>(baseUrl+'/getSellersForSearching',{params})
   }
+  getSellerByPaypalEmail(paypalEmail: string): Observable<any> {
+    const params = {paypalEmail: paypalEmail};
+    return this.httpClient.get<any>(`${baseUrl}/getSellerByPaypalEmail`, {params});
+  }
+  createNewSeller(paypalEmail: string): Observable<any> {
+    const data = {paypalEmail: paypalEmail};
+    return this.httpClient.post<any>(`${baseUrl}/createNewSeller`,null, {params: data});
+  }
+
+
+
 }

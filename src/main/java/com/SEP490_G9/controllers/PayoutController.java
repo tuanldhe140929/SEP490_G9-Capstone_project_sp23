@@ -21,8 +21,7 @@ public class PayoutController {
 	
 @Autowired
 PayoutService payoutService;
-@Autowired
-PayoutDTO payoutDTO;
+
 
 @GetMapping("getPurchasedProduct")
 public ResponseEntity<?> getPayoutHistory(){
