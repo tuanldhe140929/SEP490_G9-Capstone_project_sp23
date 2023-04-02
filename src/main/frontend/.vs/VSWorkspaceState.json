@@ -3,14 +3,12 @@
     "",
     "\\src",
     "\\src\\app",
-    "\\src\\app\\DTOS",
     "\\src\\app\\modules",
-    "\\src\\app\\modules\\for-users\\my-cart",
-    "\\src\\app\\modules\\user-views",
-    "\\src\\app\\modules\\user-views\\cart",
-    "\\src\\app\\modules\\user-views\\review-transaction",
+    "\\src\\app\\modules\\guest-views",
+    "\\src\\app\\modules\\seller-views",
+    "\\src\\app\\modules\\seller-views\\update-product",
     "\\src\\app\\services"
   ],
-  "SelectedNode": "\\src\\app\\modules\\user-views\\cart\\cart.component.ts",
+  "SelectedNode": "\\src\\app\\modules\\seller-views\\update-product\\update-product.component.css",
   "PreviewInSolutionExplorer": false
 }

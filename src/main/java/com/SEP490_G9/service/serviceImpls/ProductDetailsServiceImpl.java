@@ -360,12 +360,16 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 
 		List<ProductFile> newPDFiles = new ArrayList<>();
 		for (ProductFile pfile : productDetails.getFiles()) {
-			if (pfile.isEnabled() && !pfile.isNewUploaded() && pfile.isReviewed()) {
+			if (pfile.isEnabled() && !pfile.isNewUploaded() && pfile.isReviewed()
+					||!pfile.isEnabled() && !pfile.isNewUploaded() && !pfile.isReviewed()) {
 				ProductFile pf = new ProductFile();
 				pf.setName(pfile.getName());
 				pf.setProductDetails(newPD);
 				pf.setSize(pfile.getSize());
 				pf.setType(pfile.getType());
+				pf.setEnabled(true);
+				pf.setNewUploaded(false);
+				pf.setReviewed(true);
 				pf.setSource(pfile.getSource());
 				newPDFiles.add(pf);
 			}

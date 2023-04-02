@@ -30,7 +30,7 @@ public class ProductDetails implements Serializable {
 	@JoinColumn(name = "product_id", referencedColumnName = "id", columnDefinition = "bigint")
 	private Product product;
 
-	@Column(name = "name", length = 30)
+	@Column(name = "name", length = 30, nullable = true)
 	private String name;
 
 	@Column(name = "description", length = 100)
@@ -48,13 +48,13 @@ public class ProductDetails implements Serializable {
 	@Column(name = "instruction")
 	private String instruction;
 
-	@Column(name = "upload_date")
+	@Column(name = "upload_date", nullable = false)
 	private Date createdDate;
 
-	@Column(name = "last_update")
+	@Column(name = "last_update", nullable = false)
 	private Date lastModified;
 	
-	@Column(name = "flagged")
+	@Column(name = "flagged", nullable = false)
 	private boolean flagged;
 
 	@ManyToOne

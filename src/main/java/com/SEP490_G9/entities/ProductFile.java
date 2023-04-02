@@ -18,31 +18,31 @@ public class ProductFile {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@Column(name = "name")
+	@Column(name = "name", nullable = false)
 	private String name;
 
-	@Column(name = "source")
+	@Column(name = "source", length = 255)
 	private String source;
 
-	@Column(name = "type")
+	@Column(name = "type", nullable = false)
 	private String type;
 
-	@Column(name = "size")
+	@Column(name = "size", nullable = false)
 	private Long size;
 
-	@Column(name="created_date")
+	@Column(name="created_date", nullable = false)
 	private Date createdDate;
 	
-	@Column(name="last_modified")
+	@Column(name="last_modified", nullable = false)
 	private Date lastModified;
 	
-	@Column(name="enabled")
+	@Column(name="enabled", nullable = false)
 	private boolean enabled;
 	
-	@Column(name="new_uploaded")
+	@Column(name="new_uploaded", nullable = false)
 	private boolean newUploaded;
 	
-	@Column(name="reviewed")
+	@Column(name="reviewed", nullable = false)
 	private boolean reviewed;
 	
 	@ManyToOne

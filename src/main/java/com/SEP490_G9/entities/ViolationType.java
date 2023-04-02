@@ -1,5 +1,6 @@
 package com.SEP490_G9.entities;
 
+import java.io.Serializable;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -15,13 +16,13 @@ import jakarta.persistence.Table;
 @JsonIgnoreProperties(value = { "reports" })
 @Entity
 @Table(name = "violation_types")
-public class ViolationType {
+public class ViolationType implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 
 	private Long id;
-	@Column(name = "name", unique = true)
+	@Column(name = "name", unique = true, nullable = false)
 
 	private String name;
 
