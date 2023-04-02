@@ -146,7 +146,7 @@
                     <input class="form-control" id="max" placeholder="Max" type="number" [(ngModel)]="maxprice">
                   </div> <!-- col end.// -->
                 </div> <!-- row end.// -->
-                <div *ngIf="!compareMinMax()">
+                <div *ngIf="!compareMinMax()||!checkValidMinMax()">
                   <small style="color: red">Khoảng giá không hợp lệ</small>
                 </div>
                 <button class="btn btn-light w-100" type="button" [disabled]="!compareMinMax()" (click)="refresh()">Áp dụng</button>
