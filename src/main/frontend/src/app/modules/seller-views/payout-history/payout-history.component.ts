@@ -33,7 +33,7 @@ export class PayoutHistoryComponent {
     }
   )
  }
- formatTime(createdDate: Date){
+formatTime(createdDate: Date){
 const timestamp = createdDate;
 const date = new Date(timestamp);
 
@@ -47,5 +47,6 @@ const formattedTime = date.getHours().toString().padStart(2, '0') + ':' +
 
 const formattedTimestamp = formattedDate + ' ' + formattedTime;
 console.log(formattedTimestamp);
+return formattedTimestamp;
  }
 }
