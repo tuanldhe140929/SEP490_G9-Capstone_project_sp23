@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.SEP490_G9.common.Constant;
-import com.SEP490_G9.common.JwtTokenUtil;
 import com.SEP490_G9.common.PasswordGenerator;
 import com.SEP490_G9.dto.AuthResponse;
 import com.SEP490_G9.entities.Account;
@@ -31,6 +30,7 @@ import com.SEP490_G9.entities.RefreshToken;
 import com.SEP490_G9.entities.Role;
 import com.SEP490_G9.entities.User;
 import com.SEP490_G9.entities.UserDetailsImpl;
+import com.SEP490_G9.security.JwtTokenUtil;
 import com.SEP490_G9.service.AccountService;
 import com.SEP490_G9.service.GoogleAuthService;
 import com.SEP490_G9.service.RoleService;
@@ -84,7 +84,6 @@ public class UserController {
 		}
 		List<Role> userRoles = new ArrayList<>();
 		userRoles.add(roleService.getRoleById(Constant.USER_ROLE_ID));
-		userRoles.add(roleService.getRoleById(Constant.SELLER_ROLE_ID));
 		String encodedPassword = new BCryptPasswordEncoder().encode(user.getPassword());
 		
 		User newUser = new User();

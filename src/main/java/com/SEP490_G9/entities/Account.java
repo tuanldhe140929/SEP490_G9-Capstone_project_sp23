@@ -27,7 +27,7 @@ public class Account {
 	private String email;
 
 	@NotBlank(message = "password can't be blank")
-	@Column(name = "password")
+	@Column(name = "password", nullable = false)
 	@Size(min = 8, max = 100)
 	private String password;
 

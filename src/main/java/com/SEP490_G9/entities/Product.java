@@ -29,18 +29,18 @@ public class Product implements Serializable {
 	@JoinColumn(name = "seller_id", nullable = false)
 	private Seller seller;
 
-	@Column(name = "active_version")
+	@Column(name = "active_version", nullable = false, length = 30)
 	private String activeVersion;
 
 	@OneToMany(mappedBy = "product")
 	private List<ProductDetails> productDetails = new ArrayList<>();
 
-	@Column(name = "draft")
+	@Column(name = "draft", nullable = false)
 	private boolean draft = false;
 
 	@OneToMany(mappedBy = "product")
 	private List<Report> reports = new ArrayList<>();
-	
+
 	public Product() {
 	}
 
@@ -111,6 +111,5 @@ public class Product implements Serializable {
 	public void setDraft(boolean draft) {
 		this.draft = draft;
 	}
-
 
 }

@@ -18,10 +18,10 @@ public class Seller extends User {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@Column(name="paypal_email")
+	@Column(name="paypal_email", nullable = false)
 	private String paypalEmail;
 
-	@Column(name = "seller_enabled")
+	@Column(name = "seller_enabled", nullable = false)
 	private boolean sellerEnabled;
 
 	@OneToMany(mappedBy = "seller", fetch = FetchType.EAGER)

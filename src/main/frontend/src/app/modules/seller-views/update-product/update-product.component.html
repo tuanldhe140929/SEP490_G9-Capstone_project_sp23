@@ -1,12 +1,29 @@
+<app-header></app-header>
 <div class="container-fluid grad">
   <div class="row padded" style="width:93%; background:white; margin:auto;margin-bottom:5%;">
-    <div class="row" style="border-bottom:0.5px solid grey; margin:auto;">
+    <div class="row" style="border-bottom: 0.5px solid #cdcdcd; height: 45px; margin: auto; background-color: #f4f4f4; ">
       <div style="display:flex;">
-        <div class="col-3" style="float:left;">
+        <div class="col-3" style="float:left; margin-top:auto; margin-bottom: auto;">
+          <span class="back_to_shop">Back to shop</span>
+        </div>
+      </div>
+    </div>
+    <div class="row" style="border-bottom: 0.5px solid #cdcdcd; height:70px; margin: auto;">
+      <div style="display:flex;">
+        <div class="col-3" style="float:left; margin-top:auto;margin-bottom:auto;">
           <h2>Cập nhật sản phẩm</h2>
         </div>
         <div class="col-9">
-          <div class="status" style="float:right; width:400px;"><h5>Trạng thái: </h5><h5 style="font-size:17px;">{{getApproved(product.approved)}}</h5></div>
+          <div class="status" style="float:right; width:400px; height:auto; margin-top: 9px;">
+            <div style="">
+              <h5>Trạng thái: </h5>
+              <h5 style="font-size: 17px; color: #6c757d;" *ngIf="product.approved==ProductStatus.NEW">{{getApproved(product.approved)}}</h5>
+              <h5 style="font-size:17px; color:yellow;" *ngIf="product.approved==ProductStatus.PENDING">{{getApproved(product.approved)}}</h5>
+              <h5 style="font-size:17px; color:green;" *ngIf="product.approved==ProductStatus.APPROVED">{{getApproved(product.approved)}}</h5>
+              <h5 style="font-size:17px; color:red;" *ngIf="product.approved==ProductStatus.REJECTED">{{getApproved(product.approved)}}</h5>
+
+            </div>
+          </div>
           <div class="draft"> </div>
         </div>
       </div>
@@ -216,23 +233,23 @@
               </div>
               <textarea id="instruction_details" [value]="product.instruction" style="min-height:200px;width:100%;resize:none"></textarea>
             </div>
-<!--            <div class="draft_picker" style="font-weight:600">
-              <div class="draft_picker_label">
-                <div><label for="draft_pick">Hiển thị</label></div>
-              </div>
-              <div class="draft_pick">
-                <input id="draft" value="true" type="radio" (click)="onDraftSelect($event)" />
-                <label for="draft">Bản nháp</label>&nbsp;&#45;&nbsp;<small>Chỉ mình bạn có thể nhìn thấy sản phẩm này</small>
-              </div>
-              <div>
-                <input id="publish" value="false" type="radio" (click)="onDraftSelect($event)" />
-                <label for="publish">Xuất bản</label>&nbsp;&#45;&nbsp;<small>Những người khác có thể xem và mua sản phẩm này</small>
-              </div>
-            </div>-->
+            <!--            <div class="draft_picker" style="font-weight:600">
+                        <div class="draft_picker_label">
+                          <div><label for="draft_pick">Hiển thị</label></div>
+                        </div>
+                        <div class="draft_pick">
+                          <input id="draft" value="true" type="radio" (click)="onDraftSelect($event)" />
+                          <label for="draft">Bản nháp</label>&nbsp;&#45;&nbsp;<small>Chỉ mình bạn có thể nhìn thấy sản phẩm này</small>
+                        </div>
+                        <div>
+                          <input id="publish" value="false" type="radio" (click)="onDraftSelect($event)" />
+                          <label for="publish">Xuất bản</label>&nbsp;&#45;&nbsp;<small>Những người khác có thể xem và mua sản phẩm này</small>
+                        </div>
+                      </div>-->
             <div style="display:flex;">
               <!--<input class="button add_file_btn" style="" type="submit" value="Lưu" />-->
               <div *ngIf="product.approved==ProductStatus.NEW" class="button add_file_btn" (click)="setPending()">Cập nhật</div>
-              <div *ngIf="product.approved==ProductStatus.PENDING || product.approved ==ProductStatus.REJECTED || product.approved==ProductStatus.APPROVED" class="button add_file_btn" (click)="setNew()">Tiếp tục cập nhật</div> 
+              <div *ngIf="product.approved==ProductStatus.PENDING || product.approved ==ProductStatus.REJECTED || product.approved==ProductStatus.APPROVED" class="button add_file_btn" (click)="setNew()">Tiếp tục cập nhật</div>
             </div>
           </div>
           <div class="right_col col-4">
@@ -370,7 +387,7 @@
         <th style="width:100px;"></th>
         <th style="width:200px;">Ngày tạo</th>
         <th style="width:200px;">Chỉnh sửa cuối</th>
-        <th >Trạng thái</th>
+        <th>Trạng thái</th>
       </tr>
       <tr *ngFor="let ver of productVersions">
         <td><div class="ver" (click)="chooseVersion(ver)">{{ver.version}}</div></td>
@@ -379,7 +396,7 @@
           <ng-template #showActive> <div class="current_version">Hiện tại</div></ng-template>
           <ng-template #optionActive>
             <div *ngIf="ver.approved == ProductStatus.APPROVED" class="option_active" (click)="activeVersion(ver)">Sử dụng</div>
-            <div *ngIf="ver.approved !=ProductStatus.APPROVED" class="option_active" >Sử dụng</div>
+            <div *ngIf="ver.approved !=ProductStatus.APPROVED" class="option_active">Sử dụng</div>
           </ng-template>
         </td>
         <td><div>{{dateFormat(ver.createdDate)}}</div></td>
@@ -396,3 +413,4 @@
     <button style=" width:20%;margin-left: 15px; border-radius: 5px; background-color: #FF2449; color: white; border: 1px solid rgba(0, 0, 0, 0.1);height:35px;" class="update_version_btn" (click)="createNewVersion()">Cập nhật</button>
   </div>
 </ng-template>
+<app-footer></app-footer>
