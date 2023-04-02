@@ -1,4 +1,4 @@
-<app-header></app-header>
+<!-- <app-header></app-header>
 <h1>Payout history</h1>
 <div class="mat-elevation-z8" *ngFor ="let payout of payoutlist">
     <table mat-table>
@@ -23,4 +23,34 @@
       </ng-container>
     </table>
 <app-footer></app-footer>
-    
+     -->
+     
+
+
+<app-header></app-header>
+<h1 style="text-align: center;">Payout history</h1>
+<div class="table-responsive pb-5">
+				<table id="tbOrderHistory" class="table border ps-table w-100 mb-3" *ngFor ="let payout of payoutlist">
+					<thead>
+						<tr>
+							<!-- <th class="font-weight-bold py-2 border-0">ID</th> -->
+							<th class="font-weight-bold py-2 border-0 quantity">Amount</th>
+							<th class="font-weight-bold py-2 border-0 ">CreatedDate</th>
+							<th class="font-weight-bold py-2 border-0 ">Status</th>
+							<!-- <th class="font-weight-bold py-2 border-0 ">PayoutFee</th> -->
+							<!-- <th class="font-weight-bold py-2 border-0 ">Customer</th>
+							<th class="font-weight-bold py-2 border-0 ">Total</th>
+							<th class="font-weight-bold py-2 border-0 ">Status</th>
+							<th class="font-weight-bold py-2 border-0 ">Action</th> -->
+						</tr>
+            <tr>
+              <td>${{payout.amount}}</td>
+              <td>{{formatTime(payout.createdDate)}}</td>
+              <td>{{payout.status}}</td>             
+            </tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+<app-footer></app-footer>
