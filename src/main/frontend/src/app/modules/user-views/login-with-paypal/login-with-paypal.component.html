@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Email Input Form</title>
+	<style>
+		body {
+			background-color: #f5f5f5;
+			font-family: Arial, sans-serif;
+		}
+
+		form {
+			margin: 0 auto;
+			max-width: 500px;
+			padding: 20px;
+			background-color: #fff;
+			border-radius: 5px;
+			box-shadow: 0 0 10px rgba(0,0,0,0.1);
+		}
+
+		label {
+			display: block;
+			margin-bottom: 10px;
+			font-weight: bold;
+			font-size: 16px;
+		}
+
+		input[type="email"] {
+			display: block;
+			padding: 10px;
+			border-radius: 5px;
+			border: 1px solid #ccc;
+			margin-bottom: 20px;
+			width: 100%;
+			font-size: 16px;
+			box-sizing: border-box;
+		}
+
+		button[type="submit"] {
+			background-color: #4CAF50;
+			color: white;
+			padding: 10px 20px;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+			font-size: 16px;
+			transition: background-color 0.2s ease;
+		}
+
+		button[type="submit"]:hover {
+			background-color: #3e8e41;
+		}
+
+		p {
+			margin-top: 20px;
+			font-size: 16px;
+		}
+
+		a {
+			display: inline-block;
+			background-color: #0070ba;
+			color: white;
+			padding: 10px 20px;
+			border-radius: 5px;
+			text-decoration: none;
+			font-size: 16px;
+			transition: background-color 0.2s ease;
+		}
+
+		a:hover {
+			background-color: #005689;
+		}
+	</style>
+</head>
+<body>
+	<form (ngSubmit)="onSubmit()" #paypalEmailForm="ngForm">
+		<label for="paypalEmail">Paypal Email:</label>
+		<input type="email" id="paypalEmail" name="paypalEmail" placeholder="hãy điền email" [(ngModel)]="paypalEmail" required>
+		<button type="submit" [disabled]="!paypalEmailForm.valid">xác nhận</button>
+	</form>
+	<div style="display: flex; flex-direction: column; align-items: center;">
+		<p>Đăng nhập bằng pay pal</p>
+		<a href="https://www.sandbox.paypal.com/connect/?flowEntry=static&client_id=AXeBEqb1kDGW5dIr6LfFb5VUAq1O71dUvAnF_cni3TATp2fUv-94ZMl1sqpJFGowcDfcfo2y5EX1jXYF&response_type=code&scope=email&redirect_uri=https://toan31311.wixsite.com/datn&state=1">Log In with PayPal</a>
+	  </div>
+</body>
+</html>

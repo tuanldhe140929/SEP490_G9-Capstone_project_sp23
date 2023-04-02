@@ -22,6 +22,7 @@ public class PayoutController {
 @Autowired
 PayoutService payoutService;
 
+
 @GetMapping("getPurchasedProduct")
 public ResponseEntity<?> getPayoutHistory(){
 	List<Payout> allStatusPayout = payoutService.getPayoutHistory();
