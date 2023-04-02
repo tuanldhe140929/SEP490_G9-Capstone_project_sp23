@@ -130,7 +130,7 @@ class ProductFileServiceTest {
 		when(productDetailsService.getByProductIdAndVersion(2L, "1.0.0")).thenReturn(pd);
 		when(pfr.existsById(2L)).thenReturn(true);
 		when(pfr.findById(2L)).thenReturn(Optional.of(file));
-		ProductFileDTO result = pfs.deleteById(2L);
+		ProductFile result = pfs.deleteById(2L);
 		assertNotNull(result);
 	}
 

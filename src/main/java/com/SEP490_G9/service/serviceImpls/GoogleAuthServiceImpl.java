@@ -1,19 +1,22 @@
-package com.SEP490_G9.common;
+package com.SEP490_G9.service.serviceImpls;
 
 import java.io.IOException;
 
 import org.apache.http.client.fluent.Form;
 import org.apache.http.client.fluent.Request;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
+import com.SEP490_G9.common.Constant;
 import com.SEP490_G9.entities.User;
 import com.SEP490_G9.exception.InternalServerException;
+import com.SEP490_G9.service.GoogleAuthService;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
-@Component
-public class GoogleAPI {
+@Service
+public class GoogleAuthServiceImpl implements GoogleAuthService {
 
+	@Override
 	public User getUserInfo(final String code) {
 		String userInfoJson;
 		try {
@@ -28,7 +31,8 @@ public class GoogleAPI {
 		return user;
 	}
 
-	private String getToken(final String code) {
+	@Override
+	public String getToken(final String code) {
 		String response = "";
 		try {
 			response = Request.Post(Constant.GOOGLE_LINK_GET_TOKEN)

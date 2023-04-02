@@ -104,6 +104,14 @@ export class SearchResultComponent implements OnInit{
     }
   }
 
+  checkValidMinMax(): boolean{
+    if(this.minprice<0||this.maxprice<0||!Number.isInteger(this.minprice)||!Number.isInteger(this.maxprice)){
+      return false;
+    }else{
+      return true;
+    }
+  }
+
   refresh(){
     console.log(this.checkedTags);
     this.productService.getFilteredProducts(this.keyword,this.chosenCategory, this.checkedTags,this.minprice,this.maxprice).subscribe(

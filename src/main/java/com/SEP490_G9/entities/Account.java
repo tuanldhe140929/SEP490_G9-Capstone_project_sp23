@@ -31,13 +31,13 @@ public class Account {
 	@Size(min = 8, max = 100)
 	private String password;
 
-	@Column(name = "created_date")
+	@Column(name = "created_date" , nullable = false)
 	private Date createdDate;
 
 	@Column(name = "last_modified")
 	private Date lastModified;
 
-	@Column(name = "enabled")
+	@Column(name = "enabled", nullable = false)
 	private boolean enabled = true;
 
 	@ManyToMany(fetch = FetchType.EAGER)

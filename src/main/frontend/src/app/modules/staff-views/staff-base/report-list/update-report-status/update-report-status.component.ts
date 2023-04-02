@@ -17,6 +17,7 @@ import { ReportDescriptionComponent } from '../report-description/report-descrip
 interface ReportEntity{
   userId: number,
   username: string,
+  version: string,
   violationTypeName: string,
   description: string,
   createdDate: string,
@@ -30,7 +31,7 @@ interface ReportEntity{
   styleUrls: ['./update-report-status.component.css']
 })
 export class UpdateReportStatusComponent implements AfterViewInit{
-  displayedColumns: string[] = ['username', 'violationType', 'description','checkbox'];
+  displayedColumns: string[] = ['username', 'version', 'violationType', 'description','checkbox'];
   reportList: Report[] = [];
   userList: User[] = [];
   violationTypeList: ViolationType[] = [];
@@ -48,7 +49,7 @@ export class UpdateReportStatusComponent implements AfterViewInit{
     private dialog: MatDialog,
     private toastr: ToastrService 
   ){
-    this.reportService.getByProductAndStatus(dataInjected.productId, dataInjected.version, dataInjected.status).subscribe(reports => {
+    this.reportService.getByProductsAllVersions(dataInjected.productId, dataInjected.status).subscribe(reports => {
       this.reportList = reports
       this.userService.getAllUsers().subscribe(users => {
         this.userList = users
@@ -60,6 +61,7 @@ export class UpdateReportStatusComponent implements AfterViewInit{
             return{
               userId: report.user.id,
               username: report.user.username,
+              version: report.version,
               violationTypeName: report.violation_types.name,
               description: report.description,
               createdDate: report.created_date,
@@ -78,10 +80,11 @@ export class UpdateReportStatusComponent implements AfterViewInit{
     })
   }
 
-  openReportDescription(username: string, violationTypeName: string, description: string, reportedDate: string){
+  openReportDescription(username: string, version: string, violationTypeName: string, description: string, reportedDate: string){
     const dialogRef = this.dialog.open(ReportDescriptionComponent, {
       data: {
         username: username,
+        version: version,
         violationTypeName: violationTypeName,
         description: description,
         reportedDate: reportedDate
@@ -95,10 +98,12 @@ export class UpdateReportStatusComponent implements AfterViewInit{
 
   updateStatus(){
     let data = this.dataSource.data;
+    let versionList = [];
     let userIdList = [];
     let statusList = [];
     for(let i = 0; i<data.length;i++){
       let userData = data[i];
+      versionList.push(userData.version);
       userIdList.push(userData.userId);
       statusList.push(userData.checked ? "ACCEPTED":"DENIED");
     }

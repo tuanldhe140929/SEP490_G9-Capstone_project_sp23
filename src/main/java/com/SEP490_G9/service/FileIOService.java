@@ -15,13 +15,4 @@ public interface FileIOService {
 
 	String storeV2(MultipartFile file, String path);
 
-	Stream<Path> loadAll();
-
-	Path load(String filename);
-
-	Resource loadAsResource(String filename);
-
-	void deleteAll();
-
-	MultipartFile loadAsMultipartFile(String filename);
 }

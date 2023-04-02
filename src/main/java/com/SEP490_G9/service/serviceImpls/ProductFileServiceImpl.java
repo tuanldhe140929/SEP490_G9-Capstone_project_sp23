@@ -28,7 +28,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.SEP490_G9.common.Constant;
 import com.SEP490_G9.common.Md5Hash;
-import com.SEP490_G9.common.VirusTotalAPI;
 import com.SEP490_G9.dto.ProductFileDTO;
 import com.SEP490_G9.entities.Account;
 import com.SEP490_G9.entities.CartItem;
@@ -50,6 +49,7 @@ import com.SEP490_G9.service.FileIOService;
 import com.SEP490_G9.service.ProductDetailsService;
 import com.SEP490_G9.service.ProductFileService;
 import com.SEP490_G9.service.ProductService;
+import com.SEP490_G9.service.VirusTotalService;
 
 import jakarta.transaction.Transactional;
 
@@ -78,7 +78,7 @@ public class ProductFileServiceImpl implements ProductFileService {
 	Md5Hash downloadTokenUtil;
 
 	@Autowired
-	VirusTotalAPI virusTotalApi;
+	VirusTotalService virusTotalApi;
 
 	@Override
 	public ProductFile createProductFile(ProductFile productFile) {

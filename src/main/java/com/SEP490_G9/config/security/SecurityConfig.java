@@ -25,7 +25,7 @@ import com.SEP490_G9.config.filter.JwtRequestFilter;
 @Configuration
 @Component
 @EnableWebSecurity(debug = true)
-public class SecurityConfiguration {
+public class SecurityConfig {
 	@Autowired
 	JwtAuthenticationEntryPoint authenEntryPoint;
 

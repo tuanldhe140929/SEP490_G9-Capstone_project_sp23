@@ -22,16 +22,19 @@ public class User extends Account implements Serializable {
 	@Size(min = 3, max = 30)
 	private String username;
 
+	@Size(max = 255)
 	@Column(name = "first_name")
 	private String firstName;
 
+	@Size(max = 255)
 	@Column(name = "last_name")
 	private String lastName;
 
+	@Size(max = 255)
 	@Column(name = "avatar")
 	private String avatar;
 
-	@Column(name = "email_verified")
+	@Column(name = "email_verified", nullable = false)
 	private boolean emailVerified = false;
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
