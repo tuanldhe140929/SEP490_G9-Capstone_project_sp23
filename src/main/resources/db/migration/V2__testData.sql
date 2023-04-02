@@ -40,7 +40,7 @@
  insert into categories(id, name) VALUES(7, 'Backgrounds');
  insert into categories(id, name) VALUES(8, 'Fonts');
  insert into categories(id, name) VALUES(9, 'Icons');
- insert into categories(id, name) VALUES(10, 'Tileset');
+ insert into categories(id, name) VALUES(10, 'Scripts');
  insert into categories(id, name) VALUES(11, 'User interfaces');
  insert into categories(id, name) VALUES(12, 'Lore');
  insert into categories(id, name) VALUES(13, 'Others');
@@ -61,12 +61,12 @@
  insert into violation_types VALUES (6,'Copyright infringement');
  insert into violation_types VALUES (7,'Promote terrorism');
 
-  
- /*insert into products (id, active_version, enabled, approved, seller_id) VALUES(1,'1.0.0',true,'APPROVED',2);
- insert into products (id, active_version, enabled, approved, seller_id) VALUES(2,'1.0.0',true,'APPROVED',2);
- insert into products (id, active_version, enabled, approved, seller_id) VALUES(3,'1.0.0',true,'REJECTED',2);
- insert into products (id, active_version, enabled, approved, seller_id) VALUES(4,'1.0.0',true,'REJECTED',2);
- insert into products (id, active_version, enabled, approved, seller_id) VALUES(5,'1.0.0',true,'PENDING',2);
+  --data for unit test--
+ /*insert into products (id, active_version, enabled, seller_id) VALUES(1,'1.0.0',true,2);
+ insert into products (id, active_version, enabled, seller_id) VALUES(2,'1.0.0',true,2);
+ insert into products (id, active_version, enabled, seller_id) VALUES(3,'1.0.0',true,2);
+ insert into products (id, active_version, enabled, seller_id) VALUES(4,'1.0.0',true,2);
+ insert into products (id, active_version, enabled, seller_id) VALUES(5,'1.0.0',true,2);
  
  insert into product_details (product_id, version, cover_image, upload_date, description, detail_description, draft, instruction, last_update, name, price, category_id, engine_id, license_id)
  VALUES(1,'1.0.0',null,CURRENT_DATE,'TEST VERSION','TEST VERSION',true,'TEST VERSION', CURRENT_DATE, 'TEST VERSION', 13000, 1,1,2);
@@ -88,9 +88,6 @@
  insert into product_details_tag VALUES(3,'1.0.0',2);
  insert into product_details_tag VALUES(4,'1.0.0',2);
  insert into product_details_tag VALUES(4,'1.0.0',1);
- 
-
-
 
  insert into previews (id, source, type,product_id, version) VALUES(1,'account_id_2\products\1\(1) file_example_MOV_1920_2_2MB.mov','video',1,'1.0.0');
  insert into previews (id, source, type,product_id, version) VALUES(2,'account_id_2\products\1\Database V2.drawio.png','picture',1,'1.0.0');

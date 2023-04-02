@@ -21,6 +21,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.cors.CorsConfiguration;
 
 import com.SEP490_G9.config.filter.JwtRequestFilter;
+import com.SEP490_G9.security.JwtAuthenticationEntryPoint;
 
 @Configuration
 @Component

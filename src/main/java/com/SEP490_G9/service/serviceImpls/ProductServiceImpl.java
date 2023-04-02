@@ -77,6 +77,7 @@ public class ProductServiceImpl implements ProductService {
 
 	private ProductDetails createProductDetails(Product product, String version) {
 		ProductDetails productDetails = new ProductDetails();
+		productDetails.setFlagged(false);
 		productDetails.setProduct(product);
 		productDetails.setVersion(version);
 		productDetails.setCreatedDate(new Date());

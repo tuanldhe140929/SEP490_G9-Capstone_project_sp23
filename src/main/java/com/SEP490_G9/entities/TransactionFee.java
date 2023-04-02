@@ -15,14 +15,14 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@JsonIgnoreProperties(value= {"transaction"})
+@JsonIgnoreProperties(value = { "transaction" })
 @Table(name = "transaction_fees")
 public class TransactionFee {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
-	@Column(name = "percentage")
+	@Column(name = "percentage", columnDefinition = "integer check (percentage >= 0 and percentage <= 100)")
 	private int percentage;
 
 	@OneToMany(mappedBy = "fee", fetch = FetchType.EAGER)
@@ -31,9 +31,11 @@ public class TransactionFee {
 	public TransactionFee() {
 		// TODO Auto-generated constructor stub
 	}
+
 	public TransactionFee(int id) {
 		this.id = id;
 	}
+
 	public int getId() {
 		return id;
 	}
