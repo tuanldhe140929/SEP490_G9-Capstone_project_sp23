@@ -1,6 +1,7 @@
 package com.SEP490_G9.service.serviceImpls;
 
 import java.math.BigDecimal;
+
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ import com.paypal.api.payments.Transaction;
 import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.OAuthTokenCredential;
 import com.paypal.base.rest.PayPalRESTException;
+
 
 @Service
 public class PaypalServiceImpl implements PaypalService {
@@ -185,5 +187,14 @@ public class PaypalServiceImpl implements PaypalService {
 		Currency fee = batch.getBatchHeader().getFees();
 		return fee.getValue();
 	}
+	@Override
+	public String getPayPalAccessToken() throws PayPalRESTException {
+	    String clientId = "Aeggqb_Nn61TNAR-cWfm7IdfXU9omux5CCpc0EWlZD-_8pilOyfTOfMdfOeJa2_kaY20lNYpcXFezbPq"; 
+	    String clientSecret = "EAMwf-ypGAL7ImdmcX2Yqp3RSzNxzQya1_If3BwWsAv2O7jUAjExUbtiHc_RN1fBkGAt1CPjiHomV-fD"; 
+
+	    OAuthTokenCredential authTokenCredential = new OAuthTokenCredential(clientId, clientSecret);
+	    return authTokenCredential.getAccessToken();
+	}
+
 
 }

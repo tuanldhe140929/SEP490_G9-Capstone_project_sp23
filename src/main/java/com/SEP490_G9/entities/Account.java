@@ -27,7 +27,7 @@ public class Account {
 	private String email;
 
 	@NotBlank(message = "password can't be blank")
-	@Column(name = "password")
+	@Column(name = "password", nullable = false)
 	@Size(min = 8, max = 100)
 	private String password;
 
@@ -69,6 +69,16 @@ public class Account {
 		this.enabled = enabled;
 		this.roles = roles;
 		this.refreshToken = refreshToken;
+	}
+
+	public Account(Account account) {
+		
+	}
+
+	public Account(Long id2, String email2, String password2) {
+		this.id= id2;
+		this.email=email2;
+		this.password=password2;
 	}
 
 	public Long getId() {

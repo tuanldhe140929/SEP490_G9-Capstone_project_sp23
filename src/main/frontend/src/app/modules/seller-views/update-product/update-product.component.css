@@ -4,6 +4,7 @@
 }
 
 .grad {
+  padding-top: 2%;
   min-height: 100vh;
   background-color: #f4f4f4;
 }
@@ -66,6 +67,7 @@ section {
 .payment_modes {
   display: flex;
 }
+
 
   .payment_modes button {
     flex: 1;
@@ -405,4 +407,21 @@ section {
   background: grey;
   font-weight: 600;
   cursor: pointer
+}
+
+.padded {
+
+  border: 1px solid #cdcdcd;
+  border-radius: 3px;
+}
+
+.back_to_shop{
+    font-weight:500;
+    text-decoration:underline;
+    cursor:pointer;
+    user-select:none;
+}
+
+.back_to_shop:hover{
+    opacity:.7;
 }

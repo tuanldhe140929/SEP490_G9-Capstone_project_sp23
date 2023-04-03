@@ -14,9 +14,9 @@ import com.SEP490_G9.dto.AuthResponse;
 import com.SEP490_G9.entities.Account;
 import com.SEP490_G9.entities.RefreshToken;
 import com.SEP490_G9.exception.ResourceNotFoundException;
+import com.SEP490_G9.security.JwtTokenUtil;
 import com.SEP490_G9.service.AccountService;
 import com.SEP490_G9.service.authService.RefreshTokenService;
-import com.SEP490_G9.common.JwtTokenUtil;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;

@@ -18,10 +18,10 @@ public class Seller extends User {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@Column(name="paypal_email")
+	@Column(name="paypal_email", nullable = false)
 	private String paypalEmail;
 
-	@Column(name = "seller_enabled")
+	@Column(name = "seller_enabled", nullable = false)
 	private boolean sellerEnabled;
 
 	@OneToMany(mappedBy = "seller", fetch = FetchType.EAGER)
@@ -30,7 +30,9 @@ public class Seller extends User {
 	public Seller() {
 		// TODO Auto-generated constructor stub
 	}
-
+	public Seller(User user) {
+		super(user.getId(),user.getEmail(),user.getPassword(),user.getUsername());
+	}
 	public Seller(boolean sellerEnabled, List<Product> products) {
 		super();
 		this.sellerEnabled = sellerEnabled;
@@ -60,5 +62,8 @@ public class Seller extends User {
 	public void setPaypalEmail(String paypalEmail) {
 		this.paypalEmail = paypalEmail;
 	}
+//	public void setUsername(String username) {
+//	    super.setUsername(username);
+//	}
 
 }

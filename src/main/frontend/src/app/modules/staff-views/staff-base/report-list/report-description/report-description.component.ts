@@ -8,7 +8,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 })
 export class ReportDescriptionComponent {
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: {username: string, violationTypeName: string, description: string, reportedDate: string}, 
+    @Inject(MAT_DIALOG_DATA) public data: {username: string, version:string, violationTypeName: string, description: string, reportedDate: string}, 
   ){
     
   }

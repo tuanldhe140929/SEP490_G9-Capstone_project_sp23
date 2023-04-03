@@ -1,12 +1,19 @@
 package com.SEP490_G9.entities.embeddable;
 
 import java.io.Serializable;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
 @Embeddable
 public class ProductVersionKey implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Long productId;
+	@Column(name = "version", length =30)
 	private String version;
 
 	public ProductVersionKey() {

@@ -34,27 +34,27 @@ public class Transaction {
 	@JoinColumn(name = "cart_id", nullable = false)
 	private Cart cart;
 
-	@Column(name = "amount")
+	@Column(name = "amount", nullable = false, columnDefinition = "real check (amount >= 0)")
 	private double amount;
 
 	@Enumerated(EnumType.STRING)
-	@Column(name = "status")
+	@Column(name = "status", nullable = false)
 	private Status status;
 
 	@ManyToOne
 	@JoinColumn(name = "transaction_fee_id", nullable = false)
 	private TransactionFee fee;
 
-	@Column(name = "created_date")
+	@Column(name = "created_date", nullable = false)
 	private Date createDate;
 
-	@Column(name = "last_modified")
+	@Column(name = "last_modified", nullable = false)
 	private Date lastModified;
 
 	@Column(name = "description")
 	private String description;
 
-	@Column(name = "paypal_id")
+	@Column(name = "paypal_id", nullable = false)
 	private String paypalId;
 
 	@Transient

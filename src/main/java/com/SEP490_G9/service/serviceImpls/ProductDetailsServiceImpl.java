@@ -360,12 +360,16 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 
 		List<ProductFile> newPDFiles = new ArrayList<>();
 		for (ProductFile pfile : productDetails.getFiles()) {
-			if (pfile.isEnabled() && !pfile.isNewUploaded() && pfile.isReviewed()) {
+			if (pfile.isEnabled() && !pfile.isNewUploaded() && pfile.isReviewed()
+					||!pfile.isEnabled() && !pfile.isNewUploaded() && !pfile.isReviewed()) {
 				ProductFile pf = new ProductFile();
 				pf.setName(pfile.getName());
 				pf.setProductDetails(newPD);
 				pf.setSize(pfile.getSize());
 				pf.setType(pfile.getType());
+				pf.setEnabled(true);
+				pf.setNewUploaded(false);
+				pf.setReviewed(true);
 				pf.setSource(pfile.getSource());
 				newPDFiles.add(pf);
 			}
@@ -505,37 +509,6 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 	// hien san pham cho nhan vien dua theo trang thai bao cao
 	@Override
 	public List<ProductDetails> getProductsByReportStatus(String status) {
-//		List<ProductDetails> allPd = getAll();
-//		List<ProductDetails> latestVer = getByLatestVer(allPd);
-//		List<ProductDetails> allPdByReportStatus = new ArrayList<>();
-//		for (ProductDetails pd : latestVer) {
-//			Product product = pd.getProduct();
-//			List<Report> reportList = reportRepo.findAll();
-//			for (Report report : reportList) {
-//				if (status.equalsIgnoreCase("PENDING") && report.getProduct().equals(product) && report.getStatus().equalsIgnoreCase("PENDING")) {
-//					allPdByReportStatus.add(pd);
-//				}
-//				if (status.equalsIgnoreCase("HANDLED") && report.getProduct().equals(product) && (report.getStatus().equalsIgnoreCase("ACCEPTED")||report.getStatus().equalsIgnoreCase("DENIED"))) {
-//					allPdByReportStatus.add(pd);
-//				}
-//			}
-//		}
-//		return allPdByReportStatus.stream().distinct().toList();
-//		List<Report> allReports = reportRepo.findAll();
-//		List<ProductDetails> pdByStatus = new ArrayList<>();
-//		for(Report report: allReports) {
-//			Product product = report.getProduct();
-//			List<Report> reportsOfAProduct = product.getReports();
-//			ProductDetails pd = getActiveVersion(product.getId());
-//			if(status.equalsIgnoreCase("HANDLED")&&pd.isFlagged()) {
-//				pdByStatus.add(pd);
-//			}
-//			if(status.equalsIgnoreCase("PENDING")&&!pd.isFlagged()&&reportsOfAProduct.size()>0) {
-//				pdByStatus.add(pd);
-//			}
-//		}
-//		return pdByStatus.stream().distinct().toList();
-		
 		List<ProductDetails> finalResult = new ArrayList<>();
 		List<Report> allReports = reportRepo.findAll();
 		if(status.equalsIgnoreCase("PENDING")) {

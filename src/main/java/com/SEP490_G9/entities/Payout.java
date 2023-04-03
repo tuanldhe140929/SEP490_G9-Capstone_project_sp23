@@ -20,28 +20,28 @@ public class Payout {
 	public enum Status {
 		SUCCESS, FAILED, CANCELED, CREATED, PROCESSING
 	}
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@Column(name = "amount")
+	@Column(name = "amount", nullable = false, columnDefinition = "real check (amount >= 0)")
 	private Double amount;
 
-	@Column(name = "created_date")
+	@Column(name = "created_date", nullable = false)
 	private Date createdDate;
 
-	@Column(name = "last_modified")
+	@Column(name = "last_modified", nullable = false)
 	private Date lastModified;
 
 	@Enumerated(EnumType.STRING)
-	@Column(name = "payout_status")
+	@Column(name = "payout_status", nullable = false)
 	private Status status;
 
-	@Column(name = "batch_id")
+	@Column(name = "batch_id", nullable = false)
 	private String batchId;
 
-	@Column(name = "payout_fee")
+	@Column(name = "payout_fee", nullable = false)
 	private Double payoutFee;
 
 	@Column(name = "description")
