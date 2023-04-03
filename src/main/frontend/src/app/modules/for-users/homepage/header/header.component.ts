@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { Observable, startWith, map } from 'rxjs';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { Product } from 'src/app/DTOS/Product';
+import { Product } from 'src/app/dtos/Product';
 import { ProductDtoService } from 'src/app/services/product-dto.service';
 import { NavigationExtras, Router } from '@angular/router';
 

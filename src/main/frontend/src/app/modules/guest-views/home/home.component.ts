@@ -1,4 +1,4 @@
-import { Product } from './../../../dtos/Product';
+import { Product } from '../../../dtos/Product';
 import { ProductService } from 'src/app/services/product.service';
 import { Component, OnInit } from '@angular/core';
 import { data } from 'jquery';

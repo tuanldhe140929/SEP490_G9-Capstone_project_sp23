@@ -36,6 +36,4 @@ export class SellerService {
     return this.httpClient.post<any>(`${baseUrl}/createNewSeller`,null, {params: data});
   }
 
-
-
 }
