@@ -5,13 +5,16 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.SEP490_G9.entities.Account;
 import com.SEP490_G9.entities.Cart;
 import com.SEP490_G9.entities.CartItem;
 import com.SEP490_G9.entities.Payout;
 import com.SEP490_G9.entities.Seller;
 import com.SEP490_G9.entities.Transaction;
+import com.SEP490_G9.entities.UserDetailsImpl;
 import com.SEP490_G9.repository.PayoutRepository;
 import com.SEP490_G9.repository.TransactionRepository;
 import com.SEP490_G9.service.PayoutService;
@@ -170,7 +173,8 @@ public class PayoutServiceImpl implements PayoutService {
 	}
 	@Override
 	public List<Payout> getPayoutHistory() {
-		List<Payout> Allpayout = payoutRepository.findAll();
+		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getAccount();
+		List<Payout> Allpayout = payoutRepository.findBySellerId(account.getId());
 		List<Payout> allPayoutHistory = new ArrayList<>();
 		for(Payout po : Allpayout) {
 			if(po.getStatus().equals(Payout.Status.SUCCESS)){

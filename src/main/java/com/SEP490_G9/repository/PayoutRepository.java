@@ -9,5 +9,5 @@ import com.SEP490_G9.entities.Payout;
 public interface PayoutRepository extends JpaRepository<Payout,Long> {
 
 	List<Payout> findByTransactionId(Long transactionId);
-
+	List<Payout> findBySellerId(Long sellerid);
 }
