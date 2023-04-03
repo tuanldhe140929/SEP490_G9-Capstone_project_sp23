@@ -177,6 +177,14 @@ export class SellerProductListComponent implements OnInit {
     }
   }
 
+  checkValidMinMax(): boolean{
+    if(this.minprice<0||this.maxprice<0||!Number.isInteger(this.minprice)||!Number.isInteger(this.maxprice)){
+      return false;
+    }else{
+      return true;
+    }
+  }
+
   getSellerById() {
     this.sellerService.getSellerById(this.sellerid).subscribe(
       data => {

@@ -76,6 +76,7 @@ export class ProductDetailsComponent implements OnInit {
 
   displayPreviews: DisplayPreview[] = [];
   constructor(private activatedRoute: ActivatedRoute,
+
     private router: Router,
     private storageService: StorageService,
     private decimalPipe: DecimalPipe,
@@ -84,12 +85,14 @@ export class ProductDetailsComponent implements OnInit {
     private cartService: CartService,
     private productFileService: ProductFileService,
     private toastr: ToastrService,
+
     private userService: UserService,
     private reportService: ReportService) {
   }
 
   isPurchased = false;
   ngOnInit(): void {
+
 
     // this.getProduct();
 
@@ -105,6 +108,7 @@ export class ProductDetailsComponent implements OnInit {
 
           if (this.DescriptionTab) {
             this.DescriptionTab.innerHTML = this.product.details;
+
           }
 
           this.cartService.isPurchasedByUser(this.visitor.id, this.product.id).subscribe(

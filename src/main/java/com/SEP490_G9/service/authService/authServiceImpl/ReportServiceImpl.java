@@ -112,9 +112,10 @@ public class ReportServiceImpl implements ReportService {
 	}
 
 	@Override
-	public List<Report> updateReportStatus(long productId, String version, List<Long> userIdList, List<String> statusList) {
+	public List<Report> updateReportStatus(long productId, List<String> versionList , List<Long> userIdList, List<String> statusList) {
 		List<Report> updatedList = new ArrayList<>();
 		for(int i=0;i<userIdList.size();i++) {
+			String version = versionList.get(i);
 			long userId = userIdList.get(i);
 			String status = statusList.get(i);
 			Report report = getByProductUserVersion(productId, userId, version);
@@ -164,5 +165,29 @@ public class ReportServiceImpl implements ReportService {
 		}
 		return allByStatus;
 	}
+
+	@Override
+	public List<Report> getByProductAllVersions(long productId, String status) {
+		List<Report> allReports = getAllReports();
+		List<Report> finalResult = new ArrayList<>();
+		if(status.equalsIgnoreCase("PENDING")) {
+			for(Report report: allReports) {
+				if(report.getProduct().getId()==productId&& report.getStatus().equalsIgnoreCase("PENDING")) {
+					finalResult.add(report);
+				}
+			}
+		}else {
+			for(Report report: allReports) {
+				if(report.getProduct().getId()==productId&& (report.getStatus().equalsIgnoreCase("ACCEPTED")||report.getStatus().equalsIgnoreCase("DENIED"))) {
+					finalResult.add(report);
+				}
+			}
+		}
+		return finalResult;
+	}
+
+
+
+
 
 }

@@ -31,26 +31,14 @@ export class ReportService {
     return this.httpClient.get<any>(this.BaseUrl+"/getByProductUserVersion",{params});
   }
 
-  getByStatus(status: string): Observable<any>{
-    const params = {
-      status: status
-    }
-    return this.httpClient.get<any>(this.BaseUrl+"/getByStatus",{params})
-  }
-
   updateReportStatus(productId: number, version: string, userIdList: number[], statusList: string[]){
     let params = new HttpParams().set('productId', productId).set('version',version).set('userIdList',userIdList.join(',')).set('statusList',statusList.join(','));
     return this.httpClient.put<any>(this.BaseUrl+"/updateReportStatus",null,{params})
   }
 
-  getAllReports(){
-    return this.httpClient.get<any>(this.BaseUrl+"/getAllReports");
-  }
-
-  getByProductAndStatus(productId: number, version: string, status: string){
+  getByProductsAllVersions(productId: number, status: string){
     const params = {
       productId: productId,
-      version: version,
       status: status
     }
     return this.httpClient.get<any>(this.BaseUrl+"/getByProductAndStatus",{params});

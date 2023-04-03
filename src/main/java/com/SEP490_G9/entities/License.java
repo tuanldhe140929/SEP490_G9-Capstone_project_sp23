@@ -18,16 +18,19 @@ public class License  {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	@Column(name = "name")
+	@Column(name = "name", nullable = false)
 	private String name;
 	@Column(name = "acrynosm")
 	private String acrynosm;
 
-	@Column(name = "details", length = 1024)
+	@Column(name = "details", length = 1024, nullable = false)
 	private String details;
 
 	@Column(name = "reference_link")
 	private String referenceLink;
+
+	@Column(name= "provider")
+	private String provider;
 
 	@OneToMany(mappedBy = "license", fetch = FetchType.EAGER)
 	List<ProductDetails> productDetails = new ArrayList<>();
@@ -43,6 +46,14 @@ public class License  {
 		this.acrynosm = acrynosm;
 		this.details = details;
 		this.productDetails = productDetails;
+	}
+
+	public String getProvider() {
+		return this.provider;
+	}
+
+	public void setProvider(String provider){
+		this.provider = provider;
 	}
 
 	public String getAcrynosm() {

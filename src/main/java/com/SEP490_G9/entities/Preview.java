@@ -12,10 +12,10 @@ public class Preview {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@Column(name = "source")
+	@Column(name = "source", nullable = false, length = 255)
 	private String source;
 
-	@Column(name = "type")
+	@Column(name = "type", nullable = false)
 	private String type;
 
 	@ManyToOne

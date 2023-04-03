@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.SEP490_G9.common.JwtTokenUtil;
 import com.SEP490_G9.common.PasswordGenerator;
 import com.SEP490_G9.dto.AuthRequest;
 import com.SEP490_G9.dto.AuthResponse;
@@ -33,6 +32,7 @@ import com.SEP490_G9.entities.RefreshToken;
 import com.SEP490_G9.entities.User;
 import com.SEP490_G9.entities.UserDetailsImpl;
 import com.SEP490_G9.exception.ResourceNotFoundException;
+import com.SEP490_G9.security.JwtTokenUtil;
 import com.SEP490_G9.service.AccountService;
 import com.SEP490_G9.service.authService.EmailService;
 import com.SEP490_G9.service.authService.RefreshTokenService;
@@ -83,11 +83,6 @@ public class AccountController {
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
 				.getAccount();
-		HttpSession session = request.getSession(true);
-
-		session.setAttribute("key", "value");
-		System.out.println("on login" + session.getId());
-
 		RefreshToken refreshToken = refreshTokenService.createRefreshToken(account);
 
 		Cookie cookie = new Cookie("refreshToken", refreshToken.getToken());
@@ -123,7 +118,7 @@ public class AccountController {
 		jwtUtil.invalidateToken(token);
 		response.addCookie(cookie);
 		SecurityContextHolder.getContext().setAuthentication(null);
-		return ResponseEntity.ok(null);
+		return ResponseEntity.ok(true);
 	}
 
 	@RequestMapping(value = "resetPassword", method = RequestMethod.POST)

@@ -44,7 +44,8 @@ public class User extends Account implements Serializable {
 	}
 
 	public User(Account account) {
-
+		super(account);
+		
 	}
 
 	public User(@NotBlank(message = "username can't be blank") @Size(min = 3, max = 30) String username,
@@ -68,6 +69,12 @@ public class User extends Account implements Serializable {
 
 	public User(String email) {
 		setEmail(email);
+	}
+
+	public User(Long id, String email, String password, String username2) {
+		super(id,email,password);
+		this.username=username2;
+		
 	}
 
 	public String getUsername() {

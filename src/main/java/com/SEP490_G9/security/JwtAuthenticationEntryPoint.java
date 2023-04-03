@@ -1,4 +1,4 @@
-package com.SEP490_G9.config.security;
+package com.SEP490_G9.security;
 
 import java.io.IOException;
 import java.io.Serializable;
