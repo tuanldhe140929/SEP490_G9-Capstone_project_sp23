@@ -1,11 +1,14 @@
-
-<head>
+<app-header></app-header>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-</head>
+
+</head> -->
 <hr>
+<section class="padding-y bg-light">
+    <div class="container">
+
 <div class="container bootstrap snippet">
     <div class="row">
         <div class="col-sm-10">
@@ -29,6 +32,10 @@
             <div class="tab-content">
                 <div class="tab-pane active" id="home">
                     <hr>
+
+
+
+
                     <form [formGroup]="Profileform" (submit)="onChangeName()" class="form" action="##" method="post"
                         id="registrationForm">
                         <div class="form-group">
@@ -57,8 +64,8 @@
                                     <h4>Họ</h4>
                                 </label>
                                 <input readonly [(ngModel)]="user.lastName" [ngModelOptions]="{standalone: true}"
-                                    type="text" class="form-control" id="last_name"
-                                    placeholder="Last name" title="enter your Last name if any.">
+                                    type="text" class="form-control" id="last_name" placeholder="Last name"
+                                    title="enter your Last name if any.">
                             </div>
                         </div>
                         <div class="form-group">
@@ -82,18 +89,32 @@
                         <div class="form-group">
                             <div class="col-xs-12">
                                 <br>
-                                <button class="btn btn-lg btn-success" type="submit" [disabled]="Profileform.invalid"><i
-                                        class="glyphicon glyphicon-ok-sign"></i> Lưu</button>
                                 <button class="btn btn-lg" type="reset"><i class="glyphicon glyphicon-repeat"></i> <a
                                         routerLink="/changepassword" routerLinkActive="active"
                                         ariaCurrentWhenActive="page"> Đổi mật khẩu</a></button>
                                 <button (click)="UpdateInfo()" class="btn btn-lg btn-success" type="text">
                                     Cập nhật thông tin</button>
+                                 <button *ngIf="isSeller()" type="button" class="btn btn-lg btn-success"
+                                        style="background-color: rgb(9, 139, 96);" routerLink="/payout">Payout history</button>                     
+                            </div>
+                            <div class="col-xs-12">
+                                <button class="btn btn-lg btn-success" style="background-color:  rgb(19, 113, 255);"
+                                    type="submit" [disabled]="Profileform.invalid"><i
+                                        class="glyphicon glyphicon-ok-sign"></i> Lưu</button>
                             </div>
                         </div>
                     </form>
-
                 </div>
+
+
             </div>
+
+        </div>
+
         </div>
     </div>
+    </div>
+
+</section>
+<app-footer></app-footer>
+

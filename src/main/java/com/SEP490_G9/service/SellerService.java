@@ -31,4 +31,8 @@ public interface SellerService {
 	
 	List<Seller> getPurchasedProduct(long sellerId);
 
+	boolean createNewSeller(String paypalEmail);
+
+	Seller getSellerByPaypalEmail(String paypalEmail);
+
 }

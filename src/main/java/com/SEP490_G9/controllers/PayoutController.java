@@ -22,7 +22,7 @@ public class PayoutController {
 @Autowired
 PayoutService payoutService;
 
-@GetMapping("getPurchasedProduct")
+@GetMapping("getPayoutHistory")
 public ResponseEntity<?> getPayoutHistory(){
 	List<Payout> allStatusPayout = payoutService.getPayoutHistory();
 	List<PayoutDTO> allDtoPayout = new ArrayList<>();

@@ -44,13 +44,15 @@ public class SecurityConfig {
 
 		http.cors().configurationSource(request -> {
 			CorsConfiguration configuration = new CorsConfiguration();
-			configuration.setAllowedOrigins(List.of("http://localhost:4200"));
+			configuration.setAllowedOrigins(List.of("http://localhost:4200","ap.ngrok.io"));
 			configuration.setAllowCredentials(true);
 			configuration.setAllowedMethods(List.of("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
 			configuration.addExposedHeader("Message");
 			configuration.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));
 			return configuration;
 		}).and().csrf().disable();
+		
+		
 
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED);
 

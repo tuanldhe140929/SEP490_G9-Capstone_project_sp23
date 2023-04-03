@@ -8,6 +8,7 @@ import { ChangePasswordComponent } from './change-password/change-password.compo
 import { CreateReportComponent } from './create-report/create-report.component';
 
 import { DownloadComponent } from './download/download.component';
+import { LoginWithPaypalComponent } from './login-with-paypal/login-with-paypal.component';
 import { ProfileComponent } from './profile/profile.component';
 import { ReviewTransactionComponent } from './review-transaction/review-transaction.component';
 
@@ -47,6 +48,12 @@ const routes: Routes = [
     path: 'transaction/reviewTransaction',
     component: ReviewTransactionComponent,
     title: 'Xác nhận đơn hàng',
+    canActivate: [AuthGuard]
+  },
+  {
+  path: 'seller/createNewSeller',
+    component: LoginWithPaypalComponent,
+    title: 'xác thực người bán',
     canActivate: [AuthGuard]
   }
 ];

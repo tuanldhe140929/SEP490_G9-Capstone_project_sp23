@@ -26,6 +26,12 @@ public interface UserService {
 	public User updateUser(String newUserName, String newFirstName, String newLastName);
 
 	public String uploadAvatar(MultipartFile coverImage) throws IOException;
+
+
+	boolean isPayPalUser(String userEmail);
+	
+
 	
 	List<User> getAllUsers();
+
 }

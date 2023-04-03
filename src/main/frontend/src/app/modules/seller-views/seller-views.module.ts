@@ -17,32 +17,32 @@ import { VgOverlayPlayModule } from '@videogular/ngx-videogular/overlay-play';
 import { VgBufferingModule } from '@videogular/ngx-videogular/buffering';
 import { SellerGuardGuard } from '../../guards/seller-guard.guard';
 import { DecimalPipe } from '@angular/common';
-import { HeaderComponent } from '../common-views/header/header.component';
-import { FooterComponent } from '../common-views/footer/footer.component';
-import { CommonViewsModule } from '../common-views/common-views.module';
+import { PayoutHistoryComponent } from './payout-history/payout-history.component';
+import { CommonViewsModule } from "../common-views/common-views.module";
 
 
 @NgModule({
-  declarations: [
-    UpdateProductComponent,
-  ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    SellerViewsRoutingModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatIconModule,
-    MatProgressBarModule,
-    MatAutocompleteModule,
-    MatFormFieldModule,
-    CKEditorModule,
-    VgCoreModule,
-    CommonViewsModule,
-    VgControlsModule,
-    VgOverlayPlayModule,
-    VgBufferingModule
-  ],
-  providers: [SellerGuardGuard, DecimalPipe]
+    declarations: [
+        UpdateProductComponent,
+        PayoutHistoryComponent
+    ],
+    providers: [SellerGuardGuard, DecimalPipe],
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        SellerViewsRoutingModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatIconModule,
+        MatProgressBarModule,
+        MatAutocompleteModule,
+        MatFormFieldModule,
+        CKEditorModule,
+        VgCoreModule,
+        VgControlsModule,
+        VgOverlayPlayModule,
+        VgBufferingModule,
+        CommonViewsModule
+    ]
 })
 export class SellerViewsModule { }

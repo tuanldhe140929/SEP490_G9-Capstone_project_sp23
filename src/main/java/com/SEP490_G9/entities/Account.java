@@ -71,6 +71,16 @@ public class Account {
 		this.refreshToken = refreshToken;
 	}
 
+	public Account(Account account) {
+		
+	}
+
+	public Account(Long id2, String email2, String password2) {
+		this.id= id2;
+		this.email=email2;
+		this.password=password2;
+	}
+
 	public Long getId() {
 		return id;
 	}

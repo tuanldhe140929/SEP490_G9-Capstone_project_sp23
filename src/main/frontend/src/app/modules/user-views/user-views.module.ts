@@ -13,6 +13,7 @@ import { CartComponent } from './cart/cart.component';
 import { ThankYouComponent } from './thank-you/thank-you.component';
 import { ReviewTransactionComponent } from './review-transaction/review-transaction.component';
 import { LoadingSpinnerComponent } from '../common-views/loading-spinner/loading-spinner.component';
+import { LoginWithPaypalComponent } from './login-with-paypal/login-with-paypal.component';
 
 
 @NgModule({
@@ -23,7 +24,8 @@ import { LoadingSpinnerComponent } from '../common-views/loading-spinner/loading
     DownloadComponent,
     CartComponent,
     ThankYouComponent,
-    ReviewTransactionComponent
+    ReviewTransactionComponent,
+    LoginWithPaypalComponent
   ],
   imports: [
     CommonModule,
