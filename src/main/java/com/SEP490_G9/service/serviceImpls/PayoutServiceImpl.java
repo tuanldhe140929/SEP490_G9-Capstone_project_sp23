@@ -70,6 +70,8 @@ public class PayoutServiceImpl implements PayoutService {
 		payout.setTransaction(transaction);
 		payout.setCreatedDate(new Date());
 		payout.setDescription("Wait for buy transaction to complete");
+		payout.setBatchId("Not yet");
+		payout.setPayoutFee(0D);
 		payout.setStatus(Payout.Status.CREATED);
 		payoutRepository.save(payout);
 		return payout;

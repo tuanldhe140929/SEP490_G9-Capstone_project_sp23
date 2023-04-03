@@ -15,8 +15,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
 import java.util.zip.ZipOutputStream;
 
+import org.apache.commons.compress.archivers.ArchiveEntry;
+import org.apache.commons.compress.archivers.ArchiveException;
+import org.apache.commons.compress.archivers.ArchiveInputStream;
+import org.apache.commons.compress.archivers.ArchiveStreamFactory;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
@@ -42,6 +48,7 @@ import com.SEP490_G9.entities.UserDetailsImpl;
 import com.SEP490_G9.entities.ProductDetails.Status;
 import com.SEP490_G9.exception.DuplicateFieldException;
 import com.SEP490_G9.exception.FileUploadException;
+import com.SEP490_G9.exception.InternalServerException;
 import com.SEP490_G9.exception.ResourceNotFoundException;
 import com.SEP490_G9.repository.ProductFileRepository;
 import com.SEP490_G9.repository.ProductRepository;
@@ -156,7 +163,7 @@ public class ProductFileServiceImpl implements ProductFileService {
 		if (productFile.getSize() == 0) {
 			throw new FileUploadException("File size:" + productFile.getSize());
 		}
-	
+
 		if ((productDetails.getFiles().size() + 1) >= 10) {
 			throw new FileUploadException("Exeeded max file count");
 		}
@@ -172,6 +179,12 @@ public class ProductFileServiceImpl implements ProductFileService {
 //		}
 		if (true) {
 			try {
+//				if (fileHasPassword(file)) {
+//					Files.deleteIfExists(tempFilePath);
+//					throw new IllegalArgumentException("Compressed file must not has password");
+//				} else {
+//					Files.deleteIfExists(tempFilePath);
+//				}
 				Files.deleteIfExists(tempFilePath);
 			} catch (IOException e) {
 				throw new FileUploadException("Error at server");
@@ -199,6 +212,24 @@ public class ProductFileServiceImpl implements ProductFileService {
 			ret.setFileState(ProductFileDTO.FileState.MALICIOUS);
 		}
 		return ret;
+	}
+
+	private boolean fileHasPassword(File file) {
+		char[] password = "password".toCharArray(); // replace with the password to test
+		try (FileInputStream fis = new FileInputStream(file);
+				ArchiveInputStream ais = new ArchiveStreamFactory().createArchiveInputStream(fis)) {
+			ArchiveEntry entry;
+			while ((entry = ais.getNextEntry()) != null) {
+				IOUtils.toByteArray(ais);
+			}
+		} catch (IOException e) {
+			throw new InternalServerException("Error occur when tryin to extract compressed file");
+		} catch (ArchiveException e) {
+			if (e.getCause() instanceof ZipException && e.getCause().getMessage().contains("password")) {
+				return true; // password-protected file
+			}
+		}
+		return false; // file is not password-protected
 	}
 
 	private Path createTempFile(MultipartFile productFile) {

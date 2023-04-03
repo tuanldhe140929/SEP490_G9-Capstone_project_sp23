@@ -34,7 +34,6 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.SEP490_G9.common.VirusTotalAPI;
 import com.SEP490_G9.configs.TestConfig;
 import com.SEP490_G9.dto.ProductFileDTO;
 import com.SEP490_G9.entities.Product;
@@ -48,13 +47,13 @@ import com.SEP490_G9.repository.ProductRepository;
 import com.SEP490_G9.repository.TransactionRepository;
 import com.SEP490_G9.service.FileIOService;
 import com.SEP490_G9.service.ProductDetailsService;
+import com.SEP490_G9.service.VirusTotalService;
 import com.SEP490_G9.service.serviceImpls.ProductFileServiceImpl;
 
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @RunWith(PowerMockRunner.class)
 @Import(TestConfig.class)
 @SpringBootTest
-@PrepareForTest(VirusTotalAPI.class)
 class ProductFileServiceTest {
 
 	@Mock
@@ -74,6 +73,9 @@ class ProductFileServiceTest {
 
 	@Mock
 	ProductRepository productRepo;
+	
+	@Mock 
+	VirusTotalService virusTotalService;
 
 	@Test
 	void testCreateProductFile() {
@@ -112,7 +114,7 @@ class ProductFileServiceTest {
 		assertThat(result.getId()).isEqualTo(2L);
 	}
 
-	VirusTotalAPI virusTotalAPI = mock(VirusTotalAPI.class);
+
 
 	@Test
 	void testDeleteById() {
@@ -161,8 +163,7 @@ class ProductFileServiceTest {
 	}
 
 	@Test
-	@PrepareForTest(VirusTotalAPI.class)
-	void testUploadFile() throws IOException {
+	void testUploadFile() throws IOException, InterruptedException {
 		pfs.setROOT_LOCATION("ABC");
 		Product product = new Product();
 		product.setId(1L);
@@ -186,7 +187,7 @@ class ProductFileServiceTest {
 
 //		PowerMockito.mockStatic(VirusTotalAPI.class);
 		try {
-			when(virusTotalAPI.scanFile(any(File.class))).thenReturn(true);
+			when(virusTotalService.scanFile(any(File.class))).thenReturn(true);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
