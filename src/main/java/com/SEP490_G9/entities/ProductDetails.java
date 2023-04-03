@@ -11,15 +11,13 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.*;
 
-
-
 @JsonIgnoreProperties(value = { "product", "cartItems" })
 @Entity
 @Table(name = "product_details", uniqueConstraints = {
 		@UniqueConstraint(name = "uk_product_version", columnNames = { "product_id", "version" }) })
 public class ProductDetails implements Serializable {
 	public enum Status {
-		NEW,PENDING,APPROVED,REJECTED
+		NEW, PENDING, APPROVED, REJECTED
 	}
 
 	@EmbeddedId
@@ -42,7 +40,7 @@ public class ProductDetails implements Serializable {
 	@Column(name = "detailDescription", length = 1000)
 	private String detailDescription;
 
-	@Column(name = "price", nullable = false)
+	@Column(name = "price", nullable = false, columnDefinition = "real check( price < 1000 )")
 	private double price = 0;
 
 	@Column(name = "instruction")
@@ -53,7 +51,7 @@ public class ProductDetails implements Serializable {
 
 	@Column(name = "last_update", nullable = false)
 	private Date lastModified;
-	
+
 	@Column(name = "flagged", nullable = false)
 	private boolean flagged;
 
@@ -62,9 +60,9 @@ public class ProductDetails implements Serializable {
 	private License license;
 
 	@Enumerated(EnumType.STRING)
-	@Column(name="status")
+	@Column(name = "status", nullable = false)
 	private Status approved = Status.NEW;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "category_id")
 	private Category category;
@@ -158,8 +156,6 @@ public class ProductDetails implements Serializable {
 	public void setDetailDescription(String detailDescription) {
 		this.detailDescription = detailDescription;
 	}
-
-	
 
 	public double getPrice() {
 		return price;
@@ -256,5 +252,5 @@ public class ProductDetails implements Serializable {
 	public void setFlagged(boolean flagged) {
 		this.flagged = flagged;
 	}
-	
+
 }

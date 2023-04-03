@@ -103,6 +103,8 @@ public class TransactionServiceImpl implements TransactionService {
 		transaction.setAmount(afterFeeCaculatedRounded);
 		transaction.setCreateDate(new Date());
 		transaction.setFee(fee);
+		transaction.setPaypalId("Not yet");
+		transaction.setLastModified(new Date());
 		transaction.setStatus(Transaction.Status.CREATED);
 		transaction = transactionRepo.save(transaction);
 

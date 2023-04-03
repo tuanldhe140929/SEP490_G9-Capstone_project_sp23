@@ -227,6 +227,7 @@ class ProductServiceTest {
 	}
 
 	@Test
+	@WithMockUser(username = "testuser", roles = { "SELLER" })
 	void testSetActiveVersion() {
 		Product product = new Product();
 		product.setId(1L);
@@ -245,6 +246,7 @@ class ProductServiceTest {
 	}
 
 	@Test
+	@WithMockUser(username = "testuser", roles = { "SELLER" })
 	void testSetActiveVersionA() {
 		Product product = new Product();
 		product.setId(1L);
