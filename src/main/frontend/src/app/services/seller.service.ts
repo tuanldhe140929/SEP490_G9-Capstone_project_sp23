@@ -35,5 +35,7 @@ export class SellerService {
     const data = {paypalEmail: paypalEmail};
     return this.httpClient.post<any>(`${baseUrl}/createNewSeller`,null, {params: data});
   }
-
+  getAllSellers(){
+    return this.httpClient.get<any>(baseUrl+'/reportedsellerlist');
+  }
 }
