@@ -69,7 +69,6 @@ public class CartServiceImplement implements CartService {
 
 		for (CartItem item : cart.getItems()) {
 			if (item.getProductDetails().getProduct().getId().equals(productId)) {
-				System.out.println("asdasd");
 				throw new IllegalArgumentException("Cart already has item");
 			}
 		}
