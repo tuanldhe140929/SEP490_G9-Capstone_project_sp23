@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Category } from 'src/app/DTOS/Category';
-import { Product } from 'src/app/DTOS/Product';
-import { Tag } from 'src/app/DTOS/Tag';
+import { Category } from 'src/app/dtos/Category';
+import { Product } from 'src/app/dtos/Product';
+import { Tag } from 'src/app/dtos/Tag';
 import { CategoryService } from 'src/app/services/category.service';
 import { ProductDtoService } from 'src/app/services/product-dto.service';
 import { TagService } from 'src/app/services/tag.service';

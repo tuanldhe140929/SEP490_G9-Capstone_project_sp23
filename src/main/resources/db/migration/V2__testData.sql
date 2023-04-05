@@ -62,23 +62,25 @@
  insert into violation_types VALUES (7,'Promote terrorism');
 
   --data for unit test--
- /*insert into products (id, active_version, enabled, seller_id) VALUES(1,'1.0.0',true,2);
- insert into products (id, active_version, enabled, seller_id) VALUES(2,'1.0.0',true,2);
- insert into products (id, active_version, enabled, seller_id) VALUES(3,'1.0.0',true,2);
- insert into products (id, active_version, enabled, seller_id) VALUES(4,'1.0.0',true,2);
- insert into products (id, active_version, enabled, seller_id) VALUES(5,'1.0.0',true,2);
+ /*insert into products (id, active_version, draft, enabled, seller_id) VALUES(1,'1.0.0',false,true,2);
+ insert into products (id, active_version, draft, enabled, seller_id) VALUES(2,'1.0.0',false,true,2);
+ insert into products (id, active_version, draft, enabled, seller_id) VALUES(3,'1.0.0',false,true,2);
+ insert into products (id, active_version, draft, enabled, seller_id) VALUES(4,'1.0.0',false,true,2);
+ insert into products (id, active_version, draft, enabled, seller_id) VALUES(5,'1.0.0',false,true,2);
  
- insert into product_details (product_id, version, cover_image, upload_date, description, detail_description, draft, instruction, last_update, name, price, category_id, engine_id, license_id)
- VALUES(1,'1.0.0',null,CURRENT_DATE,'TEST VERSION','TEST VERSION',true,'TEST VERSION', CURRENT_DATE, 'TEST VERSION', 13000, 1,1,2);
- insert into product_details (product_id, version, cover_image, upload_date, description, detail_description, draft, instruction, last_update, name, price, category_id, engine_id, license_id)
- VALUES(1,'1.0.1',null,CURRENT_DATE,'TEST VERSION','TEST VERSION',true,'TEST VERSION', CURRENT_DATE, 'TEST VERSION', 1000, 2,3,2);
- insert into product_details (product_id, version, cover_image, upload_date, description, detail_description, draft, instruction, last_update, name, price, category_id, engine_id, license_id)
- VALUES(2,'1.0.0',null,CURRENT_DATE,'TEST VERSION','TEST VERSION',false,'TEST VERSION', CURRENT_DATE, 'TEST VERSION', 100000, 1,2,1);
- insert into product_details (product_id, version, cover_image, upload_date, description, detail_description, draft, instruction, last_update, name, price, category_id, engine_id, license_id)
- VALUES(3,'1.0.0',null,CURRENT_DATE,'TEST VERSION','TEST VERSION',false,'TEST VERSION', CURRENT_DATE, 'TEST VERSION', 0, 3,1,4);
- insert into product_details (product_id, version, cover_image, upload_date, description, detail_description, draft, instruction, last_update, name, price, category_id, engine_id, license_id)
- VALUES(4,'1.0.0',null,CURRENT_DATE,'TEST VERSION','TEST VERSION',true,'TEST VERSION', CURRENT_DATE, 'TEST VERSION', 0, 4,4,3);
- 
+ insert into product_details (product_id, version, cover_image, upload_date, description, detail_description, instruction, last_update, name, price, category_id, license_id, flagged, status)
+ VALUES(1,'1.0.0',null,CURRENT_DATE,'TEST_DESCRIPTION','TEST_DETAILS_DESCRIPTION', 'TEST_INSTRUCTION', CURRENT_DATE, 'TEST_NAME', 0, 1,2,false,'NEW');
+ insert into product_details (product_id, version, cover_image, upload_date, description, detail_description, instruction, last_update, name, price, category_id, license_id, flagged, status)
+ VALUES(1,'1.0.1',null,CURRENT_DATE,'TEST_DESCRIPTION','TEST_DETAILS_DESCRIPTION', 'TEST_INSTRUCTION', CURRENT_DATE, 'TEST_NAME', 0, 3,2,false,'PENDING');
+ insert into product_details (product_id, version, cover_image, upload_date, description, detail_description, instruction, last_update, name, price, category_id, license_id, flagged, status)
+ VALUES(2,'1.0.0',null,CURRENT_DATE,'TEST_DESCRIPTION','TEST_DETAILS_DESCRIPTION', 'TEST_INSTRUCTION', CURRENT_DATE, 'TEST_NAME', 0, 5,3,false,'APPROVED');
+ insert into product_details (product_id, version, cover_image, upload_date, description, detail_description, instruction, last_update, name, price, category_id, license_id, flagged, status)
+ VALUES(3,'1.0.0',null,CURRENT_DATE,'TEST_DESCRIPTION','TEST_DETAILS_DESCRIPTION', 'TEST_INSTRUCTION', CURRENT_DATE, 'TEST_NAME', 0, 2,2,false,'APPROVED');
+ insert into product_details (product_id, version, cover_image, upload_date, description, detail_description, instruction, last_update, name, price, category_id, license_id, flagged, status)
+ VALUES(4,'1.0.0',null,CURRENT_DATE,'TEST_DESCRIPTION','TEST_DETAILS_DESCRIPTION', 'TEST_INSTRUCTION', CURRENT_DATE, 'TEST_NAME', 0, 6,2,false,'REJECTED');
+ insert into product_details (product_id, version, cover_image, upload_date, description, detail_description, instruction, last_update, name, price, category_id, license_id, flagged, status)
+ VALUES(5,'1.0.0',null,CURRENT_DATE,'TEST_DESCRIPTION','TEST_DETAILS_DESCRIPTION', 'TEST_INSTRUCTION', CURRENT_DATE, 'TEST_NAME', 0, 10,2,false,'NEW');
+
  insert into product_details_tag VALUES(1,'1.0.0',3);
  insert into product_details_tag VALUES(1,'1.0.0',1);
  insert into product_details_tag VALUES(1,'1.0.1',2);
@@ -99,13 +101,13 @@
  insert into previews (id, source, type,product_id, version) VALUES(8,'account_id_2\products\1\Untitled Diagram.drawio.png','picture',4,'1.0.0');
 
  
- insert into files (id, name, size, source, type, product_id, version) VALUES(1,'(1) file_example_MOV_1920_2_2MB.mov',100,'account_id_2\products\1\(1) file_example_MOV_1920_2_2MB.mov','image/png',1,'1.0.0');
- insert into files (id, name, size, source, type, product_id, version) VALUES(2,'Database V2.drawio.png',100,'account_id_2\products\1\Database V2.drawio.png','image/png',1,'1.0.0');
- insert into files (id, name, size, source, type, product_id, version) VALUES(3,'ERD V2.drawio.png',100,'account_id_2\products\1\ERD V2.drawio.png','image/png',1,'1.0.1');
- insert into files (id, name, size, source, type, product_id, version) VALUES(4,'(1) file_example_MOV_1920_2_2MB.mov',100,'account_id_2\products\1\(1) file_example_MOV_1920_2_2MB.mov','video/mov',2,'1.0.0');
- insert into files (id, name, size, source, type, product_id, version) VALUES(5,'Database V2.drawio (3).png',100,'account_id_2\products\1\Database V2.drawio (3).png','image/png',2,'1.0.0');
- insert into files (id, name, size, source, type, product_id, version) VALUES(6,'Overall Architecture.drawio (3).png',100,'account_id_2\products\1\Overall Architecture.drawio (3).png','image/png',3,'1.0.0');
- insert into files (id, name, size, source, type, product_id, version) VALUES(7,'Untitled Diagram.drawio.png',100,'account_id_2\products\1\Untitled Diagram.drawio.png','image/png',4,'1.0.0');
+ insert into files (id, name, size, source, type, product_id, version, enabled, new_uploaded, reviewed, created_date, last_modified) VALUES(1,'(1) file_example_MOV_1920_2_2MB.mov',100,'account_id_2\products\1\(1) file_example_MOV_1920_2_2MB.mov','image/png',1,'1.0.0',true, false, true, CURRENT_DATE, CURRENT_DATE);
+ insert into files (id, name, size, source, type, product_id, version, enabled, new_uploaded, reviewed, created_date, last_modified) VALUES(2,'Database V2.drawio.png',100,'account_id_2\products\1\Database V2.drawio.png','image/png',1,'1.0.0',true, false, true, CURRENT_DATE, CURRENT_DATE);
+ insert into files (id, name, size, source, type, product_id, version, enabled, new_uploaded, reviewed, created_date, last_modified) VALUES(3,'ERD V2.drawio.png',100,'account_id_2\products\1\ERD V2.drawio.png','image/png',1,'1.0.1',true, false, true, CURRENT_DATE, CURRENT_DATE);
+ insert into files (id, name, size, source, type, product_id, version, enabled, new_uploaded, reviewed, created_date, last_modified) VALUES(4,'(1) file_example_MOV_1920_2_2MB.mov',100,'account_id_2\products\1\(1) file_example_MOV_1920_2_2MB.mov','video/mov',2,'1.0.0',true, false, true, CURRENT_DATE, CURRENT_DATE);
+ insert into files (id, name, size, source, type, product_id, version, enabled, new_uploaded, reviewed, created_date, last_modified) VALUES(5,'Database V2.drawio (3).png',100,'account_id_2\products\1\Database V2.drawio (3).png','image/png',2,'1.0.0',true, false, true, CURRENT_DATE, CURRENT_DATE);
+ insert into files (id, name, size, source, type, product_id, version, enabled, new_uploaded, reviewed, created_date, last_modified) VALUES(6,'Overall Architecture.drawio (3).png',100,'account_id_2\products\1\Overall Architecture.drawio (3).png','image/png',3,'1.0.0',true, false, true, CURRENT_DATE, CURRENT_DATE);
+ insert into files (id, name, size, source, type, product_id, version, enabled, new_uploaded, reviewed, created_date, last_modified) VALUES(7,'Untitled Diagram.drawio.png',100,'account_id_2\products\1\Untitled Diagram.drawio.png','image/png',4,'1.0.0',true, false, true, CURRENT_DATE, CURRENT_DATE);
  
 
 

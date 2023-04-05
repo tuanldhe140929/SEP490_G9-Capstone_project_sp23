@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Cart } from 'src/app/DTOS/Cart';
-import { CartItem } from 'src/app/DTOS/CartItem';
-import { Product } from 'src/app/DTOS/Product';
+import { Cart } from 'src/app/dtos/Cart';
+import { CartItem } from 'src/app/dtos/CartItem';
+import { Product } from 'src/app/dtos/Product';
 import { CartService } from 'src/app/services/cart.service';
 
 @Component({

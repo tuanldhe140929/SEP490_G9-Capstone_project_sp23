@@ -8,6 +8,7 @@ import { Observable } from 'rxjs';
 import { User } from 'src/app/dtos/User';
 import { StorageService } from 'src/app/services/storage.service';
 import { UserService } from 'src/app/services/user.service';
+import { Role } from 'src/app/dtos/Role';
 
 
 
@@ -128,6 +129,10 @@ export class ProfileComponent implements OnInit {
         }
       )
     }
+  }
+  isSeller(): boolean {
+    const sellerRole: Role = {id: 4, name: 'ROLE_SELLER'}; 
+    return this.user.roles.some(role => role.id === sellerRole.id);
   }
 
 }

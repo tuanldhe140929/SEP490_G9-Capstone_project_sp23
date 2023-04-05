@@ -34,5 +34,7 @@ public interface SellerService {
 	boolean createNewSeller(String paypalEmail);
 
 	Seller getSellerByPaypalEmail(String paypalEmail);
+	
+	List<Seller> getReportedSellers();
 
 }

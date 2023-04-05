@@ -7,9 +7,7 @@ import com.SEP490_G9.entities.Seller;
 import com.SEP490_G9.entities.Transaction;
 
 public class PayoutDTO {
-	public enum Status{
-		SUCCESS, FAILED, CANCELED, CREATED, PROCESSING
-	}
+
 	public PayoutDTO(){
 		
 	}
@@ -17,7 +15,7 @@ public class PayoutDTO {
 	private Double amount;
 	private Date createdDate;
 	private Date lastModified;
-	private Status status;
+	private Payout.Status status;
 	private String batchId;
 	private Double payoutFee;
 	private String description;
@@ -26,16 +24,16 @@ public class PayoutDTO {
 	
 	public PayoutDTO(Payout payout) {
 		super();
-		this.id = id;
-		this.amount = amount;
-		this.createdDate = createdDate;
-		this.lastModified = lastModified;
-		this.status = status;
-		this.batchId = batchId;
-		this.payoutFee = payoutFee;
-		this.description = description;
-		this.seller = seller;
-		this.transaction = transaction;
+		this.id = payout.getId();
+		this.amount = payout.getAmount();
+		this.createdDate = payout.getCreatedDate();
+		this.lastModified = payout.getLastModified();
+		this.status = payout.getStatus();
+		this.batchId = payout.getBatchId();
+		this.payoutFee = payout.getPayoutFee();
+		this.description = payout.getDescription();
+		this.seller = payout.getSeller();
+		this.transaction = payout.getTransaction();
 	}
 	public Long getId() {
 		return id;
@@ -61,10 +59,11 @@ public class PayoutDTO {
 	public void setLastModified(Date lastModified) {
 		this.lastModified = lastModified;
 	}
-	public Status getStatus() {
+
+	public Payout.Status getStatus() {
 		return status;
 	}
-	public void setStatus(Status status) {
+	public void setStatus(Payout.Status status) {
 		this.status = status;
 	}
 	public String getBatchId() {

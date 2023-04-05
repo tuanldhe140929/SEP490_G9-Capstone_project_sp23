@@ -36,10 +36,10 @@ const MSG105 = 'Định dạng này không được hỗ trợ';
 const IMAGE_EXTENSIONS = ['image/png', 'image/jpeg', 'image/svg+xml'];
 const VIDEO_EXTENSIONS = ['video/mp4', 'video/x-matroska', 'video/quicktime'];
 const baseUrl = "http://localhost:9000/private/manageProduct";
-const MAX_SIZE = 50000000000;
+const MAX_SIZE = 1024*1024*2000;
 const MAX_FILE_COUNT = 10;
 const CHUNK_SIZE = 50000000;
-
+const MAX_FILE_SIZE = 1024 * 1024 * 500;
 class UploadProcess {
   progress: number;
   subcription: Subscription
@@ -160,6 +160,18 @@ export class UpdateProductComponent implements OnInit {
           this.openFileSizeErrorModal();
           return;
         }
+        
+        if ($event.target.files[i].size > MAX_FILE_SIZE) {
+          this.fileError = "File đăng tải có kích thước: tối đa 500Mb";
+          this.openFileSizeErrorModal();
+          return;
+        }
+        
+             if($event.target.files[i].name.length>100 || 0> $event.target.files[i].name.length){
+	 	 this.fileError = "Tên tệp từ 1 đến 100 kí tự";
+      this.openFileSizeErrorModal();
+      return;
+	}
 
         for (let j = 0; j < this.fileDisplayList.length; j++) {
           if (this.fileDisplayList[j].file.name === $event.target.files[i].name) {
@@ -171,7 +183,7 @@ export class UpdateProductComponent implements OnInit {
         }
         totalSize += $event.target.files[i].size;
         if (totalSize > MAX_SIZE) {
-          this.fileError = "Tổng dung lượng các file vượt quá 5GB";
+          this.fileError = "Tổng dung lượng các file vượt quá 2GB";
           this.openFileSizeErrorModal();
           return;
         }
@@ -233,9 +245,9 @@ export class UpdateProductComponent implements OnInit {
                 break;
               }
             }
-            if (index != -1) {
-              this.fileDisplayList.slice(index, 1);
-            }
+            
+              this.fileDisplayList.slice(this.fileDisplayList.indexOf(fileDisplay), 1);
+            
           }
         )
         fileDisplay.process.subcription = upload$;
@@ -556,6 +568,11 @@ export class UpdateProductComponent implements OnInit {
     }
     const file: File = $event.target.files[0];
 
+	if(file.name.length>100){
+		this.fileError = "Tên tệp từ 1 đến 100 kí tự";
+      this.openFileSizeErrorModal();
+      return;
+	}
     if (file) {
       console.log(file.type);
       if (!this.checkFileType(file.type, IMAGE_EXTENSIONS)) {
@@ -598,7 +615,13 @@ export class UpdateProductComponent implements OnInit {
       this.openFileSizeErrorModal();
       return;
     }
+ 
     const file: File = $event.target.files[0];
+    if(file.name.length>100 || file.name.length<0){
+	  this.fileError = "Tên tệp từ 1 đến 100 kí tự";
+      this.openFileSizeErrorModal();
+      return;
+	}
     if (file) {
       if (!this.checkFileType(file.type, VIDEO_EXTENSIONS)) {
         this.openFormatErrorModal();
@@ -655,6 +678,12 @@ export class UpdateProductComponent implements OnInit {
           if (!this.checkFileType(files[i].type, IMAGE_EXTENSIONS)) {
             valid = false;
           }
+          
+            if(files[i].name.length>100 || files[i].name.length<0){
+	  this.fileError = "Tên tệp từ 1 đến 100 kí tự";
+      this.openFileSizeErrorModal();
+      return;
+	}
         }
         if (!valid) {
           this.openFormatErrorModal();
