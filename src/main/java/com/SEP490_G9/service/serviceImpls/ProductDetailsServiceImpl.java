@@ -262,7 +262,7 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 			throw new ResourceNotFoundException("Product details", "version", product.getActiveVersion());
 		}
 		Account account = getCurrentAccount();
-		if (ret.getProduct().getSeller().getId() != account.getId()) {
+		if (ret.getProduct().getSeller().getId() != account.getId() && !isStaff(account)) {
 			if (ret.getApproved() != Status.APPROVED) {
 				throw new IllegalAccessError("Can not access this resource");
 			}
