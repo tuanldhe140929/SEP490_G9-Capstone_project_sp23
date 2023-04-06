@@ -3,6 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AccountService } from 'src/app/services/account.service';
+import { Account } from 'src/app/dtos/Account';
 
 @Component({
   selector: 'app-add-staff',
@@ -12,6 +13,7 @@ import { AccountService } from 'src/app/services/account.service';
 export class AddStaffComponent implements OnInit{
 
   canCloseDialog: boolean;
+  staff: Account;
 
   constructor(private formBuilder: FormBuilder, private accountService: AccountService, private toastr: ToastrService, @Inject(MAT_DIALOG_DATA) public data: {emailList: string[]}){}
 
@@ -62,10 +64,8 @@ export class AddStaffComponent implements OnInit{
     if(this.addStaffForm.valid){
       if(!this.checkEmailExists()){
         this.canCloseDialog = true;
-        console.log(this.data.emailList.length);
         this.accountService.addStaff(this.addStaffForm.value).subscribe(
           data => {
-            console.log(data);
             this.toastr.success("Thêm nhân viên thành công!");
           }
         )

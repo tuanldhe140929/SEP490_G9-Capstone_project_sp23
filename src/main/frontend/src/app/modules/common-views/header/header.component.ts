@@ -59,7 +59,7 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.productService.getFilteredProducts("",0,[],0,10000000).subscribe(
+    this.productService.getFilteredProducts("",0,[],0,1000).subscribe(
       data => {
         this.productList = data;
         for (let i = 0; i <= this.productList.length; i++) {

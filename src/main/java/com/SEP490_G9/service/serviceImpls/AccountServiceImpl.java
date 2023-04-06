@@ -16,12 +16,16 @@ import com.SEP490_G9.exception.ResourceNotFoundException;
 import com.SEP490_G9.repository.AccountRepository;
 import com.SEP490_G9.repository.RoleRepository;
 import com.SEP490_G9.service.AccountService;
+import com.SEP490_G9.service.authService.RefreshTokenService;
 import com.SEP490_G9.common.Constant;
 import com.SEP490_G9.common.PasswordGenerator;
 
 @Service
 public class AccountServiceImpl implements AccountService {
 
+	@Autowired
+	RefreshTokenService refreshTokenService;
+	
 	@Autowired
 	AccountRepository accountRepo;
 

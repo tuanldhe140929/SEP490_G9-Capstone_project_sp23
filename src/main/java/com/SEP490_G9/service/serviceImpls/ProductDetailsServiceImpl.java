@@ -238,6 +238,9 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		if (min < 0 || max < 0) {
 			throw new NumberException("Min or max cannot be negative");
 		}
+		if (min > 1000 || max > 1000) {
+			throw new NumberException("Price range must be from 0 to 1000");
+		}
 		List<ProductDetails> pdByPriceRange = new ArrayList<>();
 		for (ProductDetails pd : listPd) {
 			if (pd.getPrice() >= min && pd.getPrice() <= max) {
