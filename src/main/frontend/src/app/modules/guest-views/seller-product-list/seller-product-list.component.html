@@ -199,7 +199,7 @@
                 <div class="price-wrap">
                   <strong class="price">{{product.name}}</strong>
                 </div> <!-- price-wrap.// -->
-                <p class="title mb-2">{{product.price}}VND</p>
+                <p class="title mb-2">{{product.price}} $</p>
                 <a (click)="openDetails(product.id)" class="btn btn-primary">Chi tiết</a>
                 <a *ngIf="!sellerStatus" href="#" class="btn btn-light btn-icon"> <i class="fa fa-shopping-cart"></i> </a>
                 <a *ngIf="sellerStatus" (click)="redirectUpdatePage(product.id)" class="btn btn-light btn-icon"> <i class="fa fa-pen"></i> </a>

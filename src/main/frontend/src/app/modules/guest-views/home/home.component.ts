@@ -2,6 +2,7 @@ import { Product } from '../../../dtos/Product';
 import { ProductService } from 'src/app/services/product.service';
 import { Component, OnInit } from '@angular/core';
 import { data } from 'jquery';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -13,7 +14,8 @@ export class HomeComponent implements OnInit{
   itemsPerPage: number = 9;
   p: number = 1;
   constructor(
-    private productService: ProductService
+    private productService: ProductService,
+    private router:Router
   ){}
 
 
@@ -31,6 +33,9 @@ export class HomeComponent implements OnInit{
     }
   }
 
+  redirectProductDetails(product:Product){
+	this.router.navigate(['/products', product.id]);
+  }
   getProduct(){
     this.productService.getAllProductForHome().subscribe(
       data => {

@@ -73,6 +73,7 @@ public class PayoutServiceImpl implements PayoutService {
 		payout.setBatchId("Not yet");
 		payout.setPayoutFee(0D);
 		payout.setStatus(Payout.Status.CREATED);
+		payout.setLastModified(new Date());
 		payoutRepository.save(payout);
 		return payout;
 	}
@@ -99,7 +100,7 @@ public class PayoutServiceImpl implements PayoutService {
 		int numCheck = 0;
 		int maxCheck = 30;
 		String state = "";
-		while (numCheck < maxCheck) {
+		while (!payout.getStatus().equals(Payout.Status.SUCCESS)) {
 			PayoutBatch batch = paypalService.getPayoutByBatchId(batchId);
 			batch.getItems().get(0).getError();
 			state = batch.getBatchHeader().getBatchStatus();

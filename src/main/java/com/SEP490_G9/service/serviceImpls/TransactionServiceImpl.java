@@ -94,10 +94,13 @@ public class TransactionServiceImpl implements TransactionService {
 
 		TransactionFee fee = transFeeRepo.findById(1).get();
 		double totalPrice = caculateCartTotalAmount(cart);
-		double afterFeeCaculated = (totalPrice * (1 + fee.getPercentage()));
+		System.out.println(totalPrice);
+		
+		double afterFeeCaculated = (totalPrice * (1 + (double) (fee.getPercentage() / 100f)));
+		System.out.println(afterFeeCaculated);
 		double afterFeeCaculatedRounded = new BigDecimal(afterFeeCaculated).setScale(2, RoundingMode.HALF_UP)
 				.doubleValue();
-
+		System.out.println(afterFeeCaculatedRounded);
 		Transaction transaction = new Transaction();
 		transaction.setCart(cart);
 		transaction.setAmount(afterFeeCaculatedRounded);

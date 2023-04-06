@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 import com.SEP490_G9.common.Constant;
 import com.SEP490_G9.dto.ProductDetailsDTO;
 import com.SEP490_G9.entities.Account;
+import com.SEP490_G9.entities.Cart;
+import com.SEP490_G9.entities.CartItem;
 import com.SEP490_G9.entities.Category;
 import com.SEP490_G9.entities.Preview;
 import com.SEP490_G9.entities.Product;
@@ -26,6 +28,7 @@ import com.SEP490_G9.entities.Report;
 import com.SEP490_G9.entities.Role;
 import com.SEP490_G9.entities.Seller;
 import com.SEP490_G9.entities.Tag;
+import com.SEP490_G9.entities.Transaction;
 import com.SEP490_G9.entities.UserDetailsImpl;
 import com.SEP490_G9.exception.DuplicateFieldException;
 import com.SEP490_G9.exception.NumberException;
@@ -35,6 +38,7 @@ import com.SEP490_G9.repository.ProductFileRepository;
 import com.SEP490_G9.repository.ProductRepository;
 import com.SEP490_G9.repository.ReportRepository;
 import com.SEP490_G9.repository.SellerRepository;
+import com.SEP490_G9.repository.TransactionRepository;
 import com.SEP490_G9.service.PreviewService;
 import com.SEP490_G9.service.ProductDetailsService;
 import com.SEP490_G9.service.ProductService;
@@ -61,7 +65,7 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 
 	@Autowired
 	PreviewService previewService;
-	
+
 //	@Autowired
 //	ReportService reportService;
 
@@ -71,6 +75,8 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 	@Autowired
 	ReportRepository reportRepo;
 
+	@Autowired
+	TransactionRepository transactionRepo;
 	// Supporting methods
 
 	@Override
@@ -262,7 +268,7 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 			throw new ResourceNotFoundException("Product details", "version", product.getActiveVersion());
 		}
 		Account account = getCurrentAccount();
-		if (ret.getProduct().getSeller().getId() != account.getId()) {
+		if (ret.getProduct().getSeller().getId() != account.getId() && !isStaff(account)) {
 			if (ret.getApproved() != Status.APPROVED) {
 				throw new IllegalAccessError("Can not access this resource");
 			}
@@ -271,7 +277,8 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 	}
 
 	public Account getCurrentAccount() {
-		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getAccount();
+		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
+				.getAccount();
 		return account;
 	}
 
@@ -361,7 +368,7 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		List<ProductFile> newPDFiles = new ArrayList<>();
 		for (ProductFile pfile : productDetails.getFiles()) {
 			if (pfile.isEnabled() && !pfile.isNewUploaded() && pfile.isReviewed()
-					||!pfile.isEnabled() && !pfile.isNewUploaded() && !pfile.isReviewed()) {
+					|| !pfile.isEnabled() && !pfile.isNewUploaded() && !pfile.isReviewed()) {
 				ProductFile pf = new ProductFile();
 				pf.setName(pfile.getName());
 				pf.setProductDetails(newPD);
@@ -370,6 +377,8 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 				pf.setEnabled(true);
 				pf.setNewUploaded(false);
 				pf.setReviewed(true);
+				pf.setCreatedDate(new Date());
+				pf.setLastModified(new Date());
 				pf.setSource(pfile.getSource());
 				newPDFiles.add(pf);
 			}
@@ -382,6 +391,7 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 			p.setProductDetails(newPD);
 			p.setSource(preview.getSource());
 			p.setType(preview.getType());
+
 			// p.setSource(preview.getSource().replace(source, dest));
 			newPDPreviews.add(p);
 		}
@@ -511,26 +521,31 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 	public List<ProductDetails> getProductsByReportStatus(String status) {
 		List<ProductDetails> finalResult = new ArrayList<>();
 		List<Report> allReports = reportRepo.findAll();
-		if(status.equalsIgnoreCase("PENDING")) {
+		if (status.equalsIgnoreCase("PENDING")) {
 			List<ProductDetails> latestVerPd = getAllByLatestVersion();
-			for(ProductDetails pd: latestVerPd) {
+			for (ProductDetails pd : latestVerPd) {
 				Product product = pd.getProduct();
 				long productId = product.getId();
 				String latestVer = product.getActiveVersion();
-				for(Report report: allReports) {
-					if(report.getReportKey().getProductId()== productId && report.getVersion().equalsIgnoreCase(latestVer) && report.getStatus().equalsIgnoreCase("PENDING")) {
+				for (Report report : allReports) {
+					if (report.getReportKey().getProductId() == productId
+							&& report.getVersion().equalsIgnoreCase(latestVer)
+							&& report.getStatus().equalsIgnoreCase("PENDING")) {
 						finalResult.add(pd);
 					}
 				}
 			}
-		}else {
+		} else {
 			List<ProductDetails> allPd = productDetailsRepo.findAll();
-			for(ProductDetails pd: allPd) {
+			for (ProductDetails pd : allPd) {
 				Product product = pd.getProduct();
 				long productId = product.getId();
 				String version = pd.getVersion();
-				for(Report report: allReports) {
-					if(report.getReportKey().getProductId()== productId && report.getVersion().equalsIgnoreCase(version) && (report.getStatus().equalsIgnoreCase("ACCEPTED")||report.getStatus().equalsIgnoreCase("DENIED"))) {
+				for (Report report : allReports) {
+					if (report.getReportKey().getProductId() == productId
+							&& report.getVersion().equalsIgnoreCase(version)
+							&& (report.getStatus().equalsIgnoreCase("ACCEPTED")
+									|| report.getStatus().equalsIgnoreCase("DENIED"))) {
 						finalResult.add(pd);
 					}
 				}
@@ -648,5 +663,25 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 			throw new ResourceNotFoundException("Product details", "version", product.getActiveVersion());
 		}
 		return ret;
+	}
+
+	@Override
+	public int getTotalPurchasedCount(Long productId) {
+		int count = 0;
+		List<Transaction> completedTransactions = transactionRepo.findByStatus(Transaction.Status.COMPLETED);
+		List<Cart> purchasedCart = new ArrayList<>();
+		for (Transaction t : completedTransactions) {
+			purchasedCart.add(t.getCart());
+		}
+
+		for (Cart cart : purchasedCart) {
+			for (CartItem item : cart.getItems()) {
+				if (item.getProductDetails().getProduct().getId().equals(productId)) {
+					count++;
+					break;
+				}
+			}
+		}
+		return count;
 	}
 }

@@ -1,6 +1,7 @@
-import { OnInit } from '@angular/core';
+import { OnInit, ViewChild } from '@angular/core';
 import { Component } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Product } from '../../../dtos/Product';
 import { ProductFile } from '../../../dtos/ProductFile';
 import { ProductFileService } from '../../../services/product-file.service';
@@ -12,16 +13,20 @@ import { ProductService } from '../../../services/product.service';
   styleUrls: ['./download.component.css']
 })
 export class DownloadComponent implements OnInit {
-
+  @ViewChild('infoModal', { static: false }) private infoModal: any;
+  info = "";
   product: Product;
   token: string = "";
   constructor(private activatedRoute: ActivatedRoute,
     private productService: ProductService,
     private productFileService: ProductFileService,
-    private router: Router) {
+    private router: Router,
+    private modalService: NgbModal  ) {
 
   }
-
+  openInfoModal() {
+    this.modalService.open(this.infoModal, { centered: true });
+  }
   ngOnInit(): void {
     var productIdAndName = this.activatedRoute.snapshot.paramMap.get('productId');
     var tokenParam = this.activatedRoute.snapshot.queryParamMap.get('token');
@@ -81,9 +86,15 @@ export class DownloadComponent implements OnInit {
         //window.open(url); // open the URL in a new tab to initiate the download
       },
       error => {
+        this.info = "Không thể tải";
+        this.openInfoModal();
         console.log(error);
       }
     )
+  }
+  dismissError() {
+    this.info = "";
+    this.modalService.dismissAll();
   }
 }
 

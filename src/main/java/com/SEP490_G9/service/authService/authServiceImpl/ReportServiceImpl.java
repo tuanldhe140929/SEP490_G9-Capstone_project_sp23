@@ -48,7 +48,7 @@ public class ReportServiceImpl implements ReportService {
 	public Report sendReport (long productId, long accountId, String version, String description, long violationTypeId) {
 		Report report = new Report();
 		Product product = productRepository.findById(productId).get();
-		User user = userRepository.findById(accountId).get();
+		User user = userRepository.findById(accountId);
 		report.setProduct(product);
 		report.setUser(user);
 		report.setVersion(version);
@@ -93,7 +93,7 @@ public class ReportServiceImpl implements ReportService {
 	@Override
 	public Report getByProductUserVersion(long productId, long userId, String version) {
 		Product product = productRepository.findById(productId).get();
-		User user = userRepository.findById(userId).get();
+		User user = userRepository.findById(userId);
 		List<Report> allReports = getAllReports();
 		List<Report> reportsByProduct = getByProductDetails(allReports, product, version);
 		List<Report> reportsByUser = getByUser(reportsByProduct, user);
