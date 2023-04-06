@@ -2,6 +2,7 @@ package com.SEP490_G9.services;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
@@ -103,7 +104,7 @@ class TransactionServiceTest {
 		productDetails.setProduct(product);
 		productDetails.setVersion("1.0.0");
 		productDetails.setProductVersionKey(new ProductVersionKey(1L,"1.0.0"));
-		
+		productDetails.setPrice(2);
 		CartItem item = new CartItem();
 		item.setCart(cart);
 		item.setProductDetails(productDetails);
@@ -117,12 +118,19 @@ class TransactionServiceTest {
 		fee.setId(1);
 		fee.setPercentage(10);
 		
+		Transaction expected = new Transaction();
+		expected.setAmount(2.2);
+		expected.setCart(cart);
+		expected.setFee(fee);
 		when(us.getById(user.getId())).thenReturn(user);
 		when(cs.isUserOwnCart(1L, 1L)).thenReturn(true);
 		when(cs.isCartHadPurchased(1L)).thenReturn(false);
 		when(cs.getById(1L)).thenReturn(cart);
+		when(tr.save(any())).thenReturn(expected);
 		when(feeRepo.findById(1)).thenReturn(Optional.of(fee));
 		
+		Transaction result = ts.createTransaction(cart.getId(), user);
+		assertThat(result.getStatus()).isEqualTo(Transaction.Status.CREATED);
 		
 	}
 

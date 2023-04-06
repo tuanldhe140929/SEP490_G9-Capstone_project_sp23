@@ -203,6 +203,7 @@
           <a href="#" class="img-wrap rounded bg-gray-light"> 
             <img height="250" class="mix-blend-multiply" [src]="getCoverImage(product)"> 
           </a>
+           <a (click)="redirectProductDetails(product)" class="btn btn-primary">Chi tiết</a>
           <figcaption class="pt-2">
             <a href="#" class="float-end btn btn-light btn-icon"> <i class="fa fa-heart"></i> </a>
             <strong class="price">{{product.price}}$</strong> <!-- price.// -->

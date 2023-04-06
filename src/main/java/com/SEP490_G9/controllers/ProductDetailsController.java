@@ -251,4 +251,9 @@ public class ProductDetailsController {
 		return ResponseEntity.ok(allProductsDTO);
 	}
 
+	@GetMapping(value = "getTotalPurchasedCount")
+	public ResponseEntity<?> getTotalPurchasedCount(@RequestParam("productId") Long productId){
+		int count = this.productDetailsService.getTotalPurchasedCount(productId);
+				return ResponseEntity.ok(count);
+	}
 }
