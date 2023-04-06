@@ -21,7 +21,7 @@ export class SearchResultComponent implements OnInit{
   filterResult: Product[] = [];
   keyword: any;
   minprice: number = 0;
-  maxprice: number = 10000000;
+  maxprice: number = 1000;
   chosenCategory: number = 0;
   chosenTags:number[] = [];
   p:number = 1;
@@ -53,7 +53,7 @@ export class SearchResultComponent implements OnInit{
     //     }
     //   }
     // )
-    this.productService.getFilteredProducts(this.keyword,0,[],0,10000000).subscribe(
+    this.productService.getFilteredProducts(this.keyword,0,[],0,1000).subscribe(
       data => {
         this.resultList = data;
         this.totalResult = this.resultList.length;
@@ -105,7 +105,7 @@ export class SearchResultComponent implements OnInit{
   }
 
   checkValidMinMax(): boolean{
-    if(this.minprice<0||this.maxprice<0||!Number.isInteger(this.minprice)||!Number.isInteger(this.maxprice)){
+    if(this.minprice<0||this.maxprice<0||this.minprice>1000||this.maxprice>1000){
       return false;
     }else{
       return true;

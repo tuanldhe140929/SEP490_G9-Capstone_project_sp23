@@ -137,8 +137,8 @@ public class AccountController {
 	}
 
 	@PostMapping("addStaff")
-	public ResponseEntity<?> addStaff(@RequestBody Account staff) {
-		Account addedStaff = accountService.addStaff(staff);
+	public ResponseEntity<?> addStaff(@RequestBody Account account) {
+		Account addedStaff = accountService.addStaff(account);
 		return ResponseEntity.ok(addedStaff);
 	}
 

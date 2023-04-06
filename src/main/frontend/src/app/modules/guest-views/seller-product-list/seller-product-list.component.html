@@ -149,7 +149,7 @@
                 <div *ngIf="!compareMinMax()||!checkValidMinMax()">
                   <small style="color: red">Khoảng giá không hợp lệ</small>
                 </div>
-                <button class="btn btn-light w-100" type="button" [disabled]="!compareMinMax()" (click)="refresh()">Áp dụng</button>
+                <button class="btn btn-light w-100" type="button" [disabled]="!compareMinMax()||!checkValidMinMax()" (click)="refresh()">Áp dụng</button>
               </div> <!-- card-body.// -->
             </div> <!-- collapse.// -->
           </article> <!-- filter-group // -->
