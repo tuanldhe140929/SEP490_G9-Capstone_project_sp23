@@ -10,7 +10,7 @@ public interface TransactionService {
 
 	Transaction getByTransactionId(Long transactionId);
 	
-	Transaction createTransaction(Long cartId, Account account);
+	Transaction createTransaction(Long cartId, Long accountId);
 	
 	Transaction createTransactionPayment(Long transactionId);
 	
@@ -20,7 +20,7 @@ public interface TransactionService {
 	
 	Transaction cancel(Long transactionId);
 
-	Transaction fetchTransactionStatus(String paymenId, Long transactionId);
+	Transaction fetchTransactionStatus(Long transactionId);
 
 	Transaction updateTransaction(Transaction transaction);
 }
