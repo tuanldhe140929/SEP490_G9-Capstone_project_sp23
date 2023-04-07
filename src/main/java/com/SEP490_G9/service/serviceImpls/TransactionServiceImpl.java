@@ -73,9 +73,9 @@ public class TransactionServiceImpl implements TransactionService {
 	}
 
 	@Override
-	public Transaction createTransaction(Long cartId, Account account) {
+	public Transaction createTransaction(Long cartId, Long accountId) {
 		Cart cart = cartService.getById(cartId);
-		User user = userService.getById(account.getId());
+		User user = userService.getById(accountId);
 
 		if (!cartService.isUserOwnCart(user.getId(), cart.getId())) {
 			throw new IllegalAccessError("You don't have right to purchase this cart");
@@ -122,7 +122,7 @@ public class TransactionServiceImpl implements TransactionService {
 
 	@Override
 	public Transaction createTransactionPayment(Long transactionId) {
-		Transaction transaction = transactionRepo.findById(transactionId).orElseThrow();
+		Transaction transaction = transactionRepo.findById(transactionId).get();
 		transaction.setDescription("pay with paypal");
 		Payment payment = null;
 		payment = paypalService.createPayment(transaction);
@@ -158,21 +158,27 @@ public class TransactionServiceImpl implements TransactionService {
 	@Override
 	public Transaction executeTransaction(String paymentId, String payerId) {
 		Transaction transaction = transactionRepo.findByPaypalId(paymentId);
+		if(payerId.isBlank() || payerId.isEmpty()) {
+			throw new IllegalArgumentException("PayerId can not be blank");
+		}
+		if(transaction==null) {
+			throw new ResourceNotFoundException("transaction", "paymentId", paymentId);
+		}
 		if (!transaction.getStatus().equals(Transaction.Status.APPROVED)) {
 			throw new IllegalAccessError("The transaction isn't ready or has been commit");
 		}
 		Payment payment = paypalService.executePayment(paymentId, payerId);
-		Transaction ret = fetchTransactionStatus(paymentId, transaction.getId());
+		Transaction ret = fetchTransactionStatus(transaction.getId());
 		return ret;
 	}
 
 	@Override
-	public Transaction fetchTransactionStatus(String paymenId, Long transactionId) {
+	public Transaction fetchTransactionStatus(Long transactionId) {
 		Transaction transaction = transactionRepo.findById(transactionId).orElseThrow();
 		int numChecks = 0;
 		int maxChecks = 300;
 		while (numChecks < maxChecks) {
-			Payment payment = paypalService.getPaymentByPaypalId(paymenId);
+			Payment payment = paypalService.getPaymentByPaypalId(transaction.getPaypalId());
 			String state = payment.getState();
 			System.out.println("Payment State: " + state);
 			if (state.equals("approved")) {
