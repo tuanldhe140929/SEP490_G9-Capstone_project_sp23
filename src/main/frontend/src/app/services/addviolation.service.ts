@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class AddviolationService {
-  private apiServerUrlManageViolation = "http://localhost:9000/private/manageviolation"
+  private apiServerUrlManageViolation = "http://localhost:9000/violation"
 
   constructor(private httpClient: HttpClient) { }
 

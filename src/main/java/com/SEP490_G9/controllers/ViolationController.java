@@ -29,13 +29,13 @@ public class ViolationController {
 	ViolationService violationService;
 	
 	@PostMapping("addviolation")
-	public ResponseEntity<?> addTag(@RequestBody Violation vio) {
+	public ResponseEntity<?> addViolation(@RequestBody Violation vio) {
 		Violation vionew = new Violation();
 		vionew.setAccount(null);
 		vionew.setCreated_date(null);
 		vionew.setDescription(null);
 		
-		boolean canAdd = violationService.addVio(vio);
+		boolean canAdd = violationService.addViolation(vio);
 		return ResponseEntity.ok(canAdd);
 	}
 	

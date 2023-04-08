@@ -31,7 +31,7 @@ public class Violation {
 	private Date created_date = new Date();
 	
 	@OneToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "account_id", unique = false, nullable = false) // sual lai la false
+	@JoinColumn(name = "account_id", unique = false, nullable = true) // sual lai la false
 	private Account account;
 	
 	public Violation() {

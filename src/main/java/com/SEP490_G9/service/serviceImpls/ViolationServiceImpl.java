@@ -21,7 +21,7 @@ public class ViolationServiceImpl implements ViolationService{
 	ViolationTypeRepository vioTypeRepo;
 	
 	@Override
-	public boolean addVio(Violation vio) {
+	public boolean addViolation(Violation vio) {
 		vioRepo.save(vio);
 		return true;
 	}

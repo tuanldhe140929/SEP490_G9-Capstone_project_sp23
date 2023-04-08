@@ -1,8 +1,6 @@
 package com.SEP490_G9.service.serviceImpls;
 
-
 import java.io.File;
-
 
 import java.io.IOException;
 import java.util.List;
@@ -191,6 +189,12 @@ public class UserServiceImpl implements UserService {
 	public List<User> getAllUsers() {
 		List<User> allUsers = userRepository.findAll();
 		return allUsers;
+	}
+
+	@Override
+	public boolean isPayPalUser(String userEmail) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

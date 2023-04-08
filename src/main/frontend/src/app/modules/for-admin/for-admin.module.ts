@@ -28,6 +28,7 @@ import { UpdateCategoryComponent } from './for-admin-base/categories/update-cate
 import { AddTagComponent } from './for-admin-base/tags/add-tag/add-tag.component';
 import { UpdateTagComponent } from './for-admin-base/tags/update-tag/update-tag.component';
 import { ReportedSellerListsComponent } from './for-admin-base/reported-seller-lists/reported-seller-lists.component';
+import { AddviolationComponent } from './for-admin-base/addviolation/addviolation.component';
 
 
 @NgModule({
@@ -36,6 +37,7 @@ import { ReportedSellerListsComponent } from './for-admin-base/reported-seller-l
     DashboardComponent,
     StaffsComponent,
     AddStaffComponent,
+    AddviolationComponent,
     UpdateStaffStatusComponent,
     CategoriesComponent,
     AddCategoryComponent,
