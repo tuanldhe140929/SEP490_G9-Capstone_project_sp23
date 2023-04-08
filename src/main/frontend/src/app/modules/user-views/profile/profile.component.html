@@ -88,6 +88,11 @@
                                         ariaCurrentWhenActive="page"> Đổi mật khẩu</a></button>
                                 <button (click)="UpdateInfo()" class="btn btn-lg btn-success" type="text">
                                     Cập nhật thông tin</button>
+                                    
+                                    <button class="btn btn-lg btn-success" type="reset">
+                                        <i class="glyphicon glyphicon-repeat"></i> 
+                                        <a routerLink="/seller/createNewSeller" routerLinkActive="active" ariaCurrentWhenActive="page" style="color: white; text-decoration: none;">xác thực tài khoản</a>
+                                      </button> 
                                  <button *ngIf="isSeller()" type="button" class="btn btn-lg btn-success"
                                         style="background-color: rgb(9, 139, 96);" routerLink="/payout">Payout history</button>                     
                             </div>
