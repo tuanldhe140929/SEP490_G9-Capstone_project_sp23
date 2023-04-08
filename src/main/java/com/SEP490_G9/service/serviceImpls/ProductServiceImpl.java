@@ -14,12 +14,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.SEP490_G9.common.Constant;
 import com.SEP490_G9.entities.Account;
 import com.SEP490_G9.entities.License;
 import com.SEP490_G9.entities.Product;
 import com.SEP490_G9.entities.ProductDetails;
 import com.SEP490_G9.entities.ProductDetails.Status;
 import com.SEP490_G9.entities.Report;
+import com.SEP490_G9.entities.Role;
 import com.SEP490_G9.entities.Seller;
 import com.SEP490_G9.entities.UserDetailsImpl;
 import com.SEP490_G9.exception.FileUploadException;
@@ -68,8 +70,6 @@ public class ProductServiceImpl implements ProductService {
 		Seller seller = getCurrentSeller();
 		product.setSeller(seller);
 		Product createdProduct = productRepository.save(product);
-		List<ProductDetails> ps = productDetailsRepo.findByApproved(Status.NEW);
-		System.out.println(ps.size());
 		createdProduct.getProductDetails().add(createProductDetails(createdProduct, FIRST_PRODUCT_VERSION));
 		return createdProduct;
 
@@ -126,7 +126,10 @@ public class ProductServiceImpl implements ProductService {
 	public Seller getCurrentSeller() {
 		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
 				.getAccount();
+		if(!account.getRoles().contains(new Role(Constant.SELLER_ROLE_ID,"ROLE_SELLER")))
+			throw new IllegalAccessError("Must be a seller");
 		Seller seller = sellerService.getSellerById(account.getId());
+		
 		return seller;
 	}
 
