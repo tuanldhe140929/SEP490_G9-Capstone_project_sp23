@@ -111,7 +111,6 @@ public class PayoutServiceImpl implements PayoutService {
 
 	@Override
 	public Payout fetchPayoutStatus(Long payoutId, String batchId) {
-		System.out.println(payoutId);
 		Payout payout = getById(payoutId);
 
 		int numCheck = 0;

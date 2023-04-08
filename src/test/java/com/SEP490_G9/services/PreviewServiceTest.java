@@ -50,22 +50,22 @@ class PreviewServiceTest {
 
 	@InjectMocks
 	PreviewServiceImpl ps;
-	
+
 	@Mock
 	FileIOService fileIOService;
 
 	@Mock
 	ProductDetailsRepository pdRepo;
-	
+
 	@Test
-	void testUploadPreviewPicture() {
+	void testPS2_1() {
 		Product product = new Product();
 		product.setId(1L);
 		Seller seller = new Seller();
 		seller.setId(1L);
 		product.setSeller(seller);
 		ProductDetails pd = new ProductDetails();
-		pd.setProductVersionKey(new ProductVersionKey(1L,"1.0.0"));
+		pd.setProductVersionKey(new ProductVersionKey(1L, "1.0.0"));
 		pd.setProduct(product);
 		pd.setVersion("1.0.0");
 		Preview preview = new Preview();
@@ -73,25 +73,25 @@ class PreviewServiceTest {
 		preview.setProductDetails(pd);
 		preview.setType("picture");
 		pd.getPreviews().add(preview);
-		MultipartFile coverImage = new MockMultipartFile("coverImage", "test.png", "image/png", "test".getBytes());
+		byte[] bytes = new byte[1024 * 1024 * 10];
+		MultipartFile coverImage = new MockMultipartFile("coverImage", "test.jpg", "image/jpeg", bytes);
 		when(pdRepo.findByProductIdAndProductVersionKeyVersion(1L, "1.0.0")).thenReturn(pd);
-		
+
 		when(fileIOService.storeV2(any(MultipartFile.class), anyString())).thenReturn("path/to/image.png");
-		List<PreviewDTO> result = ps.uploadPreviewPicture(1L, "1.0.0",coverImage);
-		System.out.println(result.get(0).getId());
+		List<PreviewDTO> result = ps.uploadPreviewPicture(1L, "1.0.0", coverImage);
 		// Verify the result
 		assertThat(result.get(0).getId()).isEqualTo(1L);
 	}
-	
+
 	@Test
-	void testUploadPreviewPictureA() {
+	void testPS2_2() {
 		Product product = new Product();
 		product.setId(1L);
 		Seller seller = new Seller();
 		seller.setId(1L);
 		product.setSeller(seller);
 		ProductDetails pd = new ProductDetails();
-		pd.setProductVersionKey(new ProductVersionKey(1L,"1.0.0"));
+		pd.setProductVersionKey(new ProductVersionKey(1L, "1.0.0"));
 		pd.setProduct(product);
 		pd.setVersion("1.0.0");
 		Preview preview = new Preview();
@@ -99,22 +99,161 @@ class PreviewServiceTest {
 		preview.setProductDetails(pd);
 		preview.setType("picture");
 		pd.getPreviews().add(preview);
-		MultipartFile coverImage = new MockMultipartFile("coverImage", "test.png", "asdasd", "test".getBytes());
+		byte[] bytes = new byte[1024 * 1024 * 10];
+		MultipartFile coverImage = new MockMultipartFile("coverImage", "test.png", "image/png", bytes);
 		when(pdRepo.findByProductIdAndProductVersionKeyVersion(1L, "1.0.0")).thenReturn(pd);
-		
+
 		when(fileIOService.storeV2(any(MultipartFile.class), anyString())).thenReturn("path/to/image.png");
-		assertThrows(FileUploadException.class, ()->ps.uploadPreviewPicture(1L, "1.0.0",coverImage));
+		List<PreviewDTO> result = ps.uploadPreviewPicture(1L, "1.0.0", coverImage);
+		// Verify the result
+		assertThat(result.get(0).getId()).isEqualTo(1L);
 	}
-	
+
 	@Test
-	void testUploadPreviewVideo() {
+	void testtestPS2_3() {
 		Product product = new Product();
 		product.setId(1L);
 		Seller seller = new Seller();
 		seller.setId(1L);
 		product.setSeller(seller);
 		ProductDetails pd = new ProductDetails();
-		pd.setProductVersionKey(new ProductVersionKey(1L,"1.0.0"));
+		pd.setProductVersionKey(new ProductVersionKey(1L, "1.0.0"));
+		pd.setProduct(product);
+		pd.setVersion("1.0.0");
+		Preview preview = new Preview();
+		preview.setId(1L);
+		preview.setProductDetails(pd);
+		preview.setType("picture");
+		pd.getPreviews().add(preview);
+		byte[] bytes = new byte[1024 * 1024 * 200];
+		MultipartFile coverImage = new MockMultipartFile("coverImage", "test.svg", "image/svg+xml", bytes);
+		when(pdRepo.findByProductIdAndProductVersionKeyVersion(1L, "1.0.0")).thenReturn(pd);
+
+		when(fileIOService.storeV2(any(MultipartFile.class), anyString())).thenReturn("path/to/image.png");
+		List<PreviewDTO> result = ps.uploadPreviewPicture(1L, "1.0.0", coverImage);
+		// Verify the result
+		assertThat(result.get(0).getId()).isEqualTo(1L);
+	}
+
+	@Test
+	void testPS2_4() {
+		Product product = new Product();
+		product.setId(1L);
+		Seller seller = new Seller();
+		seller.setId(1L);
+		product.setSeller(seller);
+		ProductDetails pd = new ProductDetails();
+		pd.setProductVersionKey(new ProductVersionKey(1L, "1.0.0"));
+		pd.setProduct(product);
+		pd.setVersion("1.0.0");
+		Preview preview = new Preview();
+		preview.setId(1L);
+		preview.setProductDetails(pd);
+		preview.setType("picture");
+		pd.getPreviews().add(preview);
+		byte[] bytes = new byte[1];
+		MultipartFile coverImage = new MockMultipartFile("coverImage", "test.jpg", "image/jpeg", bytes);
+		when(pdRepo.findByProductIdAndProductVersionKeyVersion(1L, "1.0.0")).thenReturn(pd);
+
+		when(fileIOService.storeV2(any(MultipartFile.class), anyString())).thenReturn("path/to/image.png");
+		List<PreviewDTO> result = ps.uploadPreviewPicture(1L, "1.0.0", coverImage);
+		// Verify the result
+		assertThat(result.get(0).getId()).isEqualTo(1L);
+	}
+
+	@Test
+	void testPS2_5() {
+		Product product = new Product();
+		product.setId(1L);
+		Seller seller = new Seller();
+		seller.setId(1L);
+		product.setSeller(seller);
+		ProductDetails pd = new ProductDetails();
+		pd.setProductVersionKey(new ProductVersionKey(1L, "1.0.0"));
+		pd.setProduct(product);
+		pd.setVersion("1.0.0");
+		Preview preview = new Preview();
+		preview.setId(1L);
+		preview.setProductDetails(pd);
+		preview.setType("picture");
+		pd.getPreviews().add(preview);
+		byte[] bytes = new byte[0];
+		MultipartFile coverImage = new MockMultipartFile("coverImage", "test.jpg", "image/jpg", bytes);
+		when(pdRepo.findByProductIdAndProductVersionKeyVersion(1L, "1.0.0")).thenReturn(pd);
+
+		when(fileIOService.storeV2(any(MultipartFile.class), anyString())).thenReturn("path/to/image.png");
+
+		// Verify the result
+		assertThrows(FileUploadException.class, () -> {
+			ps.uploadPreviewPicture(1L, "1.0.0", coverImage);
+		});
+	}
+
+	@Test
+	void testPS2_6() {
+		Product product = new Product();
+		product.setId(1L);
+		Seller seller = new Seller();
+		seller.setId(1L);
+		product.setSeller(seller);
+		ProductDetails pd = new ProductDetails();
+		pd.setProductVersionKey(new ProductVersionKey(1L, "1.0.0"));
+		pd.setProduct(product);
+		pd.setVersion("1.0.0");
+		Preview preview = new Preview();
+		preview.setId(1L);
+		preview.setProductDetails(pd);
+		preview.setType("picture");
+		pd.getPreviews().add(preview);
+		byte[] bytes = new byte[1024*1024*500];
+		MultipartFile coverImage = new MockMultipartFile("11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111", ""
+				+ "11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111", "image/jpg", bytes);
+		when(pdRepo.findByProductIdAndProductVersionKeyVersion(1L, "1.0.0")).thenReturn(pd);
+
+		when(fileIOService.storeV2(any(MultipartFile.class), anyString())).thenReturn("path/to/image.png");
+
+		// Verify the result
+		assertThrows(FileUploadException.class, () -> {
+			ps.uploadPreviewPicture(1L, "1.0.0", coverImage);
+		});
+	}
+	
+	@Test
+	void testtestPS2_7() {
+		Product product = new Product();
+		product.setId(1L);
+		Seller seller = new Seller();
+		seller.setId(1L);
+		product.setSeller(seller);
+		ProductDetails pd = new ProductDetails();
+		pd.setProductVersionKey(new ProductVersionKey(1L, "1.0.0"));
+		pd.setProduct(product);
+		pd.setVersion("1.0.0");
+		Preview preview = new Preview();
+		preview.setId(1L);
+		preview.setProductDetails(pd);
+		preview.setType("picture");
+		pd.getPreviews().add(preview);
+		byte[] bytes = new byte[1024*1024*500];
+		MultipartFile coverImage = new MockMultipartFile("video","video.mov", "video/quicktime", bytes);
+		when(pdRepo.findByProductIdAndProductVersionKeyVersion(1L, "1.0.0")).thenReturn(pd);
+
+		when(fileIOService.storeV2(any(MultipartFile.class), anyString())).thenReturn("path/to/image.png");
+
+		// Verify the result
+		assertThrows(FileUploadException.class, () -> {
+			ps.uploadPreviewPicture(1L, "1.0.0", coverImage);
+		});
+	}
+	@Test
+	void testPS1_1() {
+		Product product = new Product();
+		product.setId(1L);
+		Seller seller = new Seller();
+		seller.setId(1L);
+		product.setSeller(seller);
+		ProductDetails pd = new ProductDetails();
+		pd.setProductVersionKey(new ProductVersionKey(1L, "1.0.0"));
 		pd.setProduct(product);
 		pd.setVersion("1.0.0");
 		Preview preview = new Preview();
@@ -122,26 +261,53 @@ class PreviewServiceTest {
 		preview.setProductDetails(pd);
 		preview.setType("video");
 		pd.getPreviews().add(preview);
-		MultipartFile coverImage = new MockMultipartFile("video", "test.png", "video/mp4", "test".getBytes());
+		byte[] bytes = new byte[1024*1024*10];
+		MultipartFile coverImage = new MockMultipartFile("video", "test.png", "video/mp4", bytes);
 		when(pdRepo.findByProductIdAndProductVersionKeyVersion(1L, "1.0.0")).thenReturn(pd);
 		when(previewRepo.save(any(Preview.class))).thenReturn(preview);
 		when(fileIOService.storeV2(any(MultipartFile.class), anyString())).thenReturn("path/to/image.png");
-		Preview result = ps.uploadPreviewVideo(1L, "1.0.0",coverImage);
+		Preview result = ps.uploadPreviewVideo(1L, "1.0.0", coverImage);
+		// Verify the result
+		System.out.println(result.getId());
+		assertThat(result.getId()).isEqualTo(1L);
+	}
+
+	@Test
+	void testPS1_2() {
+		Product product = new Product();
+		product.setId(1L);
+		Seller seller = new Seller();
+		seller.setId(1L);
+		product.setSeller(seller);
+		ProductDetails pd = new ProductDetails();
+		pd.setProductVersionKey(new ProductVersionKey(1L, "1.0.0"));
+		pd.setProduct(product);
+		pd.setVersion("1.0.0");
+		Preview preview = new Preview();
+		preview.setId(1L);
+		preview.setProductDetails(pd);
+		preview.setType("video");
+		pd.getPreviews().add(preview);
+		byte[] bytes = new byte[1];
+		MultipartFile coverImage = new MockMultipartFile("video", "test.png", "video/x-matroska", bytes);
+		when(pdRepo.findByProductIdAndProductVersionKeyVersion(1L, "1.0.0")).thenReturn(pd);
+		when(previewRepo.save(any(Preview.class))).thenReturn(preview);
+		when(fileIOService.storeV2(any(MultipartFile.class), anyString())).thenReturn("path/to/image.png");
+		Preview result = ps.uploadPreviewVideo(1L, "1.0.0", coverImage);
 		// Verify the result
 		System.out.println(result.getId());
 		assertThat(result.getId()).isEqualTo(1L);
 	}
 	
-	
 	@Test
-	void testUploadPreviewVideoA() {
+	void testPS1_3() {
 		Product product = new Product();
 		product.setId(1L);
 		Seller seller = new Seller();
 		seller.setId(1L);
 		product.setSeller(seller);
 		ProductDetails pd = new ProductDetails();
-		pd.setProductVersionKey(new ProductVersionKey(1L,"1.0.0"));
+		pd.setProductVersionKey(new ProductVersionKey(1L, "1.0.0"));
 		pd.setProduct(product);
 		pd.setVersion("1.0.0");
 		Preview preview = new Preview();
@@ -149,10 +315,124 @@ class PreviewServiceTest {
 		preview.setProductDetails(pd);
 		preview.setType("video");
 		pd.getPreviews().add(preview);
-		MultipartFile coverImage = new MockMultipartFile("video", "test.png", "img/mp4", "test".getBytes());
+		byte[] bytes = new byte[1024 * 1024 * 200];
+		MultipartFile coverImage = new MockMultipartFile("video", "test.png", "video/quicktime", bytes);
 		when(pdRepo.findByProductIdAndProductVersionKeyVersion(1L, "1.0.0")).thenReturn(pd);
 		when(previewRepo.save(any(Preview.class))).thenReturn(preview);
 		when(fileIOService.storeV2(any(MultipartFile.class), anyString())).thenReturn("path/to/image.png");
-		assertThrows(FileUploadException.class, ()->ps.uploadPreviewVideo(1L, "1.0.0",coverImage));
+		Preview result = ps.uploadPreviewVideo(1L, "1.0.0", coverImage);
+		// Verify the result
+		System.out.println(result.getId());
+		assertThat(result.getId()).isEqualTo(1L);
+	}
+	
+	@Test
+	void testPS1_4() {
+		Product product = new Product();
+		product.setId(1L);
+		Seller seller = new Seller();
+		seller.setId(1L);
+		product.setSeller(seller);
+		ProductDetails pd = new ProductDetails();
+		pd.setProductVersionKey(new ProductVersionKey(1L, "1.0.0"));
+		pd.setProduct(product);
+		pd.setVersion("1.0.0");
+		Preview preview = new Preview();
+		preview.setId(1L);
+		preview.setProductDetails(pd);
+		preview.setType("video");
+		pd.getPreviews().add(preview);
+		byte[] bytes = new byte[1];
+		MultipartFile coverImage = new MockMultipartFile("video", "test.png", "video/x-matroska", bytes);
+		when(pdRepo.findByProductIdAndProductVersionKeyVersion(1L, "1.0.0")).thenReturn(pd);
+		when(previewRepo.save(any(Preview.class))).thenReturn(preview);
+		when(fileIOService.storeV2(any(MultipartFile.class), anyString())).thenReturn("path/to/image.png");
+		Preview result = ps.uploadPreviewVideo(1L, "1.0.0", coverImage);
+		// Verify the result
+		System.out.println(result.getId());
+		assertThat(result.getId()).isEqualTo(1L);
+	}
+	
+	@Test
+	void testPS1_5() {
+		Product product = new Product();
+		product.setId(1L);
+		Seller seller = new Seller();
+		seller.setId(1L);
+		product.setSeller(seller);
+		ProductDetails pd = new ProductDetails();
+		pd.setProductVersionKey(new ProductVersionKey(1L, "1.0.0"));
+		pd.setProduct(product);
+		pd.setVersion("1.0.0");
+		Preview preview = new Preview();
+		preview.setId(1L);
+		preview.setProductDetails(pd);
+		preview.setType("video");
+		pd.getPreviews().add(preview);
+		byte[] bytes = new byte[0];
+		MultipartFile coverImage = new MockMultipartFile("video", "test.png", "video/x-matroska", bytes);
+		when(pdRepo.findByProductIdAndProductVersionKeyVersion(1L, "1.0.0")).thenReturn(pd);
+		when(previewRepo.save(any(Preview.class))).thenReturn(preview);
+		when(fileIOService.storeV2(any(MultipartFile.class), anyString())).thenReturn("path/to/image.png");
+	
+		assertThrows(FileUploadException.class, () -> {
+			ps.uploadPreviewVideo(1L, "1.0.0", coverImage);
+		});
+	}
+	
+	@Test
+	void testPS1_6() {
+		Product product = new Product();
+		product.setId(1L);
+		Seller seller = new Seller();
+		seller.setId(1L);
+		product.setSeller(seller);
+		ProductDetails pd = new ProductDetails();
+		pd.setProductVersionKey(new ProductVersionKey(1L, "1.0.0"));
+		pd.setProduct(product);
+		pd.setVersion("1.0.0");
+		Preview preview = new Preview();
+		preview.setId(1L);
+		preview.setProductDetails(pd);
+		preview.setType("video");
+		pd.getPreviews().add(preview);
+		byte[] bytes = new byte[10];
+		MultipartFile coverImage = new MockMultipartFile("11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+				"11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111", "video/x-matroska", bytes);
+		when(pdRepo.findByProductIdAndProductVersionKeyVersion(1L, "1.0.0")).thenReturn(pd);
+		when(previewRepo.save(any(Preview.class))).thenReturn(preview);
+		when(fileIOService.storeV2(any(MultipartFile.class), anyString())).thenReturn("path/to/image.png");
+	
+		assertThrows(FileUploadException.class, () -> {
+			ps.uploadPreviewVideo(1L, "1.0.0", coverImage);
+		});
+	}
+	
+	@Test
+	void testPS1_7() {
+		Product product = new Product();
+		product.setId(1L);
+		Seller seller = new Seller();
+		seller.setId(1L);
+		product.setSeller(seller);
+		ProductDetails pd = new ProductDetails();
+		pd.setProductVersionKey(new ProductVersionKey(1L, "1.0.0"));
+		pd.setProduct(product);
+		pd.setVersion("1.0.0");
+		Preview preview = new Preview();
+		preview.setId(1L);
+		preview.setProductDetails(pd);
+		preview.setType("video");
+		pd.getPreviews().add(preview);
+		byte[] bytes = new byte[10];
+		MultipartFile coverImage = new MockMultipartFile("name",
+				"name.svg", "image/svg+xml", bytes);
+		when(pdRepo.findByProductIdAndProductVersionKeyVersion(1L, "1.0.0")).thenReturn(pd);
+		when(previewRepo.save(any(Preview.class))).thenReturn(preview);
+		when(fileIOService.storeV2(any(MultipartFile.class), anyString())).thenReturn("path/to/image.png");
+	
+		assertThrows(FileUploadException.class, () -> {
+			ps.uploadPreviewVideo(1L, "1.0.0", coverImage);
+		});
 	}
 }

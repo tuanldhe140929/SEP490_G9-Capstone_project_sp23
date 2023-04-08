@@ -47,6 +47,8 @@ import com.paypal.api.payments.PayoutBatch;
 import com.paypal.api.payments.PayoutBatchHeader;
 import com.paypal.api.payments.PayoutItemDetails;
 
+import junit.framework.Assert;
+
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @DataJpaTest
 @RunWith(SpringRunner.class)
@@ -512,5 +514,112 @@ when(payoutRepository.saveAll(anyList())).thenReturn(payouts);
 	    Mockito.when(payoutRepository.findByTransactionId(transactionId)).thenReturn(payouts);
 	    List<Payout> results = payoutService.cancelPayout(transactionId);
 	    assertThat(results.size()).isEqualTo(10);
+	}
+	
+	@Test
+	public void testPOS4_1() {
+		   // Arrange
+	    Long payoutId = 1234L;
+	    String batchId = "batch1234";
+	    Payout payout = new Payout();
+	    payout.setId(payoutId);
+	    Mockito.when(payoutRepository.findById(1234L)).thenReturn(Optional.of(payout));
+
+	    PayoutBatch payoutBatch = new PayoutBatch();
+	    PayoutBatchHeader header = new PayoutBatchHeader();
+	    header.setBatchStatus("SUCCESS");
+	    payoutBatch.setBatchHeader(header);
+	    Mockito.when(paypalService.getPayoutByBatchId(batchId)).thenReturn(payoutBatch);
+
+	    double expectedFee = 2.5;
+	    Mockito.when(paypalService.getPayoutFee(batchId)).thenReturn(String.valueOf(expectedFee));
+
+	    // Act
+	    Payout result = payoutService.fetchPayoutStatus(payoutId, batchId);
+
+	    // Assert
+	    Mockito.verify(payoutRepository, Mockito.times(1)).save(payout);
+	    assertEquals(Payout.Status.SUCCESS, result.getStatus());
+	    assertEquals(expectedFee, result.getPayoutFee(), 0.01);
+	}
+	
+	
+	@Test
+	public void testPOS4_2() {
+		   // Arrange
+	    Long payoutId = 1234L;
+	    String batchId = "batch1234";
+	    Payout payout = new Payout();
+	    payout.setId(payoutId);
+	    Mockito.when(payoutRepository.findById(1234L)).thenReturn(Optional.of(payout));
+
+	    PayoutBatch payoutBatch = new PayoutBatch();
+	    PayoutBatchHeader header = new PayoutBatchHeader();
+	    header.setBatchStatus("PENDING");
+	    payoutBatch.setBatchHeader(header);
+	    Mockito.when(paypalService.getPayoutByBatchId(batchId)).thenReturn(payoutBatch);
+
+	    double expectedFee = 2.5;
+	    Mockito.when(paypalService.getPayoutFee(batchId)).thenReturn(String.valueOf(expectedFee));
+
+	    // Act
+	    Payout result = payoutService.fetchPayoutStatus(payoutId, batchId);
+
+	    // Assert
+	    Mockito.verify(payoutRepository, Mockito.times(1)).save(payout);
+	    assertEquals(Payout.Status.PROCESSING, result.getStatus());
+	    assertEquals(expectedFee, result.getPayoutFee(), 0.01);
+	}
+	
+	@Test
+	public void testPOS4_3() {
+		   // Arrange
+	    Long payoutId = 1234L;
+	    String batchId = "batch1234";
+	    Payout payout = new Payout();
+	    payout.setId(payoutId);
+	    Mockito.when(payoutRepository.findById(1234L)).thenReturn(Optional.of(payout));
+
+	    PayoutBatch payoutBatch = new PayoutBatch();
+	    PayoutBatchHeader header = new PayoutBatchHeader();
+	    header.setBatchStatus("DENIED");
+	    payoutBatch.setBatchHeader(header);
+	    Mockito.when(paypalService.getPayoutByBatchId(batchId)).thenReturn(payoutBatch);
+
+	    double expectedFee = 2.5;
+	    Mockito.when(paypalService.getPayoutFee(batchId)).thenReturn(String.valueOf(expectedFee));
+
+	    // Act
+	    Payout result = payoutService.fetchPayoutStatus(payoutId, batchId);
+
+	    // Assert
+	    Mockito.verify(payoutRepository, Mockito.times(1)).save(payout);
+	    assertEquals(Payout.Status.FAILED, result.getStatus());
+	    assertEquals(expectedFee, result.getPayoutFee(), 0.01);
+	}
+	
+	@Test
+	public void testPOS4_5() {
+		   // Arrange
+	    Long payoutId = 1234L;
+	    String batchId = "batch1234";
+	    Payout payout = new Payout();
+	    payout.setId(payoutId);
+	    Mockito.when(payoutRepository.findById(1234L)).thenReturn(Optional.of(payout));
+
+	    PayoutBatch payoutBatch = new PayoutBatch();
+	    PayoutBatchHeader header = new PayoutBatchHeader();
+	    header.setBatchStatus("");
+	    payoutBatch.setBatchHeader(header);
+	    Mockito.when(paypalService.getPayoutByBatchId(batchId)).thenReturn(payoutBatch);
+
+	    double expectedFee = 2.5;
+	    Mockito.when(paypalService.getPayoutFee(batchId)).thenReturn(String.valueOf(expectedFee));
+
+	    // Act
+	    Payout result = payoutService.fetchPayoutStatus(payoutId, batchId);
+
+	    // Assert
+	    assertEquals(Payout.Status.FAILED, result.getStatus());
 	}
 }
