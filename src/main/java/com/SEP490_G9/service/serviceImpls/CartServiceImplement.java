@@ -208,9 +208,11 @@ public class CartServiceImplement implements CartService {
 	@Override
 	public boolean isUserPurchasedProduct(Long userId, Long productId) {
 		boolean ret = false;
-		List<Cart> carts = cartRepository.findByUserId(userId);
+		
+		List<Cart> carts = cartRepository.findByUserId(userId);System.out.println(carts.size());
 		List<Cart> purchasedCart = new ArrayList<>();
 		for (Cart cart : carts) {
+		
 			if (isCartHadPurchased(cart.getId()))
 				purchasedCart.add(cart);
 		}

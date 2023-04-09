@@ -17,7 +17,7 @@
             <div class="card-body text-center">
                   <h5 class="mt-3 text-white">Amazing Gifts</h5>
                    <p class="text-white">No matter how far along you are in your sophistication</p>
-                  <a href="#" class="btn btn-outline-light"> View more </a>
+                  <a href="#padding-y" class="btn btn-outline-light"> View more </a>
                 </div>
           </article>
         </aside>
@@ -203,6 +203,7 @@
           <a href="#" class="img-wrap rounded bg-gray-light"> 
             <img height="250" class="mix-blend-multiply" [src]="getCoverImage(product)"> 
           </a>
+           <a (click)="redirectProductDetails(product)" class="btn btn-primary">Chi tiết</a>
           <figcaption class="pt-2">
             <a href="#" class="float-end btn btn-light btn-icon"> <i class="fa fa-heart"></i> </a>
             <strong class="price">{{product.price}}$</strong> <!-- price.// -->

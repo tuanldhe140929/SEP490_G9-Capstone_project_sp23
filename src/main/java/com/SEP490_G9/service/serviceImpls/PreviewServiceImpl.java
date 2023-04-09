@@ -95,13 +95,19 @@ public class PreviewServiceImpl implements PreviewService {
 	@Override
 	public List<PreviewDTO> uploadPreviewPicture(Long productId, String version, MultipartFile previewPicture) {
 		List<PreviewDTO> ret = null;
+		if (previewPicture.getSize() == 0) {
+			throw new FileUploadException("File does not have content");
+		}
+		if (previewPicture.getOriginalFilename().length() > 100) {
+			throw new FileUploadException("File name too long");
+		}
 		if (!checkFileType(previewPicture, IMAGE_EXTENSIONS)) {
 			throw new FileUploadException(previewPicture.getContentType() + " file not accept");
 		} else {
 			Preview preview = new Preview();
 			ProductDetails productDetails = productDetailsRepo.findByProductIdAndProductVersionKeyVersion(productId,
 					version);
-			if(productDetails.getApproved()!=Status.NEW) {
+			if (productDetails.getApproved() != Status.NEW) {
 				throw new IllegalArgumentException("Cannot edit this version");
 			}
 			String previewPictureLocation = getPreviewsLocation(productDetails);
@@ -135,6 +141,13 @@ public class PreviewServiceImpl implements PreviewService {
 	public Preview uploadPreviewVideo(Long productId, String version, MultipartFile previewVideo) {
 		if (!checkFileType(previewVideo, VIDEO_EXTENSIONS)) {
 			throw new FileUploadException(previewVideo.getContentType() + " file not accept");
+		}
+
+		if (previewVideo.getSize() == 0) {
+			throw new FileUploadException("File does not have content");
+		}
+		if (previewVideo.getOriginalFilename().length() > 100) {
+			throw new FileUploadException("File name too long");
 		}
 		ProductDetails productDetails = productDetailsRepo.findByProductIdAndProductVersionKeyVersion(productId,
 				version);

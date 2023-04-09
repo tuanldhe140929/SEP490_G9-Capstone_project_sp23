@@ -86,4 +86,6 @@ public interface ProductDetailsService {
 	public List<ProductDetails>getHotProduct(Long productId);
 
 	public ProductDetails getActiveVersionForDownload(Long productId);
+
+	public int getTotalPurchasedCount(Long productId);
 }

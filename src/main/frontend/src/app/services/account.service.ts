@@ -34,7 +34,7 @@ logout() {
   }
 
   addStaff(body: any): Observable<any>{
-    return this.httpClient.post<any>(`${this.apiServerUrlManageAccount}/addStaff`, body);
+    return this.httpClient.post<any>(`${this.apiServerUrlManageAccount}/addStaff`, body, {});
   }
 
   updateStaffStatus(id: number): Observable<any>{

@@ -1,0 +1,15 @@
+.section-header
+{
+    border-bottom: 1px solid;
+    border-color:gainsboro;
+}
+.* {
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+a {
+  border-radius: 3px;
+  background-color: white;
+  border: 1px solid #999999;
+}
+

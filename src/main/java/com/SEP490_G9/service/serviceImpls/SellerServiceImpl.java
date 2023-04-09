@@ -191,5 +191,10 @@ public class SellerServiceImpl implements SellerService {
 		return null;
 	}
 
-	
+	@Override
+	public List<Seller> getReportedSellers() {
+		// TODO Auto-generated method stub
+		List<Seller> allSellers = sellerRepository.findAll();
+		return allSellers;
+	}
 }

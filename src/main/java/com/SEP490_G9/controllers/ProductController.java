@@ -10,6 +10,7 @@ import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -59,9 +60,11 @@ public class ProductController {
 
 	final String FIRST_PRODUCT_VERSION = "1.0.0";
 
-
 	@Autowired
 	ProductService productService;
+
+	@Autowired
+	SellerService sellerService;
 
 	@Autowired
 	ProductDetailsRepository productDetailsRepo;
@@ -75,6 +78,14 @@ public class ProductController {
 	// create new Product
 	@PostMapping(value = "createNewProduct")
 	public ResponseEntity<?> createNewProduct() {
+		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
+				.getAccount();
+		Seller seller = sellerService.getSellerById(account.getId());
+
+		if (seller.getProducts().size() == 20) {
+			throw new IllegalArgumentException("Cannot create more than 20 products");
+		}
+		
 		Product product = new Product();
 		product.setEnabled(true);
 		product.setDraft(false);
@@ -140,18 +151,19 @@ public class ProductController {
 		int count = sellerProducts.size();
 		return ResponseEntity.ok(count);
 	}
-	
+
 	@PostMapping(value = "updateProductApprovalStatus")
-	public ResponseEntity<?> updateProductApprovalStatus(@RequestParam(name = "productId") long productId, @RequestParam(name = "status") boolean status){
+	public ResponseEntity<?> updateProductApprovalStatus(@RequestParam(name = "productId") long productId,
+			@RequestParam(name = "status") boolean status) {
 		productService.updateProductApprovalStatus(productId, status);
 		return ResponseEntity.ok(status);
 	}
 
 	@GetMapping(value = "getProductsByReportStatus")
-	public ResponseEntity<?> getProductsByReportStatus(@RequestParam(name = "reportStatus") String reportStatus){
+	public ResponseEntity<?> getProductsByReportStatus(@RequestParam(name = "reportStatus") String reportStatus) {
 		List<Product> allProductsByStatus = productService.getAllProductsByReportStatus(reportStatus);
 		List<Product> allDtoProducts = new ArrayList<>();
-		for(Product product: allProductsByStatus) {
+		for (Product product : allProductsByStatus) {
 			allDtoProducts.add(product);
 		}
 		return ResponseEntity.ok(allDtoProducts);

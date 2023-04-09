@@ -40,7 +40,7 @@ public class TransactionController {
 	public ResponseEntity<?> checkout(@RequestParam(name = "cartId") Long cartId) {
 		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
 				.getAccount();
-		Transaction transaction = transactionService.createTransaction(cartId, account);
+		Transaction transaction = transactionService.createTransaction(cartId, account.getId());
 		System.out.println(transaction);
 		return ResponseEntity.ok(transaction);
 	}

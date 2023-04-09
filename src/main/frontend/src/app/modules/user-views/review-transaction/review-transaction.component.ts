@@ -47,9 +47,11 @@ export class ReviewTransactionComponent implements OnInit {
      
       var feePercentage = this.transaction.fee.percentage;
       this.originalPrice = this.transaction.amount;
-      this.fee =  this.originalPrice /100 * 10;
-
-      this.originalPrice = Math.round(this.originalPrice * 100) / 100;
+      this.fee =  this.originalPrice /(100+feePercentage) * 10;
+		this.fee = parseFloat(this.fee.toFixed(2));
+	
+      this.originalPrice = Math.round(this.originalPrice * 100) / (100+feePercentage);
+      this.originalPrice = parseFloat(this.originalPrice.toFixed(2))
       this.fee = Math.round(this.fee * 100) / 100;
       this.total = this.originalPrice + this.fee;
     }
