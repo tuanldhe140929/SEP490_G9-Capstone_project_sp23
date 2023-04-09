@@ -240,12 +240,14 @@ public class ProductDetailsController {
 	@GetMapping(value = "GetAllProductForHomePage")
 	public ResponseEntity<?> GetAllProductForHomePage() {
 		List<ProductDetails> allProducts = productDetailsService.getAll();
-		List<ProductDetails> approvedProducts = productDetailsService.getByApproved(allProducts);
-		List<ProductDetails> lastestProducts = productDetailsService.getByLatestVer(approvedProducts);
+
+		List<ProductDetails> lastestProducts = productDetailsService.getByLatestVer(allProducts);
 		List<ProductDetails> EnabledProducts = productDetailsService.getByEnabled(lastestProducts);
+		List<ProductDetails> approvedProducts = productDetailsService.getByApproved(EnabledProducts);
+
 		List<ProductDetails> PublishedProducts = productDetailsService.getByPublished(EnabledProducts);
 		List<ProductDetailsDTO> allProductsDTO = new ArrayList<>();
-		for (ProductDetails p : lastestProducts) {
+		for (ProductDetails p : approvedProducts) {
 			allProductsDTO.add(new ProductDetailsDTO(p));
 		}
 		return ResponseEntity.ok(allProductsDTO);

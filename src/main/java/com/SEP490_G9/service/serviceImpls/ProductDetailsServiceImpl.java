@@ -126,7 +126,7 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 			if (pd.getApproved() == Status.APPROVED) {
 				approvedPd.add(pd);
 			}
-		}
+		}@
 		return approvedPd;
 	}
 
@@ -270,12 +270,7 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		if (ret == null) {
 			throw new ResourceNotFoundException("Product details", "version", product.getActiveVersion());
 		}
-		Account account = getCurrentAccount();
-		if (ret.getProduct().getSeller().getId() != account.getId() && !isStaff(account)) {
-			if (ret.getApproved() != Status.APPROVED) {
-				throw new IllegalAccessError("Can not access this resource");
-			}
-		}
+
 		return ret;
 	}
 
@@ -299,12 +294,6 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		ProductDetails ret = productDetailsRepo.findByProductIdAndProductVersionKeyVersion(productId, version);
 		if (ret == null) {
 			throw new ResourceNotFoundException("product", "id and version", productId + " " + version);
-		}
-		Account account = getCurrentAccount();
-		if (ret.getProduct().getSeller().getId() != account.getId() && !isStaff(account)) {
-			if (ret.getApproved() != Status.APPROVED) {
-				throw new IllegalAccessError("Can not access this resource");
-			}
 		}
 		return ret;
 	}
