@@ -82,4 +82,5 @@ public class TransactionController {
 		Transaction.Status status = transaction.getStatus();
 		return ResponseEntity.ok(status);
 	}
+
 }

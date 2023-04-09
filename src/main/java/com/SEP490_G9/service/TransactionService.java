@@ -1,8 +1,14 @@
 package com.SEP490_G9.service;
 
+import java.util.List;
+
 import com.SEP490_G9.entities.Account;
+import com.SEP490_G9.entities.Cart;
+import com.SEP490_G9.entities.CartItem;
+import com.SEP490_G9.entities.ProductDetails;
 import com.SEP490_G9.entities.Seller;
 import com.SEP490_G9.entities.Transaction;
+import com.SEP490_G9.entities.User;
 
 public interface TransactionService {
 
@@ -23,4 +29,8 @@ public interface TransactionService {
 	Transaction fetchTransactionStatus(String paymenId, Long transactionId);
 
 	Transaction updateTransaction(Transaction transaction);
+	
+	public boolean isCartHadPurchased(Long cartId);
+	
+	public List<ProductDetails> getListCartUserPurchasedProduct(Long userId);
 }
