@@ -126,7 +126,7 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 			if (pd.getApproved() == Status.APPROVED) {
 				approvedPd.add(pd);
 			}
-		}@
+		}
 		return approvedPd;
 	}
 
@@ -270,6 +270,14 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		if (ret == null) {
 			throw new ResourceNotFoundException("Product details", "version", product.getActiveVersion());
 		}
+		
+		Account account = getCurrentAccount();
+
+		if(!account.getId().equals(product.getSeller().getId()) && !isStaff(account)){
+			if(ret.getApproved()!=Status.APPROVED) {
+				throw new IllegalAccessError("Cannot access this resource");
+			}
+		} 
 
 		return ret;
 	}
