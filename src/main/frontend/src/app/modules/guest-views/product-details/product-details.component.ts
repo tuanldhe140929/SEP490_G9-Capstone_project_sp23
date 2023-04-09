@@ -31,12 +31,16 @@ class DisplayPreview {
   }
 
   public static fromPreview(preview: Preview): DisplayPreview {
+    console.log(preview);
     var ret = new DisplayPreview;
     ret.preview = preview;
+    ret.preview.id = preview.id;
     if (preview.type == 'picture')
       ret.thumb = this.getSrc(preview.source);
     else
       ret.thumb = 'https://xn--b1akdajq8j.xn--p1ai/app/plugins/video-thumbnails/default.jpg';
+
+    console.log(ret);
     return ret;
   }
 
@@ -123,9 +127,9 @@ export class ProductDetailsComponent implements OnInit {
             for (let i = 0; i < this.product.previewPictures.length; i++) {
               var a = DisplayPreview.fromPreview(this.product.previewPictures[i]);
               this.displayPreviews.push(a);
-              console.log(a);
+          
             }
-
+          console.log(this.displayPreviews);
           if (this.BlackThumbs.length > 0)
             this.BlackThumbs.item(0)?.setAttribute("style", "border-radius: 4px; position: absolute; top: 0; right: 9px; bottom: 0; left: 0; background: #000; opacity: 0;");
 
@@ -139,7 +143,7 @@ export class ProductDetailsComponent implements OnInit {
             dum.thumb = "https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty.jpg";
             this.displayPreviews.push(dum);
           }
-          console.log(this.displayPreviews);
+         
           this.currentPreview = this.displayPreviews[0];
             //sau phần getProduct
           this.productId = Number(this.activatedRoute.snapshot.paramMap.get('productId'));
@@ -170,12 +174,12 @@ export class ProductDetailsComponent implements OnInit {
           }
         },
         error => {
-          console.log(error);
+          this.router.navigate(['error']);
         })
     }
   }
 
-  currentPreview: DisplayPreview = new DisplayPreview;
+  currentPreview: DisplayPreview;
 
   onChoosePreview(preview: DisplayPreview): void {
     this.currentPreview = preview;
@@ -232,60 +236,6 @@ export class ProductDetailsComponent implements OnInit {
 
   src = 'http://localhost:9000/public/serveMedia/image?source=account_id_2%2Fproducts%2F2%2FDatabase%20V2.drawio%20(2).png';
 
-  getProduct() {
-    var productIdAndName = this.activatedRoute.snapshot.paramMap.get('productId');
-    if (productIdAndName) {
-      var productId = productIdAndName.split("-")[0];
-
-      this.productService.getProductById(+productId).subscribe(
-        data => {
-          this.product = data;
-          console.log(this.product);
-          this.version = this.product.version;
-          if (this.DescriptionTab) {
-            this.DescriptionTab.innerHTML = this.product.details;
-          }
-          this.owner = data.seller;
-          this.getSellerTotalProductCount(this.owner.id);
-          this.getProfileImage();
-          if (this.product.previewVideo != null)
-            this.displayPreviews.push(DisplayPreview.fromPreview(this.product.previewVideo));
-          else
-
-          if (this.product.previewPictures != null)
-            for (let i = 0; i < this.product.previewPictures.length; i++) {
-              var a = DisplayPreview.fromPreview(this.product.previewPictures[i]);
-              this.displayPreviews.push(a);
-              console.log(a);
-              }
-
-          if (this.product.previewVideo == null && this.product.previewPictures == null) {
-            var dum: DisplayPreview = new DisplayPreview;
-            var dumPreview = new Preview;
-            dumPreview.id = -1;
-            dumPreview.type = "picture";
-            dumPreview.source = "https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty.jpg";
-            dum.preview = dumPreview;
-            dum.thumb = "https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty.jpg";
-            this.displayPreviews.push(dum);
-          }
-
-          
-          if (this.BlackThumbs.length > 0)
-            this.BlackThumbs.item(0)?.setAttribute("style", "border-radius: 4px; position: absolute; top: 0; right: 9px; bottom: 0; left: 0; background: #000; opacity: 0;");
-
-          this.productService.getTotalPurchasedCount(this.product.id).subscribe(
-            (data) => {
-              this.totalPurchasedCount = data;
-            }
-          )
-
-        },
-        error => {
-          this.router.navigate(['error']);
-        })
-    }
-  }
   totalPurchasedCount = 0;
   checkIfPurchased() {
 
@@ -306,7 +256,8 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   getPreviewPictureSource(): string {
-    if (this.currentPreview.preview.id = -1) {
+   
+    if (this.currentPreview.preview.id == -1) {
       return "https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty.jpg";
     }
     return 'http://localhost:9000/public/serveMedia/image?source=' + this.currentPreview.preview.source.replace(/\\/g, '/');

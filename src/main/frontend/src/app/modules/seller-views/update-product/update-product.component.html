@@ -4,7 +4,7 @@
     <div class="row" style="border-bottom: 0.5px solid #cdcdcd; height: 45px; margin: auto; background-color: #f4f4f4; ">
       <div style="display:flex;">
         <div class="col-3" style="float:left; margin-top:auto; margin-bottom: auto;">
-          <span class="back_to_shop">Back to shop</span>
+          <span class="back_to_shop" (click)="backToShop()">Trở về cửa hàng</span>
         </div>
       </div>
     </div>
@@ -216,9 +216,9 @@
                 <div class="button add_file_btn has_multi_upload" (click)="fileUpload.click()">
                   Thêm tệp
                 </div>
-                <input type="file" class="file-input" (change)="onFileUpload($event)" multiple="multiple" #fileUpload>
+                <input type="file" class="file-input" (change)="onFileUpload($event)" #fileUpload>
               </div>
-              <p class="upload_limit">Giới hạn độ lớn tệp: 1GB</p>
+              <p class="upload_limit">Giới hạn độ lớn tệp: 500Mb</p>
             </section>
             <h2>Chi tiết</h2>
             <div class="input_row">

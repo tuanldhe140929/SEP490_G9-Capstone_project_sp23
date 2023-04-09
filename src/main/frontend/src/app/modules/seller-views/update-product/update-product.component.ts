@@ -1,5 +1,5 @@
 import { HttpClient, HttpEventType, HttpResponse } from '@angular/common/http';
-import { AfterViewInit, Component, ElementRef, Input, OnInit, Renderer2, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, Input, OnInit, Renderer2, TemplateRef, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { finalize, Subscription } from 'rxjs';
@@ -89,7 +89,8 @@ export class UpdateProductComponent implements OnInit {
     private productFileService: ProductFileService,
     private categoryService: CategoryService,
     private tagService: TagService,
-    private productService: ProductService) { }
+    private productService: ProductService,
+    private cd: ChangeDetectorRef  ) { }
 
   product: Product = new Product;
   typeList: Category[] = [];
@@ -235,19 +236,22 @@ export class UpdateProductComponent implements OnInit {
             }
           },
           (error) => {
+            if (error.status===400)
             fileDisplay.file.fileState = FileState.ERROR;
-            this.info = "Không thể tải lên file " + file.name;
+            this.info = "Không thể tải lên file " + file.name + "có thể tệp chứa virus";
             this.openInfoModal();
             var index = -1;
+            console.log(fileDisplay);
             for (let i = 0; i < this.fileDisplayList.length; i++) {
               if (file.name == this.fileDisplayList[i].file.name) {
                 index = i;
                 break;
               }
             }
-            
-              this.fileDisplayList.slice(this.fileDisplayList.indexOf(fileDisplay), 1);
-            
+           
+            this.fileDisplayList = this.fileDisplayList.slice(0, index);
+            this.cd.detectChanges();
+            console.log(this.fileDisplayList.slice(0, 4));
           }
         )
         fileDisplay.process.subcription = upload$;
@@ -872,6 +876,7 @@ export class UpdateProductComponent implements OnInit {
 
   dismissError() {
     this.errors = [];
+    this.cd.detectChanges();
     this.modalService.dismissAll();
   }
   removeSpaces(text: string) {
@@ -1170,7 +1175,7 @@ export class UpdateProductComponent implements OnInit {
   }
 
 
-  formattedPrice = '2.00';
+  formattedPrice = '$2';
 
   updatePrice(value: any) {
     this.priceError();
@@ -1399,5 +1404,9 @@ export class UpdateProductComponent implements OnInit {
       error => {
         console.log(error);
       });
+  }
+
+  backToShop() {
+    this.router.navigate(['collection',2]);
   }
 }

@@ -76,6 +76,11 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	private ProductDetails createProductDetails(Product product, String version) {
+
+		if (product.getProductDetails().size() == 10) {
+			throw new IllegalArgumentException("Cannot create more than 10 versions");
+		}
+
 		ProductDetails productDetails = new ProductDetails();
 		productDetails.setFlagged(false);
 		productDetails.setProduct(product);
@@ -126,10 +131,17 @@ public class ProductServiceImpl implements ProductService {
 	public Seller getCurrentSeller() {
 		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
 				.getAccount();
-		if(!account.getRoles().contains(new Role(Constant.SELLER_ROLE_ID,"ROLE_SELLER")))
+		boolean isSeller = false;
+		for (Role role : account.getRoles()) {
+			if (role.getName().equals("ROLE_SELLER")) {
+				isSeller = true;
+			}
+		}
+		if (isSeller == false) {
 			throw new IllegalAccessError("Must be a seller");
+		}
 		Seller seller = sellerService.getSellerById(account.getId());
-		
+
 		return seller;
 	}
 

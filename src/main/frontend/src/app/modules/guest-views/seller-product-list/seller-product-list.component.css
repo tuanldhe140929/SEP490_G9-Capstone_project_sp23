@@ -150,3 +150,20 @@ button:active {
 .example-spacer {
   flex: 1 1 auto;
 }
+
+button{
+border-radius:3px;
+}
+
+a{
+    border-radius:3px;
+}
+
+.sellerInfo {
+  background-color: #FF2449;  
+}
+.padded {
+  padding: 20px;
+  padding-top:40px;
+  padding-bottom:40px;
+}

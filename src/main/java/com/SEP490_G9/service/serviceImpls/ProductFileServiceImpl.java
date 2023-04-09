@@ -175,9 +175,23 @@ public class ProductFileServiceImpl implements ProductFileService {
 		if (productFile.getSize() == 0 || productFile.getSize() > 500 * 1024 * 1024) {
 			throw new FileUploadException("File size:" + productFile.getSize());
 		}
-
-		if ((productDetails.getFiles().size() + 1) >= 10) {
+		int fileCount = 0;
+		for(ProductFile file: productDetails.getFiles()) {
+			if(file.isEnabled()==true) {
+				fileCount++;
+			}
+		}
+		if ((fileCount + 1) > 10) {
 			throw new FileUploadException("Exeeded max file count");
+		}
+		
+		long totalSize = 0;
+		for(ProductFile file: productDetails.getFiles()) {
+			totalSize += file.getSize();
+		}
+		totalSize += productFile.getSize();
+		if(totalSize >= 2000 * 1024 * 1024) {
+			throw new FileUploadException("Exeeded max storage for version");
 		}
 
 		if (productFile.getOriginalFilename().endsWith(".zip") || productFile.getOriginalFilename().endsWith(".rar")) {
