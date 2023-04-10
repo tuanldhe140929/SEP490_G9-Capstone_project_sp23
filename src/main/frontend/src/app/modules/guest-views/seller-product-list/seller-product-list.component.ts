@@ -30,7 +30,7 @@ export class SellerProductListComponent implements OnInit {
   categoryList: Category[] = [];
   tagList: Category[] = [];
   minprice: number = 0;
-  maxprice: number = 10000000;
+  maxprice: number = 1000;
   chosenCategory: number = 0;
   keyword: string = "";
   p: number = 1;
@@ -224,10 +224,11 @@ export class SellerProductListComponent implements OnInit {
         this.router.navigate(['product/update/' + data.id]);
       },
       error => {
-        console.log(error);
+        this.info = "Không thể tạo nhiều hơn 20 sản phẩm";
+        this.openInfoModal();
       });
   }
-
+  info = "";
   redirectUpdatePage(productId: number) {
     this.router.navigate(['product/update/' + productId]);
   }

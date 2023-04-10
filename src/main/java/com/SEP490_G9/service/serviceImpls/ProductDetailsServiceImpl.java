@@ -274,7 +274,7 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		Account account = getCurrentAccount();
 
 		if(!account.getId().equals(product.getSeller().getId()) && !isStaff(account)){
-			if(ret.getApproved()!=Status.APPROVED) {
+			if(ret.getApproved()!=Status.APPROVED || !ret.getProduct().isEnabled()) {
 				throw new IllegalAccessError("Cannot access this resource");
 			}
 		} 

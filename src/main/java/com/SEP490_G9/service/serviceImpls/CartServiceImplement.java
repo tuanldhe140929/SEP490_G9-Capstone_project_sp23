@@ -100,7 +100,7 @@ public class CartServiceImplement implements CartService {
 		Cart cart = getById(cartId);
 		CartItem itemToRemove = null;
 		for (CartItem item : cart.getItems()) {
-			if (item.getProductDetails().getProductVersionKey().getProductId() == productId) {
+			if (item.getProductDetails().getProductVersionKey().getProductId().equals(productId)) {
 				itemToRemove = item;
 				break;
 			}
@@ -208,18 +208,23 @@ public class CartServiceImplement implements CartService {
 	@Override
 	public boolean isUserPurchasedProduct(Long userId, Long productId) {
 		boolean ret = false;
-		
-		List<Cart> carts = cartRepository.findByUserId(userId);System.out.println(carts.size());
+
+		List<Cart> carts = cartRepository.findByUserId(userId);
 		List<Cart> purchasedCart = new ArrayList<>();
 		for (Cart cart : carts) {
-		
+
 			if (isCartHadPurchased(cart.getId()))
 				purchasedCart.add(cart);
 		}
+
+		System.out.println(purchasedCart.size());
+
 		for (Cart cart : purchasedCart) {
 			for (CartItem item : cart.getItems()) {
-				if (item.getProductDetails().getProduct().getId() == productId)
+				if (item.getProductDetails().getProduct().getId().equals(productId)) {
 					ret = true;
+				}
+
 			}
 		}
 		return ret;

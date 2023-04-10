@@ -71,6 +71,7 @@ export class CartComponent implements OnInit {
     this.isLoading = true;
     this.transactionService.purchase(this.cart.id).subscribe(
       data => {
+        this.isLoading = true;
         this.transaction = data;
         if (this.transaction.amount > 0) {
           var strWindowFeatures = "location=yes,height=570,width=520,scrollbars=yes,status=yes";
