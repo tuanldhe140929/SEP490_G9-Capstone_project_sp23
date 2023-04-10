@@ -975,7 +975,6 @@ class ProductDetailsServiceTest {
 		List<Integer> actualTagList = new ArrayList<>();
 		actualTagList.add(1);
 		List<ProductDetails> actual = pdsi.getProductForSearching("asset", 1, actualTagList, 0, 300);
-		
 		assertEquals(expected, actual);
 	}
 	
