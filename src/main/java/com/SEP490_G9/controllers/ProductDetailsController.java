@@ -240,10 +240,13 @@ public class ProductDetailsController {
 	@GetMapping(value = "GetAllProductForHomePage")
 	public ResponseEntity<?> GetAllProductForHomePage() {
 		List<ProductDetails> allProducts = productDetailsService.getAll();
-		List<ProductDetails> approvedProducts = productDetailsService.getByApproved(allProducts);
-		List<ProductDetails> lastestProducts = productDetailsService.getByLatestVer(approvedProducts);
-		List<ProductDetails> EnabledProducts = productDetailsService.getByEnabled(lastestProducts);
+		List<ProductDetails> EnabledProducts = productDetailsService.getByEnabled(allProducts);
 		List<ProductDetails> PublishedProducts = productDetailsService.getByPublished(EnabledProducts);
+
+		List<ProductDetails> approvedProducts = productDetailsService.getByApproved(PublishedProducts);
+		List<ProductDetails> lastestProducts = productDetailsService.getByLatestVer(approvedProducts);
+
+
 		List<ProductDetailsDTO> allProductsDTO = new ArrayList<>();
 		for (ProductDetails p : lastestProducts) {
 			allProductsDTO.add(new ProductDetailsDTO(p));
@@ -251,4 +254,9 @@ public class ProductDetailsController {
 		return ResponseEntity.ok(allProductsDTO);
 	}
 
+	@GetMapping(value = "getTotalPurchasedCount")
+	public ResponseEntity<?> getTotalPurchasedCount(@RequestParam("productId") Long productId){
+		int count = this.productDetailsService.getTotalPurchasedCount(productId);
+				return ResponseEntity.ok(count);
+	}
 }

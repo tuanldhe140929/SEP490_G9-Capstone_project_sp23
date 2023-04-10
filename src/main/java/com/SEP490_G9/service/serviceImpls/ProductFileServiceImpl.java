@@ -11,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -27,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.security.access.AuthorizationServiceException;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -53,6 +55,7 @@ import com.SEP490_G9.exception.ResourceNotFoundException;
 import com.SEP490_G9.repository.ProductFileRepository;
 import com.SEP490_G9.repository.ProductRepository;
 import com.SEP490_G9.repository.TransactionRepository;
+import com.SEP490_G9.service.CartService;
 import com.SEP490_G9.service.FileIOService;
 import com.SEP490_G9.service.ProductDetailsService;
 import com.SEP490_G9.service.ProductFileService;
@@ -87,6 +90,9 @@ public class ProductFileServiceImpl implements ProductFileService {
 
 	@Autowired
 	VirusTotalService virusTotalApi;
+
+	@Autowired
+	CartService cartService;
 
 	@Override
 	public ProductFile createProductFile(ProductFile productFile) {
@@ -157,15 +163,41 @@ public class ProductFileServiceImpl implements ProductFileService {
 		ret.setFileState(ProductFileDTO.FileState.UPLOADING);
 
 		ProductDetails productDetails = productDetailsService.getByProductIdAndVersion(productId, version);
+		if (productDetails == null) {
+			throw new IllegalArgumentException("version not found");
+		}
 		if (productDetails.getApproved() != Status.NEW) {
 			throw new IllegalArgumentException("Cannot edit this version");
 		}
-		if (productFile.getSize() == 0) {
+		if (productFile.getOriginalFilename().length() > 100) {
+			throw new FileUploadException("File name too long");
+		}
+		if (productFile.getSize() == 0 || productFile.getSize() > 500 * 1024 * 1024) {
 			throw new FileUploadException("File size:" + productFile.getSize());
 		}
-
-		if ((productDetails.getFiles().size() + 1) >= 10) {
+		int fileCount = 0;
+		for(ProductFile file: productDetails.getFiles()) {
+			if(file.isEnabled()==true) {
+				fileCount++;
+			}
+		}
+		if ((fileCount + 1) > 10) {
 			throw new FileUploadException("Exeeded max file count");
+		}
+		
+		long totalSize = 0;
+		for(ProductFile file: productDetails.getFiles()) {
+			totalSize += file.getSize();
+		}
+		totalSize += productFile.getSize();
+		if(totalSize >= 2000 * 1024 * 1024) {
+			throw new FileUploadException("Exeeded max storage for version");
+		}
+
+		if (productFile.getOriginalFilename().endsWith(".zip") || productFile.getOriginalFilename().endsWith(".rar")) {
+			if (fileHasPassword(productFile)) {
+				throw new FileUploadException("Compressed file cannot has password");
+			}
 		}
 
 		Path tempFilePath = createTempFile(productFile);
@@ -179,12 +211,7 @@ public class ProductFileServiceImpl implements ProductFileService {
 //		}
 		if (true) {
 			try {
-//				if (fileHasPassword(file)) {
-//					Files.deleteIfExists(tempFilePath);
-//					throw new IllegalArgumentException("Compressed file must not has password");
-//				} else {
-//					Files.deleteIfExists(tempFilePath);
-//				}
+
 				Files.deleteIfExists(tempFilePath);
 			} catch (IOException e) {
 				throw new FileUploadException("Error at server");
@@ -214,18 +241,19 @@ public class ProductFileServiceImpl implements ProductFileService {
 		return ret;
 	}
 
-	private boolean fileHasPassword(File file) {
+	private boolean fileHasPassword(MultipartFile productFile) {
 		char[] password = "password".toCharArray(); // replace with the password to test
-		try (FileInputStream fis = new FileInputStream(file);
-				ArchiveInputStream ais = new ArchiveStreamFactory().createArchiveInputStream(fis)) {
+		try (InputStream fis = productFile.getInputStream();
+				ArchiveInputStream ais = new ArchiveStreamFactory().createArchiveInputStream(ArchiveStreamFactory.ZIP,
+						fis)) {
 			ArchiveEntry entry;
 			while ((entry = ais.getNextEntry()) != null) {
-				IOUtils.toByteArray(ais);
+				// do nothing, just read through the archive
 			}
 		} catch (IOException e) {
-			throw new InternalServerException("Error occur when tryin to extract compressed file");
+			throw new InternalServerException("Error occurred when trying to extract compressed file", e);
 		} catch (ArchiveException e) {
-			if (e.getCause() instanceof ZipException && e.getCause().getMessage().contains("password")) {
+			if (e.getCause() instanceof ZipException && e.getCause().getMessage().toLowerCase().contains("password")) {
 				return true; // password-protected file
 			}
 		}
@@ -281,16 +309,16 @@ public class ProductFileServiceImpl implements ProductFileService {
 	public ByteArrayResource downloadFile(Long userId, Long productId, String token) {
 
 		if (token.isEmpty()) {
-			UserDetailsImpl authentication = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication()
-					.getPrincipal());
+			Collection<? extends GrantedAuthority> auth = SecurityContextHolder.getContext().getAuthentication()
+					.getAuthorities();
 
-			if (!isStaff(authentication.getAccount())) {
+			if (!auth.contains(new SimpleGrantedAuthority("ROLE_STAFF"))) {
 				System.out.println("checkin");
 				throw new IllegalAccessError("You don't have right to download this product");
 			}
 		} else {
 			if (!downloadTokenUtil.validateToken(userId, productId, token)) {
-				throw new IllegalAccessError("You don't have right to download this product");
+				throw new IllegalAccessError("false token");
 			}
 		}
 		List<File> productFiles = new ArrayList<>();
@@ -361,23 +389,14 @@ public class ProductFileServiceImpl implements ProductFileService {
 	@Override
 	public String generateDownloadToken(Long userId, Long productId) {
 		String token = "";
-		boolean isPurchased = checkIfPurchased(userId, productId);
+		boolean isPurchased = cartService.isUserPurchasedProduct(userId, productId);
 		if (isPurchased) {
 			token = downloadTokenUtil.generateToken(userId, productId);
+		} else {
+			throw new IllegalAccessError("You don't have right to download this product");
 		}
-		return token;
-	}
 
-	private boolean checkIfPurchased(Long userId, Long productId) {
-//		List<Transaction> transactions = transactionRepo.findByUserIdAndStatus(userId,"purchased");
-//		for(Transaction transaction:transactions) {
-//			for(CartItem item: transaction.getCart().getItems()) {
-//				if(item.getCartItemKey().getProductVersionKey().getProductId() == productId) {
-//					return true;
-//				}
-//			}
-//		}
-		return true;
+		return token;
 	}
 
 	public String getROOT_LOCATION() {

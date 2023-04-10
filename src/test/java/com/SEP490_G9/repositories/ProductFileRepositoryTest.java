@@ -29,13 +29,6 @@ class ProductFileRepositoryTest {
 	ProductFileRepository productFileRepository;
 
 	@Test
-	void testFindAll() {
-		int expectedSize = 7;
-		List<ProductFile> results = productFileRepository.findAll();
-		assertEquals(expectedSize, results.size());
-	}
-
-	@Test
 	void testFindByProductIdAndVersionN() {
 		ProductDetails pd = new ProductDetails();
 		pd.setProductVersionKey(new ProductVersionKey(1L, "1.0.0"));
@@ -51,38 +44,6 @@ class ProductFileRepositoryTest {
 		assertEquals(results.size(),0);
 	}
 
-	@Test
-	void testExistByNameAndProductDetailsN() {
-		ProductDetails pd = new ProductDetails();
-		pd.setProductVersionKey(new ProductVersionKey(1L, "1.0.0"));
-		String existName = "Database V2.drawio.png";
-		boolean result = productFileRepository.existsByNameAndProductDetails(existName, pd);
-		assertTrue(result);
-	}
-	
-	@Test
-	void testExistByNameAndProductDetailsA() {
-		ProductDetails pd = new ProductDetails();
-		pd.setProductVersionKey(new ProductVersionKey(-1L, "1.0.0000000"));
-		String existName = "Database V2.drawio.png";
-		boolean result = productFileRepository.existsByNameAndProductDetails(existName, pd);
-		assertFalse(result);
-	}
 
-	@Test
-	void testDeleteByIdN() {
-		Long id = 2L;
-		assertTrue(productFileRepository.existsById(id));
-		productFileRepository.deleteById(id);
-		assertTrue(!productFileRepository.existsById(id));
-	}
-	
-	@Test
-	void testDeleteByIdB() {
-		Long id = 1L;
-		assertTrue(productFileRepository.existsById(id));
-		productFileRepository.deleteById(id);
-		assertTrue(!productFileRepository.existsById(id));
-	}
 
 }

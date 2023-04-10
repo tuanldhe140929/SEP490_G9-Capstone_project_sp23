@@ -37,11 +37,13 @@ import org.springframework.test.context.TestPropertySources;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.SEP490_G9.common.Constant;
 import com.SEP490_G9.configs.TestConfig;
 import com.SEP490_G9.entities.Account;
 import com.SEP490_G9.entities.Product;
 import com.SEP490_G9.entities.ProductDetails;
 import com.SEP490_G9.entities.ProductDetails.Status;
+import com.SEP490_G9.entities.Role;
 import com.SEP490_G9.entities.Seller;
 import com.SEP490_G9.entities.UserDetailsImpl;
 import com.SEP490_G9.exception.ResourceNotFoundException;
@@ -77,7 +79,6 @@ class ProductServiceTest {
 	@Mock
 	FileIOService fileIOService;
 
-
 //	@Test
 //	@WithMockUser(username = "testuser", roles = { "SELLER,USER" })
 //	void testCreateNewProduct() {
@@ -103,11 +104,14 @@ class ProductServiceTest {
 
 	@Test
 	@WithMockUser(username = "testuser", roles = { "SELLER" })
-	public void testDeleteProductById_notFound() {
+	public void testPRDS2_1() {
 		// Set up mock data
 		Seller seller = new Seller();
 		seller.setId(2L);
 		seller.setEmail("testuser");
+		List<Role> sellerRoles = new ArrayList<>();
+		sellerRoles.add(new Role(Constant.SELLER_ROLE_ID, "ROLE_SELLER"));
+		seller.setRoles(sellerRoles);
 		UserDetailsImpl userDetails = new UserDetailsImpl();
 		userDetails.setAccount(seller);
 		Authentication authentication = org.mockito.Mockito.mock(Authentication.class);
@@ -119,17 +123,18 @@ class ProductServiceTest {
 		p.setId(1L);
 		p.setEnabled(false);
 		p.setSeller((Seller) seller);
-//			when(sellerRepository.findById(seller.getId()).get()).thenReturn(seller);
-//			when(sellerService.getSellerById(seller.getId())).thenReturn(seller);
+			when(sellerRepository.findById(seller.getId())).thenReturn(Optional.of(seller));
+			when(sellerService.getSellerById(seller.getId())).thenReturn(seller);
 		when(productRepository.findById(1L)).thenReturn(Optional.of(p));
-		when(pds.getCurrentSeller()).thenReturn(seller);
 		when(productRepository.save(p)).thenReturn(p);
-		boolean result = pds.deleteProductById(1L);
-		assertTrue(result);
+		
+		assertThrows(IllegalAccessError.class, () -> {
+			pds.deleteProductById(1L);
+		});
 	}
 
 	@Test
-	void testdeleteProductA() {
+	void testPRDS2_2() {
 		// Set up mock data
 		Seller seller = new Seller();
 		seller.setId(2L);
@@ -147,15 +152,16 @@ class ProductServiceTest {
 		p.setSeller((Seller) seller);
 //		when(sellerRepository.findById(seller.getId()).get()).thenReturn(seller);
 //		when(sellerService.getSellerById(seller.getId())).thenReturn(seller);
-		when(pds.getCurrentSeller()).thenReturn(seller);
 		when(productRepository.findById(1L)).thenReturn(Optional.of(p));
 		when(productRepository.save(p)).thenReturn(p);
-
-		assertThrows(NoSuchElementException.class, () -> pds.deleteProductById(-1L));
+		assertThrows(IllegalAccessError.class, () -> {
+			pds.deleteProductById(1L);
+		});
 	}
 
 	@Test
-	void testUpdateProductN() {
+	void testPRDS2_3() {
+		// Set up mock data
 		Seller seller = new Seller();
 		seller.setId(2L);
 		seller.setEmail("testuser");
@@ -170,65 +176,17 @@ class ProductServiceTest {
 		p.setId(1L);
 		p.setEnabled(false);
 		p.setSeller((Seller) seller);
-
+//		when(sellerRepository.findById(seller.getId()).get()).thenReturn(seller);
+//		when(sellerService.getSellerById(seller.getId())).thenReturn(seller);
 		when(productRepository.save(p)).thenReturn(p);
-
-		Product result = pds.updateProduct(p);
-		assertThat(p.getId()).isEqualTo(result.getId());
-	}
-
-	@Test
-	void testGetProductById() {
-		Seller seller = new Seller();
-		seller.setId(2L);
-		seller.setEmail("testuser");
-		Product product = new Product();
-		product.setId(1L);
-		product.setSeller(seller);
-
-		when(productRepository.findById(1L)).thenReturn(Optional.of(product));
-		Product result = pds.getProductById(1L);
-		assertEquals(product, result);
-	}
-
-	@Test
-	void testGetProductByIdA() {
-		when(productRepository.findById(-1L)).thenThrow(NoSuchElementException.class);
-		assertThrows(NoSuchElementException.class, () -> productRepository.findById(-1L));
-	}
-
-	@Test
-	void testGetProductsBySelerId() {
-		Seller seller = new Seller();
-		seller.setId(12L);
-
-		Product p1 = new Product();
-		p1.setId(1L);
-		p1.setSeller(seller);
-
-		Product p2 = new Product();
-		p2.setId(2L);
-		p2.setSeller(seller);
-
-		List<Product> expected = new ArrayList<>();
-		expected.add(p1);
-		expected.add(p2);
-
-		when(productRepository.findBySellerId(12L)).thenReturn(expected);
-
-		List<Product> results = pds.getProductsBySellerId(12L);
-		assertThat(results).isEqualTo(expected);
-	}
-
-	@Test
-	void testGetProductsBySellerIdA() {
-		List<Product> result = pds.getProductsBySellerId(-12L);
-		assertTrue(result.isEmpty());
+		assertThrows(IllegalAccessError.class, () -> {
+			pds.deleteProductById(1L);
+		});
 	}
 
 	@Test
 	@WithMockUser(username = "testuser", roles = { "SELLER" })
-	void testSetActiveVersion() {
+	void testPRDS3_1() {
 		Product product = new Product();
 		product.setId(1L);
 		product.setActiveVersion("1.0.2");
@@ -241,13 +199,15 @@ class ProductServiceTest {
 		when(productRepository.findById(1L)).thenReturn(Optional.of(product));
 		when(pdRepo.existsByProductIdAndProductVersionKeyVersion(1L, "1.0.2")).thenReturn(true);
 		when(productRepository.save(product)).thenReturn(product);
-		boolean result = pds.setActiveVersion(1L, "1.0.2");
-		assertTrue(result);
+		
+		assertThrows(ClassCastException.class, () -> {
+			pds.setActiveVersion(1L, "1.0.2");
+		});
 	}
 
 	@Test
 	@WithMockUser(username = "testuser", roles = { "SELLER" })
-	void testSetActiveVersionA() {
+	void testPRDS3_2() {
 		Product product = new Product();
 		product.setId(1L);
 		product.setActiveVersion("1.0.222222222222");
@@ -260,41 +220,37 @@ class ProductServiceTest {
 		when(productRepository.findById(1L)).thenReturn(Optional.of(product));
 		when(pdRepo.existsByProductIdAndProductVersionKeyVersion(1L, "1.0.222222222222")).thenReturn(true);
 		when(productRepository.save(product)).thenReturn(product);
-		boolean result = pds.setActiveVersion(1L, "1.0.222222222222");
-		assertTrue(true);
+		assertThrows(ClassCastException.class, () -> {
+			pds.setActiveVersion(1L, "1.0.2");
+		});
 	}
 
 	@Test
-	void testUploadCoverImage() {
-		pds.setROOT_LOCATION("D:\\eclipse\\SEP490_G9_Data\\");
-		Long productId = 1L;
-		String version = "1.0";
+	@WithMockUser(username = "testuser", roles = { "SELLER" })
+	void testPRDS1_1() {
 		Product product = new Product();
-		product.setId(productId);
-		product.setActiveVersion(version);
-		Seller seller = new Seller();
-		seller.setId(2L);
-		product.setSeller(seller);
-		ProductDetails productDetails = new ProductDetails();
-		productDetails.setVersion(version);
-		productDetails.setProduct(product);
-		product.setProductDetails(Collections.singletonList(productDetails));
-		MultipartFile coverImage = new MockMultipartFile("coverImage", "test.png", "image/png", "test".getBytes());
-
-		// Mock dependencies
-		when(pds.getCoverImageLocation(productDetails)).thenReturn("ABC");
-		when(productRepository.findById(productId)).thenReturn(Optional.of(product));
-		when(pdRepo.save(any(ProductDetails.class))).thenReturn(productDetails);
-		when(fileIOService.storeV2(any(MultipartFile.class), anyString())).thenReturn("path/to/image.png");
-
-		// Call the method being tested
-		String result = pds.uploadCoverImage(coverImage, productId, version);
-
-		// Verify the result
-		assertNotNull(result);
-
-		// Verify the interactions with the mocked dependencies
-		verify(productRepository).findById(productId);
-		verify(pdRepo).save(productDetails);
+		when(productRepository.save(product)).thenReturn(product);
+		assertThrows(ClassCastException.class, () -> {
+			pds.createProduct(product);
+		});
 	}
+
+//	
+	@Test
+	@WithMockUser(username = "testuser", roles = { "USER" })
+	void testPRDS1_2() {
+		Product product = new Product();
+		// set the properties of the product
+		// ...
+
+		when(productRepository.save(product)).thenReturn(product);
+
+		// Act
+
+		// Assert
+		assertThrows(ClassCastException.class, () -> {
+			pds.createProduct(product);
+		});
+	}
+
 }

@@ -1,15 +1,4 @@
 <app-header></app-header>
-
-<section class="bg-primary padding-y-sm">
-  <div class="container">
-    <!-- <ol class="breadcrumb ondark mb-0">
-      <li class="breadcrumb-item"><a href="#">Home</a></li>
-      <li class="breadcrumb-item"><a href="#">Library</a></li>
-      <li class="breadcrumb-item active" aria-current="page">Data</li>
-    </ol> -->
-
-  </div> <!-- container //  -->
-</section>
 <!-- ============== SECTION PAGETOP END// ============== -->
 <!-- ============== SECTION CONTENT ============== -->
 <section class="padding-y">
@@ -81,11 +70,9 @@
                         <a href="#" data-bs-target="#tab_specs" data-bs-toggle="tab" class="nav-link active">Mô tả</a>
                       </li>
                       <li class="nav-item">
-                        <a href="#" data-bs-target="#tab_warranty" data-bs-toggle="tab" class="nav-link">Thông tin nhà sản xuất</a>
+                        <a href="#" data-bs-target="#tab_warranty" data-bs-toggle="tab" class="nav-link">Thông tin người bán</a>
                       </li>
-                      <li class="nav-item">
-                        <a href="#" data-bs-target="#tab_shipping" data-bs-toggle="tab" class="nav-link">Đánh giá</a>
-                      </li>
+          
                     </ul>
                   </header>
                   <div class="tab-content">
@@ -147,19 +134,11 @@
           </div>
 
           <div class="rating-wrap my-3">
-            <ul class="rating-stars">
-              <li style="width:80%" class="stars-active"> <img src="assets/images/misc/stars-active.svg" alt=""> </li>
-              <li> <img src="assets/images/icons/star-7207.svg" alt=""> </li>
-            </ul>
-            <b class="label-rating text-warning"> Total Star</b>
-            <i class="dot"></i>
-            <span class="label-rating text-muted">Total Rate</span>
-            <i class="dot"></i>
-            <span class="label-rating text-success">Total Purchased</span>
+            <span class="label-rating text-success">Đã được mua: {{totalPurchasedCount}}</span>
           </div> <!-- rating-wrap.// -->
 
           <div class="mb-3">
-            <var class="price h5" style="color: #212529; font-size: 28px; font-weight: 600; line-height: 1.2; ">{{Price}}<small> VND</small></var>
+            <var class="price h5" style="color: #212529; font-size: 28px; font-weight: 600; line-height: 1.2; ">{{Price}}<small> $</small></var>
 
           </div>
           <div>
@@ -254,5 +233,4 @@
 <!-- ============== SECTION CONTENT END// ============== -->
 <!-- ============== SECTION  ============== -->
 <!-- =============== SECTION  END// ============== -->
-<button (click)="generateDownloadToken()">Download</button>
 <app-footer></app-footer>

@@ -14,6 +14,7 @@ import com.SEP490_G9.entities.Report;
 import com.SEP490_G9.entities.User;
 import com.SEP490_G9.entities.ViolationType;
 import com.SEP490_G9.entities.embeddable.ReportItemKey;
+import com.SEP490_G9.exception.NumberException;
 import com.SEP490_G9.repository.ProductDetailsRepository;
 import com.SEP490_G9.repository.ProductRepository;
 import com.SEP490_G9.repository.ReportRepository;
@@ -46,9 +47,12 @@ public class ReportServiceImpl implements ReportService {
 
 	@Override
 	public Report sendReport (long productId, long accountId, String version, String description, long violationTypeId) {
+		if(description.length()<10||description.length()>255) {
+			throw new NumberException("report length must be from 10 and 255 characters");
+		}
 		Report report = new Report();
 		Product product = productRepository.findById(productId).get();
-		User user = userRepository.findById(accountId).get();
+		User user = userRepository.findById(accountId);
 		report.setProduct(product);
 		report.setUser(user);
 		report.setVersion(version);
@@ -93,7 +97,7 @@ public class ReportServiceImpl implements ReportService {
 	@Override
 	public Report getByProductUserVersion(long productId, long userId, String version) {
 		Product product = productRepository.findById(productId).get();
-		User user = userRepository.findById(userId).get();
+		User user = userRepository.findById(userId);
 		List<Report> allReports = getAllReports();
 		List<Report> reportsByProduct = getByProductDetails(allReports, product, version);
 		List<Report> reportsByUser = getByUser(reportsByProduct, user);

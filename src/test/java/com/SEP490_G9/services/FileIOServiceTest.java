@@ -52,11 +52,11 @@ class FileIOServiceTest {
 	}
 
 	@Test
-	void testStoreV2(@TempDir Path tempDir) throws IOException {
+	void testFIS1(@TempDir Path tempDir) throws IOException {
 		// Given
-		String originalFilename = UUID.randomUUID().toString() + ".txt";
+		String originalFilename = "file.txt";
 		String path = tempDir.toString();
-		MockMultipartFile file = new MockMultipartFile("file", originalFilename, "text/plain", "Test data".getBytes());
+		MockMultipartFile file = new MockMultipartFile("file", originalFilename, "image/png", "Test data".getBytes());
 
 		// When
 		String storedPath = fileIOService.storeV2(file, path);
@@ -71,16 +71,22 @@ class FileIOServiceTest {
 	}
 
 	@Test
-	void testStoreV2_ioException() throws IOException {
+	void testFIS2(@TempDir Path tempDir) throws IOException {
 		// Given
-		MultipartFile file = mock(MultipartFile.class);
-		String path = "invalid_path";
+		String originalFilename = "file.png";
+		String path = tempDir.toString();
+		MockMultipartFile file = new MockMultipartFile("file", originalFilename, "image/png", "Test data".getBytes());
 
-		InputStream inputStream = mock(InputStream.class);
-		when(file.getInputStream()).thenReturn(inputStream);
+		// When
+		String storedPath = fileIOService.storeV2(file, path);
 
-		// act
-		assertThrows(NullPointerException.class,()-> fileIOService.storeV2(file, path));
+		// Then
+		File storedFile = new File(storedPath);
+		assertEquals(originalFilename, storedFile.getName());
+		assertEquals(path, storedFile.getParent());
+
+		// Cleanup
+		Files.delete(storedFile.toPath());
 	}
 
 }

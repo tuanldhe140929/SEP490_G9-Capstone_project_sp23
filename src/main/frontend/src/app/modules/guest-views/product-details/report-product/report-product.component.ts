@@ -105,7 +105,7 @@ export class ReportProductComponent implements OnInit{
   }
 
   descriptionExceed(): boolean{
-    if(this.description.length>255){
+    if(this.description.length<10||this.description.length>255){
       return true
     }else{
       return false
