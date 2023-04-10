@@ -1,0 +1,60 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f2f2f2;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+h1 {
+  font-size: 36px;
+  margin-bottom: 20px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+  table th,
+  table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ccc;
+  }
+
+  table th {
+    font-weight: bold;
+  }
+
+.total-amount {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.btn {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 3px;
+  color: #fff;
+  width:100px;
+  text-decoration: none;
+  background-color: #FF2449;
+  border: white 1px solid;
+  cursor: pointer;
+}
+
+.cancel {
+  background-color: #4a4a4a;
+  margin-left: 10px;
+}
+

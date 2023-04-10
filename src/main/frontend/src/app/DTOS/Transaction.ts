@@ -1,5 +1,15 @@
-import { TransactionFee } from "./TransactionFee";
 
+import { TransactionFee } from "./TransactionFee";
+import { Product } from "./Product";
+export class Cart{
+  id: number;
+  items: Item[];
+}
+
+export class Item {
+  cartItemKey: number;
+  productDetails: Product;
+}
 export enum TransactionStatus{
 	FAILED = "FAILED",COMPLETED="COMPLETED",CREATED="CREATED",
 	CANCELED="CANCELED",APPROVED ="APPROVED"
@@ -19,10 +29,12 @@ export class Transaction{
   paypalId: number;
   fee: TransactionFee;
 	approvalUrl:string;
-	payer:Payer;
+  payer: Payer;
+  cart: Cart;
 	constructor(){
 		this.payer = new Payer;
-		this.id = -1;
+    this.id = -1;
+    this.cart = new Cart
     this.amount = -1;
     this.fee = new TransactionFee;
 		this.status = TransactionStatus.FAILED;

@@ -82,8 +82,15 @@ public class ProductController {
 				.getAccount();
 		Seller seller = sellerService.getSellerById(account.getId());
 
-		if (seller.getProducts().size() == 20) {
-			throw new IllegalArgumentException("Cannot create more than 20 products");
+		int count = 0;
+		for(Product p : seller.getProducts()) {
+			if(p.isEnabled()) {
+				count++;
+			}
+		}
+		
+		if(count==20) {
+			throw new IllegalArgumentException("Exeeded max number of product");
 		}
 		
 		Product product = new Product();

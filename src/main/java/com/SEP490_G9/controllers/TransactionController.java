@@ -48,8 +48,10 @@ public class TransactionController {
 	@GetMapping("/reviewTransaction")
 	public ResponseEntity<?> reviewTransaction(@RequestParam("paymentId") String paymentId) {
 		Transaction transaction = transactionService.getByPaymentId(paymentId);
-		transaction.setStatus(Transaction.Status.APPROVED);
-		transactionService.updateTransaction(transaction);
+		if (transaction.getStatus() == Transaction.Status.CREATED) {
+			transaction.setStatus(Transaction.Status.APPROVED);
+			transactionService.updateTransaction(transaction);
+		}
 		Payer payer = paypalService.getPayerById(paymentId);
 		transaction.setPayer(payer);
 		return ResponseEntity.ok(transaction);
@@ -69,7 +71,7 @@ public class TransactionController {
 		Transaction transaction = transactionService.executeTransaction(paymentId, payerId);
 		return ResponseEntity.ok(transaction);
 	}
-	
+
 	@PostMapping("/cancelTransaction")
 	public ResponseEntity<?> cancelTransaction(@RequestParam("transId") Long transId) {
 		Transaction ret = transactionService.cancel(transId);

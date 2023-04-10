@@ -235,8 +235,10 @@ public class TransactionServiceImpl implements TransactionService {
 
 		if (transaction.getStatus().equals(Transaction.Status.COMPLETED)
 				|| transaction.getStatus().equals(Transaction.Status.FAILED)
-				|| transaction.getStatus().equals(Transaction.Status.EXPIRED))
-			throw new IllegalArgumentException("The transaction has ben made");
+				|| transaction.getStatus().equals(Transaction.Status.EXPIRED)
+				|| transaction.getStatus().equals(Transaction.Status.CANCELED))
+			throw new IllegalArgumentException("The transaction has ben made or has been cancelled");
+		
 		transaction.setStatus(Transaction.Status.CANCELED);
 		transaction.setLastModified(new Date());
 		transaction = transactionRepo.save(transaction);
