@@ -12,17 +12,20 @@ import org.springframework.stereotype.Service;
 import com.SEP490_G9.entities.Account;
 import com.SEP490_G9.entities.Cart;
 import com.SEP490_G9.entities.CartItem;
+import com.SEP490_G9.entities.ProductDetails;
 import com.SEP490_G9.entities.Seller;
 import com.SEP490_G9.entities.Transaction;
 import com.SEP490_G9.entities.TransactionFee;
 import com.SEP490_G9.entities.User;
 import com.SEP490_G9.exception.InternalServerException;
 import com.SEP490_G9.exception.ResourceNotFoundException;
+import com.SEP490_G9.repository.CartRepository;
 import com.SEP490_G9.repository.TransactionFeeRepository;
 import com.SEP490_G9.repository.TransactionRepository;
 import com.SEP490_G9.service.CartService;
 import com.SEP490_G9.service.PayoutService;
 import com.SEP490_G9.service.PaypalService;
+import com.SEP490_G9.service.ProductDetailsService;
 import com.SEP490_G9.service.TransactionService;
 import com.SEP490_G9.service.UserService;
 import com.paypal.api.payments.Links;
@@ -51,6 +54,13 @@ public class TransactionServiceImpl implements TransactionService {
 
 	@Autowired
 	PayoutService payoutService;
+	
+	@Autowired
+	CartRepository cartRepo;
+	
+	
+	@Autowired
+	ProductDetailsService pds;
 
 	@Override
 	public Transaction getByPaymentId(String paymentId) {
@@ -252,4 +262,37 @@ public class TransactionServiceImpl implements TransactionService {
 		}
 		return total;
 	}
+
+	@Override
+	public boolean isCartHadPurchased(Long cartId) {
+		Cart cart = cartRepo.findById(cartId).orElseThrow();
+		for (Transaction transaction : cart.getTransactions()) {
+			if (transaction.getStatus().equals(Transaction.Status.COMPLETED)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	@Override
+	public List<ProductDetails> getListCartUserPurchasedProduct(Long userId) {
+		List<Cart> carts = cartRepo.findByUserId(userId);
+		List<Cart> purchasedCart = new ArrayList<>();
+		for (Cart cart : carts) {
+			if (isCartHadPurchased(cart.getId()))
+				purchasedCart.add(cart);		
+		}
+		List<ProductDetails> purchasedProductList = new ArrayList<>();
+		List<CartItem> purchasedCartItem = new ArrayList<>();
+		
+		for (Cart c : purchasedCart) {
+			List<CartItem> pCI = c.getItems();
+			for(CartItem CI : pCI) {
+				purchasedProductList.add(pds.getActiveVersion(CI.getProductDetails().getProduct().getId()));
+			}
+		}
+		return purchasedProductList;
+	}
+
+	
 }
