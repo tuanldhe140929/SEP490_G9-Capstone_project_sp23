@@ -7,11 +7,11 @@
         </select>
         <br>
         <div class="form-group">
-            <p>Mô tả chi tiết (vui lòng không để quá 255 ký tự) :</p>
+            <p>Mô tả chi tiết (để từ 10 đến 255 ký tự) :</p>
             <textarea [(ngModel)]="description" (input)="onDescriptionChange()" formControlName="description"></textarea>
         </div>
         <small *ngIf="descriptionEmpty()" style="color: red;">Vui lòng mô tả chi tiết vi phạm</small>
-        <small *ngIf="descriptionExceed()" style="color: red">Vui lòng không để mô tả quá 255 ký tự</small>
+        <small *ngIf="descriptionExceed()" style="color: red">Vui lòng để mô tả từ 10 đến 255 ký tự</small>
         <div class="form-group" align="end">
             <button class="btn btn-warning" mat-dialog-close="">Hủy</button>
             <button class="btn btn-primary" type="submit" [disabled]="violationTypeId==0||descriptionEmpty()||descriptionExceed()" mat-dialog-close="">Gửi báo cáo</button>
