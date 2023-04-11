@@ -4,7 +4,7 @@
     <div class="row" style="border-bottom: 0.5px solid #cdcdcd; height: 45px; margin: auto; background-color: #f4f4f4; ">
       <div style="display:flex;">
         <div class="col-3" style="float:left; margin-top:auto; margin-bottom: auto;">
-          <span class="back_to_shop">Back to shop</span>
+          <span class="back_to_shop" (click)="backToShop()">Trở về cửa hàng</span>
         </div>
       </div>
     </div>
@@ -216,9 +216,9 @@
                 <div class="button add_file_btn has_multi_upload" (click)="fileUpload.click()">
                   Thêm tệp
                 </div>
-                <input type="file" class="file-input" (change)="onFileUpload($event)" multiple="multiple" #fileUpload>
+                <input type="file" class="file-input" (change)="onFileUpload($event)" #fileUpload>
               </div>
-              <p class="upload_limit">Giới hạn độ lớn tệp: 1GB</p>
+              <p class="upload_limit">Giới hạn độ lớn tệp: 500Mb</p>
             </section>
             <h2>Chi tiết</h2>
             <div class="input_row">
@@ -290,7 +290,7 @@
                   </div>
                 </ng-template>
               </div>
-              <div class="upload_preview_pictures_label"><label for="preview_video_container">Tải lên video xem trước<br /><small>Định dạng: .mp4, .mkv, .mov, kích thước tối đa: 1GB</small></label> </div>
+              <div class="upload_preview_pictures_label"><label for="preview_video_container">Tải lên video xem trước<br /><small>Định dạng: .mp4, .mkv, .mov, kích thước tối đa: 200Mb</small></label> </div>
             </div>
             <div class="preview_pictures drop" id="preview_pictures_container" style="margin-top:30px;">
               <div class="upload_container" style="position:relative; background-color:white;max-height:500px;">

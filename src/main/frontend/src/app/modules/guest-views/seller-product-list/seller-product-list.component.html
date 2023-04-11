@@ -1,227 +1,226 @@
 <app-header></app-header>
 <!-- ============== SECTION PAGETOP ============== -->
-<section class="bg-primary py-5">
-  <div class="container">
-    <div class="row">
-      <div class="col-2">
-        <img [src]="getSellerAvatar()" width="150" height="150">
+<div class="container-fluid" style="background-color: #f4f4f4;">
+  <section class="py-5 sellerInfo" style="padding-top:20px;">
+    <div class="container">
+      <div class="row">
+        <div class="col-2">
+          <img [src]="getSellerAvatar()" width="150" height="150">
+        </div>
+        <div class="col-2" *ngIf="(seller!=null)">
+          <b style="color: white; font-size: 40px;">{{seller.username}}</b>
+          <br>
+          <p style="color: white; font-size: 30px;">{{seller.email}}</p>
+        </div>
       </div>
-      <div class="col-2" *ngIf ="(seller!=null)">
-        <b style="color: white; font-size: 40px;">{{seller.username}}</b>
-        <br>
-        <p style="color: white; font-size: 30px;">{{seller.email}}</p>
-      </div>
-    </div>
-  </div> <!-- container //  -->
-</section>
-<!-- ============== SECTION PAGETOP END// ============== -->
-<!-- ============== SECTION CONTENT ============== -->
-<section class="padding-y">
-  <div class="container">
+    </div> <!-- container //  -->
+  </section>
+  <!-- ============== SECTION PAGETOP END// ============== -->
+  <!-- ============== SECTION CONTENT ============== -->
 
-    <div class="row">
-      <aside class="col-lg-3">
+  <section class="padding padded">
+    <div class="container">
 
-        <button class="btn btn-outline-secondary mb-3 w-100  d-lg-none" data-bs-toggle="collapse" data-bs-target="#aside_filter">Show filter</button>
+      <div class="row">
+        <aside class="col-lg-3">
 
-        <!-- ===== Card for sidebar filter ===== -->
-        <div id="aside_filter" class="collapse card d-lg-block mb-5">
+          <button class="btn btn-outline-secondary mb-3 w-100  d-lg-none" data-bs-toggle="collapse" data-bs-target="#aside_filter">Show filter</button>
 
-          <article class="filter-group">
-            <header class="card-header">
-              <a href="#" class="title" data-bs-toggle="collapse" data-bs-target="#collapse_aside2">
-                <i class="icon-control fa fa-chevron-down"></i>  Tìm kiếm từ khóa
-              </a>
-            </header>
-            <div class="collapse show" id="collapse_aside2">
-              <div class="card-body">
-                <div class="row mb-3">
-                  <div>
-                    <input class="form-control" id="min" placeholder="Nhập từ khóa" type="text" [(ngModel)]="keyword">
-                  </div> <!-- col end.// -->
-                </div> <!-- row end.// -->
-              </div> <!-- card-body.// -->
-            </div> <!-- collapse.// -->
-          </article> <!-- filter-group // -->
+          <!-- ===== Card for sidebar filter ===== -->
+          <div id="aside_filter" class="collapse card d-lg-block mb-5">
 
-          <article class="filter-group">
-            <header class="card-header">
-              <a href="#" class="title" data-bs-toggle="collapse" data-bs-target="#collapse_aside1">
-                <i class="icon-control fa fa-chevron-down"></i>   Phân loại
-              </a>
-            </header>
-            <div class="collapse show" id="collapse_aside1">
-              <div class="card-body">
-                <div class="form-check">
-                  <input class="form-check-input" type="radio" name="choosecategory" id="flexRadioDefault1" [value]="0" [(ngModel)]="chosenCategory" (change)="onChangeCategory($event)">
-                  <label class="form-check-label" for="flexRadioDefault1">
-                    Tất cả phân loại
-                  </label>
-                  <!-- <b class="badge rounded-pill bg-gray-dark float-end">{{resultList.length}}</b> -->
+            <article class="filter-group">
+              <header class="card-header">
+                <a href="#" class="title" data-bs-toggle="collapse" data-bs-target="#collapse_aside2">
+                  <i class="icon-control fa fa-chevron-down"></i>  Tìm kiếm từ khóa
+                </a>
+              </header>
+              <div class="collapse show" id="collapse_aside2">
+                <div class="card-body">
+                  <div class="row mb-3">
+                    <div>
+                      <input class="form-control" id="min" placeholder="Nhập từ khóa" type="text" [(ngModel)]="keyword">
+                    </div> <!-- col end.// -->
+                  </div> <!-- row end.// -->
+                </div> <!-- card-body.// -->
+              </div> <!-- collapse.// -->
+            </article> <!-- filter-group // -->
+
+            <article class="filter-group">
+              <header class="card-header">
+                <a href="#" class="title" data-bs-toggle="collapse" data-bs-target="#collapse_aside1">
+                  <i class="icon-control fa fa-chevron-down"></i>   Phân loại
+                </a>
+              </header>
+              <div class="collapse show" id="collapse_aside1">
+                <div class="card-body">
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="choosecategory" id="flexRadioDefault1" [value]="0" [(ngModel)]="chosenCategory" (change)="onChangeCategory($event)">
+                    <label class="form-check-label" for="flexRadioDefault1">
+                      Tất cả phân loại
+                    </label>
+                    <!-- <b class="badge rounded-pill bg-gray-dark float-end">{{resultList.length}}</b> -->
+                  </div>
+                  <div class="form-check" *ngFor="let category of categoryList">
+                    <input class="form-check-input" type="radio" name="choosecategory" id="flexRadioDefault1" [value]="category.id" [(ngModel)]="chosenCategory" (change)="onChangeCategory($event)">
+                    <label class="form-check-label" for="flexRadioDefault2">
+                      {{category.name}}
+                    </label>
+                  </div>
                 </div>
-                <div class="form-check" *ngFor="let category of categoryList">
-                  <input class="form-check-input" type="radio" name="choosecategory" id="flexRadioDefault1" [value]="category.id" [(ngModel)]="chosenCategory" (change)="onChangeCategory($event)">
-                  <label class="form-check-label" for="flexRadioDefault2">
-                    {{category.name}}
+              </div> <!-- collapse.// -->
+            </article> <!-- filter-group // -->
+            <!-- <article class="filter-group">
+                     <header class="card-header">
+                       <a href="#" class="title" data-bs-toggle="collapse" data-bs-target="#collapse_aside_brands">
+                       <i class="icon-control fa fa-chevron-down"></i>  Phân loại
+                       </a>
+                     </header>
+                     <div class="collapse show" id="collapse_aside_brands">
+                       <div class="card-body">
+                         <label class="form-check mb-2">
+                         <input class="form-check-input" type="checkbox" value="" checked>
+                         <span class="form-check-label"> Mercedes </span>
+                         <b class="badge rounded-pill bg-gray-dark float-end">120</b>
+                         </label>
+                         <label class="form-check mb-2">
+                         <input class="form-check-input" type="checkbox" value="" checked>
+                         <span class="form-check-label"> Toyota </span>
+                         <b class="badge rounded-pill bg-gray-dark float-end">15</b>
+                         </label>
+                         <label class="form-check mb-2">
+                         <input class="form-check-input" type="checkbox" value="" checked>
+                         <span class="form-check-label"> Mitsubishi </span>
+                         <b class="badge rounded-pill bg-gray-dark float-end">35</b>
+                         </label>
+                         <label class="form-check mb-2">
+                         <input class="form-check-input" type="checkbox" value="" checked>
+                         <span class="form-check-label"> Nissan </span>
+                         <b class="badge rounded-pill bg-gray-dark float-end">89</b>
+                         </label>
+                         <label class="form-check mb-2">
+                         <input class="form-check-input" type="checkbox" value="">
+                         <span class="form-check-label"> Honda </span>
+                         <b class="badge rounded-pill bg-gray-dark float-end">30</b>
+                         </label>
+                         <label class="form-check mb-2">
+                         <input class="form-check-input" type="checkbox" value="">
+                         <span class="form-check-label"> Honda accord </span>
+                         <b class="badge rounded-pill bg-gray-dark float-end">30</b>
+                         </label>
+                       </div>
+                     </div>
+                     </article> -->
+
+            <article class="filter-group">
+              <header class="card-header">
+                <a href="#" class="title" data-bs-toggle="collapse" data-bs-target="#collapse_aside_brands">
+                  <i class="icon-control fa fa-chevron-down"></i>  Nhãn
+                </a>
+              </header>
+              <div class="collapse show" id="collapse_aside_brands">
+                <div class="card-body">
+                  <label class="form-check mb-2" *ngFor="let tag of tagList">
+                    <input class="form-check-input" name="choosetag" type="checkbox" [value]="tag.id" (change)="updateCheckedValues($event)">
+                    <span class="form-check-label"> {{tag.name}} </span>
                   </label>
                 </div>
               </div>
-            </div> <!-- collapse.// -->
-          </article> <!-- filter-group // -->
+            </article>
 
- <!-- <article class="filter-group">
-          <header class="card-header">
-            <a href="#" class="title" data-bs-toggle="collapse" data-bs-target="#collapse_aside_brands">
-            <i class="icon-control fa fa-chevron-down"></i>  Phân loại
-            </a>
+            <article class="filter-group">
+              <header class="card-header">
+                <a href="#" class="title" data-bs-toggle="collapse" data-bs-target="#collapse_aside2">
+                  <i class="icon-control fa fa-chevron-down"></i>  Giá
+                </a>
+              </header>
+              <div class="collapse show" id="collapse_aside2">
+                <div class="card-body">
+                  <div class="row mb-3">
+                    <div class="col-6">
+                      <label for="min" class="form-label">Min</label>
+                      <input class="form-control" id="min" placeholder="Min" type="number" [(ngModel)]="minprice">
+                    </div> <!-- col end.// -->
+
+                    <div class="col-6">
+                      <label for="max" class="form-label">Max</label>
+                      <input class="form-control" id="max" placeholder="Max" type="number" [(ngModel)]="maxprice">
+                    </div> <!-- col end.// -->
+                  </div> <!-- row end.// -->
+                  <div *ngIf="!compareMinMax()||!checkValidMinMax()">
+                    <small style="color: red">Khoảng giá không hợp lệ</small>
+                  </div>
+                  <button class="btn btn-light w-100" type="button" [disabled]="!compareMinMax()||!checkValidMinMax()" (click)="refresh()">Áp dụng</button>
+                </div> <!-- card-body.// -->
+              </div> <!-- collapse.// -->
+            </article> <!-- filter-group // -->
+
+          </div> <!-- card.// -->
+          <!-- ===== Card for sidebar filter .// ===== -->
+
+        </aside> <!-- col .// -->
+        <main class="col-lg-9">
+
+          <header class="d-sm-flex align-items-center border-bottom mb-4 pb-3">
+            <div *ngIf="productList.length==0">
+              <strong class="d-block py-2">Không có sản phẩm nào</strong>
+            </div>
+            <div class="ms-auto ">
+              <!-- <select class="form-select d-inline-block w-auto me-1">
+                <option value="0">Best match</option>
+                <option value="1">Recommended</option>
+                <option value="2">High rated</option>
+                <option value="3">Randomly</option>
+              </select>
+              <div class="btn-group">
+              <a href="#" class="btn btn-light" data-bs-toggle="tooltip" title="List view">
+                <i class="fa fa-bars"></i>
+              </a>
+              <a href="#" class="btn btn-light active" data-bs-toggle="tooltip" title="Grid view">
+                <i class="fa fa-th"></i>
+              </a>
+              </div>  -->
+              <div>
+                <button class="btn newProduct" *ngIf="sellerStatus" (click)="createNewProduct()">Thêm sản phẩm</button>
+              </div>
+            </div>
           </header>
-          <div class="collapse show" id="collapse_aside_brands">
-            <div class="card-body">
-              <label class="form-check mb-2">
-              <input class="form-check-input" type="checkbox" value="" checked>
-              <span class="form-check-label"> Mercedes </span>
-              <b class="badge rounded-pill bg-gray-dark float-end">120</b>
-              </label>
-              <label class="form-check mb-2">
-              <input class="form-check-input" type="checkbox" value="" checked>
-              <span class="form-check-label"> Toyota </span>
-              <b class="badge rounded-pill bg-gray-dark float-end">15</b>
-              </label>
-              <label class="form-check mb-2">
-              <input class="form-check-input" type="checkbox" value="" checked>
-              <span class="form-check-label"> Mitsubishi </span>
-              <b class="badge rounded-pill bg-gray-dark float-end">35</b>
-              </label>
-              <label class="form-check mb-2">
-              <input class="form-check-input" type="checkbox" value="" checked>
-              <span class="form-check-label"> Nissan </span>
-              <b class="badge rounded-pill bg-gray-dark float-end">89</b>
-              </label>
-              <label class="form-check mb-2">
-              <input class="form-check-input" type="checkbox" value="">
-              <span class="form-check-label"> Honda </span>
-              <b class="badge rounded-pill bg-gray-dark float-end">30</b>
-              </label>
-              <label class="form-check mb-2">
-              <input class="form-check-input" type="checkbox" value="">
-              <span class="form-check-label"> Honda accord </span>
-              <b class="badge rounded-pill bg-gray-dark float-end">30</b>
-              </label>
-            </div>
-          </div>
-          </article> -->
 
-          <article class="filter-group">
-            <header class="card-header">
-              <a href="#" class="title" data-bs-toggle="collapse" data-bs-target="#collapse_aside_brands">
-              <i class="icon-control fa fa-chevron-down"></i>  Nhãn
-              </a>
-            </header>
-            <div class="collapse show" id="collapse_aside_brands">
-              <div class="card-body">
-                <label class="form-check mb-2" *ngFor="let tag of tagList">
-                <input class="form-check-input" name="choosetag" type="checkbox" [value]="tag.id" (change)="updateCheckedValues($event)">
-                <span class="form-check-label"> {{tag.name}} </span>
-                </label> 
-              </div> 
-            </div> 
-          </article>
-
-          <article class="filter-group">
-            <header class="card-header">
-              <a href="#" class="title" data-bs-toggle="collapse" data-bs-target="#collapse_aside2">
-                <i class="icon-control fa fa-chevron-down"></i>  Giá
-              </a>
-            </header>
-            <div class="collapse show" id="collapse_aside2">
-              <div class="card-body">
-                <div class="row mb-3">
-                  <div class="col-6">
-                    <label for="min" class="form-label">Min</label>
-                    <input class="form-control" id="min" placeholder="Min" type="number" [(ngModel)]="minprice">
-                  </div> <!-- col end.// -->
-
-                  <div class="col-6">
-                    <label for="max" class="form-label">Max</label>
-                    <input class="form-control" id="max" placeholder="Max" type="number" [(ngModel)]="maxprice">
-                  </div> <!-- col end.// -->
-                </div> <!-- row end.// -->
-                <div *ngIf="!compareMinMax()||!checkValidMinMax()">
-                  <small style="color: red">Khoảng giá không hợp lệ</small>
+          <!-- ========= content items ========= -->
+          <div class="row">
+            <div class="col-lg-4 col-md-6 col-sm-6" *ngFor="let product of productList | paginate: {itemsPerPage: itemsPerPage, currentPage: p}">
+              <figure class="card card-product-grid" style="border-radius:0px;">
+                <div class="img-wrap">
+                  <img [src]="getCoverImage(product)" style="border-radius:0px;">
                 </div>
-                <button class="btn btn-light w-100" type="button" [disabled]="!compareMinMax()" (click)="refresh()">Áp dụng</button>
-              </div> <!-- card-body.// -->
-            </div> <!-- collapse.// -->
-          </article> <!-- filter-group // -->
+                <figcaption class="info-wrap border-top">
+                  <div class="price-wrap">
+                    <strong class="price">{{product.name}}</strong>
+                  </div> <!-- price-wrap.// -->
+                  <p class="title mb-2">{{product.price}} $</p>
+                  <a (click)="openDetails(product.id)" class="btn viewProduct">Chi tiết</a>
+                  <a *ngIf="!sellerStatus" href="#" class="btn btn-light btn-icon"> <i class="fa fa-shopping-cart"></i> </a>
+                  <a *ngIf="sellerStatus" (click)="redirectUpdatePage(product.id)" class="btn btn-light btn-icon"> <i class="fa fa-pen"></i> </a>
+                  <a *ngIf="sellerStatus" (click)="openConfirmDelete(product.id)" class="btn btn-light btn-icon"> <i class="fa fa-trash"></i> </a>
+                </figcaption>
+              </figure>
 
-        </div> <!-- card.// -->
-        <!-- ===== Card for sidebar filter .// ===== -->
+            </div> <!-- col end.// -->
+          </div> <!-- row end.// -->
 
-      </aside> <!-- col .// -->
-      <main class="col-lg-9">
+          <hr>
+          <footer class="d-flex mt-4">
 
-        <header class="d-sm-flex align-items-center border-bottom mb-4 pb-3">
-          <div *ngIf="productList.length==0">
-            <strong class="d-block py-2">Không có kết quả</strong>
-          </div>
-          <div *ngIf="productList.length>0">
-            <strong class="d-block py-2">Tìm thấy {{productList.length}} sản phẩm</strong>
-          </div>
-          <div class="ms-auto ">
-            <!-- <select class="form-select d-inline-block w-auto me-1">
-              <option value="0">Best match</option>
-              <option value="1">Recommended</option>
-              <option value="2">High rated</option>
-              <option value="3">Randomly</option>
-            </select>
-            <div class="btn-group">
-            <a href="#" class="btn btn-light" data-bs-toggle="tooltip" title="List view">
-              <i class="fa fa-bars"></i>
-            </a>
-            <a href="#" class="btn btn-light active" data-bs-toggle="tooltip" title="Grid view">
-              <i class="fa fa-th"></i>
-            </a>
-            </div>  -->
-            <div>
-              <button class="btn btn-primary" *ngIf="sellerStatus" (click)="createNewProduct()">Thêm sản phẩm</button>
+            <div class="mt-8 py-5 flex justify-center items-center" *ngIf="productList.length>0">
+              <pagination-controls (pageChange)="p = $event"></pagination-controls>
             </div>
-          </div>
-        </header>
+          </footer>
 
-        <!-- ========= content items ========= -->
-        <div class="row">
-          <div class="col-lg-4 col-md-6 col-sm-6" *ngFor="let product of productList | paginate: {itemsPerPage: itemsPerPage, currentPage: p}">
-            <figure class="card card-product-grid">
-              <div class="img-wrap">
-                <img [src]="getCoverImage(product)">
-              </div>
-              <figcaption class="info-wrap border-top">
-                <div class="price-wrap">
-                  <strong class="price">{{product.name}}</strong>
-                </div> <!-- price-wrap.// -->
-                <p class="title mb-2">{{product.price}}VND</p>
-                <a (click)="openDetails(product.id)" class="btn btn-primary">Chi tiết</a>
-                <a *ngIf="!sellerStatus" href="#" class="btn btn-light btn-icon"> <i class="fa fa-shopping-cart"></i> </a>
-                <a *ngIf="sellerStatus" (click)="redirectUpdatePage(product.id)" class="btn btn-light btn-icon"> <i class="fa fa-pen"></i> </a>
-                <a *ngIf="sellerStatus" (click)="openConfirmDelete(product.id)" class="btn btn-light btn-icon"> <i class="fa fa-trash"></i> </a>
-              </figcaption>
-            </figure>
-       
-          </div> <!-- col end.// -->
-        </div> <!-- row end.// -->
-
-        <hr>
-        <footer class="d-flex mt-4">
-
-          <div class="mt-8 py-5 flex justify-center items-center" *ngIf="productList.length>0">
-            <pagination-controls (pageChange)="p = $event"></pagination-controls>
-          </div>
-        </footer>
-
-      </main>
+        </main>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
+</div>
 <app-footer></app-footer>
 
 <ng-template #infoModal let-modal>
@@ -230,7 +229,7 @@
     <button type="button" class="btn-close" aria-label="Close" (click)="dismissModal()"></button>
   </div>
   <div class="modal-body">
-    <small style="color:red;">Sản phẩm không tồn tại<br /></small>
+    <small style="color:red;">{{info}}<br /></small>
     <div style="display: flex; width: auto; float: right;" class="delete_action_btns" (click)="dismissModal()">
       <button style="" class="actionBtn">OK</button>
     </div>

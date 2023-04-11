@@ -31,7 +31,7 @@ import org.junit.jupiter.api.Test;
 @DataJpaTest
 @RunWith(SpringRunner.class)
 @Import(TestConfig.class)
-class TransactionRepositoryTests {
+class TransactionRepositoryTest {
 	@Autowired
 	private TransactionRepository traRepos;
 	

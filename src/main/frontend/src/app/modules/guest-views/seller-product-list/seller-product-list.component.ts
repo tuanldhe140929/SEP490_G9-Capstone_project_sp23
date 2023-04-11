@@ -30,7 +30,7 @@ export class SellerProductListComponent implements OnInit {
   categoryList: Category[] = [];
   tagList: Category[] = [];
   minprice: number = 0;
-  maxprice: number = 10000000;
+  maxprice: number = 1000;
   chosenCategory: number = 0;
   keyword: string = "";
   p: number = 1;
@@ -65,14 +65,14 @@ export class SellerProductListComponent implements OnInit {
       this.userService.getCurrentUserInfo().subscribe(data => {
         this.user = data;
         if(this.user.id == this.sellerid){
-          this.productService.getProductsBySellerForSeller(this.sellerid, "", 0, [],0, 10000000).subscribe(
+          this.productService.getProductsBySellerForSeller(this.sellerid, "", 0, [],0, 1000).subscribe(
             data => {
               this.productList = data;
               this.sellerStatus = true;
             }
           )
         }else{
-          this.productService.getProductsBySellerForUser(this.sellerid, "", 0, [],0, 10000000).subscribe(
+          this.productService.getProductsBySellerForUser(this.sellerid, "", 0, [],0, 1000).subscribe(
             data => {
               console.log(data);
               this.productList = data;
@@ -85,19 +85,13 @@ export class SellerProductListComponent implements OnInit {
         }
       })
     }else{
-      this.productService.getProductsBySellerForUser(this.sellerid, "", 0,[], 0, 10000000).subscribe(
+      this.productService.getProductsBySellerForUser(this.sellerid, "", 0,[], 0, 1000).subscribe(
         data => {
           this.productList = data;
           this.sellerStatus = false;
         }
       )
     }
-    
-    // this.productService.getProductsBySellerForUser(this.sellerid, "", 0, 0, 10000000).subscribe(
-    //   data => {
-    //     this.displayForUser = data;
-    //   }
-    // )
     this.getAllCategories();
     this.getAllTags();
     this.getSellerById();
@@ -178,7 +172,7 @@ export class SellerProductListComponent implements OnInit {
   }
 
   checkValidMinMax(): boolean{
-    if(this.minprice<0||this.maxprice<0||!Number.isInteger(this.minprice)||!Number.isInteger(this.maxprice)){
+    if(this.minprice<0||this.maxprice<0||this.minprice>1000||this.maxprice>1000){
       return false;
     }else{
       return true;
@@ -222,11 +216,6 @@ export class SellerProductListComponent implements OnInit {
         }
       )
     }
-    // this.productService.getProductsBySellerForSeller(this.sellerid, this.keyword, this.chosenCategory, [], this.minprice, this.maxprice).subscribe(
-    //   data => {
-    //     this.productList = data;
-    //   }
-    // )
   }
 
   createNewProduct() {
@@ -235,10 +224,11 @@ export class SellerProductListComponent implements OnInit {
         this.router.navigate(['product/update/' + data.id]);
       },
       error => {
-        console.log(error);
+        this.info = "Không thể tạo nhiều hơn 20 sản phẩm";
+        this.openInfoModal();
       });
   }
-
+  info = "";
   redirectUpdatePage(productId: number) {
     this.router.navigate(['product/update/' + productId]);
   }

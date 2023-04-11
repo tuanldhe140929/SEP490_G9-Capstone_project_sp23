@@ -14,12 +14,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.SEP490_G9.common.Constant;
 import com.SEP490_G9.entities.Account;
 import com.SEP490_G9.entities.License;
 import com.SEP490_G9.entities.Product;
 import com.SEP490_G9.entities.ProductDetails;
 import com.SEP490_G9.entities.ProductDetails.Status;
 import com.SEP490_G9.entities.Report;
+import com.SEP490_G9.entities.Role;
 import com.SEP490_G9.entities.Seller;
 import com.SEP490_G9.entities.UserDetailsImpl;
 import com.SEP490_G9.exception.FileUploadException;
@@ -68,14 +70,17 @@ public class ProductServiceImpl implements ProductService {
 		Seller seller = getCurrentSeller();
 		product.setSeller(seller);
 		Product createdProduct = productRepository.save(product);
-		List<ProductDetails> ps = productDetailsRepo.findByApproved(Status.NEW);
-		System.out.println(ps.size());
 		createdProduct.getProductDetails().add(createProductDetails(createdProduct, FIRST_PRODUCT_VERSION));
 		return createdProduct;
 
 	}
 
 	private ProductDetails createProductDetails(Product product, String version) {
+
+		if (product.getProductDetails().size() == 10) {
+			throw new IllegalArgumentException("Cannot create more than 10 versions");
+		}
+
 		ProductDetails productDetails = new ProductDetails();
 		productDetails.setFlagged(false);
 		productDetails.setProduct(product);
@@ -126,7 +131,17 @@ public class ProductServiceImpl implements ProductService {
 	public Seller getCurrentSeller() {
 		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
 				.getAccount();
+		boolean isSeller = false;
+		for (Role role : account.getRoles()) {
+			if (role.getName().equals("ROLE_SELLER")) {
+				isSeller = true;
+			}
+		}
+		if (isSeller == false) {
+			throw new IllegalAccessError("Must be a seller");
+		}
 		Seller seller = sellerService.getSellerById(account.getId());
+
 		return seller;
 	}
 
@@ -142,12 +157,13 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public List<Product> getProductsBySellerId(Long sellerId) {
 		List<Product> products = productRepository.findBySellerId(sellerId);
-		for (Product p : products) {
-			if (!p.isEnabled()) {
-				products.remove(p);
+		List<Product> activeProducts = new ArrayList<>();
+		for(Product p: products) {
+			if(p.isEnabled()) {
+				activeProducts.add(p);
 			}
 		}
-		return productRepository.findBySellerId(sellerId);
+		return activeProducts;
 	}
 
 	@Override

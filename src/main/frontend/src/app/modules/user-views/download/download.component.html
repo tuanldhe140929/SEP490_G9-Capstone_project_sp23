@@ -38,4 +38,12 @@
     <div class="col-12 content"></div>
   </div>
 </div>
-
+<ng-template #infoModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" style="color:black">Thông báo</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="dismissError()"></button>
+  </div>
+  <div class="modal-body">
+    <small style="color:black;">{{info}}<br /></small>
+  </div>
+</ng-template>

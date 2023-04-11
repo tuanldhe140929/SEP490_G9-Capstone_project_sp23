@@ -150,3 +150,39 @@ button:active {
 .example-spacer {
   flex: 1 1 auto;
 }
+
+button{
+border-radius:3px;
+}
+
+a{
+    border-radius:3px;
+}
+
+.sellerInfo {
+  background-color: #FF2449;  
+}
+.padded {
+  padding: 20px;
+  padding-top:40px;
+  padding-bottom:40px;
+}
+
+.newProduct {
+  background-color: #FF2449;
+  border:solid white 1px;
+  color:white;
+}
+
+.viewProduct {
+  border: solid white 1px;
+  background-color: #FF2449;
+  color: white;
+}
+
+  .viewProduct:hover {
+    background-color: white;
+    border: solid #FF2449 1px;
+    color: #FF2449;
+    transition: all 0.15s;
+  }
