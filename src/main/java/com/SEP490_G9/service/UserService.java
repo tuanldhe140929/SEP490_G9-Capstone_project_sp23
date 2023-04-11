@@ -27,7 +27,6 @@ public interface UserService {
 
 	public String uploadAvatar(MultipartFile coverImage) throws IOException;
 
-	boolean isPayPalUser(String userEmail);
 
 	List<User> getAllUsers();
 
