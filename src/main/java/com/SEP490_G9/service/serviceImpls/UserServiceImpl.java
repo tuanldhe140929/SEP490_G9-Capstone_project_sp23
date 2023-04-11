@@ -169,10 +169,6 @@ public class UserServiceImpl implements UserService {
 		return allUsers;
 	}
 
-	@Override
-	public boolean isPayPalUser(String userEmail) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+
 
 }

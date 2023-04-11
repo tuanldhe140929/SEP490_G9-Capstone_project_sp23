@@ -14,6 +14,7 @@ import { ThankYouComponent } from './thank-you/thank-you.component';
 import { ReviewTransactionComponent } from './review-transaction/review-transaction.component';
 import { LoadingSpinnerComponent } from '../common-views/loading-spinner/loading-spinner.component';
 import { LoginWithPaypalComponent } from './login-with-paypal/login-with-paypal.component';
+import { PurchasedProductListComponent } from './purchased-product-list/purchased-product-list.component';
 
 
 @NgModule({
@@ -25,7 +26,8 @@ import { LoginWithPaypalComponent } from './login-with-paypal/login-with-paypal.
     CartComponent,
     ThankYouComponent,
     ReviewTransactionComponent,
-    LoginWithPaypalComponent
+    LoginWithPaypalComponent,
+    PurchasedProductListComponent
   ],
   imports: [
     CommonModule,
