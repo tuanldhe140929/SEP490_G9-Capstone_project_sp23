@@ -17,6 +17,9 @@ export class ProductService {
     return this.httpClient.get<License[]>(baseUrlProduct+'/getLicense');
   }
 
+  getTotalPurchasedCount(productId: number): Observable<number> {
+    return this.httpClient.get<number>(baseUrl + "/getTotalPurchasedCount?productId="+productId);
+  }
   getProductByIdAndVersion(productId: number, version: string): Observable<Product> {
     return this.httpClient.post<Product>(baseUrl + '/getByIdAndVersion', null, {
       params: {

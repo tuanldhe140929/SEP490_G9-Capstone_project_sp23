@@ -1,5 +1,5 @@
 import { HttpClient, HttpEventType, HttpResponse } from '@angular/common/http';
-import { AfterViewInit, Component, ElementRef, Input, OnInit, Renderer2, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, Input, OnInit, Renderer2, TemplateRef, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { finalize, Subscription } from 'rxjs';
@@ -36,10 +36,10 @@ const MSG105 = 'Định dạng này không được hỗ trợ';
 const IMAGE_EXTENSIONS = ['image/png', 'image/jpeg', 'image/svg+xml'];
 const VIDEO_EXTENSIONS = ['video/mp4', 'video/x-matroska', 'video/quicktime'];
 const baseUrl = "http://localhost:9000/private/manageProduct";
-const MAX_SIZE = 50000000000;
+const MAX_SIZE = 1024*1024*2000;
 const MAX_FILE_COUNT = 10;
 const CHUNK_SIZE = 50000000;
-
+const MAX_FILE_SIZE = 1024 * 1024 * 500;
 class UploadProcess {
   progress: number;
   subcription: Subscription
@@ -89,7 +89,8 @@ export class UpdateProductComponent implements OnInit {
     private productFileService: ProductFileService,
     private categoryService: CategoryService,
     private tagService: TagService,
-    private productService: ProductService) { }
+    private productService: ProductService,
+    private cd: ChangeDetectorRef  ) { }
 
   product: Product = new Product;
   typeList: Category[] = [];
@@ -160,6 +161,18 @@ export class UpdateProductComponent implements OnInit {
           this.openFileSizeErrorModal();
           return;
         }
+        
+        if ($event.target.files[i].size > MAX_FILE_SIZE) {
+          this.fileError = "File đăng tải có kích thước: tối đa 500Mb";
+          this.openFileSizeErrorModal();
+          return;
+        }
+        
+             if($event.target.files[i].name.length>100 || 0> $event.target.files[i].name.length){
+	 	 this.fileError = "Tên tệp từ 1 đến 100 kí tự";
+      this.openFileSizeErrorModal();
+      return;
+	}
 
         for (let j = 0; j < this.fileDisplayList.length; j++) {
           if (this.fileDisplayList[j].file.name === $event.target.files[i].name) {
@@ -171,7 +184,7 @@ export class UpdateProductComponent implements OnInit {
         }
         totalSize += $event.target.files[i].size;
         if (totalSize > MAX_SIZE) {
-          this.fileError = "Tổng dung lượng các file vượt quá 5GB";
+          this.fileError = "Tổng dung lượng các file vượt quá 2GB";
           this.openFileSizeErrorModal();
           return;
         }
@@ -223,19 +236,22 @@ export class UpdateProductComponent implements OnInit {
             }
           },
           (error) => {
+            if (error.status===400)
             fileDisplay.file.fileState = FileState.ERROR;
-            this.info = "Không thể tải lên file " + file.name;
+            this.info = "Không thể tải lên file " + file.name + "có thể tệp chứa virus";
             this.openInfoModal();
             var index = -1;
+            console.log(fileDisplay);
             for (let i = 0; i < this.fileDisplayList.length; i++) {
               if (file.name == this.fileDisplayList[i].file.name) {
                 index = i;
                 break;
               }
             }
-            if (index != -1) {
-              this.fileDisplayList.slice(index, 1);
-            }
+           
+            this.fileDisplayList = this.fileDisplayList.slice(0, index);
+            this.cd.detectChanges();
+            console.log(this.fileDisplayList.slice(0, 4));
           }
         )
         fileDisplay.process.subcription = upload$;
@@ -556,6 +572,11 @@ export class UpdateProductComponent implements OnInit {
     }
     const file: File = $event.target.files[0];
 
+	if(file.name.length>100){
+		this.fileError = "Tên tệp từ 1 đến 100 kí tự";
+      this.openFileSizeErrorModal();
+      return;
+	}
     if (file) {
       console.log(file.type);
       if (!this.checkFileType(file.type, IMAGE_EXTENSIONS)) {
@@ -598,7 +619,13 @@ export class UpdateProductComponent implements OnInit {
       this.openFileSizeErrorModal();
       return;
     }
+ 
     const file: File = $event.target.files[0];
+    if(file.name.length>100 || file.name.length<0){
+	  this.fileError = "Tên tệp từ 1 đến 100 kí tự";
+      this.openFileSizeErrorModal();
+      return;
+	}
     if (file) {
       if (!this.checkFileType(file.type, VIDEO_EXTENSIONS)) {
         this.openFormatErrorModal();
@@ -655,6 +682,12 @@ export class UpdateProductComponent implements OnInit {
           if (!this.checkFileType(files[i].type, IMAGE_EXTENSIONS)) {
             valid = false;
           }
+          
+            if(files[i].name.length>100 || files[i].name.length<0){
+	  this.fileError = "Tên tệp từ 1 đến 100 kí tự";
+      this.openFileSizeErrorModal();
+      return;
+	}
         }
         if (!valid) {
           this.openFormatErrorModal();
@@ -843,6 +876,7 @@ export class UpdateProductComponent implements OnInit {
 
   dismissError() {
     this.errors = [];
+    this.cd.detectChanges();
     this.modalService.dismissAll();
   }
   removeSpaces(text: string) {
@@ -1141,7 +1175,7 @@ export class UpdateProductComponent implements OnInit {
   }
 
 
-  formattedPrice = '2.00';
+  formattedPrice = '$2';
 
   updatePrice(value: any) {
     this.priceError();
@@ -1370,5 +1404,9 @@ export class UpdateProductComponent implements OnInit {
       error => {
         console.log(error);
       });
+  }
+
+  backToShop() {
+    this.router.navigate(['collection',2]);
   }
 }

@@ -20,7 +20,7 @@
     </div>
     <div>
         <label>Ngày báo cáo: </label>
-        <b>{{data.reportedDate}}</b>
+        <b>{{data.reportedDate | date: 'dd/MM/yyyy HH:mm'}}</b>
     </div>
     <div align="end">
         <button class="btn btn-warning" mat-dialog-close>Đóng</button>

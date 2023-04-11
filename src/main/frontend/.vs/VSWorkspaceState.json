@@ -5,10 +5,10 @@
     "\\src\\app",
     "\\src\\app\\modules",
     "\\src\\app\\modules\\guest-views",
-    "\\src\\app\\modules\\seller-views",
+    "\\src\\app\\modules\\guest-views\\product-details",
     "\\src\\app\\modules\\seller-views\\update-product",
     "\\src\\app\\services"
   ],
-  "SelectedNode": "\\src\\app\\modules\\seller-views\\update-product\\update-product.component.css",
+  "SelectedNode": "\\src\\app\\modules\\guest-views\\product-details\\product-details.component.ts",
   "PreviewInSolutionExplorer": false
 }

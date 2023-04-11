@@ -24,6 +24,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 import com.SEP490_G9.exception.DuplicateFieldException;
 import com.SEP490_G9.exception.ErrorResponse;
+import com.SEP490_G9.exception.FileUploadException;
 import com.SEP490_G9.exception.InternalServerException;
 import com.SEP490_G9.exception.ResourceNotFoundException;
 
@@ -214,6 +215,17 @@ public class CommonExceptionHandler {
 		msgs.add(ex.getMessage());
 		errorResponse.setMessages(msgs);
 		errorResponse.setStatus(HttpStatus.NOT_FOUND);
+		return errorResponse;
+	}
+	
+	@ExceptionHandler(FileUploadException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public final ErrorResponse exceptionResolve(FileUploadException ex) {
+		ErrorResponse errorResponse = new ErrorResponse();
+		List<String> msgs = new ArrayList<>();
+		msgs.add(ex.getMessage());
+		errorResponse.setMessages(msgs);
+		errorResponse.setStatus(HttpStatus.BAD_REQUEST);
 		return errorResponse;
 	}
 //	@ExceptionHandler({ CustomException.class })

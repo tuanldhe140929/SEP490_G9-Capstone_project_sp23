@@ -39,6 +39,41 @@ public class SecurityConfig {
 	@Autowired
 	JwtRequestFilter filter;
 
+	private String[] publicApis= {
+			"account/login",
+			"account/logout",
+			"account/resetPassword",
+			"user/register",
+			"user/loginWithGoogle",
+			"user/sendVerifyEmail",
+			"verifyEmail/**"
+			};
+	
+	private String[] userApis= {
+			"user/getUserInfo",
+			"user/changeAccountPassword",
+			"user/uploadProfileImage",
+			"user/changeAccountInfo",
+			"private/cart/add/**",
+			"private/cart/remove/**",
+			"getCurrentCartDTO",
+			"removeAll/**",
+			"isUserPurchasedProduct"
+			};
+	
+	private String[] sellerApis= {"",
+	""};
+	
+	private String[] adminApis= {
+			"account/staffs",
+			"account/addStaff",
+			"account/updateStaffStatus",
+			"account/allAccounts",
+			"user/getAllUsers"
+			};
+	
+	private String[] staffApis= {"",
+	""};
 	@Bean
 	public SecurityFilterChain setfilterChains(HttpSecurity http) throws Exception {
 
@@ -57,13 +92,14 @@ public class SecurityConfig {
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED);
 
 		http.authorizeHttpRequests().requestMatchers("/**").permitAll()
-//		.authorizeHttpRequests().requestMatchers("/home").hasAnyRole("USER","ADMIN","STAFF")
-//		//.and().authorizeHttpRequests().requestMatchers("/private/api/cart").hasAnyRole("USER")
-//		.and().authorizeHttpRequests().requestMatchers("/private/**").hasAnyRole("USER","ADMIN","STAFF")
-				.and().httpBasic().authenticationEntryPoint(authenEntryPoint).and().authorizeHttpRequests().anyRequest()
-				.authenticated().and().authenticationProvider(authProvider).logout()
-				.logoutRequestMatcher(new AntPathRequestMatcher("public/auth/logout")).and()
-				.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
+//		.and().authorizeHttpRequests().requestMatchers(userApis).hasAnyRole("USER")
+//		.and().authorizeHttpRequests().requestMatchers(sellerApis).hasAnyRole("SELLER")
+//		.and().authorizeHttpRequests().requestMatchers(adminApis).hasAnyRole("ADMIN")
+//		.and().authorizeHttpRequests().requestMatchers(staffApis).hasAnyRole("STAFF","ADMIN")
+		.and().httpBasic().authenticationEntryPoint(authenEntryPoint)
+		.and().authorizeHttpRequests().anyRequest().authenticated()
+		.and().authenticationProvider(authProvider)
+		.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
 
 		return http.build();
 	}

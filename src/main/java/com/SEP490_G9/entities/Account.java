@@ -11,7 +11,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-@JsonIgnoreProperties(value = { "refreshToken" })
+@JsonIgnoreProperties(value = { "refreshToken"})
 @Table(name = "accounts")
 @Inheritance(strategy = InheritanceType.JOINED)
 @Entity

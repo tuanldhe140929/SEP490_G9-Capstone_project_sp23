@@ -9,12 +9,19 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.zip.ZipException;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.SocketTimeoutException;
 
+import org.apache.commons.compress.archivers.ArchiveEntry;
+import org.apache.commons.compress.archivers.ArchiveException;
+import org.apache.commons.compress.archivers.ArchiveInputStream;
+import org.apache.commons.compress.archivers.ArchiveStreamFactory;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -42,6 +49,10 @@ public class VirusTotalServiceImpl implements VirusTotalService {
 
 	@Override
 	public boolean scanFile(File file) {
+
+		if (fileHasPassword(file)) {
+			throw new FileUploadException("CompressedFile can not have password");
+		}
 		long startTime = System.currentTimeMillis();
 		List<byte[]> chunks;
 		try {
@@ -59,8 +70,8 @@ public class VirusTotalServiceImpl implements VirusTotalService {
 				long uploadChunkStart = System.currentTimeMillis();
 				String analysisId = uploadChunk(UPLOAD_ENDPOINT, chunk);
 				long uploadChunkEnd = System.currentTimeMillis();
-				//System.out.println("upload chunk " + (chunks.indexOf(chunk) + 1) + " takes "
-			//			+ (uploadChunkEnd - uploadChunkStart) / 1000 + "s");
+				// System.out.println("upload chunk " + (chunks.indexOf(chunk) + 1) + " takes "
+				// + (uploadChunkEnd - uploadChunkStart) / 1000 + "s");
 
 				boolean isChunkSafe = getAnalysis(analysisId, chunks.indexOf(chunk));
 				long analysisEnd = System.currentTimeMillis();
@@ -89,8 +100,27 @@ public class VirusTotalServiceImpl implements VirusTotalService {
 		}
 
 		long finishTime = System.currentTimeMillis();
-		//System.out.println("total: " + (finishTime - startTime) / 1000);
+		// System.out.println("total: " + (finishTime - startTime) / 1000);
 		return isMalicious;
+	}
+
+
+	private boolean fileHasPassword(File productFile) {
+		char[] password = "password".toCharArray(); // replace with the password to test
+		try (FileInputStream fis = new FileInputStream(productFile);
+				ArchiveInputStream ais = new ArchiveStreamFactory().createArchiveInputStream(fis)) {
+			ArchiveEntry entry;
+			while ((entry = ais.getNextEntry()) != null) {
+				IOUtils.toByteArray(ais);
+			}
+		} catch (IOException e) {
+			throw new InternalServerException("Error occur when tryin to extract compressed file");
+		} catch (ArchiveException e) {
+			if (e.getCause() instanceof ZipException && e.getCause().getMessage().contains("password")) {
+				return true; // password-protected file
+			}
+		}
+		return false; // file is not password-protected
 	}
 
 	private boolean getAnalysis(String analysisId, int index) {
@@ -114,7 +144,7 @@ public class VirusTotalServiceImpl implements VirusTotalService {
 				if (status.equals("completed")) {
 					// Print out the JSON object
 					notCompleted = false;
-					//System.out.println(index);
+					// System.out.println(index);
 
 					int malicious = rootNode.get("data").get("attributes").get("stats").get("malicious").asInt();
 					if (malicious == 0) {
@@ -153,8 +183,8 @@ public class VirusTotalServiceImpl implements VirusTotalService {
 		try {
 			Response response = client.newCall(request).execute();
 
-		ObjectMapper objectMapper = new ObjectMapper();
-		JsonNode rootNode = objectMapper.readTree(response.body().string());
+			ObjectMapper objectMapper = new ObjectMapper();
+			JsonNode rootNode = objectMapper.readTree(response.body().string());
 
 			// Get the value of the "id" attribute
 			id = rootNode.get("data").get("id").asText();
@@ -183,7 +213,7 @@ public class VirusTotalServiceImpl implements VirusTotalService {
 				chunks.add(chunk);
 			}
 		}
-		//System.out.println("chunk: " + chunks.size());
+		// System.out.println("chunk: " + chunks.size());
 		return chunks;
 	}
 }

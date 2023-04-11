@@ -62,4 +62,9 @@ public class SellerController {
 		Seller seller = sellerService.getSellerByPaypalEmail(paypalEmail);
 		return ResponseEntity.ok(seller);
 	}
+	@GetMapping("/reportedsellerlist")
+	public ResponseEntity<?> getReportedSeller() {
+		List<Seller> seller = sellerService.getReportedSellers();
+		return ResponseEntity.ok(seller);
+	}
 }
