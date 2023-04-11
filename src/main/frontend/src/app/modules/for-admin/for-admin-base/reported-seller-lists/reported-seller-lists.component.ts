@@ -7,6 +7,7 @@ import { SellerService } from 'src/app/services/seller.service';
 import { AddviolationComponent } from '../addviolation/addviolation.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-reported-seller-lists',
@@ -14,18 +15,27 @@ import { MatInputModule } from '@angular/material/input';
   styleUrls: ['./reported-seller-lists.component.css']
 })
 export class ReportedSellerListsComponent implements AfterViewInit{
-  displayedColumns: string[] = ['Email', 'Ngày tạo', 'Cấm'];
+  displayedColumns: string[] = ['ID','Email', 'Ngày tạo', 'Cấm'];
   dataSource: MatTableDataSource<Seller>;
+
+  account_id: number;
+  violation_id: number;
+  createdDate: Date;
+  description: string;
 
   reportedsellerList: Seller[] = [];
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  constructor(private sellerService: SellerService, private dialog: MatDialog) {
+  constructor(private sellerService: SellerService, private dialog: MatDialog,public routerService: Router) {
+
 
     // Assign the data to the data source for the table to render
     this.sellerService.getAllSellers().subscribe(
       response => {
         this.dataSource = new MatTableDataSource(response);
         this.reportedsellerList = response;
+        // for (let i = 0; i < this.reportedsellerList.length; i++) {
+        //   this.account_idList.push(this.reportedsellerList[i].id);
+        // }
         this.dataSource.paginator = this.paginator;
         console.log(response)
       }
@@ -33,10 +43,13 @@ export class ReportedSellerListsComponent implements AfterViewInit{
 
   }
 
-  openViolationDialog() {
+  openViolationDialog(account_id: number) {
+    this.routerService.navigate(['/admin'], {queryParams:{account_id:this.account_id?this.account_id:'',violation_id:this.violation_id?this.violation_id:'',createdDate:this.createdDate?this.createdDate:'',description:this.description?this.description:''}})
     const dialogRef = this.dialog.open(AddviolationComponent, {
       width: '350px',
-     
+      data: {
+        account_id: account_id,
+      }
     });
 
     // dialogRef.afterClosed().subscribe(result => {
