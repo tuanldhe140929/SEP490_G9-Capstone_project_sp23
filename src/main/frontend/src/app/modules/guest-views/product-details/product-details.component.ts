@@ -160,10 +160,10 @@ export class ProductDetailsComponent implements OnInit {
                 this.cartService.isPurchasedByUser(this.visitor.id, this.product.id).subscribe(
             data => {
               this.isPurchased = data;
-          
+                    console.log(data);
             },
             error => {
-
+              console.log(error);
             }
           )
                 this.reportService.getReportByProductUserVersion(this.productId, this.visitorId, this.version).subscribe((data: any) => {

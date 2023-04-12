@@ -157,12 +157,13 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public List<Product> getProductsBySellerId(Long sellerId) {
 		List<Product> products = productRepository.findBySellerId(sellerId);
-		for (Product p : products) {
-			if (!p.isEnabled()) {
-				products.remove(p);
+		List<Product> activeProducts = new ArrayList<>();
+		for(Product p: products) {
+			if(p.isEnabled()) {
+				activeProducts.add(p);
 			}
 		}
-		return productRepository.findBySellerId(sellerId);
+		return activeProducts;
 	}
 
 	@Override
