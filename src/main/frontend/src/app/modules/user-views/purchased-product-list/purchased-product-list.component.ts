@@ -6,6 +6,8 @@ import { Product } from 'src/app/dtos/Product';
 import { TransactionService } from 'src/app/services/transaction.service';
 import { StorageService } from 'src/app/services/storage.service';
 import { User } from 'src/app/dtos/User';
+import { ProductDetailsDTO } from 'src/app/dtos/ProductDetailsDTO';
+
 
 @Component({
   selector: 'app-purchased-product-list',
@@ -14,20 +16,21 @@ import { User } from 'src/app/dtos/User';
 })
 export class PurchasedProductListComponent {
   authResponse: AuthResponse = new AuthResponse;
-  purchasedList: Product[] = [];
+  purchasedList: ProductDetailsDTO[] = [];
   user: User = new User();
+  userId = this.user.id
   constructor(
     private transactionService: TransactionService,
     private storageService: StorageService
-  ){}
+  ) { }
 
-  ngOnInit():void{ 
-    this.authResponse = this.storageService.getAuthResponse();
+  ngOnInit(): void {
+    this.getPurchasedProductList();
   }
 
-  getPurchasedProductList(userId: number){
-    this.transactionService.getPurchasedProductList(userId).subscribe(
-      data =>{
+  getPurchasedProductList() {
+    this.transactionService.getPurchasedProductList().subscribe(
+      data => {
         console.log(data);
         this.purchasedList = data;
       }

@@ -1,36 +1,8 @@
-<!-- <app-header></app-header>
-<h1>Payout history</h1>
-<div class="mat-elevation-z8" *ngFor ="let payout of payoutlist">
-    <table mat-table>
-        <ng-container matColumnDef="Id">
-            <th mat-header-cell> ID </th>
-            <td mat-cell> {{payout.id}} </td>
-          </ng-container>
-
-      <ng-container matColumnDef="amount">
-        <th mat-header-cell > Amount </th>
-        <td mat-cell > {{payout.amount}} </td>
-      </ng-container>
-  
-      <ng-container matColumnDef="createdDate">
-        <th mat-header-cell > createdDate </th>
-        <td mat-cell > {{payout.createdDate}} </td>
-      </ng-container>
-
-      <ng-container matColumnDef="status">
-        <th mat-header-cell > Status </th>
-        <td mat-cell > {{payout.status}} </td>
-      </ng-container>
-    </table>
-<app-footer></app-footer>
-     -->
-     
-
 
 <app-header></app-header>
 <h1 style="text-align: center;">Lịch sử thu nhập</h1>
 <div class="table-responsive pb-5">
-				<table id="tbOrderHistory" class="table border ps-table w-100 mb-3" *ngFor ="let payout of payoutlist">
+				<table id="tbOrderHistory" class="table border ps-table w-100 mb-3" >
 					<thead>
 						<tr>
 							<th class="font-weight-bold py-2 border-0 quantity">Số tiền</th>         
@@ -42,10 +14,10 @@
 							<th class="font-weight-bold py-2 border-0 ">Status</th>
 							<th class="font-weight-bold py-2 border-0 ">Action</th> -->
 						</tr>
-            <tr>
+            <tr *ngFor ="let payout of payoutlist">
               <td>${{payout.amount}}</td>
               <td>{{formatTime(payout.createdDate)}}</td>
-              <td>{{payout.status}}</td>             
+              <td>{{payout.status}}</td>            
             </tr>
 					</thead>
 					<tbody>
