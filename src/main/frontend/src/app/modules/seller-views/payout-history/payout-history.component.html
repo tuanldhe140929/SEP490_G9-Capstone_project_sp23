@@ -14,14 +14,17 @@
 							<th class="font-weight-bold py-2 border-0 ">Status</th>
 							<th class="font-weight-bold py-2 border-0 ">Action</th> -->
 						</tr>
-            <tr *ngFor ="let payout of payoutlist">
+            <tr style="border-style: solid; border-width: ;" *ngFor ="let payout of payoutlist |
+			 paginate:{
+				itemsPerPage: 5, 
+				currentPage: page, 
+				totalItems:totalLength}">
               <td>${{payout.amount}}</td>
               <td>{{formatTime(payout.createdDate)}}</td>
-              <td>{{payout.status}}</td>            
+              <td>{{payout.status}}</td>          
             </tr>
-					</thead>
-					<tbody>
-					</tbody>
+					</thead>				
 				</table>
+				<pagination-controls  class="text-center my-pagination" (pageChange) = "page = $event"></pagination-controls>
 			</div>
 <app-footer></app-footer>

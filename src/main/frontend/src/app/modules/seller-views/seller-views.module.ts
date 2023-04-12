@@ -19,7 +19,7 @@ import { SellerGuardGuard } from '../../guards/seller-guard.guard';
 import { DecimalPipe } from '@angular/common';
 import { PayoutHistoryComponent } from './payout-history/payout-history.component';
 import { CommonViewsModule } from "../common-views/common-views.module";
-
+import { NgxPaginationModule } from 'ngx-pagination';
 
 @NgModule({
     declarations: [
@@ -42,7 +42,8 @@ import { CommonViewsModule } from "../common-views/common-views.module";
         VgControlsModule,
         VgOverlayPlayModule,
         VgBufferingModule,
-        CommonViewsModule
+        CommonViewsModule,
+        NgxPaginationModule
     ]
 })
 export class SellerViewsModule { }
