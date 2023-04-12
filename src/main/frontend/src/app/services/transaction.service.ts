@@ -37,7 +37,7 @@ export class TransactionService {
       }
     })
   }
-  getPurchasedProductList(userId: number){
-    return this.httpClient.get<any>("http://localhost:9000/transaction/getPurchasedProductList");
+  public getPurchasedProductList(){
+    return this.httpClient.get<any>(baseUrl+"/getPurchasedProductList");
   }
 }

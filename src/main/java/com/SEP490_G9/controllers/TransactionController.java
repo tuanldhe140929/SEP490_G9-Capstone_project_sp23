@@ -93,9 +93,9 @@ public class TransactionController {
 		Transaction.Status status = transaction.getStatus();
 		return ResponseEntity.ok(status);
 	}
-	@GetMapping("getPurchasedProductList")
-	public ResponseEntity<?> getPurchasedProductList(@RequestParam(name = "userId") Long userId){
-		List<ProductDetails> allProductPurchased = transactionService.getListCartUserPurchasedProduct(userId);
+	@GetMapping("/getPurchasedProductList")
+	public ResponseEntity<?> getPurchasedProductList(){
+		List<ProductDetails> allProductPurchased = transactionService.getListCartUserPurchasedProduct();
 		List<ProductDetailsDTO> allDtoPurchased = new ArrayList<>();
 		for(ProductDetails pd : allProductPurchased) {
 			allDtoPurchased.add(new ProductDetailsDTO(pd));

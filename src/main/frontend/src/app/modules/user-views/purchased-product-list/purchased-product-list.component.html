@@ -1,1 +1,27 @@
-<p>purchased-product-list works!</p>
+
+<app-header></app-header>
+<h1 style="text-align: center;">Lịch sử mua hàng</h1>
+<div class="table-responsive pb-5">
+				<table id="tbOrderHistory" class="table border ps-table w-100 mb-3" >
+					<thead>
+						<tr>
+							<th class="font-weight-bold py-2 border-0 ">Tên</th>         
+							<th class="font-weight-bold py-2 border-0 ">Ngày khởi tạo</th>
+							<th class="font-weight-bold py-2 border-0 ">Tình trạng</th>
+							<!-- <th class="font-weight-bold py-2 border-0 ">PayoutFee</th> -->
+							<!-- <th class="font-weight-bold py-2 border-0 ">Customer</th>
+							<th class="font-weight-bold py-2 border-0 ">Total</th>
+							<th class="font-weight-bold py-2 border-0 ">Status</th>
+							<th class="font-weight-bold py-2 border-0 ">Action</th> -->
+						</tr>
+            <tr *ngFor ="let product of purchasedList">
+              <td>{{product.name}}</td>
+                <td>{{product.price}}</td>
+                <td>{{product.seller}}</td>
+            </tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+<app-footer></app-footer>
