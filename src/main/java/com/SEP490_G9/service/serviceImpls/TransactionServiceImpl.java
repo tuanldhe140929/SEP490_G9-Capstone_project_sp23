@@ -8,23 +8,28 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.SEP490_G9.entities.Account;
 import com.SEP490_G9.entities.Cart;
 import com.SEP490_G9.entities.CartItem;
+import com.SEP490_G9.entities.ProductDetails;
 import com.SEP490_G9.entities.Seller;
 import com.SEP490_G9.entities.Transaction;
 import com.SEP490_G9.entities.Transaction.Status;
 import com.SEP490_G9.entities.TransactionFee;
 import com.SEP490_G9.entities.User;
+import com.SEP490_G9.entities.UserDetailsImpl;
 import com.SEP490_G9.exception.InternalServerException;
 import com.SEP490_G9.exception.ResourceNotFoundException;
+import com.SEP490_G9.repository.CartRepository;
 import com.SEP490_G9.repository.TransactionFeeRepository;
 import com.SEP490_G9.repository.TransactionRepository;
 import com.SEP490_G9.service.CartService;
 import com.SEP490_G9.service.PayoutService;
 import com.SEP490_G9.service.PaypalService;
+import com.SEP490_G9.service.ProductDetailsService;
 import com.SEP490_G9.service.TransactionService;
 import com.SEP490_G9.service.UserService;
 import com.paypal.api.payments.Links;
@@ -53,6 +58,12 @@ public class TransactionServiceImpl implements TransactionService {
 
 	@Autowired
 	PayoutService payoutService;
+
+	@Autowired
+	CartRepository cartRepo;
+
+	@Autowired
+	ProductDetailsService pds;
 
 	@Override
 	public Transaction getByPaymentId(String paymentId) {
@@ -185,7 +196,9 @@ public class TransactionServiceImpl implements TransactionService {
 	@Override
 	public Transaction executeTransaction(String paymentId, String payerId) {
 		Transaction transaction = transactionRepo.findByPaypalId(paymentId);
+
 		Transaction ret = null;
+
 		if (payerId.isBlank() || payerId.isEmpty()) {
 			throw new IllegalArgumentException("PayerId can not be blank");
 		}
@@ -285,4 +298,38 @@ public class TransactionServiceImpl implements TransactionService {
 		}
 		return total;
 	}
+
+	@Override
+	public boolean isCartHadPurchased(Long cartId) {
+		Cart cart = cartRepo.findById(cartId).orElseThrow();
+		for (Transaction transaction : cart.getTransactions()) {
+			if (transaction.getStatus().equals(Transaction.Status.COMPLETED)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public List<ProductDetails> getListCartUserPurchasedProduct() {
+		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
+				.getAccount();
+		List<Cart> carts = cartRepo.findByUserId(account.getId());
+		List<Cart> purchasedCart = new ArrayList<>();
+		for (Cart cart : carts) {
+			if (isCartHadPurchased(cart.getId()))
+				purchasedCart.add(cart);
+		}
+		List<ProductDetails> purchasedProductList = new ArrayList<>();
+		List<CartItem> purchasedCartItem = new ArrayList<>();
+
+		for (Cart c : purchasedCart) {
+			List<CartItem> pCI = c.getItems();
+			for (CartItem CI : pCI) {
+				purchasedProductList.add(pds.getActiveVersion(CI.getProductDetails().getProduct().getId()));
+			}
+		}
+		return purchasedProductList;
+	}
+
 }

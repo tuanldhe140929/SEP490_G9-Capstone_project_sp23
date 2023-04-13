@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule, Routes, CanActivate } from '@angular/router';
 
 import { AuthGuard } from '../../guards/auth.guard';
 import { CheckOutComponent } from '../for-users/check-out/check-out.component';
@@ -11,6 +11,8 @@ import { DownloadComponent } from './download/download.component';
 import { LoginWithPaypalComponent } from './login-with-paypal/login-with-paypal.component';
 import { ProfileComponent } from './profile/profile.component';
 import { ReviewTransactionComponent } from './review-transaction/review-transaction.component';
+import { PurchasedProductListComponent } from './purchased-product-list/purchased-product-list.component';
+import { Title } from '@angular/platform-browser';
 
 const routes: Routes = [
   {
@@ -55,7 +57,13 @@ const routes: Routes = [
     component: LoginWithPaypalComponent,
     title: 'xác thực người bán',
     canActivate: [AuthGuard]
-  }
+  },
+{
+  path: 'transaction/PurchasedProductList',
+  component: PurchasedProductListComponent,
+  title: 'PurchasedProductList',
+  canActivate: [AuthGuard]
+}
 ];
 
 @NgModule({

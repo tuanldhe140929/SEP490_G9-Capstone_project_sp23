@@ -1,8 +1,6 @@
 package com.SEP490_G9.service.serviceImpls;
 
-
 import java.io.File;
-
 
 import java.io.IOException;
 import java.util.List;
@@ -48,6 +46,7 @@ public class UserServiceImpl implements UserService {
 	private String ROOT_LOCATION;
 	@Autowired
 	PaypalServiceImpl paypalimpl;
+	
 	@Override
 	public User getById(Long userId) {
 		User user = userRepository.findById(userId).get();
@@ -150,31 +149,6 @@ public class UserServiceImpl implements UserService {
 		userRepository.save(user);
 		return user;
 	}
-//	@Override
-//	public boolean isPayPalUser(String userEmail) {
-//	    String accessToken;
-//	    try {
-//	        // Retrieve access token
-//	        accessToken = paypalimpl.getPayPalAccessToken();
-//	    } catch (PayPalRESTException e) {
-//	        System.err.println(e.getDetails());
-//	        return false;
-//	    }
-//
-//	    try {
-//	        // Get user info using access token
-//	    	User userInfo = new User().getUserInfo(accessToken.get, userEmail);
-//	        return (userInfo != null);
-//	    } catch (PayPalRESTException e) {
-//	        System.err.println(e.getDetails());
-//	        return false;
-//	    }
-//	     
-//	   
-//
-//
-//	    return false;
-//	}
 
 	
 	
@@ -193,10 +167,6 @@ public class UserServiceImpl implements UserService {
 		return allUsers;
 	}
 
-	@Override
-	public boolean isPayPalUser(String userEmail) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+
 
 }

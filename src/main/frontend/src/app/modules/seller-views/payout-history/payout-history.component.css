@@ -59,3 +59,6 @@ table.dataTable thead th.sorting_desc:before,
 table.dataTable thead th.sorting_asc:before {
   display: none;
 }
+.my-pagination /deep/ .ngx-pagination .current {
+  background: #4285f4;
+}

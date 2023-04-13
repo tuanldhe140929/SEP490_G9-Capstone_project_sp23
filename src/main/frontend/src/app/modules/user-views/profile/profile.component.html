@@ -1,4 +1,10 @@
 <app-header></app-header>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
 <hr>
 <section class="padding-y bg-light">
     <div class="container">
@@ -26,10 +32,6 @@
             <div class="tab-content">
                 <div class="tab-pane active" id="home">
                     <hr>
-
-
-
-
                     <form [formGroup]="Profileform" (submit)="onChangeName()" class="form" action="##" method="post"
                         id="registrationForm">
                         <div class="form-group">
@@ -67,7 +69,7 @@
                                 <label for="Join Date">
                                     <h4>Ngày khởi tạo</h4>
                                 </label>
-                                <input [value]="user.createdDate" readonly type="text" class="form-control"
+                                <input [value]="formatTime(user.createdDate)" readonly type="text" class="form-control"
                                     name="CreatedDate" id="phone" placeholder="" title=".">
                             </div>
                         </div>

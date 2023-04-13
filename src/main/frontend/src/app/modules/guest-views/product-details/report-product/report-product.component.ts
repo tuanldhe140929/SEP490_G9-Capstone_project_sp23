@@ -120,4 +120,5 @@ export class ReportProductComponent implements OnInit{
     this.violationTypeId = Number(value);
     console.log("proid:"+this.data.productId+" userid:"+this.data.userId+" vio:"+this.violationTypeId+" desc:"+this.description);
   }
+  
 }
