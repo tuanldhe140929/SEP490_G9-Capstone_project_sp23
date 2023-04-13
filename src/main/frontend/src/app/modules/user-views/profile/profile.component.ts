@@ -134,5 +134,20 @@ export class ProfileComponent implements OnInit {
     const sellerRole: Role = {id: 4, name: 'ROLE_SELLER'}; 
     return this.user.roles.some(role => role.id === sellerRole.id);
   }
-
+  formatTime(createdDate: Date){
+    const timestamp = createdDate;
+    const date = new Date(timestamp);
+    
+    const formattedDate = date.getDate().toString().padStart(2, '0') + '-' +
+                          (date.getMonth() + 1).toString().padStart(2, '0') + '-' +
+                          date.getFullYear().toString();
+    
+    const formattedTime = date.getHours().toString().padStart(2, '0') + ':' +
+                          date.getMinutes().toString().padStart(2, '0') + ':' +
+                          date.getSeconds().toString().padStart(2, '0');
+    
+    const formattedTimestamp = formattedDate + ' ' + formattedTime;
+    console.log(formattedTimestamp);
+    return formattedTimestamp;
+     }
 }

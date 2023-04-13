@@ -17,7 +17,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 
-@JsonIgnoreProperties(value = { "cart" })
+@JsonIgnoreProperties(value = { })
 @Entity
 @Table(name = "transactions")
 public class Transaction {

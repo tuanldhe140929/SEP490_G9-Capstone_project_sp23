@@ -33,8 +33,8 @@ export class ReviewTransactionComponent implements OnInit {
     const $request = this.transactionService.reviewTransaction(this.paymentId, this.token, this.payerId);
     $request.subscribe(
       data => {
-        console.log(data);
-        this.transaction = data;
+        
+        this.transaction = data;console.log(this.transaction);
         this.caculateFee();
       },
       error => {
@@ -68,7 +68,8 @@ export class ReviewTransactionComponent implements OnInit {
     this.isLoading = true;
     this.transactionService.executePayment(this.paymentId, this.payerId).subscribe(
       data => {
-
+        this.isLoading = false;
+        this.transaction = data;
         switch (data.status) {
           case TransactionStatus.CREATED:
             console.log('created');
@@ -94,8 +95,10 @@ export class ReviewTransactionComponent implements OnInit {
         this.openInfoModal();
       },
       error => {
-        this.info = "Thanh toán không thành công";
+        this.isLoading = false;
+        this.info = "Không thể thực hiện hành động này";
         this.openInfoModal();
+        console.log(error);
       }
     );
   }
@@ -104,16 +107,20 @@ export class ReviewTransactionComponent implements OnInit {
     this.isLoading = true;
     this.transactionService.cancelPayment(this.transaction.id).subscribe(
       data => {
-        this.isLoading = false;
-        if (data == true) {
-          this.info = "Hủy thanh toán thành công";
-          this.openInfoModal();
-        }
+        this.transaction = data;
+        this.info = "Hủy thanh toán thành công";
+        this.openInfoModal();
       },
       error => {
-        this.info = "Hủy thanh toán không thành công";
+        this.isLoading = false;
+        this.info = "Không thể thực hiện hành động này";
         this.openInfoModal();
+        console.log(error);
       }
     );
+  }
+
+  get TransactionStatus() {
+    return TransactionStatus;
   }
 }

@@ -1,5 +1,8 @@
 package com.SEP490_G9.controllers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -11,9 +14,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.SEP490_G9.dto.ProductDetailsDTO;
 import com.SEP490_G9.entities.Account;
+import com.SEP490_G9.entities.ProductDetails;
 import com.SEP490_G9.entities.Transaction;
 import com.SEP490_G9.entities.UserDetailsImpl;
+import com.SEP490_G9.repository.ProductRepository;
 import com.SEP490_G9.service.PaypalService;
 import com.SEP490_G9.service.TransactionService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -35,6 +41,9 @@ public class TransactionController {
 
 	@Autowired
 	PaypalService paypalService;
+	
+	@Autowired
+	ProductRepository productRepo;
 
 	@PostMapping("/purchase")
 	public ResponseEntity<?> checkout(@RequestParam(name = "cartId") Long cartId) {
@@ -48,8 +57,10 @@ public class TransactionController {
 	@GetMapping("/reviewTransaction")
 	public ResponseEntity<?> reviewTransaction(@RequestParam("paymentId") String paymentId) {
 		Transaction transaction = transactionService.getByPaymentId(paymentId);
-		transaction.setStatus(Transaction.Status.APPROVED);
-		transactionService.updateTransaction(transaction);
+		if (transaction.getStatus() == Transaction.Status.CREATED) {
+			transaction.setStatus(Transaction.Status.APPROVED);
+			transactionService.updateTransaction(transaction);
+		}
 		Payer payer = paypalService.getPayerById(paymentId);
 		transaction.setPayer(payer);
 		return ResponseEntity.ok(transaction);
@@ -69,7 +80,7 @@ public class TransactionController {
 		Transaction transaction = transactionService.executeTransaction(paymentId, payerId);
 		return ResponseEntity.ok(transaction);
 	}
-	
+
 	@PostMapping("/cancelTransaction")
 	public ResponseEntity<?> cancelTransaction(@RequestParam("transId") Long transId) {
 		Transaction ret = transactionService.cancel(transId);
@@ -81,5 +92,14 @@ public class TransactionController {
 		Transaction transaction = transactionService.getByTransactionId(transactionId);
 		Transaction.Status status = transaction.getStatus();
 		return ResponseEntity.ok(status);
+	}
+	@GetMapping("/getPurchasedProductList")
+	public ResponseEntity<?> getPurchasedProductList(){
+		List<ProductDetails> allProductPurchased = transactionService.getListCartUserPurchasedProduct();
+		List<ProductDetailsDTO> allDtoPurchased = new ArrayList<>();
+		for(ProductDetails pd : allProductPurchased) {
+			allDtoPurchased.add(new ProductDetailsDTO(pd));
+		}
+		return ResponseEntity.ok(allDtoPurchased);
 	}
 }

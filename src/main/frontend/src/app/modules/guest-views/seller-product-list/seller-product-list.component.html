@@ -181,7 +181,7 @@
               </a>
               </div>  -->
               <div>
-                <button class="btn btn-primary" *ngIf="sellerStatus" (click)="createNewProduct()">Thêm sản phẩm</button>
+                <button class="btn newProduct" *ngIf="sellerStatus" (click)="createNewProduct()">Thêm sản phẩm</button>
               </div>
             </div>
           </header>
@@ -189,16 +189,16 @@
           <!-- ========= content items ========= -->
           <div class="row">
             <div class="col-lg-4 col-md-6 col-sm-6" *ngFor="let product of productList | paginate: {itemsPerPage: itemsPerPage, currentPage: p}">
-              <figure class="card card-product-grid">
+              <figure class="card card-product-grid" style="border-radius:0px;">
                 <div class="img-wrap">
-                  <img [src]="getCoverImage(product)">
+                  <img [src]="getCoverImage(product)" style="border-radius:0px;">
                 </div>
                 <figcaption class="info-wrap border-top">
                   <div class="price-wrap">
                     <strong class="price">{{product.name}}</strong>
                   </div> <!-- price-wrap.// -->
                   <p class="title mb-2">{{product.price}} $</p>
-                  <a (click)="openDetails(product.id)" class="btn btn-primary">Chi tiết</a>
+                  <a (click)="openDetails(product.id)" class="btn viewProduct">Chi tiết</a>
                   <a *ngIf="!sellerStatus" href="#" class="btn btn-light btn-icon"> <i class="fa fa-shopping-cart"></i> </a>
                   <a *ngIf="sellerStatus" (click)="redirectUpdatePage(product.id)" class="btn btn-light btn-icon"> <i class="fa fa-pen"></i> </a>
                   <a *ngIf="sellerStatus" (click)="openConfirmDelete(product.id)" class="btn btn-light btn-icon"> <i class="fa fa-trash"></i> </a>
@@ -229,7 +229,7 @@
     <button type="button" class="btn-close" aria-label="Close" (click)="dismissModal()"></button>
   </div>
   <div class="modal-body">
-    <small style="color:red;">Sản phẩm không tồn tại<br /></small>
+    <small style="color:red;">{{info}}<br /></small>
     <div style="display: flex; width: auto; float: right;" class="delete_action_btns" (click)="dismissModal()">
       <button style="" class="actionBtn">OK</button>
     </div>

@@ -8,8 +8,8 @@ const baseUrl = 'http://localhost:9000/transaction';
   providedIn: 'root'
 })
 export class TransactionService {
-  cancelPayment(transId: number): Observable<boolean> {
-    return this.httpClient.post<boolean>(baseUrl + '/cancelTransaction', null, {
+  cancelPayment(transId: number): Observable<Transaction> {
+    return this.httpClient.post<Transaction>(baseUrl + '/cancelTransaction', null, {
       params: {
         transId: transId
       }
@@ -36,5 +36,8 @@ export class TransactionService {
         PayerID: payerId
       }
     })
+  }
+  public getPurchasedProductList(){
+    return this.httpClient.get<any>(baseUrl+"/getPurchasedProductList");
   }
 }

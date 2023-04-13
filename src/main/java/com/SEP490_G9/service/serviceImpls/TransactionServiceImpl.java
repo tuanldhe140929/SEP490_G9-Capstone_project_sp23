@@ -7,22 +7,27 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.SEP490_G9.entities.Account;
 import com.SEP490_G9.entities.Cart;
 import com.SEP490_G9.entities.CartItem;
+import com.SEP490_G9.entities.ProductDetails;
 import com.SEP490_G9.entities.Seller;
 import com.SEP490_G9.entities.Transaction;
 import com.SEP490_G9.entities.TransactionFee;
 import com.SEP490_G9.entities.User;
+import com.SEP490_G9.entities.UserDetailsImpl;
 import com.SEP490_G9.exception.InternalServerException;
 import com.SEP490_G9.exception.ResourceNotFoundException;
+import com.SEP490_G9.repository.CartRepository;
 import com.SEP490_G9.repository.TransactionFeeRepository;
 import com.SEP490_G9.repository.TransactionRepository;
 import com.SEP490_G9.service.CartService;
 import com.SEP490_G9.service.PayoutService;
 import com.SEP490_G9.service.PaypalService;
+import com.SEP490_G9.service.ProductDetailsService;
 import com.SEP490_G9.service.TransactionService;
 import com.SEP490_G9.service.UserService;
 import com.paypal.api.payments.Links;
@@ -51,6 +56,12 @@ public class TransactionServiceImpl implements TransactionService {
 
 	@Autowired
 	PayoutService payoutService;
+
+	@Autowired
+	CartRepository cartRepo;
+
+	@Autowired
+	ProductDetailsService pds;
 
 	@Override
 	public Transaction getByPaymentId(String paymentId) {
@@ -95,7 +106,7 @@ public class TransactionServiceImpl implements TransactionService {
 		TransactionFee fee = transFeeRepo.findById(1).get();
 		double totalPrice = caculateCartTotalAmount(cart);
 		System.out.println(totalPrice);
-		
+
 		double afterFeeCaculated = (totalPrice * (1 + (double) (fee.getPercentage() / 100f)));
 		System.out.println(afterFeeCaculated);
 		double afterFeeCaculatedRounded = new BigDecimal(afterFeeCaculated).setScale(2, RoundingMode.HALF_UP)
@@ -158,10 +169,10 @@ public class TransactionServiceImpl implements TransactionService {
 	@Override
 	public Transaction executeTransaction(String paymentId, String payerId) {
 		Transaction transaction = transactionRepo.findByPaypalId(paymentId);
-		if(payerId.isBlank() || payerId.isEmpty()) {
+		if (payerId.isBlank() || payerId.isEmpty()) {
 			throw new IllegalArgumentException("PayerId can not be blank");
 		}
-		if(transaction==null) {
+		if (transaction == null) {
 			throw new ResourceNotFoundException("transaction", "paymentId", paymentId);
 		}
 		if (!transaction.getStatus().equals(Transaction.Status.APPROVED)) {
@@ -235,8 +246,10 @@ public class TransactionServiceImpl implements TransactionService {
 
 		if (transaction.getStatus().equals(Transaction.Status.COMPLETED)
 				|| transaction.getStatus().equals(Transaction.Status.FAILED)
-				|| transaction.getStatus().equals(Transaction.Status.EXPIRED))
-			throw new IllegalArgumentException("The transaction has ben made");
+				|| transaction.getStatus().equals(Transaction.Status.EXPIRED)
+				|| transaction.getStatus().equals(Transaction.Status.CANCELED))
+			throw new IllegalArgumentException("The transaction has ben made or has been cancelled");
+		
 		transaction.setStatus(Transaction.Status.CANCELED);
 		transaction.setLastModified(new Date());
 		transaction = transactionRepo.save(transaction);
@@ -250,4 +263,38 @@ public class TransactionServiceImpl implements TransactionService {
 		}
 		return total;
 	}
+
+	@Override
+	public boolean isCartHadPurchased(Long cartId) {
+		Cart cart = cartRepo.findById(cartId).orElseThrow();
+		for (Transaction transaction : cart.getTransactions()) {
+			if (transaction.getStatus().equals(Transaction.Status.COMPLETED)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public List<ProductDetails> getListCartUserPurchasedProduct() {
+		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
+				.getAccount();
+		List<Cart> carts = new ArrayList<>();
+		List<Cart> purchasedCart = new ArrayList<>();
+		for (Cart cart : carts) {
+			if (isCartHadPurchased(cart.getId()))
+				purchasedCart.add(cart);
+		}
+		List<ProductDetails> purchasedProductList = new ArrayList<>();
+		List<CartItem> purchasedCartItem = new ArrayList<>();
+
+		for (Cart c : purchasedCart) {
+			List<CartItem> pCI = c.getItems();
+			for (CartItem CI : pCI) {
+				purchasedProductList.add(pds.getActiveVersion(CI.getProductDetails().getProduct().getId()));
+			}
+		}
+		return purchasedProductList;
+	}
+
 }
