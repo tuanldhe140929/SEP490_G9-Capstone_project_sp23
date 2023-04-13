@@ -85,7 +85,7 @@ public class AccountServiceImpl implements AccountService {
 		Date date = new Date();
 		staff.setCreatedDate(new Date());
 		List<Role> staffRoles = new ArrayList<>();
-		staffRoles.add(roleRepo.getReferenceById(Constant.STAFF_ROLE_ID));
+		staffRoles.add(roleRepo.findById(Constant.STAFF_ROLE_ID));
 		staff.setRoles(staffRoles);
 		accountRepo.save(staff);
 		return staff;
