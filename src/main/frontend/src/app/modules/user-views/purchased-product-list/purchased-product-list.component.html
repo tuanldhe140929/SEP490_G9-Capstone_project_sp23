@@ -14,7 +14,15 @@
 							<th class="font-weight-bold py-2 border-0 ">Status</th>
 							<th class="font-weight-bold py-2 border-0 ">Action</th> -->
 			</tr>
-		
+			<tr *ngFor="let product of purchasedList|
+			paginate:{
+			   itemsPerPage: 5, 
+			   currentPage: page, 
+			   totalItems:totalLength}">
+				<td>{{product.name}}</td>
+				<td>{{product.description}}</td>
+				<td>{{product.price}}</td>
+				<td>{{formatTime(product.createdDate)}}</td>
 			</tr>
 		</thead>
 
