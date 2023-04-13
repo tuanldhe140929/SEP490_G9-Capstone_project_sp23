@@ -1,3 +1,4 @@
+<div *ngIf="isLoading"><app-loading-spinner></app-loading-spinner></div>
 <div class="container" style="margin-top: 3%;">
   <h1>Xác nhận giao dịch</h1>
   <table>
@@ -33,10 +34,13 @@
   <div class="" *ngIf="transaction.status==TransactionStatus.CANCELED">
     Trạng thái giao dịch: Đã hủy
   </div>
+  <div class="" *ngIf="transaction.status==TransactionStatus.EXPIRED">
+    Trạng thái giao dịch: Hết hạn
+  </div>
 
 
-  <button (click)="executePayment()" class="btn">Pay</button>
-  <button (click)="cancelPayment()" class="btn cancel">Cancel</button>
+  <button (click)="executePayment()" class="btn">Thanh toán</button>
+  <button (click)="cancelPayment()" class="btn cancel">Hủy bỏ</button>
 </div>
 
 

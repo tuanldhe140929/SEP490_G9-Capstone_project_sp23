@@ -71,8 +71,8 @@ export class ReviewTransactionComponent implements OnInit {
         this.isLoading = false;
         this.transaction = data;
         switch (data.status) {
-          case TransactionStatus.CREATED:
-            console.log('created');
+          case TransactionStatus.EXPIRED:
+            this.info = "Giao dịch hết hạn";
             break;
           case TransactionStatus.APPROVED:
             console.log('APPROVED');
@@ -107,9 +107,16 @@ export class ReviewTransactionComponent implements OnInit {
     this.isLoading = true;
     this.transactionService.cancelPayment(this.transaction.id).subscribe(
       data => {
+		  this.isLoading = false;
         this.transaction = data;
-        this.info = "Hủy thanh toán thành công";
-        this.openInfoModal();
+        if(data.status == TransactionStatus.EXPIRED){
+			this.info = "Giao dịch hết hạn";
+
+		}else{
+			this.info = "Hủy thanh toán thành công";
+
+		}
+		 this.openInfoModal();
       },
       error => {
         this.isLoading = false;

@@ -12,7 +12,7 @@ public interface AccountService {
 
 	Account getByRefreshToken(RefreshToken findByToken);
 
-	Account getById(int i);
+	Account getById(long i);
 
 	Account getByEmail(String email);
 

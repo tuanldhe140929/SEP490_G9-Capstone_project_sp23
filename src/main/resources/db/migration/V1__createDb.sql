@@ -50,7 +50,7 @@ END $$;
  create table sellers (paypal_email varchar(255) not null, seller_enabled boolean not null, account_id bigint not null, primary key (account_id));
  create table tags (id serial not null, name varchar(255) not null unique, primary key (id));
  create table transaction_fees (id serial not null, percentage integer check (percentage >= 0 and percentage <= 100), primary key (id));
- create table transactions (id bigint not null, amount real check (amount >= 0) not null, created_date timestamp(6) not null, description varchar(255), last_modified timestamp(6) not null, paypal_id varchar(255) not null, status TransactionStatus not null, cart_id bigint not null, transaction_fee_id integer not null, primary key (id));
+ create table transactions (id bigint not null, amount real check (amount >= 0) not null, created_date timestamp(6) not null, expired_date timestamp(6), description varchar(255), last_modified timestamp(6) not null, paypal_id varchar(255) not null, status TransactionStatus not null, cart_id bigint not null, transaction_fee_id integer not null, primary key (id));
  create table users (avatar varchar(255), email_verified boolean not null, first_name varchar(255), last_name varchar(255), username varchar(30) not null, account_id bigint not null, primary key (account_id));
  create table violation_types (id bigserial not null, name varchar(255) not null, primary key (id));
  create table violations (id bigint not null, created_date timestamp(6) not null, description varchar(255) not null, account_id bigint not null, primary key (id));

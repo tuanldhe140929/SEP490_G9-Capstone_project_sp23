@@ -78,26 +78,8 @@ public class ProductController {
 	// create new Product
 	@PostMapping(value = "createNewProduct")
 	public ResponseEntity<?> createNewProduct() {
-		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
-				.getAccount();
-		Seller seller = sellerService.getSellerById(account.getId());
-
-		int count = 0;
-		for(Product p : seller.getProducts()) {
-			if(p.isEnabled()) {
-				count++;
-			}
-		}
 		
-		if(count==20) {
-			throw new IllegalArgumentException("Exeeded max number of product");
-		}
-		
-		Product product = new Product();
-		product.setEnabled(true);
-		product.setDraft(false);
-		product.setActiveVersion(FIRST_PRODUCT_VERSION);
-		Product createdProduct = productService.createProduct(product);
+		Product createdProduct = productService.createNewProduct();
 		ProductDTO productDTO = new ProductDTO(createdProduct);
 		return ResponseEntity.ok(productDTO);
 	}

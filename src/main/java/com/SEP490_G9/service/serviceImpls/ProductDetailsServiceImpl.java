@@ -271,13 +271,33 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 			throw new ResourceNotFoundException("Product details", "version", product.getActiveVersion());
 		}
 		
+		
 		Account account = getCurrentAccount();
+		if(!ret.getProduct().isEnabled()) {
+			throw new ResourceNotFoundException("Product", "id", product.getId());
+		}
 
-		if(!account.getId().equals(product.getSeller().getId()) && !isStaff(account)){
-			if(ret.getApproved()!=Status.APPROVED || !ret.getProduct().isEnabled()) {
+		if(account==null) {
+			if(!ret.getApproved().equals(Status.APPROVED)) {
 				throw new IllegalAccessError("Cannot access this resource");
 			}
-		} 
+		}else {
+			if(!ret.getApproved().equals(Status.APPROVED)) {
+				System.out.println(account.getId());
+				if(!isStaff(account) && !ret.getProduct().getSeller().getId().equals(account.getId())) {
+					System.out.println(isStaff(account));
+					System.out.println(ret.getProduct().getSeller().getId());
+					throw new IllegalAccessError("Cannot access this resource");
+				}
+			}
+		}
+		
+		
+//		if(!account.getId().equals(product.getSeller().getId()) && !isStaff(account)){
+//			if(ret.getApproved()!=Status.APPROVED || !ret.getProduct().isEnabled()) {
+//				throw new IllegalAccessError("Cannot access this resource");
+//			}
+//		} 
 
 		return ret;
 	}
@@ -340,7 +360,9 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		if (productDetailsRepo.existsByProductIdAndProductVersionKeyVersion(id, newVersion)) {
 			throw new DuplicateFieldException("version", newVersion);
 		}
-
+		if(newVersion.isBlank() || newVersion.isEmpty() || newVersion.length()>30) {
+			throw new IllegalArgumentException("Not valid version name");
+		}
 		ProductDetails productDetails = getActiveVersion(id);
 		ProductDetails newPD = new ProductDetails();
 		newPD = createProductDetails(productDetails.getProduct(), newVersion);
@@ -489,13 +511,14 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 	public List<ProductDetails> getProductBySellerForSeller(long sellerId, String keyword, int categoryId,
 			List<Integer> tagidlist, int min, int max) {
 		List<ProductDetails> allPd = getAll();
-		List<ProductDetails> allEnabledPd = getByEnabled(allPd);
+		List<ProductDetails> allSellerPd = getBySeller(allPd, sellerId);
+		List<ProductDetails> allEnabledPd = getByEnabled(allSellerPd);
 		List<ProductDetails> allLatestPd = getByLatestVer(allEnabledPd);
 		List<ProductDetails> allKeywordPd = getByKeyword(allLatestPd, keyword);
 		List<ProductDetails> allCategoryPd = getByCategory(allKeywordPd, categoryId);
 		List<ProductDetails> allPricePd = getByPriceRange(allCategoryPd, min, max);
-		List<ProductDetails> allSellerPd = getBySeller(allPricePd, sellerId);
-		List<ProductDetails> finalResult = getByTags(allSellerPd, tagidlist);
+
+		List<ProductDetails> finalResult = getByTags(allPricePd, tagidlist);
 		return finalResult;
 	}
 

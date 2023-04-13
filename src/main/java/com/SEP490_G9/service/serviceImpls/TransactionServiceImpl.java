@@ -5,6 +5,7 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,6 +17,7 @@ import com.SEP490_G9.entities.CartItem;
 import com.SEP490_G9.entities.ProductDetails;
 import com.SEP490_G9.entities.Seller;
 import com.SEP490_G9.entities.Transaction;
+import com.SEP490_G9.entities.Transaction.Status;
 import com.SEP490_G9.entities.TransactionFee;
 import com.SEP490_G9.entities.User;
 import com.SEP490_G9.entities.UserDetailsImpl;
@@ -117,6 +119,8 @@ public class TransactionServiceImpl implements TransactionService {
 		transaction.setAmount(afterFeeCaculatedRounded);
 		transaction.setCreateDate(new Date());
 		transaction.setFee(fee);
+		Long time = System.currentTimeMillis() + 60 * 15 * 1000;
+		transaction.setExpiredDate(new Date(time));
 		transaction.setPaypalId("Not yet");
 		transaction.setLastModified(new Date());
 		transaction.setStatus(Transaction.Status.CREATED);
@@ -137,9 +141,8 @@ public class TransactionServiceImpl implements TransactionService {
 		transaction.setDescription("pay with paypal");
 		Payment payment = null;
 		payment = paypalService.createPayment(transaction);
-		String state = payment.getState();
 
-		switch (state) {
+		switch (payment.getState()) {
 		case "created": {
 			for (Links link : payment.getLinks()) {
 				if (link.getRel().equals("approval_url")) {
@@ -148,6 +151,8 @@ public class TransactionServiceImpl implements TransactionService {
 			}
 			transaction.setPaypalId(payment.getId());
 			payoutService.preparePayout(transaction.getId());
+			Runnable a = checkTransactionStatus(transaction.getId());
+			CompletableFuture.runAsync(a);
 			break;
 		}
 		case "failed":
@@ -155,7 +160,29 @@ public class TransactionServiceImpl implements TransactionService {
 			transaction = transactionRepo.save(transaction);
 			throw new InternalServerException("Cannot create payment with paypal");
 		}
+
 		return transaction;
+	}
+
+	private Runnable checkTransactionStatus(Long transactionId) {
+		return () -> {
+			Transaction tx = transactionRepo.findById(transactionId).orElseThrow();
+			while (tx.getStatus() != Status.COMPLETED && tx.getStatus() != Status.CANCELED
+					&& tx.getStatus() != Status.FAILED) {
+				if (new Date().after(tx.getExpiredDate())) {
+					tx.setStatus(Transaction.Status.EXPIRED);
+					tx.setDescription("Transaction is expired");
+					transactionRepo.save(tx);
+					payoutService.cancelPayout(transactionId);
+				}
+
+				try {
+					Thread.sleep(3000);
+				} catch (InterruptedException e) {
+					Thread.currentThread().interrupt();
+				}
+			}
+		};
 	}
 
 	@Override
@@ -169,26 +196,38 @@ public class TransactionServiceImpl implements TransactionService {
 	@Override
 	public Transaction executeTransaction(String paymentId, String payerId) {
 		Transaction transaction = transactionRepo.findByPaypalId(paymentId);
+
+		Transaction ret = null;
+
 		if (payerId.isBlank() || payerId.isEmpty()) {
 			throw new IllegalArgumentException("PayerId can not be blank");
 		}
 		if (transaction == null) {
 			throw new ResourceNotFoundException("transaction", "paymentId", paymentId);
 		}
-		if (!transaction.getStatus().equals(Transaction.Status.APPROVED)) {
+		if (transaction.getStatus().equals(Transaction.Status.CREATED)
+				|| transaction.getStatus().equals(Transaction.Status.COMPLETED)
+				|| transaction.getStatus().equals(Transaction.Status.FAILED)
+				|| transaction.getStatus().equals(Transaction.Status.CANCELED)) {
 			throw new IllegalAccessError("The transaction isn't ready or has been commit");
 		}
+		if (transaction.getStatus().equals(Transaction.Status.EXPIRED)) {
+			ret = transaction;
+			return ret;
+		}
+		Long time = System.currentTimeMillis() + 15 * 60 * 1000;
+		transaction.setExpiredDate(new Date(time));
+		transactionRepo.save(transaction);
 		Payment payment = paypalService.executePayment(paymentId, payerId);
-		Transaction ret = fetchTransactionStatus(transaction.getId());
+		ret = fetchTransactionStatus(transaction.getId());
 		return ret;
 	}
 
 	@Override
 	public Transaction fetchTransactionStatus(Long transactionId) {
 		Transaction transaction = transactionRepo.findById(transactionId).orElseThrow();
-		int numChecks = 0;
-		int maxChecks = 300;
-		while (numChecks < maxChecks) {
+
+		while (!transaction.getExpiredDate().before(new Date())) {
 			Payment payment = paypalService.getPaymentByPaypalId(transaction.getPaypalId());
 			String state = payment.getState();
 			System.out.println("Payment State: " + state);
@@ -210,12 +249,6 @@ public class TransactionServiceImpl implements TransactionService {
 				transaction.setDescription("Payment has failed");
 				return transactionRepo.save(transaction);
 
-			} else if (state.equals("expired")) {
-				payoutService.cancelPayout(transaction.getId());
-				transaction.setStatus(Transaction.Status.EXPIRED);
-				transaction.setDescription("Payment has been expired");
-				return transactionRepo.save(transaction);
-
 			} else if (state.equals("canceled")) {
 				payoutService.cancelPayout(transaction.getId());
 				transaction.setStatus(Transaction.Status.CANCELED);
@@ -229,30 +262,32 @@ public class TransactionServiceImpl implements TransactionService {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			numChecks++;
 		}
 		if (!transaction.getStatus().equals(Transaction.Status.CANCELED)
 				|| !transaction.getStatus().equals(Transaction.Status.COMPLETED)
 				|| !transaction.getStatus().equals(Transaction.Status.FAILED))
-			transaction.setStatus(Transaction.Status.EXPIRED);
-		transaction.setDescription("Trasaction is expired");
+			transaction.setStatus(Transaction.Status.FAILED);
+		transaction.setDescription("fetch payment status timeout");
 		transaction = transactionRepo.save(transaction);
+
 		return transaction;
 	}
 
 	@Override
 	public Transaction cancel(Long transactionId) {
 		Transaction transaction = transactionRepo.findById(transactionId).orElseThrow();
-
+		if (transaction.getStatus().equals(Transaction.Status.EXPIRED)) {
+			return transaction;
+		}
 		if (transaction.getStatus().equals(Transaction.Status.COMPLETED)
 				|| transaction.getStatus().equals(Transaction.Status.FAILED)
-				|| transaction.getStatus().equals(Transaction.Status.EXPIRED)
 				|| transaction.getStatus().equals(Transaction.Status.CANCELED))
 			throw new IllegalArgumentException("The transaction has ben made or has been cancelled");
-		
+
 		transaction.setStatus(Transaction.Status.CANCELED);
 		transaction.setLastModified(new Date());
 		transaction = transactionRepo.save(transaction);
+		payoutService.cancelPayout(transactionId);
 		return transaction;
 	}
 

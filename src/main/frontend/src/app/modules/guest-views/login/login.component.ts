@@ -66,7 +66,7 @@ export class LoginComponent implements OnInit {
         },
         err => {
 			console.log(err);
-          if (err.status === 500) {
+          if (err.status === 403) {
             this.storageService.clearStorage();
             this.errorMessage = 'Sai email hoặc mật khẩu';
           }
