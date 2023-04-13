@@ -41,14 +41,6 @@ class ViolationTypeRepositoryTest {
 		assertEquals(viotype, result);
 	}
 	
-//	mỗi thằng excel lỗi>= 100
-//	mỗi thằng logissue log cả testcase cả requirement 
-//  nghĩ xem phải làm gì
-//  rủi ro dự án
-//  kiểm tra chính tả, câu viết, kí hiệu hình, đánh số
-//  network diagram, critical part, state diagram
-//	kịch bản demo
-//  test data. expected output
 	
 //	@Test
 //	void testFindAll() {
