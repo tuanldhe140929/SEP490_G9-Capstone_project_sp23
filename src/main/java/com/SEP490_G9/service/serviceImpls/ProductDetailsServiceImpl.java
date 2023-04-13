@@ -273,18 +273,20 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		
 		
 		Account account = getCurrentAccount();
-//
 		if(!ret.getProduct().isEnabled()) {
 			throw new ResourceNotFoundException("Product", "id", product.getId());
 		}
-		
+
 		if(account==null) {
 			if(!ret.getApproved().equals(Status.APPROVED)) {
 				throw new IllegalAccessError("Cannot access this resource");
 			}
 		}else {
 			if(!ret.getApproved().equals(Status.APPROVED)) {
+				System.out.println(account.getId());
 				if(!isStaff(account) && !ret.getProduct().getSeller().getId().equals(account.getId())) {
+					System.out.println(isStaff(account));
+					System.out.println(ret.getProduct().getSeller().getId());
 					throw new IllegalAccessError("Cannot access this resource");
 				}
 			}
@@ -509,13 +511,14 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 	public List<ProductDetails> getProductBySellerForSeller(long sellerId, String keyword, int categoryId,
 			List<Integer> tagidlist, int min, int max) {
 		List<ProductDetails> allPd = getAll();
-		List<ProductDetails> allEnabledPd = getByEnabled(allPd);
+		List<ProductDetails> allSellerPd = getBySeller(allPd, sellerId);
+		List<ProductDetails> allEnabledPd = getByEnabled(allSellerPd);
 		List<ProductDetails> allLatestPd = getByLatestVer(allEnabledPd);
 		List<ProductDetails> allKeywordPd = getByKeyword(allLatestPd, keyword);
 		List<ProductDetails> allCategoryPd = getByCategory(allKeywordPd, categoryId);
 		List<ProductDetails> allPricePd = getByPriceRange(allCategoryPd, min, max);
-		List<ProductDetails> allSellerPd = getBySeller(allPricePd, sellerId);
-		List<ProductDetails> finalResult = getByTags(allSellerPd, tagidlist);
+
+		List<ProductDetails> finalResult = getByTags(allPricePd, tagidlist);
 		return finalResult;
 	}
 

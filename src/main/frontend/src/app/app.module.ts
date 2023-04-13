@@ -23,6 +23,7 @@ import { SellerViewsModule } from './modules/seller-views/seller-views.module';
 import { CommonViewsModule } from './modules/common-views/common-views.module';
 import { GuestViewsModule } from './modules/guest-views/guest-views.module';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { StaffViewsModule } from './modules/staff-views/staff-views.module';
 
 
 @NgModule({
@@ -57,6 +58,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
     SellerViewsModule,
     CommonViewsModule,
     GuestViewsModule,
+    StaffViewsModule,
     NgxPaginationModule
   ],
   providers: [

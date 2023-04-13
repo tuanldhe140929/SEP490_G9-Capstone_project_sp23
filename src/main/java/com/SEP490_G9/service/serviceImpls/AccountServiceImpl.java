@@ -119,9 +119,9 @@ public class AccountServiceImpl implements AccountService {
 	}
 
 	@Override
-	public Account getById(int i) {
+	public Account getById(long i) {
 		// TODO Auto-generated method stub
-		Account ret = accountRepo.findById(i);
+		Account ret = accountRepo.findById(i).orElseThrow();
 		if (ret == null) {
 //			throw new ResourceNotFoundException("account", "id", id);
 		}

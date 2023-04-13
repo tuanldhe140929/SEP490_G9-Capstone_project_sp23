@@ -55,7 +55,6 @@ public class VirusTotalServiceImpl implements VirusTotalService {
 		}
 		long startTime = System.currentTimeMillis();
 		List<byte[]> chunks;
-		chunks.si
 		try {
 			chunks = splitFileIntoChunks(file.getPath().toString());
 		} catch (IOException e1) {
