@@ -15,7 +15,7 @@ import { ReviewTransactionComponent } from './review-transaction/review-transact
 import { LoadingSpinnerComponent } from '../common-views/loading-spinner/loading-spinner.component';
 import { LoginWithPaypalComponent } from './login-with-paypal/login-with-paypal.component';
 import { PurchasedProductListComponent } from './purchased-product-list/purchased-product-list.component';
-
+import { NgxPaginationModule } from 'ngx-pagination';
 
 @NgModule({
   declarations: [
@@ -34,7 +34,8 @@ import { PurchasedProductListComponent } from './purchased-product-list/purchase
     FormsModule,
     ReactiveFormsModule,
     UserViewsRoutingModule,
-    CommonViewsModule
+    CommonViewsModule,
+    NgxPaginationModule
   ],
   providers: [AuthGuard]
 })

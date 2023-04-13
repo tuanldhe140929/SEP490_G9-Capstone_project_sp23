@@ -279,7 +279,7 @@ public class TransactionServiceImpl implements TransactionService {
 	public List<ProductDetails> getListCartUserPurchasedProduct() {
 		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
 				.getAccount();
-		List<Cart> carts = new ArrayList<>();
+		List<Cart> carts = cartRepo.findByUserId(account.getId());
 		List<Cart> purchasedCart = new ArrayList<>();
 		for (Cart cart : carts) {
 			if (isCartHadPurchased(cart.getId()))
