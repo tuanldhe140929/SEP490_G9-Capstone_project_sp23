@@ -2,6 +2,7 @@ package com.SEP490_G9.entities;
 
 import java.util.Date;
 
+import com.SEP490_G9.dto.ViolationDTO;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Column;
@@ -45,6 +46,13 @@ public class Violation {
 		this.account = account;
 	}
 
+	public Violation(ViolationDTO vio) {
+		this.id = vio.getViolation_id();
+		this.created_date = vio.getCreatedDate();
+		this.description = vio.getDescription();
+		this.account = vio.findById();
+	}
+	
 	public Long getId() {
 		return id;
 	}
@@ -76,5 +84,10 @@ public class Violation {
 	public void setAccount(Account account) {
 		this.account = account;
 	}
+
+//	public Violation findById(long l) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
 
 }

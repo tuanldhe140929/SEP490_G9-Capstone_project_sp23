@@ -89,6 +89,7 @@ export class TagsComponent implements AfterViewInit{
       console.log(data);
     })
   }
+  
 }
 
 

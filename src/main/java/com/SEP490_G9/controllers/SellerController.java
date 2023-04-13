@@ -65,7 +65,7 @@ public class SellerController {
 	@GetMapping("/reportedsellerlist")
 	public ResponseEntity<?> getReportedSeller() {
 		
-		List<Seller> seller = sellerService.getFlaggedSellers();
+		List<Seller> seller = sellerService.getReportedSellers();
 		return ResponseEntity.ok(seller);
 	}
 }

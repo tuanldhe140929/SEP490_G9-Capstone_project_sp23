@@ -17,17 +17,8 @@ export class AddviolationService {
     return this.httpClient.get<any>(`${this.apiServerUrlManageViolation}/violations`);
   }
 
-  // addViolation(body: any): Observable<any> {
-  //   return this.httpClient.post<any>(`${this.apiServerUrlManageViolation}/addviolation`, body);
-  // }
-  sendViolation(violation_id: number, createdDate: Date, description: string, account_id: number): Observable<any> {
-    const params = {
-      violation_id: violation_id,
-      createdDate: createdDate,
-      description: description,
-      account_id: account_id
-    }
-    
-    return this.httpClient.post<any>(this.apiServerUrlManageViolation + "/addviolation", { params });
+  addViolation(body: any): Observable<any> {
+    return this.httpClient.post<any>(`${this.apiServerUrlManageViolation}/addviolation`, body);
   }
+ 
 }

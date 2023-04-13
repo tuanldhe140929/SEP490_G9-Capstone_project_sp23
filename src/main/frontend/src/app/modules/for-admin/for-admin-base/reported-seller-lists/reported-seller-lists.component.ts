@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
@@ -7,25 +7,24 @@ import { SellerService } from 'src/app/services/seller.service';
 import { AddviolationComponent } from '../addviolation/addviolation.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { data } from 'jquery';
+import { Account } from 'src/app/dtos/Account';
 
 @Component({
   selector: 'app-reported-seller-lists',
   templateUrl: './reported-seller-lists.component.html',
   styleUrls: ['./reported-seller-lists.component.css']
 })
-export class ReportedSellerListsComponent implements AfterViewInit{
+export class ReportedSellerListsComponent implements OnInit{
   displayedColumns: string[] = ['ID','Email', 'Ngày tạo', 'Cấm'];
   dataSource: MatTableDataSource<Seller>;
 
   account_id: number;
-  violation_id: number;
-  createdDate: Date;
-  description: string;
 
   reportedsellerList: Seller[] = [];
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  constructor(private sellerService: SellerService, private dialog: MatDialog,public routerService: Router) {
+  constructor(private sellerService: SellerService, private dialog: MatDialog) {
 
 
     // Assign the data to the data source for the table to render
@@ -42,9 +41,13 @@ export class ReportedSellerListsComponent implements AfterViewInit{
     )
 
   }
+  ngOnInit(): void {
+// this.activateRoute.queryParams.subscribe(data=>{
+  console.log(data);
+// });
+  }
 
   openViolationDialog(account_id: number) {
-    this.routerService.navigate(['/admin'], {queryParams:{account_id:this.account_id?this.account_id:'',violation_id:this.violation_id?this.violation_id:'',createdDate:this.createdDate?this.createdDate:'',description:this.description?this.description:''}})
     const dialogRef = this.dialog.open(AddviolationComponent, {
       width: '350px',
       data: {
@@ -52,15 +55,8 @@ export class ReportedSellerListsComponent implements AfterViewInit{
       }
     });
 
-    // dialogRef.afterClosed().subscribe(result => {
-    //   console.log(`Dialog result: ${result}`);
-    //   setTimeout(() => this.refresh(),400)
-    // });
   }
 
-  ngAfterViewInit() {
-
-  }
 
   refresh() {
     this.sellerService.getAllSellers().subscribe((data: any) => {
