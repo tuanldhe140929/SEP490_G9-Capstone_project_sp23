@@ -44,14 +44,7 @@ public class AccountServiceImpl implements AccountService {
 		return ret;
 	}
 
-	@Override
-	public Account getById(Long id) {
-		Account ret = accountRepo.findById(id).get();
-		if (ret == null) {
-			throw new ResourceNotFoundException("account", "id", id);
-		}
-		return ret;
-	}
+	
 
 	@Override
 	public Account getByEmail(String email) {
@@ -123,6 +116,24 @@ public class AccountServiceImpl implements AccountService {
 	public List<Account> getAllAccounts() {
 		List<Account> allAccounts = accountRepo.findAll();
 		return allAccounts;
+	}
+
+	@Override
+	public Account getById(int i) {
+		// TODO Auto-generated method stub
+		Account ret = accountRepo.findById(i);
+		if (ret == null) {
+//			throw new ResourceNotFoundException("account", "id", id);
+		}
+		return ret;
+	}
+
+
+
+	@Override
+	public Account findById(int id) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

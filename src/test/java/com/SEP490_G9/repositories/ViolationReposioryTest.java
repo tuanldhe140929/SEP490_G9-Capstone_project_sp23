@@ -1,5 +1,8 @@
 package com.SEP490_G9.repositories;
 
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,34 +27,26 @@ import com.SEP490_G9.repository.ViolationTypeRepository;
 @DataJpaTest
 @RunWith(SpringRunner.class)
 @Import(TestConfig.class)
-class ViolationTypeRepositoryTest {
+class ViolationReposioryTest {
 
 	@Autowired
-	ViolationTypeRepository vioTypeRepo;
+	Violation vioTypeRepo;
 	
-	@Autowired
-	List<Report> listreport = new List<Report>();
+	
+	@Test
+	void test() {
+		fail("Not yet implemented");
+	}
 	
 	@Test
 	void testFindById() {
-		ViolationType viotype = new ViolationType();
+		Violation viotype = new Violation();
 		viotype.setId(1L);
-		viotype.setName("Spam");
-		ViolationType result = vioTypeRepo.findById(1L);
+		viotype.setCreated_date(null);
+		viotype.setDescription(null);
+		viotype.setAccount(null);
+		Violation result = vioTypeRepo.findById(1L);
 		assertEquals(viotype, result);
 	}
-	
-	
-//	@Test
-//	void testFindAll() {
-//		ViolationType vio1 = new ViolationType(1, "Horror", listreport);
-//		ViolationType vio2 = new ViolationType(2, "Adventure", listreport);
-//		ViolationType vio3 = new ViolationType(3, "Action", listreport);
-//		vioTypeRepo.save(vio1);
-//		vioTypeRepo.save(vio2);
-//		vioTypeRepo.save(vio3);
-//		List<ViolationType> expected = vioTypeRepo.findAll();
-//		assertThat(expected.size()).isEqualTo(3);
-//	}
-	
+
 }

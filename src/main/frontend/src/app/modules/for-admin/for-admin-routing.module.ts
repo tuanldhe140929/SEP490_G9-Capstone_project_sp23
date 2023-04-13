@@ -9,6 +9,8 @@ import { AdminGuard } from 'src/app/guards/admin.guard';
 import { CategoriesComponent } from './for-admin-base/categories/categories.component';
 import { TagsComponent } from './for-admin-base/tags/tags.component';
 import { ReportedSellerListsComponent } from './for-admin-base/reported-seller-lists/reported-seller-lists.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatInputModule } from '@angular/material/input';
 
 const routes: Routes = [
   {

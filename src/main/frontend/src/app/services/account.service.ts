@@ -28,7 +28,8 @@ logout() {
   localStorage.clear();
   return this.httpClient.get<any>(this.apiServerUrlManageAccount + '/logout?token=' + this.storageService.getToken(), httpOptions,);
   }
-  
+  // getAccountOfSeller()
+
   getAllStaffs(): Observable<any>{
     return this.httpClient.get<any>(`${this.apiServerUrlManageAccount}/staffs`);
   }

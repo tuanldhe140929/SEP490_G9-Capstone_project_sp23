@@ -1,7 +1,8 @@
+
 import { Role } from "./Role";
 
 export class Seller{
-   id:number;
+  id:number;
 	email:string;
 	createdDate:Date
 	lastModified:Date
@@ -14,6 +15,7 @@ export class Seller{
 	emailVerified:boolean;
 	phoneNumber:string;
 	sellerEnabled:boolean;
+
   constructor() {
     this.id = -1;
     this.email = "";
@@ -28,5 +30,6 @@ export class Seller{
     this.emailVerified = true;
     this.phoneNumber = "";
     this.sellerEnabled = true;
+
   }
 }

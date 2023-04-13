@@ -65,6 +65,7 @@ export class ForAdminBaseComponent {
   }
 
   openReportedseller(){
+  // this.accountService.getAllAccounts;
     this.routerName = 'reportedsellerlist';
     this.dashboardChosen = false;
     this.manageStaffChosen = false;
