@@ -5,23 +5,20 @@
 		<thead>
 			<tr>
 				<th class="font-weight-bold py-2 border-0 ">Tên</th>
-				<th class="font-weight-bold py-2 border-0 ">Ngày khởi tạo</th>
-				<th class="font-weight-bold py-2 border-0 ">Tình trạng</th>
+				<th class="font-weight-bold py-2 border-0 ">Mô tả sản phẩm</th>
+				<th class="font-weight-bold py-2 border-0 ">Giá tiền</th>
+				<th class="font-weight-bold py-2 border-0 ">Ngày mua</th>
 				<!-- <th class="font-weight-bold py-2 border-0 ">PayoutFee</th> -->
 				<!-- <th class="font-weight-bold py-2 border-0 ">Customer</th>
 							<th class="font-weight-bold py-2 border-0 ">Total</th>
 							<th class="font-weight-bold py-2 border-0 ">Status</th>
 							<th class="font-weight-bold py-2 border-0 ">Action</th> -->
 			</tr>
-			<tr *ngFor="let product of purchasedList">
-				<td>{{product.name}}</td>
-				<td>{{product.price}}</td>
-				<td>{{product.seller}}</td>
+		
 			</tr>
 		</thead>
-		<tbody>
-		</tbody>
-	</table>
 
+	</table>
+	<pagination-controls  class="text-center my-pagination" (pageChange) = "page = $event"></pagination-controls>
 </div>
 <app-footer></app-footer>
