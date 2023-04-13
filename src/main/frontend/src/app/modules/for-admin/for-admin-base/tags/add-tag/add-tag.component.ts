@@ -9,6 +9,7 @@ import { TagService } from 'src/app/services/tag.service';
   templateUrl: './add-tag.component.html',
   styleUrls: ['./add-tag.component.css']
 })
+
 export class AddTagComponent {
   constructor(private formBuilder: FormBuilder, private tagService: TagService, private toastr: ToastrService, @Inject(MAT_DIALOG_DATA) public data: {nameList: string[]}){}
 
@@ -47,4 +48,5 @@ export class AddTagComponent {
       }
     }
   }
+
 }
