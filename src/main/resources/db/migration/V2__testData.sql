@@ -9,20 +9,35 @@
  
  insert into accounts (created_date, email, enabled, last_modified, password, id) values (CURRENT_DATE, 'user1@gmail.com', true, null, crypt('user1234', gen_salt('bf')), 1);
  insert into accounts (created_date, email, enabled, last_modified, password, id) values (CURRENT_DATE, 'seller1@gmail.com', true, null, crypt('seller1234', gen_salt('bf')), 2);
- insert into accounts (created_date, email, enabled, last_modified, password, id) values (CURRENT_DATE, 'staff@gmail.com', true, null, crypt('staff1234', gen_salt('bf')), 3);
- insert into accounts (created_date, email, enabled, last_modified, password, id) values (CURRENT_DATE, 'admin@gmail.com', true, null, crypt('admin1234', gen_salt('bf')), 4);
+  insert into accounts (created_date, email, enabled, last_modified, password, id) values (CURRENT_DATE, 'seller2@gmail.com', true, null, crypt('seller1234', gen_salt('bf')), 3);
+   insert into accounts (created_date, email, enabled, last_modified, password, id) values (CURRENT_DATE, 'seller3@gmail.com', true, null, crypt('seller1234', gen_salt('bf')), 4);
+    insert into accounts (created_date, email, enabled, last_modified, password, id) values (CURRENT_DATE, 'seller4@gmail.com', true, null, crypt('seller1234', gen_salt('bf')), 5);
+ insert into accounts (created_date, email, enabled, last_modified, password, id) values (CURRENT_DATE, 'staff@gmail.com', true, null, crypt('staff1234', gen_salt('bf')), 6);
+ insert into accounts (created_date, email, enabled, last_modified, password, id) values (CURRENT_DATE, 'admin@gmail.com', true, null, crypt('admin1234', gen_salt('bf')), 7);
 
  
  insert into account_role (account_id, role_id) values (1, 3);
  insert into account_role (account_id, role_id) values (2, 3);
  insert into account_role (account_id, role_id) values (2, 4);
- insert into account_role (account_id, role_id) values (3, 2);
- insert into account_role (account_id, role_id) values (4, 1);
+  insert into account_role (account_id, role_id) values (3, 3);
+ insert into account_role (account_id, role_id) values (3, 4);
+  insert into account_role (account_id, role_id) values (4, 3);
+ insert into account_role (account_id, role_id) values (4, 4);
+  insert into account_role (account_id, role_id) values (5, 3);
+ insert into account_role (account_id, role_id) values (5, 4);
+ insert into account_role (account_id, role_id) values (6, 2);
+ insert into account_role (account_id, role_id) values (7, 1);
  SELECT setval('accounts_seq', (SELECT MAX(id) FROM accounts));
 
  insert into users (avatar, email_verified, first_name, last_name, username, account_id) values (null, false, 'John', 'Doe', 'usser1', 1);
- insert into users (avatar, email_verified, first_name, last_name, username, account_id) values (null, false, 'John', 'Doe', 'seller1', 2);
+ insert into users (avatar, email_verified, first_name, last_name, username, account_id) values (null, true, 'John', 'Doe', 'seller1', 2);
+  insert into users (avatar, email_verified, first_name, last_name, username, account_id) values (null, true, 'John', 'Doe', 'seller2', 3);
+   insert into users (avatar, email_verified, first_name, last_name, username, account_id) values (null, true, 'John', 'Doe', 'seller3', 4);
+    insert into users (avatar, email_verified, first_name, last_name, username, account_id) values (null, true, 'John', 'Doe', 'seller4', 5);
  insert into sellers (paypal_email, seller_enabled, account_id) values ('okokokok@gmail.com', true, 2);
+ insert into sellers (paypal_email, seller_enabled, account_id) values ('namdhhe150519@fpt.edu', true, 3);
+ insert into sellers (paypal_email, seller_enabled, account_id) values ('namdinhdvh@gmail.com', true, 4);
+ insert into sellers (paypal_email, seller_enabled, account_id) values ('kokokos@gmail.com', true, 5);
  
 
  insert into tags(id, name) VALUES(1, '2D');

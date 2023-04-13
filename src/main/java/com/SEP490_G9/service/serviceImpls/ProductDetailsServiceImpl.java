@@ -271,13 +271,31 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 			throw new ResourceNotFoundException("Product details", "version", product.getActiveVersion());
 		}
 		
+		
 		Account account = getCurrentAccount();
-
-		if(!account.getId().equals(product.getSeller().getId()) && !isStaff(account)){
-			if(ret.getApproved()!=Status.APPROVED || !ret.getProduct().isEnabled()) {
+//
+		if(!ret.getProduct().isEnabled()) {
+			throw new ResourceNotFoundException("Product", "id", product.getId());
+		}
+		
+		if(account==null) {
+			if(!ret.getApproved().equals(Status.APPROVED)) {
 				throw new IllegalAccessError("Cannot access this resource");
 			}
-		} 
+		}else {
+			if(!ret.getApproved().equals(Status.APPROVED)) {
+				if(!isStaff(account) && !ret.getProduct().getSeller().getId().equals(account.getId())) {
+					throw new IllegalAccessError("Cannot access this resource");
+				}
+			}
+		}
+		
+		
+//		if(!account.getId().equals(product.getSeller().getId()) && !isStaff(account)){
+//			if(ret.getApproved()!=Status.APPROVED || !ret.getProduct().isEnabled()) {
+//				throw new IllegalAccessError("Cannot access this resource");
+//			}
+//		} 
 
 		return ret;
 	}
@@ -340,7 +358,9 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		if (productDetailsRepo.existsByProductIdAndProductVersionKeyVersion(id, newVersion)) {
 			throw new DuplicateFieldException("version", newVersion);
 		}
-
+		if(newVersion.isBlank() || newVersion.isEmpty() || newVersion.length()>30) {
+			throw new IllegalArgumentException("Not valid version name");
+		}
 		ProductDetails productDetails = getActiveVersion(id);
 		ProductDetails newPD = new ProductDetails();
 		newPD = createProductDetails(productDetails.getProduct(), newVersion);
