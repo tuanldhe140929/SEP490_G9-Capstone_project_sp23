@@ -10,7 +10,6 @@
             <p>Mô tả chi tiết (để từ 10 đến 255 ký tự) :</p>
             <textarea [(ngModel)]="description" (input)="onDescriptionChange()" formControlName="description"></textarea>
         </div>
-        <small *ngIf="descriptionEmpty()" style="color: red;">Vui lòng mô tả chi tiết vi phạm</small>
         <small *ngIf="descriptionExceed()" style="color: red">Vui lòng để mô tả từ 10 đến 255 ký tự</small>
         <div class="form-group" align="end">
             <button class="btn btn-warning" mat-dialog-close="">Hủy</button>

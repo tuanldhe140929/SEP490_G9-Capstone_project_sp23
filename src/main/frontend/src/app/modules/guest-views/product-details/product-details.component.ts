@@ -366,7 +366,7 @@ export class ProductDetailsComponent implements OnInit {
     }
     const dialogRef = this.dialog.open(ReportProductComponent, {
 
-      height: '57%',
+      // height: '57%',
       width: '50%',
       data: data
     });
