@@ -145,6 +145,9 @@
                 <div class="col-5"><label>Phiên bản</label></div>
                 <div class="col-7"><div class="version_value" style="cursor:none; color:black; font-weight:600">{{product.version}}</div></div>
               </div>
+              <!-- <div *ngIf="product.version!=latestVer.version" class="row metadata_details" style="margin-top:10px;">
+                <div class="col-12"><small style="color: red">Đây là phiên bản cũ</small></div>
+              </div> -->
               <div class="row metadata_details" style="margin-top:10px;">
                 <div class="col-5"><label>Phân loại</label></div>
                 <div class="col-7"><a class="details_value" href="">{{product.category.name}}</a></div>
@@ -170,10 +173,6 @@
   
                   </div>
                 </div>
-              </div>
-              <div class="row metadata_details">
-                <div class="col-5"><label>Game engine</label></div>
-                <div class="col-7">ABC Engine</div>
               </div>
             </div>
   

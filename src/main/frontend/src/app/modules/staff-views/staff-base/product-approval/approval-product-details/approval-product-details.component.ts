@@ -90,19 +90,19 @@ export class ApprovalProductDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.getProduct();
     this.productId = this.data.productId;
-    if(this.storageService.getToken()){
-      this.userService.getCurrentUserInfo().subscribe(
-        data => {
-          this.visitor = data;
-          this.visitorId = data.id;
-          if(this.visitorId==this.owner.id){
-            this.isOwner == true;
-          }else{
-            this.isOwner == false;
-          }
-        }
-      )
-    }
+    // if(this.storageService.getToken()){
+    //   this.userService.getCurrentUserInfo().subscribe(
+    //     data => {
+    //       this.visitor = data;
+    //       this.visitorId = data.id;
+    //       if(this.visitorId==this.owner.id){
+    //         this.isOwner == true;
+    //       }else{
+    //         this.isOwner == false;
+    //       }
+    //     }
+    //   )
+    // }
   }
 
   currentPreview: DisplayPreview = new DisplayPreview;

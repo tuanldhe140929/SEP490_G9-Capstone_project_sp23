@@ -17,13 +17,13 @@ public interface ReportService {
 	
 	List<Report> getByProductDetails(List<Report> reportList, Product product, String version);
 	
-	List<Report> getByProductAllVersions(long productId, String status);
+	List<Report> getByProductDetailsAndStatus(long productId, String version, String status);
 	
 	List<Report> getByUser(List<Report> reportList, User user);
 	
 	Report getByProductUserVersion(long productId, long userId, String version);
 	
-	List<Report> updateReportStatus(long productId, List<String> versionList, List<Long> userIdList, List<String> statusList);
+	List<Report> updateReportStatus(long productId, String version, List<Long> userIdList, List<String> statusList);
 	
 	List<Report> getByStatus(String status);
 	

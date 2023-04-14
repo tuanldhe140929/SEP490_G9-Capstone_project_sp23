@@ -1,6 +1,9 @@
 <div class="mat-elevation-z8">
-    <h1>Các báo cáo của sản phẩm này</h1>
-    <p *ngIf="dataInjected.status=='PENDING'">Hãy đánh dấu tất cả các báo cáo mà bạn đồng ý</p>
+    <h1>Các báo cáo của phiên bản này</h1>
+    <div *ngIf="dataInjected.status=='PENDING'">
+      Hãy đánh dấu tất cả các báo cáo mà bạn đồng ý
+      <br>
+    </div>
     <p *ngIf="dataInjected.status=='HANDLED'">Danh sách các báo cáo đã được xử lý</p>
     <table mat-table [dataSource]="dataSource">
   
@@ -8,12 +11,6 @@
       <ng-container matColumnDef="username">
         <th mat-header-cell *matHeaderCellDef> Tên người báo cáo </th>
         <td mat-cell *matCellDef="let element"> {{element.username}} </td>
-      </ng-container>
-  
-      <!-- Name Column -->
-      <ng-container matColumnDef="version">
-        <th mat-header-cell *matHeaderCellDef> Phiên bản </th>
-        <td mat-cell *matCellDef="let element"> {{element.version}} </td>
       </ng-container>
 
       <!-- Name Column -->

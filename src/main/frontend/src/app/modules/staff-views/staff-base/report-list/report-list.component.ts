@@ -46,6 +46,7 @@ export class ReportListComponent {
   products: Product[];
   reports: Report[];
   selectedOption: string = "PENDING";  
+  currentVer: string
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -160,7 +161,7 @@ export class ReportListComponent {
     this.refresh(status);
   }
 
-  openDetails(productId: string, version: string){
+  openDetails(productId: number, version: string){
     const dialogRef = this.dialog.open(ReportedProductDetailsComponent, {
       data: {
         productId: productId,
@@ -173,5 +174,13 @@ export class ReportListComponent {
       console.log(`Dialog result: ${result}`);
       setTimeout(() => this.refresh(this.selectedOption),400)
     });
+  }
+
+  getCurrentVersion(productId: number){
+    this.productService.getCurrentVersion(productId).subscribe(
+      data => {
+        this.currentVer = data;
+      }
+    )
   }
 }

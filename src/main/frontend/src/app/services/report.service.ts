@@ -36,9 +36,10 @@ export class ReportService {
     return this.httpClient.put<any>(this.BaseUrl+"/updateReportStatus",null,{params})
   }
 
-  getByProductsAllVersions(productId: number, status: string){
+  getByProductDetailsAndStatus(productId: number, version: string, status: string): Observable<any>{
     const params = {
       productId: productId,
+      version: version,
       status: status
     }
     return this.httpClient.get<any>(this.BaseUrl+"/getByProductAndStatus",{params});

@@ -259,4 +259,10 @@ public class ProductDetailsController {
 		int count = this.productDetailsService.getTotalPurchasedCount(productId);
 				return ResponseEntity.ok(count);
 	}
+	
+	@GetMapping(value = "getCurrentVersion")
+	public String getCurrentVersion(@RequestParam("productId") Long productId){
+		String currentVer = productDetailsService.getCurrentVersion(productId);
+		return currentVer;
+	}
 }
