@@ -17,6 +17,8 @@ const httpOptions: Object = {
 export class AccountService {
 
   private apiServerUrlManageAccount = "http://localhost:9000/account";
+  
+  private apiServerUrlRefreshToken = "http://localhost:9000/refreshToken";
 
   constructor(private httpClient: HttpClient, private storageService: StorageService) { }
 
@@ -46,7 +48,7 @@ logout() {
   }
   
     refreshToken() {
-    return this.httpClient.post<any>(this.apiServerUrlManageAccount + '/refresh', 1, httpOptions);
+    return this.httpClient.post<any>(this.apiServerUrlRefreshToken + '/refresh', 1, httpOptions);
   }
   
   resetPassword(email: String) {

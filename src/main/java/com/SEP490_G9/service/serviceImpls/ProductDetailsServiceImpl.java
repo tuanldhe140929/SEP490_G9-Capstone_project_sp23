@@ -1,6 +1,7 @@
 package com.SEP490_G9.service.serviceImpls;
 
 import java.io.File;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -270,29 +272,27 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		if (ret == null) {
 			throw new ResourceNotFoundException("Product details", "version", product.getActiveVersion());
 		}
-		
-		
+
 		Account account = getCurrentAccount();
-		if(!ret.getProduct().isEnabled()) {
+		if (!ret.getProduct().isEnabled()) {
 			throw new ResourceNotFoundException("Product", "id", product.getId());
 		}
 
-		if(account==null) {
-			if(!ret.getApproved().equals(Status.APPROVED)) {
+		if (account == null) {
+			if (!ret.getApproved().equals(Status.APPROVED)) {
 				throw new IllegalAccessError("Cannot access this resource");
 			}
-		}else {
-			if(!ret.getApproved().equals(Status.APPROVED)) {
+		} else {
+			if (!ret.getApproved().equals(Status.APPROVED)) {
 				System.out.println(account.getId());
-				if(!isStaff(account) && !ret.getProduct().getSeller().getId().equals(account.getId())) {
+				if (!isStaff(account) && !ret.getProduct().getSeller().getId().equals(account.getId())) {
 					System.out.println(isStaff(account));
 					System.out.println(ret.getProduct().getSeller().getId());
 					throw new IllegalAccessError("Cannot access this resource");
 				}
 			}
 		}
-		
-		
+
 //		if(!account.getId().equals(product.getSeller().getId()) && !isStaff(account)){
 //			if(ret.getApproved()!=Status.APPROVED || !ret.getProduct().isEnabled()) {
 //				throw new IllegalAccessError("Cannot access this resource");
@@ -303,9 +303,11 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 	}
 
 	public Account getCurrentAccount() {
-		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
-				.getAccount();
-		return account;
+		System.out.println(SecurityContextHolder.getContext().getAuthentication().getName());
+		if (!SecurityContextHolder.getContext().getAuthentication().getName().equalsIgnoreCase("anonymousUser")) {
+			return ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getAccount();
+		}
+		return null;
 	}
 
 	@Override
@@ -360,7 +362,7 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		if (productDetailsRepo.existsByProductIdAndProductVersionKeyVersion(id, newVersion)) {
 			throw new DuplicateFieldException("version", newVersion);
 		}
-		if(newVersion.isBlank() || newVersion.isEmpty() || newVersion.length()>30) {
+		if (newVersion.isBlank() || newVersion.isEmpty() || newVersion.length() > 30) {
 			throw new IllegalArgumentException("Not valid version name");
 		}
 		ProductDetails productDetails = getActiveVersion(id);
