@@ -34,6 +34,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { SellerSearchResultComponent } from './seller-search-result/seller-search-result.component';
 import { DeleteProductComponent } from './seller-product-list/delete-product/delete-product.component';
 import { SearchResultCategoryComponent } from './search-result-category/search-result-category.component';
+import { SearchResultTagComponent } from './search-result-tag/search-result-tag.component';
 
 
 @NgModule({
@@ -50,7 +51,8 @@ import { SearchResultCategoryComponent } from './search-result-category/search-r
     SearchResultComponent,
     SellerSearchResultComponent,
     DeleteProductComponent,
-    SearchResultCategoryComponent
+    SearchResultCategoryComponent,
+    SearchResultTagComponent
       
   ],
   imports: [

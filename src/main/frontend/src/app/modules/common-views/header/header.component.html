@@ -58,9 +58,6 @@
 
   <div class="collapse navbar-collapse" id="navbar_main">
     <ul class="navbar-nav">
-      <!-- <li class="nav-item">
-        <a class="nav-link ps-0" href="#"> Categories </a>
-      </li> -->
       <li class="nav-item dropdown">
         <a class="dropdown-toggle nav-link" href="#" data-bs-toggle="dropdown">
           Phân loại
@@ -68,6 +65,16 @@
         <ul class="dropdown-menu">
           <li *ngFor="let category of categoryList">
             <a class="dropdown-item" (click)="searchByCategory(category.id)" style="cursor: pointer;">{{category.name}}</a>
+          </li>
+        </ul>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="dropdown-toggle nav-link" href="#" data-bs-toggle="dropdown">
+          Nhãn
+        </a>
+        <ul class="dropdown-menu">
+          <li *ngFor="let tag of tagList">
+            <a class="dropdown-item" (click)="searchByTag(tag.id)" style="cursor: pointer;">{{tag.name}}</a>
           </li>
         </ul>
       </li>

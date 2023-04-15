@@ -11,6 +11,7 @@ import { SellerProductListComponent } from './seller-product-list/seller-product
 import { SellerSearchResultComponent } from './seller-search-result/seller-search-result.component';
 import { VerifyEmailComponent } from './verify-email/verify-email.component';
 import { SearchResultCategoryComponent } from './search-result-category/search-result-category.component';
+import { SearchResultTagComponent } from './search-result-tag/search-result-tag.component';
 
 const routes: Routes = [{
   path: 'login',
@@ -61,7 +62,11 @@ const routes: Routes = [{
   }, {
     path: 'category/:categoryId',
     component: SearchResultCategoryComponent,
-    title: 'Tìm kiếm theo phân loại'
+    title: 'Tìm kiếm sản phẩm'
+  }, {
+    path: 'tag/:tagId',
+    component: SearchResultTagComponent,
+    title: 'Tìm kiếm sản phẩm'
   }
 ];
 
