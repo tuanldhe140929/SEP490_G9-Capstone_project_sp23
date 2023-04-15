@@ -191,13 +191,14 @@
             <div class="col-lg-4 col-md-6 col-sm-6" *ngFor="let product of productList | paginate: {itemsPerPage: itemsPerPage, currentPage: p}">
               <figure class="card card-product-grid" style="border-radius:0px;">
                 <div class="img-wrap">
-                  <img [src]="getCoverImage(product)" style="border-radius:0px;">
+                  <img [src]="getCoverImage(product)" (click)="openDetails(product.id)" style="border-radius:0px; cursor: pointer;">
                 </div>
                 <figcaption class="info-wrap border-top">
                   <div class="price-wrap">
                     <strong class="price">{{product.name}}</strong>
+                    <p class="title mb-2">{{product.category.name}}</p>
                   </div> <!-- price-wrap.// -->
-                  <p class="title mb-2">{{product.price}} $</p>
+                  <strong><p class="title mb-2">${{product.price}}</p></strong>
                   <a (click)="openDetails(product.id)" class="btn viewProduct">Chi tiết</a>
                   <a *ngIf="!sellerStatus" href="#" class="btn btn-light btn-icon"> <i class="fa fa-shopping-cart"></i> </a>
                   <a *ngIf="sellerStatus" (click)="redirectUpdatePage(product.id)" class="btn btn-light btn-icon"> <i class="fa fa-pen"></i> </a>

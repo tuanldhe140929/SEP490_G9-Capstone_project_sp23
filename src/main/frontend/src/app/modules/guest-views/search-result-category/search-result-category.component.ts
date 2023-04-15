@@ -123,4 +123,16 @@ export class SearchResultCategoryComponent {
       this.checkedTags = this.checkedTags.filter(v => v !== value);
     }
   }
+
+  searchByCategory(categoryId: number){
+    this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
+      this.router.navigate(['category/'+categoryId]);
+    })
+  }
+
+  searchBySeller(sellerId: number){
+    this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
+      this.router.navigate(['collection/'+sellerId]);
+    })
+  }
 }

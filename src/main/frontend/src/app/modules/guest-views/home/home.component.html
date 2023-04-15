@@ -204,9 +204,10 @@
             <img height="250" class="mix-blend-multiply" [src]="getCoverImage(product)"> 
           </a>
           <figcaption class="pt-2">
-            <strong class="price">{{product.price}}$</strong> <!-- price.// -->
-            <a (click)="redirectProductDetails(product)" style="cursor: pointer;" class="title text-truncate">{{product.name}}</a>
-            <small class="text-muted">{{product.category.name}}</small>
+            <strong class="price">{{product.name}}</strong>
+            <p class="title mb-2"><a (click)="searchByCategory(product.category.id)" style="cursor: pointer;">{{product.category.name}}</a> của <a (click)="searchBySeller(product.seller.id)" style="cursor: pointer;">{{product.seller.username}}</a></p>
+            <strong><p class="text-muted">${{product.price}}</p></strong>
+            <a (click)="redirectProductDetails(product)" class="btn viewProduct">Chi tiết</a>
           </figcaption>
         </figure>
       </div> 
