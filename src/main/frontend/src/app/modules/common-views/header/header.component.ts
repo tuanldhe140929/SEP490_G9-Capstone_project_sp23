@@ -11,6 +11,8 @@ import { AccountService } from 'src/app/services/account.service';
 import { SellerService } from 'src/app/services/seller.service';
 import { Seller } from 'src/app/dtos/Seller';
 import { User } from '../../../dtos/User';
+import { CategoryService } from 'src/app/services/category.service';
+import { Category } from 'src/app/dtos/Category';
 
 const removeMark = require("vietnamese-tonemarkless");
 
@@ -26,6 +28,7 @@ export class HeaderComponent implements OnInit {
   user: User = new User;
   productList: Product[] = [];
   sellerList: Seller[] = [];
+  categoryList: Category[] = [];
   nameList: string[] = [];
   sellerNameList: string[] = [];
   filteredOptions: Observable<string[]>;
@@ -39,7 +42,8 @@ export class HeaderComponent implements OnInit {
     private userService: UserService,
     private router: Router,
     private productService: ProductService,
-    private sellerService: SellerService) {
+    private sellerService: SellerService,
+    private categoryService: CategoryService) {
 
   }
 
@@ -59,6 +63,7 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.getAllCategories();
     this.productService.getFilteredProducts("",0,[],0,1000).subscribe(
       data => {
         this.productList = data;
@@ -112,7 +117,7 @@ export class HeaderComponent implements OnInit {
   toSearchResult() {
     if(this.chosenOption == "PRODUCTS"){
       this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
-        this.router.navigate(['/result', this.keyword])
+        this.router.navigate(['/result', this.keyword]);
       })
     }else{
       this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
@@ -141,5 +146,19 @@ export class HeaderComponent implements OnInit {
 
   onChangeSearch(event: any){
     this.chosenOption = (event.target as HTMLSelectElement).value;
+  }
+
+  getAllCategories(){
+    this.categoryService.getAllCategories().subscribe(
+      data => {
+        this.categoryList = data;
+      }
+    )
+  }
+
+  searchByCategory(categoryid: number){
+    this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
+      this.router.navigate(['category/'+categoryid]);
+    })
   }
 }
