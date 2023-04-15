@@ -27,5 +27,7 @@ public interface ProductService {
 	List<License> getAllLicense();
 	
 	List<Product> getAllProductsByReportStatus(String reportStatus);
+
+	Product createNewProduct();
 	
 }

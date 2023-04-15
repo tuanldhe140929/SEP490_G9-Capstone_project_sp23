@@ -10,6 +10,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
@@ -17,30 +18,73 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.SEP490_G9.common.Constant;
 import com.SEP490_G9.configs.TestConfig;
+import com.SEP490_G9.entities.Account;
 import com.SEP490_G9.entities.Product;
+import com.SEP490_G9.entities.Role;
 import com.SEP490_G9.entities.Seller;
+import com.SEP490_G9.repository.AccountRepository;
 import com.SEP490_G9.repository.ProductRepository;
+import com.SEP490_G9.repository.RoleRepository;
 import com.SEP490_G9.repository.SellerRepository;
 import com.SEP490_G9.repository.UserRepository;
+import com.SEP490_G9.service.serviceImpls.AccountServiceImpl;
 import com.SEP490_G9.service.serviceImpls.SellerServiceImpl;
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @DataJpaTest
 @RunWith(SpringRunner.class)
 @Import(TestConfig.class)
 class SellerServiceTest {
-
+	@Mock
+	AccountRepository accountRepo;
+	
 	@Autowired
 	SellerRepository sellerRepo;
 	
 	@Autowired
 	UserRepository userRepo;
+
+	@InjectMocks
+	AccountServiceImpl accountServiceImpl;
 	
 	@Autowired
 	ProductRepository productRepo;
 	
 	@InjectMocks
 	SellerServiceImpl sellerImpl;
+	
+	@Mock
+	RoleRepository roleRepo;
+	
+	@Test 
+	void testGetAllSeller() {
+		Role sellerRoleInDB = new Role(4, "ROLE_SELLER");
+		when(roleRepo.findById(Constant.SELLER_ROLE_ID)).thenReturn(sellerRoleInDB);
+
+		List<Role> sellerRole = new ArrayList<>();
+		Role role = roleRepo.findById(Constant.SELLER_ROLE_ID);
+		sellerRole.add(role);
+
+		List<Account> expected = new ArrayList<>();
+
+		Account sellerAccount = new Account();
+		sellerAccount.setRoles(sellerRole);
+		sellerAccount.setId((long) 1);
+		expected.add(sellerAccount);
+
+		Account sellerAccount2 = new Account();
+		sellerAccount2.setRoles(sellerRole);
+		sellerAccount2.setId((long) 1);
+		expected.add(sellerAccount2);
+
+		when(accountRepo.findByRolesIn(sellerRole)).thenReturn(expected);
+
+		int expectedSize = 1;
+		List<Account> result = accountServiceImpl.getAllStaffs();
+		assertThat(result).isEqualTo(expected);
+		assertThat(result.size()).isEqualTo(2);
+	}
 	
 	@Test
 	void testGetSellerById() {
@@ -73,5 +117,6 @@ class SellerServiceTest {
 		Seller result = sellerImpl.getSellerByAProduct((long)1);
 		
 	}
+	
 
 }

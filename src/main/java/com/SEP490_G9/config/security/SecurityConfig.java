@@ -40,40 +40,98 @@ public class SecurityConfig {
 	JwtRequestFilter filter;
 
 	private String[] publicApis= {
-			"account/login",
-			"account/logout",
-			"account/resetPassword",
-			"user/register",
-			"user/loginWithGoogle",
-			"user/sendVerifyEmail",
-			"verifyEmail/**"
+			"/account/login",
+			"/account/logout",
+			"/account/resetPassword",
+			"/user/register",
+			"/user/loginWithGoogle",
+			"/user/sendVerifyEmail",
+			"/user/verifyEmail/**",
+			"/category/categories",
+			"/category/addCategory",
+			"/category/updateCategory/**",
+			"/productDetails/getProductsForSearching",
+			"/productDetails/getAllProducts",
+			"/productDetails/getPublishedProductsBySeller",
+			"/productDetails/getActiveVersion",
+			"/productDetails/getByIdAndVersion",
+			"/productDetails/GetAllProductForHomePage",
+			"/productDetails/getTotalPurchasedCount",
+			"/productDetails/allProductsLatestVers",
+			"/refreshToken/refresh",
+			"/seller/getSeller",
+			"/seller/getSellersForSearching",
+			"/seller/createNewSeller",
+			"/seller/getSellerByPaypalEmail",
+			"/public/serveMedia/image",
+			"/public/serveMedia/video",
+			"/violation/getAllVioTypes",
+			"/product/getProductsCountBySellerId",
+			"/user/getUserInfo",
+			"private/manageTag/tags",
+			"/user/getAllUsers"
 			};
 	
 	private String[] userApis= {
-			"user/getUserInfo",
-			"user/changeAccountPassword",
-			"user/uploadProfileImage",
-			"user/changeAccountInfo",
-			"private/cart/add/**",
-			"private/cart/remove/**",
-			"getCurrentCartDTO",
-			"removeAll/**",
-			"isUserPurchasedProduct"
+			"/user/changeAccountPassword",
+			"/user/uploadProfileImage",
+			"/user/changeAccountInfo",
+			"/private/cart/add/**",
+			"/private/cart/remove/**",
+			"/getCurrentCartDTO",
+			"/removeAll/**",
+			"/isUserPurchasedProduct",
+			"/product/getLicense",
+			"/product/getProductsCountBySellerId",
+			"/productDetails/getActiveVersionForDownload",
+			"/productFile/generateDownloadToken/**",
+			"/productFile/download",
+			"/report/sendReport",
+			"/repott/getByProductUserVersion",
+			"/transaction/purchase",
+			"/transaction/reviewTransaction",
+			"/transaction/cancel/**",
+			"/transaction/executeTransaction",
+			"/transaction/checkTransactionStatus",
+			"/transaction/getPurchasedProductList",
 			};
 	
-	private String[] sellerApis= {"",
-	""};
+	private String[] sellerApis= {
+			"/payout/getPayoutHistory",
+			"/product/createNewProduct",
+			"/product/deleteProduct/**",
+			"/product/activeVersion",
+			"/product/getProductDetails",
+			"/productDetails/getProductsBySellerForSeller",
+			"/productDetails/getAllVersion",
+			"/productDetails/verifyProduct",
+			"/productDetails/cancelVerifyProduct",
+			"/productDetails/createNewVersionV2",
+			"/productDetails/updateProduct",
+			"/productFile/uploadProductFile",
+			"/productFile/deleteProductFile",
+			
+			};
 	
 	private String[] adminApis= {
-			"account/staffs",
-			"account/addStaff",
-			"account/updateStaffStatus",
-			"account/allAccounts",
-			"user/getAllUsers"
+			"/account/staffs",
+			"/account/addStaff",
+			"/account/updateStaffStatus",
+			"/account/allAccounts"
+			
 			};
 	
-	private String[] staffApis= {"",
-	""};
+	private String[] staffApis= {
+			"/product/updateProductApprovalStatus",
+			"/product/getProductsByReportStatus",
+			"/productDetails/getProductsByReportStatus",
+			"/productDetails/getByApprovalStatus",
+			"/productDetails/updateApprovalStatus",
+			"/report/updateReportStatus",
+			"/report/getByProductAndStatus",
+			"/seller/reportedsellerlist",
+			"/violation/addViolation"
+			};
 	@Bean
 	public SecurityFilterChain setfilterChains(HttpSecurity http) throws Exception {
 
@@ -91,11 +149,11 @@ public class SecurityConfig {
 
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED);
 
-		http.authorizeHttpRequests().requestMatchers("/**").permitAll()
-//		.and().authorizeHttpRequests().requestMatchers(userApis).hasAnyRole("USER")
-//		.and().authorizeHttpRequests().requestMatchers(sellerApis).hasAnyRole("SELLER")
-//		.and().authorizeHttpRequests().requestMatchers(adminApis).hasAnyRole("ADMIN")
-//		.and().authorizeHttpRequests().requestMatchers(staffApis).hasAnyRole("STAFF","ADMIN")
+		http.authorizeHttpRequests().requestMatchers(publicApis).permitAll()
+		.and().authorizeHttpRequests().requestMatchers(userApis).hasAnyRole("USER","STAFF")
+		.and().authorizeHttpRequests().requestMatchers(sellerApis).hasAnyRole("SELLER")
+		.and().authorizeHttpRequests().requestMatchers(adminApis).hasAnyRole("ADMIN")
+		.and().authorizeHttpRequests().requestMatchers(staffApis).hasAnyRole("STAFF","ADMIN")
 		.and().httpBasic().authenticationEntryPoint(authenEntryPoint)
 		.and().authorizeHttpRequests().anyRequest().authenticated()
 		.and().authenticationProvider(authProvider)

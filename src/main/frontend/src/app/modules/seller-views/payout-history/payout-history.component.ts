@@ -20,9 +20,12 @@ export class PayoutHistoryComponent {
     private payoutService: PayoutService,
   
   ){}
- 
+  totalLength:any;
+  page:number = 1;
+  showpost:any = [];
   ngOnInit(): void {
     this.getPayoutHistory();
+    this.totalLength = this.showpost.length;
  } 
 
  getPayoutHistory(){

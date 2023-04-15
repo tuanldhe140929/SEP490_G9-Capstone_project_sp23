@@ -13,6 +13,7 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
 import {SelectionModel} from '@angular/cdk/collections';
 import { ReportDescriptionComponent } from '../report-description/report-description.component';
+import { Product } from 'src/app/dtos/Product';
 
 interface ReportEntity{
   userId: number,
@@ -31,12 +32,14 @@ interface ReportEntity{
   styleUrls: ['./update-report-status.component.css']
 })
 export class UpdateReportStatusComponent implements AfterViewInit{
-  displayedColumns: string[] = ['username', 'version', 'violationType', 'description','checkbox'];
+  displayedColumns: string[] = ['username',  'violationType', 'description','checkbox'];
   reportList: Report[] = [];
   userList: User[] = [];
   violationTypeList: ViolationType[] = [];
   reportEntityList: ReportEntity[] = [];
   reported: boolean = false;
+  currentVer: string;
+  latestVer: Product;
   dataSource: MatTableDataSource<ReportEntity>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   selection = new SelectionModel<ReportEntity>(true, []);
@@ -46,14 +49,16 @@ export class UpdateReportStatusComponent implements AfterViewInit{
     private reportService: ReportService,
     private userService: UserService,
     private violationService: ViolationService,
+    private productService: ProductService,
     private dialog: MatDialog,
     private toastr: ToastrService 
   ){
-    this.reportService.getByProductsAllVersions(dataInjected.productId, dataInjected.status).subscribe(reports => {
+    this.reportService.getByProductDetailsAndStatus(dataInjected.productId, dataInjected.version, dataInjected.status).subscribe(reports => {
       this.reportList = reports
       this.userService.getAllUsers().subscribe(users => {
         this.userList = users
         this.violationService.getAllTypes().subscribe(violationtypes => {
+          this.currentVer = dataInjected.version;
           this.violationTypeList = violationtypes
           const reportEntities : ReportEntity[] = reports.map((report: Report) => {
             const user = users.find((u: User) => {u.id === report.user.id});
@@ -98,12 +103,10 @@ export class UpdateReportStatusComponent implements AfterViewInit{
 
   updateStatus(){
     let data = this.dataSource.data;
-    let versionList = [];
     let userIdList = [];
     let statusList = [];
     for(let i = 0; i<data.length;i++){
       let userData = data[i];
-      versionList.push(userData.version);
       userIdList.push(userData.userId);
       statusList.push(userData.checked ? "ACCEPTED":"DENIED");
     }

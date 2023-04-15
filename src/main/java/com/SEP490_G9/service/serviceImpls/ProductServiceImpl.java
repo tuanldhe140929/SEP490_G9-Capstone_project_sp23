@@ -158,8 +158,8 @@ public class ProductServiceImpl implements ProductService {
 	public List<Product> getProductsBySellerId(Long sellerId) {
 		List<Product> products = productRepository.findBySellerId(sellerId);
 		List<Product> activeProducts = new ArrayList<>();
-		for(Product p: products) {
-			if(p.isEnabled()) {
+		for (Product p : products) {
+			if (p.isEnabled()) {
 				activeProducts.add(p);
 			}
 		}
@@ -292,6 +292,51 @@ public class ProductServiceImpl implements ProductService {
 		}
 		List<Product> finalResult = allReportProducts.stream().distinct().toList();
 		return finalResult;
+	}
+
+	@Override
+	public Product createNewProduct() {
+		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
+				.getAccount();
+		Seller seller = sellerService.getSellerById(account.getId());
+
+		int count = 0;
+		for (Product p : seller.getProducts()) {
+			if (p.isEnabled()) {
+				count++;
+			}
+		}
+		if (count == 20) {
+			throw new IllegalArgumentException("Exeeded max number of product");
+		}
+		Product product = new Product();
+		product.setEnabled(true);
+		product.setDraft(false);
+		product.setSeller(seller);
+		product.setActiveVersion(FIRST_PRODUCT_VERSION);
+		product = productRepository.save(product);
+
+		ProductDetails firstVersion = new ProductDetails();
+		firstVersion.setFlagged(false);
+		firstVersion.setProduct(product);
+		firstVersion.setVersion(FIRST_PRODUCT_VERSION);
+		firstVersion.setCreatedDate(new Date());
+		firstVersion.setLastModified(new Date());
+		firstVersion.setApproved(Status.NEW);
+		ProductDetails savedfristVersion = productDetailsRepo.save(firstVersion);
+
+		String coverImageDestination = getCoverImageLocation(firstVersion);
+		String filesDestination = getProductFilesLocation(firstVersion);
+		String previewsDestinations = getPreviewsLocation(firstVersion);
+		File folder = new File(ROOT_LOCATION + coverImageDestination);
+		folder.mkdirs();
+		folder = new File(ROOT_LOCATION + filesDestination);
+		folder.mkdirs();
+		folder = new File(ROOT_LOCATION + previewsDestinations);
+		folder.mkdirs();
+		
+		product.getProductDetails().add(savedfristVersion);
+		return product;
 	}
 
 }

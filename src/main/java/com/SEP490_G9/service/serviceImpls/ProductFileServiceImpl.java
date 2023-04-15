@@ -176,21 +176,21 @@ public class ProductFileServiceImpl implements ProductFileService {
 			throw new FileUploadException("File size:" + productFile.getSize());
 		}
 		int fileCount = 0;
-		for(ProductFile file: productDetails.getFiles()) {
-			if(file.isEnabled()==true) {
+		for (ProductFile file : productDetails.getFiles()) {
+			if (file.isEnabled() == true) {
 				fileCount++;
 			}
 		}
 		if ((fileCount + 1) > 10) {
 			throw new FileUploadException("Exeeded max file count");
 		}
-		
+
 		long totalSize = 0;
-		for(ProductFile file: productDetails.getFiles()) {
+		for (ProductFile file : productDetails.getFiles()) {
 			totalSize += file.getSize();
 		}
 		totalSize += productFile.getSize();
-		if(totalSize >= 2000 * 1024 * 1024) {
+		if (totalSize >= 2000 * 1024 * 1024) {
 			throw new FileUploadException("Exeeded max storage for version");
 		}
 
@@ -390,7 +390,16 @@ public class ProductFileServiceImpl implements ProductFileService {
 	public String generateDownloadToken(Long userId, Long productId) {
 		String token = "";
 		boolean isPurchased = cartService.isUserPurchasedProduct(userId, productId);
-		if (isPurchased) {
+		boolean productIsFree = false;
+		Product p = productRepo.findById(productId).orElseThrow();
+		for (ProductDetails pd : p.getProductDetails()) {
+			if (pd.getVersion().equalsIgnoreCase(p.getActiveVersion())) {
+				if (pd.getPrice() == 0) {
+					productIsFree = true;
+				}
+			}
+		}
+		if (isPurchased || productIsFree) {
 			token = downloadTokenUtil.generateToken(userId, productId);
 		} else {
 			throw new IllegalAccessError("You don't have right to download this product");

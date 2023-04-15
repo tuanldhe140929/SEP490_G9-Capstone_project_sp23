@@ -116,27 +116,58 @@ public class ReportServiceImpl implements ReportService {
 	}
 
 	@Override
-	public List<Report> updateReportStatus(long productId, List<String> versionList , List<Long> userIdList, List<String> statusList) {
+	public List<Report> updateReportStatus(long productId, String version , List<Long> userIdList, List<String> statusList) {
+//		List<Report> updatedList = new ArrayList<>();
+//		for(int i=0;i<userIdList.size();i++) {
+//			String version = versionList.get(i);
+//			long userId = userIdList.get(i);
+//			String status = statusList.get(i);
+//			Report report = getByProductUserVersion(productId, userId, version);
+//			report.setStatus(status);
+//			reportRepository.save(report);
+//			Product product = productRepository.findById(productId).get();
+//			ProductDetails pd = productDetailsService.getByProductIdAndVersion(productId, version);
+//			for(String str: statusList) {
+//				if(str.equalsIgnoreCase("ACCEPTED")) {
+//					product.setEnabled(false);
+//					pd.setFlagged(true);
+//					break;
+//				}
+//			}
+//			productDetailsRepository.save(pd);
+//			productRepository.save(product);
+//			updatedList.add(report);
+//		}
+//		return updatedList;
 		List<Report> updatedList = new ArrayList<>();
 		for(int i=0;i<userIdList.size();i++) {
-			String version = versionList.get(i);
 			long userId = userIdList.get(i);
 			String status = statusList.get(i);
 			Report report = getByProductUserVersion(productId, userId, version);
 			report.setStatus(status);
-			reportRepository.save(report);
-			Product product = productRepository.findById(productId).get();
-			ProductDetails pd = productDetailsService.getByProductIdAndVersion(productId, version);
-			for(String str: statusList) {
-				if(str.equalsIgnoreCase("ACCEPTED")) {
-					product.setEnabled(false);
-					pd.setFlagged(true);
-					break;
-				}
-			}
-			productDetailsRepository.save(pd);
-			productRepository.save(product);
 			updatedList.add(report);
+			reportRepository.save(report);
+		}
+		Product product = productRepository.findById(productId).get();
+		ProductDetails pd = productDetailsService.getByProductIdAndVersion(productId, version);
+		ProductDetails latestPd = productDetailsService.getActiveVersion(productId);
+		int accepted = 0;
+		for(String str: statusList) {
+			if(str.equalsIgnoreCase("ACCEPTED")) {
+				accepted = accepted + 1;
+			}
+		}
+		if(accepted>0) {
+			if(latestPd.getVersion().equalsIgnoreCase(version)) {
+				pd.setFlagged(true);
+				product.setEnabled(false);
+				productDetailsRepository.save(pd);
+				productRepository.save(product);
+			}
+			if(!latestPd.getVersion().equalsIgnoreCase(version)) {
+				pd.setFlagged(true);
+				productDetailsRepository.save(pd);
+			}
 		}
 		return updatedList;
 	}
@@ -171,18 +202,18 @@ public class ReportServiceImpl implements ReportService {
 	}
 
 	@Override
-	public List<Report> getByProductAllVersions(long productId, String status) {
+	public List<Report> getByProductDetailsAndStatus(long productId, String version, String status) {
 		List<Report> allReports = getAllReports();
 		List<Report> finalResult = new ArrayList<>();
 		if(status.equalsIgnoreCase("PENDING")) {
 			for(Report report: allReports) {
-				if(report.getProduct().getId()==productId&& report.getStatus().equalsIgnoreCase("PENDING")) {
+				if(report.getProduct().getId()==productId&& report.getVersion().equals(version) && report.getStatus().equalsIgnoreCase("PENDING")) {
 					finalResult.add(report);
 				}
 			}
 		}else {
 			for(Report report: allReports) {
-				if(report.getProduct().getId()==productId&& (report.getStatus().equalsIgnoreCase("ACCEPTED")||report.getStatus().equalsIgnoreCase("DENIED"))) {
+				if(report.getProduct().getId()==productId&& report.getVersion().equals(version) && (report.getStatus().equalsIgnoreCase("ACCEPTED")||report.getStatus().equalsIgnoreCase("DENIED"))) {
 					finalResult.add(report);
 				}
 			}

@@ -88,14 +88,6 @@
                         <p style="min-width: 150px; font-weight: 600;">Ngày tham gia</p>
                         <p>Ngày {{SellerJoinedDate}}</p>
                       </div>
-                      <div style="display:flex;">
-                        <p style="min-width: 150px; font-weight: 600;">Số lượng sản phẩm</p>
-                        <p>{{sellerTotalProductCount}}</p>
-                      </div>
-                      <div style="display:flex;">
-                        <p style="min-width: 150px; font-weight: 600;">Tổng số đánh giá</p>
-                        <p>{{product.seller.username}}</p>
-                      </div>
 
                     </article>
                     <article id="tab_shipping" class="tab-pane card-body">
@@ -179,10 +171,10 @@
 
           <hr>
           <div class="row cart" style="display:flex; height:60px;">
-            <div *ngIf="!isOwner && !isPurchased" class="add_to_cart" style="width:80%; padding-right:0; color:lightgrey;"><button class="add_to_cart_btn" (click)="addToCart()" style="letter-spacing: 2px;">Thêm vào giỏ hàng</button></div>
-            <div *ngIf="!isOwner && isPurchased" class="add_to_cart" style="width:80%; padding-right:0; color:lightgrey;"><button class="add_to_cart_btn" (click)="generateDownloadToken()" style="letter-spacing: 2px;">Tải xuống</button></div>
+            <div *ngIf="!isOwner && !isPurchased && product.price!=0" class="add_to_cart" style="width:80%; padding-right:0; color:lightgrey;"><button class="add_to_cart_btn" (click)="addToCart()" style="letter-spacing: 2px;">Thêm vào giỏ hàng</button></div>
+            <div *ngIf="(!isOwner && isPurchased) || (product.price==0)" class="add_to_cart" style="width:80%; padding-right:0; color:lightgrey;"><button class="add_to_cart_btn" (click)="generateDownloadToken()" style="letter-spacing: 2px;">Tải xuống</button></div>
 
-            <div *ngIf="!isOwner && !isPurchased" class="buy_now" style="width: 20%; color: lightgrey;"><button class="buy_now_btn" style="letter-spacing: 2px;" (click) ="buyNow()">Mua ngay</button></div>
+            <div *ngIf="!isOwner && !isPurchased && product.price!=0" class="buy_now" style="width: 20%; color: lightgrey;"><button class="buy_now_btn" style="letter-spacing: 2px;" (click) ="buyNow()">Mua ngay</button></div>
           </div>
           <div class="row files_metadata" style="margin-top:20px;">
             <div class="" style="font-weight:600; font-size:20px;">Các tệp có thể tải xuống</div>

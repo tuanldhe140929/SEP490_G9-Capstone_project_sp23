@@ -53,4 +53,11 @@ export class StorageService {
     }
     return false;
   }
+  public getUserId(): number | null {
+    const authResponse = this.getAuthResponse();
+    if (authResponse && authResponse.userId) {
+      return authResponse.userId;
+    }
+    return null;
+  }
 }

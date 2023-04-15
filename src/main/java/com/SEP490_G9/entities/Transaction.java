@@ -57,6 +57,9 @@ public class Transaction {
 	@Column(name = "paypal_id", nullable = false)
 	private String paypalId;
 
+	@Column(name = "expired_date")
+	private Date expiredDate;
+	
 	@Transient
 	private String approvalUrl;
 
@@ -153,6 +156,14 @@ public class Transaction {
 
 	public void setFee(TransactionFee fee) {
 		this.fee = fee;
+	}
+
+	public Date getExpiredDate() {
+		return expiredDate;
+	}
+
+	public void setExpiredDate(Date expiredDate) {
+		this.expiredDate = expiredDate;
 	}
 
 	@Override

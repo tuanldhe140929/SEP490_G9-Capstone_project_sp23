@@ -21,6 +21,9 @@ public class CustomUserDetailsServiceImpl implements UserDetailsService {
 	public UserDetailsImpl loadUserByUsername(String name) throws UsernameNotFoundException {
 		Account account = null;
 		account = accountRepository.findByEmail(name);
+		if(account==null) {
+			throw new IllegalAccessError("Wrong credentials");
+		}
 		UserDetailsImpl customUserDetail = new UserDetailsImpl();
 		customUserDetail.setAccount(account);
 		return customUserDetail;

@@ -12,7 +12,7 @@ public interface AccountService {
 
 	Account getByRefreshToken(RefreshToken findByToken);
 
-	Account getById(Long id);
+	Account getById(long i);
 
 	Account getByEmail(String email);
 
@@ -27,4 +27,6 @@ public interface AccountService {
 	String resetPassword(Account account);
 	
 	List<Account> getAllAccounts();
+
+	Account findById(int id);
 }

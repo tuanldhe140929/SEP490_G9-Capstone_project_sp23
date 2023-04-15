@@ -177,4 +177,11 @@ export class ProductService {
       }
     });
   }
+
+  public getCurrentVersion(productId: number): Observable<string>{
+    const params = {
+      productId: productId
+    }
+    return this.httpClient.get<string>(baseUrl+'/getCurrentVersion',{params});
+  }
 }

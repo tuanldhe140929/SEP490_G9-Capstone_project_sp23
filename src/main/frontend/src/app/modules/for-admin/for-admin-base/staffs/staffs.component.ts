@@ -38,7 +38,7 @@ export class StaffsComponent implements AfterViewInit {
         for (let i = 0; i < this.staffList.length; i++) {
           this.emailList.push(this.staffList[i].email);
         }
-        console.log(this.emailList.length)
+        console.log(response)
       }
     )
 

@@ -17,20 +17,18 @@ import { ToastrModule } from 'ngx-toastr';
 import { timeout } from 'rxjs';
 import { MatSortModule } from '@angular/material/sort';
 import { DataTablesModule } from 'angular-datatables';
-import { StaffViewsModule } from './modules/staff-views/staff-views.module';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { UserViewsModule } from './modules/user-views/user-views.module';
 import { SellerViewsModule } from './modules/seller-views/seller-views.module';
 import { CommonViewsModule } from './modules/common-views/common-views.module';
 import { GuestViewsModule } from './modules/guest-views/guest-views.module';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { AddviolationComponent } from './modules/staff-views/staff-base/addviolation/addviolation.component';
+import { StaffViewsModule } from './modules/staff-views/staff-views.module';
 
 
 @NgModule({
   declarations: [
-    AppComponent,
-    AddviolationComponent
+    AppComponent
   ],
   imports: [
     BrowserModule,
@@ -56,11 +54,11 @@ import { AddviolationComponent } from './modules/staff-views/staff-base/addviola
         progressBar: true
       }
     ),
-    StaffViewsModule,
     UserViewsModule,
     SellerViewsModule,
     CommonViewsModule,
     GuestViewsModule,
+    StaffViewsModule,
     NgxPaginationModule
   ],
   providers: [

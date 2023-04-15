@@ -37,4 +37,7 @@ export class TransactionService {
       }
     })
   }
+  public getPurchasedProductList(){
+    return this.httpClient.get<any>(baseUrl+"/getPurchasedProductList");
+  }
 }

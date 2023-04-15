@@ -71,6 +71,8 @@ export class ReportedProductDetailsComponent implements OnInit {
   report: Report;
   dots: number[] = [0];
   isOwner: boolean;
+  latestVer: Product;
+  isLatestVer: boolean;
 
   displayPreviews: DisplayPreview[] = [];
   constructor(
@@ -92,6 +94,11 @@ export class ReportedProductDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.getProduct();
+    // this.productService.getActiveVersion(this.data.productId).subscribe(
+    //   data => {
+    //     this.latestVer = data;
+    //   }
+    // )
     this.productId = this.data.productId;
   }
 
@@ -157,7 +164,7 @@ export class ReportedProductDetailsComponent implements OnInit {
     if (productIdAndName) {
       var productId = productIdAndName;
 
-      this.productService.getActiveVersion(this.data.productId).subscribe(
+      this.productService.getProductByIdAndVersion(this.data.productId, this.data.version).subscribe(
         data => {
           this.product = data;
           if (this.DescriptionTab) {
@@ -337,7 +344,7 @@ export class ReportedProductDetailsComponent implements OnInit {
   }
 
   refresh(productId: number) {
-    this.productService.getProductById(productId).subscribe(
+    this.productService.getProductByIdAndVersion(this.data.productId, this.data.version).subscribe(
       data => {
         this.displayPreviews = [];
         this.product = data;

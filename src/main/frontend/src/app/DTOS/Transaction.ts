@@ -12,7 +12,7 @@ export class Item {
 }
 export enum TransactionStatus{
 	FAILED = "FAILED",COMPLETED="COMPLETED",CREATED="CREATED",
-	CANCELED="CANCELED",APPROVED ="APPROVED"
+	CANCELED="CANCELED",APPROVED ="APPROVED",EXPIRED = "EXPIRED"
 }
 
 export class Payer{

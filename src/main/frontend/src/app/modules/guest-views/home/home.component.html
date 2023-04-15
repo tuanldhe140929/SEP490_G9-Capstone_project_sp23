@@ -200,14 +200,12 @@
       <!-- col end.// -->
       <div class="col-lg-3 col-md-6 col-sm-6" *ngFor="let product of productList | paginate: {itemsPerPage: itemsPerPage, currentPage: p}">
         <figure class="card-product-grid">
-          <a href="#" class="img-wrap rounded bg-gray-light"> 
+          <a (click)="redirectProductDetails(product)" class="img-wrap rounded bg-gray-light" style="cursor: pointer;"> 
             <img height="250" class="mix-blend-multiply" [src]="getCoverImage(product)"> 
           </a>
-           <a (click)="redirectProductDetails(product)" class="btn btn-primary">Chi tiết</a>
           <figcaption class="pt-2">
-            <a href="#" class="float-end btn btn-light btn-icon"> <i class="fa fa-heart"></i> </a>
             <strong class="price">{{product.price}}$</strong> <!-- price.// -->
-            <a href="#" class="title text-truncate">{{product.name}}</a>
+            <a (click)="redirectProductDetails(product)" style="cursor: pointer;" class="title text-truncate">{{product.name}}</a>
             <small class="text-muted">{{product.category.name}}</small>
           </figcaption>
         </figure>

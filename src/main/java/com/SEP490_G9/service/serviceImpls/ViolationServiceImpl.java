@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.SEP490_G9.dto.ViolationDTO;
 import com.SEP490_G9.entities.Violation;
 import com.SEP490_G9.entities.ViolationType;
 import com.SEP490_G9.repository.ViolationRepository;
@@ -21,7 +22,7 @@ public class ViolationServiceImpl implements ViolationService{
 	ViolationTypeRepository vioTypeRepo;
 	
 	@Override
-	public boolean addVio(Violation vio) {
+	public boolean addViolation(Violation vio) {
 		vioRepo.save(vio);
 		return true;
 	}

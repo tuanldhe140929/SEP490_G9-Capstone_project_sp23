@@ -672,8 +672,8 @@ export class UpdateProductComponent implements OnInit {
     }
     const files: File[] = $event.target.files;
     console.log($event.target.files.length);
-    if (this.product.previewPictures.length + files.length > 10) {
-      this.fileError = "Tối đa 10 ảnh";
+    if (this.product.previewPictures.length + files.length > 7) {
+      this.fileError = "Tối đa 7 ảnh";
       this.openFileSizeErrorModal();
     } else {
       if (files) {
@@ -1184,7 +1184,7 @@ export class UpdateProductComponent implements OnInit {
 
 
   exclusiveKey = [13, 32];
-  exclusiveKey2 = [8, 32, 190]
+  exclusiveKey2 = [8, 190, 189]
 
 
   checkInput($event: any) {
@@ -1199,18 +1199,21 @@ export class UpdateProductComponent implements OnInit {
   versionError: string[] = [];
 
   checkInputVersion($event: any) {
-    if (!this.exclusiveKey2.includes($event.keyCode) && $event.keyCode < 48 && ($event.keyCode > 57 && $event.keyCode < 65) && $event.keyCode > 90) {
+    if (!this.exclusiveKey2.includes($event.keyCode)
+      && ($event.keyCode < 48 || ($event.keyCode > 57 && $event.keyCode < 65) || $event.keyCode > 90)) {
+      $event.preventDefault();
+    }
+
+    if (($event.shiftKey && $event.keyCode >= 48 && $event.keyCode <= 57) || (($event.ctrlKey && $event.keyCode == 67) || ($event.ctrlKey && $event.keyCode == 86))) {
       $event.preventDefault();
     }
     let maxLength = 30;
-    let minLength = 3;
-    let a = 's';
-
-    let value = $event.target.value;
     console.log($event.keyCode);
+    let value = $event.target.value;
     if (value.length + 1 > maxLength && $event.keyCode != 8) {
       $event.preventDefault();
-    } this.versionError = [];
+    }
+    this.versionError = [];
 
   }
 

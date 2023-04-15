@@ -43,16 +43,6 @@ export class SearchResultComponent implements OnInit{
 
   getSearchResult(){
     this.keyword = this.activatedRoute.snapshot.paramMap.get('keyword')?.trim().toLowerCase().replace(/\s+/g,' ');;
-    // this.productService.getAllProducts().subscribe(
-    //   data => {
-    //     this.productList = data;
-    //     for(let i=0;i<this.productList.length;i++){
-    //       if(this.productList[i].name.trim().toLowerCase().includes(this.keyword)){
-    //         this.resultList.push(this.productList[i]);
-    //       }
-    //     }
-    //   }
-    // )
     this.productService.getFilteredProducts(this.keyword,0,[],0,1000).subscribe(
       data => {
         this.resultList = data;

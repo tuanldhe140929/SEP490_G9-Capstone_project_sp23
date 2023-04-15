@@ -1,6 +1,7 @@
 package com.SEP490_G9.service.serviceImpls;
 
 import java.io.File;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -270,22 +272,42 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		if (ret == null) {
 			throw new ResourceNotFoundException("Product details", "version", product.getActiveVersion());
 		}
-		
-		Account account = getCurrentAccount();
 
-		if(!account.getId().equals(product.getSeller().getId()) && !isStaff(account)){
-			if(ret.getApproved()!=Status.APPROVED || !ret.getProduct().isEnabled()) {
+		Account account = getCurrentAccount();
+		if (!ret.getProduct().isEnabled()) {
+			throw new ResourceNotFoundException("Product", "id", product.getId());
+		}
+
+		if (account == null) {
+			if (!ret.getApproved().equals(Status.APPROVED)) {
 				throw new IllegalAccessError("Cannot access this resource");
 			}
-		} 
+		} else {
+			if (!ret.getApproved().equals(Status.APPROVED)) {
+				System.out.println(account.getId());
+				if (!isStaff(account) && !ret.getProduct().getSeller().getId().equals(account.getId())) {
+					System.out.println(isStaff(account));
+					System.out.println(ret.getProduct().getSeller().getId());
+					throw new IllegalAccessError("Cannot access this resource");
+				}
+			}
+		}
+
+//		if(!account.getId().equals(product.getSeller().getId()) && !isStaff(account)){
+//			if(ret.getApproved()!=Status.APPROVED || !ret.getProduct().isEnabled()) {
+//				throw new IllegalAccessError("Cannot access this resource");
+//			}
+//		} 
 
 		return ret;
 	}
 
 	public Account getCurrentAccount() {
-		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
-				.getAccount();
-		return account;
+		System.out.println(SecurityContextHolder.getContext().getAuthentication().getName());
+		if (!SecurityContextHolder.getContext().getAuthentication().getName().equalsIgnoreCase("anonymousUser")) {
+			return ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getAccount();
+		}
+		return null;
 	}
 
 	@Override
@@ -340,7 +362,9 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		if (productDetailsRepo.existsByProductIdAndProductVersionKeyVersion(id, newVersion)) {
 			throw new DuplicateFieldException("version", newVersion);
 		}
-
+		if (newVersion.isBlank() || newVersion.isEmpty() || newVersion.length() > 30) {
+			throw new IllegalArgumentException("Not valid version name");
+		}
 		ProductDetails productDetails = getActiveVersion(id);
 		ProductDetails newPD = new ProductDetails();
 		newPD = createProductDetails(productDetails.getProduct(), newVersion);
@@ -489,13 +513,14 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 	public List<ProductDetails> getProductBySellerForSeller(long sellerId, String keyword, int categoryId,
 			List<Integer> tagidlist, int min, int max) {
 		List<ProductDetails> allPd = getAll();
-		List<ProductDetails> allEnabledPd = getByEnabled(allPd);
+		List<ProductDetails> allSellerPd = getBySeller(allPd, sellerId);
+		List<ProductDetails> allEnabledPd = getByEnabled(allSellerPd);
 		List<ProductDetails> allLatestPd = getByLatestVer(allEnabledPd);
 		List<ProductDetails> allKeywordPd = getByKeyword(allLatestPd, keyword);
 		List<ProductDetails> allCategoryPd = getByCategory(allKeywordPd, categoryId);
 		List<ProductDetails> allPricePd = getByPriceRange(allCategoryPd, min, max);
-		List<ProductDetails> allSellerPd = getBySeller(allPricePd, sellerId);
-		List<ProductDetails> finalResult = getByTags(allSellerPd, tagidlist);
+
+		List<ProductDetails> finalResult = getByTags(allPricePd, tagidlist);
 		return finalResult;
 	}
 
@@ -519,39 +544,59 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 	// hien san pham cho nhan vien dua theo trang thai bao cao
 	@Override
 	public List<ProductDetails> getProductsByReportStatus(String status) {
-		List<ProductDetails> finalResult = new ArrayList<>();
+//		List<ProductDetails> finalResult = new ArrayList<>();
+//		List<Report> allReports = reportRepo.findAll();
+//		if (status.equalsIgnoreCase("PENDING")) {
+//			List<ProductDetails> latestVerPd = getAllByLatestVersion();
+//			for (ProductDetails pd : latestVerPd) {
+//				Product product = pd.getProduct();
+//				long productId = product.getId();
+//				String latestVer = product.getActiveVersion();
+//				for (Report report : allReports) {
+//					if (report.getReportKey().getProductId() == productId
+//							&& report.getVersion().equalsIgnoreCase(latestVer)
+//							&& report.getStatus().equalsIgnoreCase("PENDING")) {
+//						finalResult.add(pd);
+//					}
+//				}
+//			}
+//		} else {
+//			List<ProductDetails> allPd = productDetailsRepo.findAll();
+//			for (ProductDetails pd : allPd) {
+//				Product product = pd.getProduct();
+//				long productId = product.getId();
+//				String version = pd.getVersion();
+//				for (Report report : allReports) {
+//					if (report.getReportKey().getProductId() == productId
+//							&& report.getVersion().equalsIgnoreCase(version)
+//							&& (report.getStatus().equalsIgnoreCase("ACCEPTED")
+//									|| report.getStatus().equalsIgnoreCase("DENIED"))) {
+//						finalResult.add(pd);
+//					}
+//				}
+//			}
+//		}
+//		return finalResult;
+		List<ProductDetails> allPd = productDetailsRepo.findAll();
 		List<Report> allReports = reportRepo.findAll();
-		if (status.equalsIgnoreCase("PENDING")) {
-			List<ProductDetails> latestVerPd = getAllByLatestVersion();
-			for (ProductDetails pd : latestVerPd) {
-				Product product = pd.getProduct();
-				long productId = product.getId();
-				String latestVer = product.getActiveVersion();
-				for (Report report : allReports) {
-					if (report.getReportKey().getProductId() == productId
-							&& report.getVersion().equalsIgnoreCase(latestVer)
-							&& report.getStatus().equalsIgnoreCase("PENDING")) {
-						finalResult.add(pd);
-					}
-				}
-			}
-		} else {
-			List<ProductDetails> allPd = productDetailsRepo.findAll();
-			for (ProductDetails pd : allPd) {
-				Product product = pd.getProduct();
-				long productId = product.getId();
-				String version = pd.getVersion();
-				for (Report report : allReports) {
-					if (report.getReportKey().getProductId() == productId
-							&& report.getVersion().equalsIgnoreCase(version)
-							&& (report.getStatus().equalsIgnoreCase("ACCEPTED")
-									|| report.getStatus().equalsIgnoreCase("DENIED"))) {
-						finalResult.add(pd);
-					}
+		List<ProductDetails> result = new ArrayList<>();
+		if(status.equalsIgnoreCase("PENDING")) {
+			for(Report report: allReports) {
+				if(report.getStatus().equals("PENDING")) {
+					ProductDetails pd = getByProductIdAndVersion(report.getProduct().getId(), report.getVersion());
+					result.add(pd);
 				}
 			}
 		}
-		return finalResult;
+		if(status.equalsIgnoreCase("HANDLED")) {
+			for(Report report: allReports) {
+				if(report.getStatus().equals("ACCEPTED")||report.getStatus().equals("DENIED")) {
+					ProductDetails pd = getByProductIdAndVersion(report.getProduct().getId(), report.getVersion());
+					result.add(pd);
+				}
+			}
+		}
+		return result;
 	}
 
 	@Override
@@ -683,5 +728,12 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 			}
 		}
 		return count;
+	}
+
+	@Override
+	public String getCurrentVersion(long productId) {
+		Product product = productRepo.findById(productId).get();
+		String latestVer = product.getActiveVersion();
+		return latestVer;
 	}
 }
