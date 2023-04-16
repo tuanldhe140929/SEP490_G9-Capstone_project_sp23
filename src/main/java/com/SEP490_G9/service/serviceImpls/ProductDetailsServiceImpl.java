@@ -92,9 +92,15 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		List<ProductDetails> latestVerPd = new ArrayList<>();
 		for (ProductDetails pd : listPd) {
 			Product product = pd.getProduct();
-			ProductDetails latestVer = getActiveVersion(product.getId());
-			latestVerPd.add(latestVer);
+			for (ProductDetails productDetails : product.getProductDetails()) {
+				if (productDetails.getVersion().equals(product.getActiveVersion())) {
+					latestVerPd.add(productDetails);
+				}
+			}
+//			ProductDetails latestVer = getActiveVersion(product.getId());
+//			latestVerPd.add(latestVer);
 		}
+		
 		return latestVerPd.stream().distinct().toList();
 	}
 
@@ -496,11 +502,10 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 	public List<ProductDetails> getProductForSearching(String keyword, int categoryid, List<Integer> tagIdList, int min,
 			int max) {
 		List<ProductDetails> allPd = getAll();
-		List<ProductDetails> allApprovedPd = getByApproved(allPd);
+		List<ProductDetails> allLatestPd = getByLatestVer(allPd);
+		List<ProductDetails> allApprovedPd = getByApproved(allLatestPd);
 		List<ProductDetails> allEnabledPd = getByEnabled(allApprovedPd);
-		List<ProductDetails> allPublishedPd = getByPublished(allEnabledPd);
-		List<ProductDetails> allLatestPd = getByLatestVer(allPublishedPd);
-		List<ProductDetails> allKeywordPd = getByKeyword(allLatestPd, keyword);
+		List<ProductDetails> allKeywordPd = getByKeyword(allEnabledPd, keyword);
 		List<ProductDetails> allCategoryPd = getByCategory(allKeywordPd, categoryid);
 		List<ProductDetails> allTagsPd = getByTags(allCategoryPd, tagIdList);
 		List<ProductDetails> finalResult = getByPriceRange(allTagsPd, min, max);
@@ -512,10 +517,10 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 	public List<ProductDetails> getProductBySellerForSeller(long sellerId, String keyword, int categoryId,
 			List<Integer> tagidlist, int min, int max) {
 		List<ProductDetails> allPd = getAll();
-		List<ProductDetails> allSellerPd = getBySeller(allPd, sellerId);
+		List<ProductDetails> allLatestPd = getByLatestVer(allPd);
+		List<ProductDetails> allSellerPd = getBySeller(allLatestPd, sellerId);
 		List<ProductDetails> allEnabledPd = getByEnabled(allSellerPd);
-		List<ProductDetails> allLatestPd = getByLatestVer(allEnabledPd);
-		List<ProductDetails> allKeywordPd = getByKeyword(allLatestPd, keyword);
+		List<ProductDetails> allKeywordPd = getByKeyword(allEnabledPd, keyword);
 		List<ProductDetails> allCategoryPd = getByCategory(allKeywordPd, categoryId);
 		List<ProductDetails> allPricePd = getByPriceRange(allCategoryPd, min, max);
 
@@ -528,11 +533,10 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 	public List<ProductDetails> getProductBySellerForUser(long sellerId, String keyword, int categoryId,
 			List<Integer> tagidlist, int min, int max) {
 		List<ProductDetails> allPd = getAll();
-		List<ProductDetails> allApprovedPd = getByApproved(allPd);
+		List<ProductDetails> allLatestPd = getByLatestVer(allPd);
+		List<ProductDetails> allApprovedPd = getByApproved(allLatestPd);
 		List<ProductDetails> allEnabledPd = getByEnabled(allApprovedPd);
-		List<ProductDetails> allPublishedPd = getByPublished(allEnabledPd);
-		List<ProductDetails> allLatestPd = getByLatestVer(allPublishedPd);
-		List<ProductDetails> allKeywordPd = getByKeyword(allLatestPd, keyword);
+		List<ProductDetails> allKeywordPd = getByKeyword(allEnabledPd, keyword);
 		List<ProductDetails> allCategoryPd = getByCategory(allKeywordPd, categoryId);
 		List<ProductDetails> allPricePd = getByPriceRange(allCategoryPd, min, max);
 		List<ProductDetails> allSellerPd = getBySeller(allPricePd, sellerId);
