@@ -133,6 +133,23 @@ export class UpdateProductComponent implements OnInit {
 
 
   }
+
+
+  public editorConfig = {
+    toolbar: {
+      items: [
+        'heading',
+        '|',
+        'italic',
+        'bold',
+        'bulletedList',
+        'numberedList',
+        'removeFormat',
+        
+      ]
+    }
+  };
+
   getLicenseList() {
     this.productService.getAllLicense().subscribe((data) => {
       this.licenseList = data;
@@ -354,6 +371,7 @@ export class UpdateProductComponent implements OnInit {
           if (this.storageService.getAuthResponse().email != data.seller.email) {
             this.router.navigate(['error']);
           }
+          this.product.price = Number.parseFloat(this.product.price.toFixed(1));
           this.product = data;
           console.log(this.product);
           this.getTagList();
@@ -444,7 +462,7 @@ export class UpdateProductComponent implements OnInit {
           } else {
             this.productCate = -1;
           }
-
+          this.product.price = Number.parseFloat(this.product.price.toFixed(1));
           if (this.product.license != null) {
             this.productLicense = this.product.license.id;
           } else {
@@ -884,6 +902,8 @@ export class UpdateProductComponent implements OnInit {
   }
 
   saveProduct() {
+    console.log("asdasdasdasdas");
+
     this.newProductForm.markAllAsTouched;
     this.newProductForm.markAsDirty;
     if (this.product.name != null)
@@ -951,7 +971,7 @@ export class UpdateProductComponent implements OnInit {
 
 
 
-
+ 
 
     if (this.errors.length == 0) {
 
@@ -961,11 +981,9 @@ export class UpdateProductComponent implements OnInit {
       this.newProductForm.controls.category.setValue(this.typeList[this.productCate - 1]);
       this.newProductForm.controls.license.setValue(this.licenseList[this.productLicense - 1])
       this.newProductForm.controls.details.setValue(this.productDetails);
-      this.newProductForm.controls.price.setValue(this.price.toString());
+      this.newProductForm.controls.price.setValue(this.product.price.toString());
       this.newProductForm.controls.description.setValue(this.product.description);
       this.newProductForm.controls.version.setValue(this.product.version);
-
-
       this.manageProductService.updateProduct(this.newProductForm.value, this.InstructionDetails.value).subscribe(
         (data) => {
           this.product = data;
@@ -1183,12 +1201,12 @@ export class UpdateProductComponent implements OnInit {
   }
 
 
-  exclusiveKey = [13, 32];
+  exclusiveKey = [13, 32,190];
   exclusiveKey2 = [8, 190, 189]
 
 
   checkInput($event: any) {
-    if (this.exclusiveKey.includes($event.keyCode) && $event.keyCode < 48 || $event.keyCode > 57) {
+    if (!this.exclusiveKey.includes($event.keyCode) && ($event.keyCode < 48 || $event.keyCode > 57)) {
       $event.preventDefault();
     }
     this.priceErrorr = [];
@@ -1331,22 +1349,23 @@ export class UpdateProductComponent implements OnInit {
       var priceString = this.formattedPrice.replace(",", "");
       var priceString = priceString.replace("$", "");
       this.price = Number.parseInt(priceString);
-      if (this.price > 1000) {
+      if (this.product.price > 1000) {
         this.errors.push("Số tiền tối đa là 1000$");
       }
 
-      if (this.price < 2) {
+      if (this.product.price < 2) {
         this.errors.push("Số tiền tối thiểu là 2$");
       }
-
-      if (this.price % 1 != 0) {
-        this.errors.push('Số tiền là bội số của 1');
+      console.log(this.product.price*10 % 1);
+      if ((this.product.price * 10 % 1) != 0) {
+        this.errors.push('Số tiền là bội số của 0.1');
       }
     }
 
 
 
 
+    console.log(this.product.price);
 
     if (this.errors.length == 0) {
 
@@ -1356,7 +1375,7 @@ export class UpdateProductComponent implements OnInit {
       this.newProductForm.controls.category.setValue(this.typeList[this.productCate - 1]);
       this.newProductForm.controls.license.setValue(this.licenseList[this.productLicense - 1])
       this.newProductForm.controls.details.setValue(this.productDetails);
-      this.newProductForm.controls.price.setValue(this.price.toString());
+      this.newProductForm.controls.price.setValue(this.product.price.toString());
       this.newProductForm.controls.description.setValue(this.product.description);
       this.newProductForm.controls.version.setValue(this.product.version);
 
@@ -1386,7 +1405,7 @@ export class UpdateProductComponent implements OnInit {
   public verifyProduct() {
     this.productService.verifyProduct(this.product.id, this.product.version).subscribe(
       data => {
-        this.product = data;
+        this.product = data; this.product.price = Number.parseFloat(this.product.price.toFixed(1));
         this.getAllVersionOfProduct(this.product.id);
         this.info = "Bản cập nhật của bạn đang được xử lý";
         this.openInfoModal();
@@ -1399,7 +1418,7 @@ export class UpdateProductComponent implements OnInit {
   public cancelVerifyProduct() {
     this.productService.cancelVerifyProduct(this.product.id, this.product.version).subscribe(
       data => {
-        this.product = data;
+        this.product = data; this.product.price = Number.parseFloat(this.product.price.toFixed(1));
         this.getAllVersionOfProduct(this.product.id);
         this.info = "Bạn có thể tiếp tục cập nhật phiên bản này";
         this.openInfoModal();

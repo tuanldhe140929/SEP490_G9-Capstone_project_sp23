@@ -48,6 +48,9 @@ export class HomeComponent implements OnInit{
       data => {
         console.log(data);
         this.productList = data;
+        for (let i = 0; i < this.productList.length; i++){
+          this.productList[i].price = Number.parseFloat(this.productList[i].price.toFixed(1));
+}
       }
     )
   }

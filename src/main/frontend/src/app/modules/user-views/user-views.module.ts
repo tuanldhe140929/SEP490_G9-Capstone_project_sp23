@@ -7,10 +7,8 @@ import { ChangePasswordComponent } from './change-password/change-password.compo
 import { ProfileComponent } from './profile/profile.component';
 import { AuthGuard } from '../../guards/auth.guard';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CheckoutComponent } from './checkout/checkout.component';
 import { DownloadComponent } from './download/download.component';
 import { CartComponent } from './cart/cart.component';
-import { ThankYouComponent } from './thank-you/thank-you.component';
 import { ReviewTransactionComponent } from './review-transaction/review-transaction.component';
 import { LoadingSpinnerComponent } from '../common-views/loading-spinner/loading-spinner.component';
 import { LoginWithPaypalComponent } from './login-with-paypal/login-with-paypal.component';
@@ -21,10 +19,8 @@ import { NgxPaginationModule } from 'ngx-pagination';
   declarations: [
     ChangePasswordComponent,
     ProfileComponent,
-    CheckoutComponent,
     DownloadComponent,
     CartComponent,
-    ThankYouComponent,
     ReviewTransactionComponent,
     LoginWithPaypalComponent,
     PurchasedProductListComponent

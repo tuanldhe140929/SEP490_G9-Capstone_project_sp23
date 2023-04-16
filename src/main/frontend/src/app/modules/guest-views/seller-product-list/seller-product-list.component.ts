@@ -68,6 +68,10 @@ export class SellerProductListComponent implements OnInit {
           this.productService.getProductsBySellerForSeller(this.sellerid, "", 0, [],0, 1000).subscribe(
             data => {
               this.productList = data;
+              for (let i = 0; i < this.productList.length; i++) {
+                this.productList[i].price = Number.parseFloat(this.productList[i].price.toFixed(1));
+
+              }
               this.sellerStatus = true;
             }
           )
@@ -76,6 +80,10 @@ export class SellerProductListComponent implements OnInit {
             data => {
               console.log(data);
               this.productList = data;
+              for (let i = 0; i < this.productList.length; i++) {
+                this.productList[i].price = Number.parseFloat(this.productList[i].price.toFixed(1));
+
+              }
               this.sellerStatus = false;
             },
             error => {
@@ -196,6 +204,10 @@ export class SellerProductListComponent implements OnInit {
           this.productService.getProductsBySellerForSeller(this.sellerid, this.keyword, this.chosenCategory, this.checkedTags, this.minprice, this.maxprice).subscribe(
             data => {
               this.productList = data;
+              for (let i = 0; i < this.productList.length; i++) {
+                this.productList[i].price = Number.parseFloat(this.productList[i].price.toFixed(1));
+
+              }
               this.sellerStatus = true;
             }
           )
@@ -290,7 +302,7 @@ export class SellerProductListComponent implements OnInit {
     if (this.seller!=null && this.seller.avatar != null && this.seller.id != -1) {
       return 'http://localhost:9000/public/serveMedia/image?source=' + this.seller.avatar.replace(/\\/g, '/');
     } else {
-      return 'assets/images/noavatar.png'
+      return 'http://ssl.gstatic.com/accounts/ui/avatar_2x.png';
     }
   }
 

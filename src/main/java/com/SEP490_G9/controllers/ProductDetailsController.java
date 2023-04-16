@@ -168,7 +168,7 @@ public class ProductDetailsController {
 		if(notEdited.getApproved()!=Status.NEW) {
 			throw new IllegalArgumentException("Cannot edit this version");
 		}
-		
+		System.out.println(productDetailsDTO.getPrice());
 		notEdited.setLastModified(new Date());
 		Product product = notEdited.getProduct();
 		notEdited.setTags(productDetailsDTO.getTags());

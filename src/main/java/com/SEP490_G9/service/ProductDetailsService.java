@@ -90,4 +90,5 @@ public interface ProductDetailsService {
 	public int getTotalPurchasedCount(Long productId);
 	
 	public String getCurrentVersion(long productId);
+	
 }

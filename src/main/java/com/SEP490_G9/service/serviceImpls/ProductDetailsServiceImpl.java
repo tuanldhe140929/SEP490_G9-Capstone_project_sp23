@@ -182,7 +182,7 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 				enabledPd.add(pd);
 			}
 		}
-		return enabledPd;
+		return enabledPd;	
 	}
 
 	@Override
@@ -290,7 +290,6 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 			}
 		} else {
 			if (!ret.getApproved().equals(Status.APPROVED)) {
-				System.out.println(account.getId());
 				if (!isStaff(account) && !ret.getProduct().getSeller().getId().equals(account.getId())) {
 					System.out.println(isStaff(account));
 					System.out.println(ret.getProduct().getSeller().getId());

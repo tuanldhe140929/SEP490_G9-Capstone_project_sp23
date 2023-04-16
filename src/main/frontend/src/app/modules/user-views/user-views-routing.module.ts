@@ -18,20 +18,20 @@ const routes: Routes = [
   {
     path: 'profile',
     component: ProfileComponent,
+    title:'Trang cá nhân',
     canActivate: [AuthGuard]
   },
   {
     path: 'changepassword',
     component: ChangePasswordComponent,
+    title:'Đổi mật khẩu',
     canActivate: [AuthGuard]
   },
   {
     path: 'cart',
-    component: CartComponent
-  },
-  {
-    path: 'checkout',
-    component: CheckOutComponent
+    component: CartComponent,
+    title: 'Giỏ hàng',
+    canActivate: [AuthGuard]
   },
   {
 
@@ -53,13 +53,13 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-  path: 'seller/createNewSeller',
+  path: 'becomeSeller',
     component: LoginWithPaypalComponent,
-    title: 'xác thực người bán',
+    title: 'Trở thành người bán',
     canActivate: [AuthGuard]
   },
 {
-  path: 'transaction/PurchasedProductList',
+  path: 'purchased',
   component: PurchasedProductListComponent,
   title: 'PurchasedProductList',
   canActivate: [AuthGuard]

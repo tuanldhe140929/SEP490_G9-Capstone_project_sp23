@@ -111,14 +111,8 @@
                         <div><label>Trả tiền<span class="sub"> - Người dùng khác phải trả tiền cho bạn để sử dụng sản phẩm này</span></label></div>
                         <div>
                           <div class="input-group">
-                            <input id="price-input"
-                                   class="form-control"
-                                   type="text"
-                                   (keydown)="checkInput($event)"
-                                   [(ngModel)]="formattedPrice"
-                                   (ngModelChange)="updatePrice($event)"
-                                   [ngModelOptions]="{standalone: true}"
-                                   autocomplete="off" />
+                            <input type="number" step="0.1" min="0" max="1000" placeholder="$0.0" [(ngModel)]="product.price"
+                            [ngModelOptions]="{standalone: true}" />
                           </div>
 
                           <div *ngFor="let error of priceErrorr">
@@ -224,7 +218,7 @@
             <div class="input_row">
               <div class="details_text_area_label">
                 <div><label for="tag_input">Mô tả</label>&nbsp;&#45;&nbsp;<small>Mô tả chi tiết về sản phẩm</small></div>
-                <ckeditor [editor]="detailsEditor" [(ngModel)]="productDetails" [ngModelOptions]="{standalone: true}"></ckeditor>
+                <ckeditor [editor]="detailsEditor" [(ngModel)]="productDetails" [ngModelOptions]="{standalone: true}" [config]="editorConfig"></ckeditor>
               </div>
             </div>
             <div class="input_row">
