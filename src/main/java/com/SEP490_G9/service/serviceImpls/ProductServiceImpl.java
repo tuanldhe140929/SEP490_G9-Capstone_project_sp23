@@ -338,5 +338,14 @@ public class ProductServiceImpl implements ProductService {
 		product.getProductDetails().add(savedfristVersion);
 		return product;
 	}
+	
+	
+	@Override
+	public boolean isProductDisabled(long productId) {
+		boolean ret = false;
+		Product product = productRepository.findById(productId).orElseThrow();
+	
+		return false;
+	}
 
 }

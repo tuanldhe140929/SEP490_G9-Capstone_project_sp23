@@ -23,6 +23,7 @@ import com.SEP490_G9.entities.User;
 import com.SEP490_G9.entities.UserDetailsImpl;
 import com.SEP490_G9.exception.InternalServerException;
 import com.SEP490_G9.exception.ResourceNotFoundException;
+import com.SEP490_G9.repository.CartItemRepository;
 import com.SEP490_G9.repository.CartRepository;
 import com.SEP490_G9.repository.TransactionFeeRepository;
 import com.SEP490_G9.repository.TransactionRepository;
@@ -64,10 +65,24 @@ public class TransactionServiceImpl implements TransactionService {
 
 	@Autowired
 	ProductDetailsService pds;
-
+	
+	@Autowired
+	CartItemRepository cartItemRepo;
+	
 	@Override
 	public Transaction getByPaymentId(String paymentId) {
 		Transaction ret = transactionRepo.findByPaypalId(paymentId);
+		for (CartItem item : ret.getCart().getItems()) {
+			if (!item.getProductDetails().getProduct().isEnabled() || !item.getProductDetails().getApproved().equals(ProductDetails.Status.APPROVED)) {
+				ret.getCart().getItems().remove(item);
+				cartItemRepo.delete(item);
+				ret.setChange(true);
+			}
+		}
+		if (ret.isChange()) {
+			ret.setStatus(Transaction.Status.CANCELED);
+			transactionRepo.save(ret);
+		}
 		return ret;
 	}
 
@@ -89,13 +104,14 @@ public class TransactionServiceImpl implements TransactionService {
 	public Transaction createTransaction(Long cartId, Long accountId) {
 		Cart cart = cartService.getById(cartId);
 		User user = userService.getById(accountId);
-
+		Transaction transaction = new Transaction();
 		if (!cartService.isUserOwnCart(user.getId(), cart.getId())) {
 			throw new IllegalAccessError("You don't have right to purchase this cart");
 		}
 		if (cartService.isCartHadPurchased(cart.getId())) {
 			throw new IllegalArgumentException("Cart had already purchased");
 		}
+
 		if (cart.getItems().size() == 0) {
 			throw new IllegalArgumentException("Cart is empty");
 		}
@@ -103,6 +119,15 @@ public class TransactionServiceImpl implements TransactionService {
 			if (cartService.isUserPurchasedProduct(user.getId(), item.getProductDetails().getProduct().getId())) {
 				throw new IllegalArgumentException("User already own item in cart");
 			}
+			if (!item.getProductDetails().getProduct().isEnabled() || !item.getProductDetails().getApproved().equals(ProductDetails.Status.APPROVED)) {
+				cart.getItems().remove(item);
+				cartItemRepo.delete(item);
+				transaction.setChange(true);
+			}
+		}
+
+		if (transaction.isChange()) {
+			return transaction;
 		}
 
 		TransactionFee fee = transFeeRepo.findById(1).get();
@@ -113,8 +138,6 @@ public class TransactionServiceImpl implements TransactionService {
 		System.out.println(afterFeeCaculated);
 		double afterFeeCaculatedRounded = new BigDecimal(afterFeeCaculated).setScale(2, RoundingMode.HALF_UP)
 				.doubleValue();
-		System.out.println(afterFeeCaculatedRounded);
-		Transaction transaction = new Transaction();
 		transaction.setCart(cart);
 		transaction.setAmount(afterFeeCaculatedRounded);
 		transaction.setCreateDate(new Date());
@@ -196,15 +219,26 @@ public class TransactionServiceImpl implements TransactionService {
 	@Override
 	public Transaction executeTransaction(String paymentId, String payerId) {
 		Transaction transaction = transactionRepo.findByPaypalId(paymentId);
-
-		Transaction ret = null;
-
-		if (payerId.isBlank() || payerId.isEmpty()) {
-			throw new IllegalArgumentException("PayerId can not be blank");
-		}
 		if (transaction == null) {
 			throw new ResourceNotFoundException("transaction", "paymentId", paymentId);
 		}
+		Transaction ret = null;
+		for (CartItem item : transaction.getCart().getItems()) {
+			if (!item.getProductDetails().getProduct().isEnabled() || !item.getProductDetails().getApproved().equals(ProductDetails.Status.APPROVED)) {
+				transaction.getCart().getItems().remove(item);
+				cartItemRepo.delete(item);
+				transaction.setChange(true);
+			}
+		}
+		if (transaction.isChange()) {
+			transaction.setStatus(Transaction.Status.CANCELED);
+			transactionRepo.save(transaction);
+			return transaction;
+		}
+		if (payerId.isBlank() || payerId.isEmpty()) {
+			throw new IllegalArgumentException("PayerId can not be blank");
+		}
+
 		if (transaction.getStatus().equals(Transaction.Status.CREATED)
 				|| transaction.getStatus().equals(Transaction.Status.COMPLETED)
 				|| transaction.getStatus().equals(Transaction.Status.FAILED)

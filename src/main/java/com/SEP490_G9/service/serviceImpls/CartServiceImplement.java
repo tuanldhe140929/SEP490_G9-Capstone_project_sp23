@@ -29,6 +29,7 @@ import com.SEP490_G9.repository.UserRepository;
 import com.SEP490_G9.service.CartService;
 import com.SEP490_G9.service.ProductDetailsService;
 import com.SEP490_G9.entities.ProductDetails;
+import com.SEP490_G9.entities.ProductDetails.Status;
 import com.SEP490_G9.repository.ProductDetailsRepository;
 
 @Service
@@ -69,7 +70,6 @@ public class CartServiceImplement implements CartService {
 
 		for (CartItem item : cart.getItems()) {
 			if (item.getProductDetails().getProduct().getId().equals(productId)) {
-				System.out.println("asdasd");
 				throw new IllegalArgumentException("Cart already has item");
 			}
 		}
@@ -168,13 +168,18 @@ public class CartServiceImplement implements CartService {
 					String activeVersion = item.getProductDetails().getProduct().getActiveVersion();
 					ProductDetails pd = productDetailsRepository.findByProductIdAndProductVersionKeyVersion(productId,
 							activeVersion);
-					updatedItem.setProductDetails(pd);
-					CartItemKey cartItemKey = new CartItemKey();
-					cartItemKey.setCartId(cart.getId());
-					cartItemKey.setProductVersionKey(pd.getProductVersionKey());
-					updatedItem.setCartItemKey(cartItemKey);
-					updatedItems.add(updatedItem);
+					if (pd.getProduct().isEnabled() && pd.getApproved().equals(Status.APPROVED)) {
+						updatedItem.setProductDetails(pd);
+						CartItemKey cartItemKey = new CartItemKey();
+						cartItemKey.setCartId(cart.getId());
+						cartItemKey.setProductVersionKey(pd.getProductVersionKey());
+						updatedItem.setCartItemKey(cartItemKey);
+						updatedItems.add(updatedItem);
+					}else {
+						cartItemRepository.delete(item);
+					}
 				}
+				System.out.println("cart size" + updatedItems.size());
 				cart.setItems(updatedItems);
 				ret = cartRepository.save(cart);
 			}

@@ -30,4 +30,5 @@ public interface ProductService {
 
 	Product createNewProduct();
 	
+	boolean isProductDisabled(long productId);
 }

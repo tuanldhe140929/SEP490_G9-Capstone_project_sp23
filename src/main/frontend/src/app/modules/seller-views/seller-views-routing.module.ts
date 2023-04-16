@@ -26,7 +26,7 @@ const routes: Routes = [
   {
     path: 'payout',
     component: PayoutHistoryComponent,
-    title: "Payout",
+    title: "Lịch sử bán hàng",
     canActivate: [SellerGuardGuard]
   }
 ];

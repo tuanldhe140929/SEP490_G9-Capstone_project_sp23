@@ -25,7 +25,8 @@ export class ProfileComponent implements OnInit {
     private httpClient: HttpClient,
     private app: AppComponent,
     private storageService: StorageService,
-    private userService: UserService) {
+    private userService: UserService,
+    private router: Router) {
 
   }
   ngOnInit(): void {
@@ -149,5 +150,17 @@ export class ProfileComponent implements OnInit {
     const formattedTimestamp = formattedDate + ' ' + formattedTime;
     console.log(formattedTimestamp);
     return formattedTimestamp;
-     }
+  }
+
+  changePassword() {
+    this.router.navigate(['changepassword']);
+  }
+
+  becomeSeller() {
+    this.router.navigate(['/seller/createNewSeller']);
+  }
+
+  viewPayouts() {
+    this.router.navigate(['payout']);
+  }
 }

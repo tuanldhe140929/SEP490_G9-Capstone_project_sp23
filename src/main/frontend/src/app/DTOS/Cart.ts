@@ -6,7 +6,7 @@ export class Cart {
   id: number;
   account:Account;
   items: CartItem[];
-  totalPrice:Number ;
+  totalPrice:number ;
   constructor() {
     this.id = -1;
     this.account = new Account();

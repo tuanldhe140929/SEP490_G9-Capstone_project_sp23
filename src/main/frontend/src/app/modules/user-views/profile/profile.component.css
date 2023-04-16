@@ -7,3 +7,57 @@ app-footer{
 *{
     
 }
+.uploadBtn {
+  color: #FF2449;
+  background-color: white;
+  border: 1px solid #FF2449;
+  border-radius: 3px;
+  width: 100px;
+  height: 25px;
+}
+
+  .uploadBtn:hover {
+    color: white;
+    background-color: #FF2449;
+    border: 1px solid white;
+    transition: 0.15s all;
+  }
+
+  .actions{
+  
+  }
+
+  .actionBtn{
+      background-color:white;
+      border: 1px solid black;
+      border-radius:3px;
+      height: 40px;
+      font-size:20px;
+      width:280px;
+      color:black;
+      margin-bottom:10px;
+  }
+
+    .actionBtn:hover {
+      background-color: #f8f9fa;
+      color: black;
+      transition: all 0.15s;
+    }
+
+  a{
+      color:black;
+      text-decoration:none;
+  }
+
+  a:hover{
+      color:black;
+      text-decoration:none;
+  }
+
+  input{
+      border-radius:3px;
+  }
+
+  .form-group{
+      margin-bottom:5px;
+  }

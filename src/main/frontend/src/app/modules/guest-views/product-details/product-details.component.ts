@@ -109,6 +109,7 @@ export class ProductDetailsComponent implements OnInit {
         data => {
           this.product = data;
           this.version = this.product.version;
+          this.product.price = Number.parseFloat(this.product.price.toFixed(1));
           console.log(this.product);
           if (this.DescriptionTab) {
             this.DescriptionTab.innerHTML = this.product.details;
@@ -347,7 +348,7 @@ export class ProductDetailsComponent implements OnInit {
 
 
   get Price() {
-    return this.getFormattedValue(this.product.price);
+    return this.product.price;
   }
 
   onCheckIfReported() {

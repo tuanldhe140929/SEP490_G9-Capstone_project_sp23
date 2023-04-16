@@ -2,4 +2,18 @@
    
     margin-left: auto
   } */
-  
+
+.buyBtn {
+  border: 1px solid white;
+  border-radius: 3px;
+  color:white;
+  background-color: #FF2449;
+}
+
+.buyBtn:hover {
+  border: 1px solid #FF2449;
+  border-radius: 3px;
+  color: #FF2449;
+  background-color: white;
+  transition: all 0.15s;
+}

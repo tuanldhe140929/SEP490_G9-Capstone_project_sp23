@@ -34,8 +34,17 @@ export class ReviewTransactionComponent implements OnInit {
     $request.subscribe(
       data => {
         
-        this.transaction = data;console.log(this.transaction);
+        this.transaction = data;
+        for (let i = 0; i < this.transaction.cart.items.length; i++) {
+          this.transaction.cart.items[i].productDetails.price = Number.parseFloat(this.transaction.cart.items[i].productDetails.price.toFixed(2));
+        }
         this.caculateFee();
+        if (this.transaction.change) {
+          this.info = "Có sản phẩm không còn khả dụng trong giỏ hàng, giao dịch này sẽ bị hủy";
+          this.openInfoModal();
+          this.transaction.status = TransactionStatus.CANCELED;
+          return;
+        }
       },
       error => {
         console.log(error);
@@ -48,12 +57,13 @@ export class ReviewTransactionComponent implements OnInit {
       var feePercentage = this.transaction.fee.percentage;
       this.originalPrice = this.transaction.amount;
       this.fee =  this.originalPrice /(100+feePercentage) * 10;
-		this.fee = parseFloat(this.fee.toFixed(2));
+		  this.fee = parseFloat(this.fee.toFixed(2));
 	
       this.originalPrice = Math.round(this.originalPrice * 100) / (100+feePercentage);
       this.originalPrice = parseFloat(this.originalPrice.toFixed(2))
       this.fee = Math.round(this.fee * 100) / 100;
       this.total = this.originalPrice + this.fee;
+      this.total = parseFloat(this.total.toFixed(2));
     }
   }
 
@@ -70,6 +80,11 @@ export class ReviewTransactionComponent implements OnInit {
       data => {
         this.isLoading = false;
         this.transaction = data;
+        if (this.transaction.change) {
+          this.info = "Có sản phẩm không còn khả dụng trong giỏ hàng, giao dịch này đã bị hủy";
+          this.transaction.status = TransactionStatus.CANCELED;
+          this.openInfoModal();
+        }
         switch (data.status) {
           case TransactionStatus.EXPIRED:
             this.info = "Giao dịch hết hạn";

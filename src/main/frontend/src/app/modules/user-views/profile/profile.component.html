@@ -1,121 +1,108 @@
 <app-header></app-header>
 
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<div class="container">
 
-<hr>
-<section class="padding-y bg-light">
-    <div class="container">
-
-<div class="container bootstrap snippet">
+  <div class="container bootstrap snippet">
     <div class="row">
-        <div class="col-sm-10">
-            <h1>{{user.username}}</h1>
-        </div>
+      <div class="col-sm-10">
+        <h1>{{user.username}}</h1>
+      </div>
     </div>
     <div class="row">
-        <div class="col-sm-3">
-            <div class="text-center">
-                <img src="" class="avatar img-circle img-thumbnail" alt="avatar" id="Image">
-                <input type="file" class="file-upload" (change)="UploadProfileImage($event)">
-            </div>
-            <!-- <ul class="list-group">
-                <li class="list-group-item text-muted">Activity <i class="fa fa-dashboard fa-1x"></i></li>
-                <li class="list-group-item text-right"><span class="pull-left"><strong>Follow</strong></span> 125</li>
-                <li class="list-group-item text-right"><span class="pull-left"><strong>Followers</strong></span> 13</li>
-                <li class="list-group-item text-right"><span class="pull-left"><strong>Posts</strong></span> 37</li>
-            </ul> -->
-        </div><!--/col-3-->
-        <div class="col-sm-9">
-            <div class="tab-content">
-                <div class="tab-pane active" id="home">
-                    <hr>
-                    <form [formGroup]="Profileform" (submit)="onChangeName()" class="form" action="##" method="post"
-                        id="registrationForm">
-                        <div class="form-group">
-                            <div class="col-xs-6">
-                                <label for="first_name">
-                                    <h4>Tên người dùng</h4>
-                                </label>
-                                <input readonly [(ngModel)]="user.username" [ngModelOptions]="{standalone: true}"
-                                    type="text" class="form-control" name="first_name" id="user_name"
-                                    placeholder="User name" title="enter your username if any.">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-xs-6">
-                                <label for="first_name">
-                                    <h4>Tên</h4>
-                                </label>
-                                <input readonly [(ngModel)]="user.firstName" [ngModelOptions]="{standalone: true}"
-                                    type="text" class="form-control" name="first_name" id="first_name"
-                                    placeholder="first name" title="enter your first name if any.">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-xs-6">
-                                <label for="first_name">
-                                    <h4>Họ</h4>
-                                </label>
-                                <input readonly [(ngModel)]="user.lastName" [ngModelOptions]="{standalone: true}"
-                                    type="text" class="form-control" id="last_name" placeholder="Last name"
-                                    title="enter your Last name if any.">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-xs-6">
-                                <label for="Join Date">
-                                    <h4>Ngày khởi tạo</h4>
-                                </label>
-                                <input [value]="formatTime(user.createdDate)" readonly type="text" class="form-control"
-                                    name="CreatedDate" id="phone" placeholder="" title=".">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-xs-6">
-                                <label for="email">
-                                    <h4>Email</h4>
-                                </label>
-                                <input readonly [value]="user.email" type="email" class="form-control" name="email"
-                                    id="email" placeholder="you@email.com" title="enter your email.">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-xs-12">
-                                <br>
-                                <button class="btn btn-lg" type="reset"><i class="glyphicon glyphicon-repeat"></i> <a
-                                        routerLink="/changepassword" routerLinkActive="active"
-                                        ariaCurrentWhenActive="page"> Đổi mật khẩu</a></button>
-                                <button (click)="UpdateInfo()" class="btn btn-lg btn-success" type="text">
-                                    Cập nhật thông tin</button>
-                                    
-                                    <button class="btn btn-lg btn-success" type="reset">
-                                        <i class="glyphicon glyphicon-repeat"></i> 
-                                        <a routerLink="/seller/createNewSeller" routerLinkActive="active" ariaCurrentWhenActive="page" style="color: white; text-decoration: none;">xác thực tài khoản</a>
-                                      </button> 
-                                 <button *ngIf="isSeller()" type="button" class="btn btn-lg btn-success"
-                                        style="background-color: rgb(9, 139, 96);" routerLink="/payout">Payout history</button>                     
-                            </div>
-                            <div class="col-xs-12">
-                                <button class="btn btn-lg btn-success" style="background-color:  rgb(19, 113, 255);"
-                                    type="submit" [disabled]="Profileform.invalid"><i
-                                        class="glyphicon glyphicon-ok-sign"></i> Lưu</button>
-                            </div>
-                        </div>
-                    </form>
+      <div class="col-sm-3" style="border-right: 1px solid #dee2e6">
+        <div class="text-center">
+          <img src="" class="avatar img-circle img-thumbnail" alt="avatar" id="Image">
+          <button class="uploadBtn" (click)="uploadavatar.click()">Chọn ảnh</button>
+          <input id="uploadavatar" #uploadavatar type="file" class="file-upload" (change)="UploadProfileImage($event)" hidden>
+        </div>
+        <!-- <ul class="list-group">
+            <li class="list-group-item text-muted">Activity <i class="fa fa-dashboard fa-1x"></i></li>
+            <li class="list-group-item text-right"><span class="pull-left"><strong>Follow</strong></span> 125</li>
+            <li class="list-group-item text-right"><span class="pull-left"><strong>Followers</strong></span> 13</li>
+            <li class="list-group-item text-right"><span class="pull-left"><strong>Posts</strong></span> 37</li>
+        </ul> -->
+        <hr />
+        <div class="row actions">
+          <button class="actionBtn" (click)="UpdateInfo()">Cập nhật thông tin</button>
+
+          <button class="actionBtn" (click)="changePassword()">Đổi mật khẩu <i class="fa-sharp fa-solid fa-arrow-right" style="color: #262626;"></i></button>
+
+          <button class="actionBtn" (click)="becomeSeller()">Trở thành người bán <i class="fa-sharp fa-solid fa-arrow-right" style="color: #262626;"></i></button>
+
+          <button *ngIf="isSeller()" class="actionBtn" (click)="viewPayouts()">Lịch sử bán hàng <i class="fa-sharp fa-solid fa-arrow-right" style="color: #262626;"></i></button>
+        </div>
+      </div><!--/col-3-->
+      <div class="col-sm-9">
+        <div class="tab-content">
+          <div class="tab-pane active" id="home">
+            <hr>
+            <form [formGroup]="Profileform" (submit)="onChangeName()" class="form" action="##" method="post"
+                  id="registrationForm">
+              <div class="form-group">
+                <div class="col-xs-6">
+                  <label for="first_name">
+                    Tên người dùng
+                  </label>
+                  <input readonly [(ngModel)]="user.username" [ngModelOptions]="{standalone: true}"
+                         type="text" class="form-control" name="first_name" id="user_name"
+                         placeholder="User name" title="enter your username if any.">
                 </div>
+              </div>
+              <div class="form-group">
+                <div class="col-xs-6">
+                  <label for="first_name">
+                    Tên
+                  </label>
+                  <input readonly [(ngModel)]="user.firstName" [ngModelOptions]="{standalone: true}"
+                         type="text" class="form-control" name="first_name" id="first_name"
+                         placeholder="first name" title="enter your first name if any.">
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-xs-6">
+                  <label for="first_name">
+                    Họ
+                  </label>
+                  <input readonly [(ngModel)]="user.lastName" [ngModelOptions]="{standalone: true}"
+                         type="text" class="form-control" id="last_name" placeholder="Last name"
+                         title="enter your Last name if any.">
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-xs-6">
+                  <label for="Join Date">
+                    Ngày tham gia
+                  </label>
+                  <input [value]="formatTime(user.createdDate)" readonly type="text" class="form-control"
+                         name="CreatedDate" id="phone" placeholder="" title=".">
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-xs-6">
+                  <label for="email">
+                    Email
+                  </label>
+                  <input readonly [value]="user.email" type="email" class="form-control" name="email"
+                         id="email" placeholder="you@email.com" title="enter your email.">
+                </div>
+              </div>
+              <div>
 
+                <div class="col-xs-12" style="margin-top:30px;">
+                  <button class="actionBtn" type="submit" [disabled]="Profileform.invalid">Lưu</button>
+                </div>
+              </div>
+            </form>
+          </div>
 
-            </div>
 
         </div>
 
-        </div>
-    </div>
-    </div>
+      </div>
 
-</section>
+    </div>
+  </div>
+</div>
+
 <app-footer></app-footer>
 

@@ -65,6 +65,9 @@ public class Transaction {
 
 	@Transient
 	private Payer payer;
+	
+	@Transient
+	boolean isChange;
 
 	public Transaction() {
 		// TODO Auto-generated constructor stub
@@ -164,6 +167,14 @@ public class Transaction {
 
 	public void setExpiredDate(Date expiredDate) {
 		this.expiredDate = expiredDate;
+	}
+
+	public boolean isChange() {
+		return isChange;
+	}
+
+	public void setChange(boolean isChange) {
+		this.isChange = isChange;
 	}
 
 	@Override

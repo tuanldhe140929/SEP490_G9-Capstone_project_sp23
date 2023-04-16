@@ -1,7 +1,7 @@
 <app-header></app-header>
 <!-- ============== SECTION PAGETOP ============== -->
-<div class="container-fluid" style="background-color: #f4f4f4;">
-  <section class="py-5 sellerInfo" style="padding-top:20px;">
+<div class="container-fluid" style="background-color: #f4f4f4; padding:0;">
+  <section class="py-5 sellerInfo col-12" style="padding-top:20px;">
     <div class="container">
       <div class="row">
         <div class="col-2">
@@ -196,7 +196,7 @@
                 <figcaption class="info-wrap border-top">
                   <div class="price-wrap">
                     <strong class="price">{{product.name}}</strong>
-                    <p class="title mb-2">{{product.category.name}}</p>
+                    <p class="title mb-2" *ngIf="product.category!=null">{{product.category.name}}</p>
                   </div> <!-- price-wrap.// -->
                   <strong><p class="title mb-2">${{product.price}}</p></strong>
                   <a (click)="openDetails(product.id)" class="btn viewProduct">Chi tiết</a>

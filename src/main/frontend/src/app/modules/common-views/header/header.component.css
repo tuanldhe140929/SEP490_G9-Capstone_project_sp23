@@ -1,0 +1,30 @@
+.navbar {
+  background-color: #f8f9fa !important;
+  border-bottom: 1px solid #dee2e6;
+}
+.navbar-light {
+  background-color: #f8f9fa; /* light gray */
+}
+
+  .navbar-light .nav-link {
+    color: #272b2f; /* dark gray */
+  }
+
+    .navbar-light .nav-link:hover {
+      color: black; /* dark gray */
+      transition: all 0.15s;
+    }
+.float-end a {
+  border-radius: 3px;
+  background-color: white;
+  border: 1px solid #999999;
+}
+
+  .float-end a:hover {
+    background-color: #f8f9fa;
+  }
+
+.btn-light:hover .fa {
+  color: black;
+  transition: all 0.15s;
+}

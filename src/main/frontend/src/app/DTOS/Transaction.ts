@@ -31,6 +31,7 @@ export class Transaction{
 	approvalUrl:string;
   payer: Payer;
   cart: Cart;
+  change: boolean;
 	constructor(){
 		this.payer = new Payer;
     this.id = -1;
@@ -42,6 +43,7 @@ export class Transaction{
 		this.lastModified = new Date;
 		this.paypalId = -1;
 		this.approvalUrl = '';
+    this.change = false;
 	}
 	
 	
