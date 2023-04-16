@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Category } from 'src/app/dtos/Category';
 import { Product } from 'src/app/dtos/Product';
@@ -8,18 +8,18 @@ import { ProductService } from 'src/app/services/product.service';
 import { TagService } from 'src/app/services/tag.service';
 
 @Component({
-  selector: 'app-search-result',
-  templateUrl: './search-result.component.html',
-  styleUrls: ['./search-result.component.css']
+  selector: 'app-search-result-category',
+  templateUrl: './search-result-category.component.html',
+  styleUrls: ['./search-result-category.component.css']
 })
-export class SearchResultComponent implements OnInit{
+export class SearchResultCategoryComponent {
 
   productList: Product[] = [];
   resultList: Product[] = [];
   categoryList: Category[] = [];
   tagList: Tag[] = [];
   filterResult: Product[] = [];
-  keyword: any;
+  categoryId: number;
   minprice: number = 0;
   maxprice: number = 1000;
   chosenCategory: number = 0;
@@ -27,6 +27,7 @@ export class SearchResultComponent implements OnInit{
   p:number = 1;
   itemsPerPage: number = 9;
   totalResult: any;
+  keyword: string = "";
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -42,8 +43,9 @@ export class SearchResultComponent implements OnInit{
   }
 
   getSearchResult(){
-    this.keyword = this.activatedRoute.snapshot.paramMap.get('keyword')?.trim().toLowerCase().replace(/\s+/g,' ');;
-    this.productService.getFilteredProducts(this.keyword,0,[],0,1000).subscribe(
+    this.categoryId = Number(this.activatedRoute.snapshot.paramMap.get('categoryId'));
+    this.chosenCategory = this.categoryId;
+    this.productService.getFilteredProducts(this.keyword,this.categoryId,[],0,1000).subscribe(
       data => {
         this.resultList = data;
         this.totalResult = this.resultList.length;
@@ -107,6 +109,7 @@ export class SearchResultComponent implements OnInit{
     this.productService.getFilteredProducts(this.keyword,this.chosenCategory, this.checkedTags,this.minprice,this.maxprice).subscribe(
       data => {
         this.resultList = data;
+        this.totalResult = this.resultList.length;
       }
     )
   }

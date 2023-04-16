@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.SEP490_G9.entities.Product;
 import com.SEP490_G9.entities.ProductDetails;
+import com.SEP490_G9.entities.ProductDetails.Status;
 import com.SEP490_G9.entities.Report;
 import com.SEP490_G9.entities.User;
 import com.SEP490_G9.entities.ViolationType;
@@ -117,28 +118,6 @@ public class ReportServiceImpl implements ReportService {
 
 	@Override
 	public List<Report> updateReportStatus(long productId, String version , List<Long> userIdList, List<String> statusList) {
-//		List<Report> updatedList = new ArrayList<>();
-//		for(int i=0;i<userIdList.size();i++) {
-//			String version = versionList.get(i);
-//			long userId = userIdList.get(i);
-//			String status = statusList.get(i);
-//			Report report = getByProductUserVersion(productId, userId, version);
-//			report.setStatus(status);
-//			reportRepository.save(report);
-//			Product product = productRepository.findById(productId).get();
-//			ProductDetails pd = productDetailsService.getByProductIdAndVersion(productId, version);
-//			for(String str: statusList) {
-//				if(str.equalsIgnoreCase("ACCEPTED")) {
-//					product.setEnabled(false);
-//					pd.setFlagged(true);
-//					break;
-//				}
-//			}
-//			productDetailsRepository.save(pd);
-//			productRepository.save(product);
-//			updatedList.add(report);
-//		}
-//		return updatedList;
 		List<Report> updatedList = new ArrayList<>();
 		for(int i=0;i<userIdList.size();i++) {
 			long userId = userIdList.get(i);
@@ -158,16 +137,9 @@ public class ReportServiceImpl implements ReportService {
 			}
 		}
 		if(accepted>0) {
-			if(latestPd.getVersion().equalsIgnoreCase(version)) {
-				pd.setFlagged(true);
-				product.setEnabled(false);
-				productDetailsRepository.save(pd);
-				productRepository.save(product);
-			}
-			if(!latestPd.getVersion().equalsIgnoreCase(version)) {
-				pd.setFlagged(true);
-				productDetailsRepository.save(pd);
-			}
+			pd.setFlagged(true);
+			pd.setApproved(Status.REJECTED);
+			productDetailsRepository.save(pd);
 		}
 		return updatedList;
 	}

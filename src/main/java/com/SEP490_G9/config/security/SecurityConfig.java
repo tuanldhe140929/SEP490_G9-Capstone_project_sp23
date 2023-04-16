@@ -68,7 +68,8 @@ public class SecurityConfig {
 			"/violation/getAllVioTypes",
 			"/product/getProductsCountBySellerId",
 			"/user/getUserInfo",
-			"private/manageTag/tags"
+			"private/manageTag/tags",
+			"/user/getAllUsers"
 			};
 	
 	private String[] userApis= {
@@ -116,8 +117,8 @@ public class SecurityConfig {
 			"/account/staffs",
 			"/account/addStaff",
 			"/account/updateStaffStatus",
-			"/account/allAccounts",
-			"/user/getAllUsers"
+			"/account/allAccounts"
+			
 			};
 	
 	private String[] staffApis= {
@@ -129,7 +130,7 @@ public class SecurityConfig {
 			"/report/updateReportStatus",
 			"/report/getByProductAndStatus",
 			"/seller/reportedsellerlist",
-			"/violation/addViolation",
+			"/violation/addViolation"
 			};
 	@Bean
 	public SecurityFilterChain setfilterChains(HttpSecurity http) throws Exception {

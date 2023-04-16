@@ -2,6 +2,7 @@
     border: solid white 1px;
     background-color: #FF2449;
     color: white;
+    border-radius: 2px;
   }
   
     .viewProduct:hover {

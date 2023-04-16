@@ -2,7 +2,7 @@
 <!-- ============== SECTION PAGETOP ============== -->
 <section class="bg-primary py-5">
     <div class="container">
-      <h2 class="text-white">Kết quả tìm kiếm cho từ khóa "{{keyword}}"</h2>
+      <h2 class="text-white">Tìm kiếm sản phẩm</h2>
     </div> <!-- container //  -->
     </section>
     <!-- ============== SECTION PAGETOP END// ============== -->
@@ -20,6 +20,23 @@
     <!-- ===== Card for sidebar filter ===== -->
     <div id="aside_filter" class="collapse card d-lg-block mb-5">
     
+        <article class="filter-group">
+            <header class="card-header">
+              <a href="#" class="title" data-bs-toggle="collapse" data-bs-target="#collapse_aside2">
+                <i class="icon-control fa fa-chevron-down"></i>  Tìm kiếm từ khóa
+              </a>
+            </header>
+            <div class="collapse show" id="collapse_aside2">
+              <div class="card-body">
+                <div class="row mb-3">
+                  <div>
+                    <input class="form-control" id="min" placeholder="Nhập từ khóa" type="text" [(ngModel)]="keyword">
+                  </div> <!-- col end.// -->
+                </div> <!-- row end.// -->
+              </div> <!-- card-body.// -->
+            </div> <!-- collapse.// -->
+          </article> <!-- filter-group // -->
+
       <article class="filter-group">
       <header class="card-header">
         <a href="#" class="title" data-bs-toggle="collapse" data-bs-target="#collapse_aside1">
@@ -54,7 +71,7 @@
       <div class="collapse show" id="collapse_aside_brands">
         <div class="card-body">
           <label class="form-check mb-2" *ngFor="let tag of tagList">
-          <input class="form-check-input" name="choosetag" type="checkbox" [value]="tag.id" (change)="updateCheckedValues($event)">
+          <input class="form-check-input" name="choosetag" type="checkbox" [value]="tag.id" [checked]="tag.id==tagId" (change)="updateCheckedValues($event)">
           <span class="form-check-label"> {{tag.name}} </span>
           </label> 
         </div> 

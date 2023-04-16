@@ -10,6 +10,8 @@ import { SearchResultComponent } from './search-result/search-result.component';
 import { SellerProductListComponent } from './seller-product-list/seller-product-list.component';
 import { SellerSearchResultComponent } from './seller-search-result/seller-search-result.component';
 import { VerifyEmailComponent } from './verify-email/verify-email.component';
+import { SearchResultCategoryComponent } from './search-result-category/search-result-category.component';
+import { SearchResultTagComponent } from './search-result-tag/search-result-tag.component';
 
 const routes: Routes = [{
   path: 'login',
@@ -57,6 +59,14 @@ const routes: Routes = [{
     path: 'sellers/:keyword',
     component: SellerSearchResultComponent,
     title: 'Kết quả tìm kiếm người bán'
+  }, {
+    path: 'category/:categoryId',
+    component: SearchResultCategoryComponent,
+    title: 'Tìm kiếm sản phẩm'
+  }, {
+    path: 'tag/:tagId',
+    component: SearchResultTagComponent,
+    title: 'Tìm kiếm sản phẩm'
   }
 ];
 

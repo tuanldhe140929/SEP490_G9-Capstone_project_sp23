@@ -1,3 +1,20 @@
 .* {
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
+.viewProduct {
+  border: solid white 1px;
+  background-color: #FF2449;
+  color: white;
+  border-radius: 2px;
+}
+
+  .viewProduct:hover {
+    background-color: white;
+    border: solid #FF2449 1px;
+    color: #FF2449;
+    transition: all 0.15s;
+  }
+
+  a:hover{
+    color: red;
+  }

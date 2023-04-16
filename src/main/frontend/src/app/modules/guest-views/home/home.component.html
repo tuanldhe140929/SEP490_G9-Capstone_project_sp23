@@ -179,11 +179,27 @@
             <img height="250" class="mix-blend-multiply" [src]="getCoverImage(product)">
           </a>
           <a (click)="redirectProductDetails(product)" class="btn btn-primary">Chi tiết</a>
+
           <figcaption class="pt-2">
             <a href="#" class="float-end btn btn-light btn-icon"> <i class="fa fa-heart"></i> </a>
-            <strong class="price">{{product.price}}$</strong> <!-- price.// -->
-            <a href="#" class="title text-truncate">{{product.name}}</a>
-            <small class="text-muted">{{product.category.name}}</small>
+            <strong class="price">$590.00</strong> 
+            <a href="#" class="title text-truncate">Canon EOS professional</a>
+            <small class="text-muted">Capacity: 128GB</small>
+          </figcaption>
+        </figure>
+      </div>  -->
+      <!-- col end.// -->
+      <div class="col-lg-3 col-md-6 col-sm-6" *ngFor="let product of productList | paginate: {itemsPerPage: itemsPerPage, currentPage: p}">
+        <figure class="card-product-grid">
+          <a (click)="redirectProductDetails(product)" class="img-wrap rounded bg-gray-light" style="cursor: pointer;"> 
+            <img height="250" class="mix-blend-multiply" [src]="getCoverImage(product)"> 
+          </a>
+
+          <figcaption class="pt-2">
+            <strong class="price">{{product.name}}</strong>
+            <p class="title mb-2"><a (click)="searchByCategory(product.category.id)" style="cursor: pointer;">{{product.category.name}}</a> của <a (click)="searchBySeller(product.seller.id)" style="cursor: pointer;">{{product.seller.username}}</a></p>
+            <strong><p class="text-muted">${{product.price}}</p></strong>
+            <a (click)="redirectProductDetails(product)" class="btn viewProduct">Chi tiết</a>
           </figcaption>
         </figure>
       </div>

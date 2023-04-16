@@ -242,8 +242,10 @@ export class ProductDetailsComponent implements OnInit {
   }
 
 
-  searchTag(tag: Tag) {
-
+  searchTag(tagId: number) {
+    this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
+      this.router.navigate(['tag/'+tagId]);
+    })
   }
 
   getSrc(p: DisplayPreview) {
@@ -463,5 +465,11 @@ export class ProductDetailsComponent implements OnInit {
       }
     );
   }
+
+  searchByCategory(categoryId: number){
+    this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
+      this.router.navigate(['category/'+categoryId]);
+    })
   }
+}
 

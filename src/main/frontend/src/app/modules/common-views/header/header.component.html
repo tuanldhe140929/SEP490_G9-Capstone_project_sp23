@@ -50,7 +50,7 @@
       </div> <!-- row end.// -->
     </div> <!-- container end.// -->
   </section> <!-- header-main end.// -->
-  <!--  <nav class="navbar navbar-light bg-primary border-top navbar-expand-lg">
+   <nav class="navbar navbar-light bg-primary border-top navbar-expand-lg">
       <div class="container">
         <button class="navbar-toggler border" type="button" data-bs-toggle="collapse" data-bs-target="#navbar_main">
           <span class="navbar-toggler-icon"></span>
@@ -58,22 +58,29 @@
 
   <div class="collapse navbar-collapse" id="navbar_main">
     <ul class="navbar-nav">
-      <li class="nav-item">
-        <a class="nav-link ps-0" href="#"> Categories </a>
+      <li class="nav-item dropdown">
+        <a class="dropdown-toggle nav-link" href="#" data-bs-toggle="dropdown">
+          Phân loại
+        </a>
+        <ul class="dropdown-menu">
+          <li *ngFor="let category of categoryList">
+            <a class="dropdown-item" (click)="searchByCategory(category.id)" style="cursor: pointer;">{{category.name}}</a>
+          </li>
+        </ul>
       </li>
       <li class="nav-item dropdown">
         <a class="dropdown-toggle nav-link" href="#" data-bs-toggle="dropdown">
-          Others
+          Nhãn
         </a>
         <ul class="dropdown-menu">
-          <li> <a class="dropdown-item" href="#">Submenu one </a> </li>
-          <li> <a class="dropdown-item" href="#">Submenu two</a> </li>
-          <li> <a class="dropdown-item" href="#">Submenu three</a> </li>
+          <li *ngFor="let tag of tagList">
+            <a class="dropdown-item" (click)="searchByTag(tag.id)" style="cursor: pointer;">{{tag.name}}</a>
+          </li>
         </ul>
       </li>
     </ul>
   </div> 
   </div> 
-  </nav> <!-- navbar end.// -->
+  </nav> <!-- navbar end.//
 </header> <!-- section-header end.// -->
 

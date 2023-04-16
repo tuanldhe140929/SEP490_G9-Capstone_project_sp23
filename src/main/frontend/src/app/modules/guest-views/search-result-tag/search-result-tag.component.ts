@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Category } from 'src/app/dtos/Category';
 import { Product } from 'src/app/dtos/Product';
@@ -8,25 +8,27 @@ import { ProductService } from 'src/app/services/product.service';
 import { TagService } from 'src/app/services/tag.service';
 
 @Component({
-  selector: 'app-search-result',
-  templateUrl: './search-result.component.html',
-  styleUrls: ['./search-result.component.css']
+  selector: 'app-search-result-tag',
+  templateUrl: './search-result-tag.component.html',
+  styleUrls: ['./search-result-tag.component.css']
 })
-export class SearchResultComponent implements OnInit{
+export class SearchResultTagComponent {
 
   productList: Product[] = [];
   resultList: Product[] = [];
   categoryList: Category[] = [];
   tagList: Tag[] = [];
   filterResult: Product[] = [];
-  keyword: any;
+  tagId: number;
   minprice: number = 0;
   maxprice: number = 1000;
   chosenCategory: number = 0;
   chosenTags:number[] = [];
+  checkedTags:number[] = [];
   p:number = 1;
   itemsPerPage: number = 9;
   totalResult: any;
+  keyword: string = "";
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -42,8 +44,10 @@ export class SearchResultComponent implements OnInit{
   }
 
   getSearchResult(){
-    this.keyword = this.activatedRoute.snapshot.paramMap.get('keyword')?.trim().toLowerCase().replace(/\s+/g,' ');;
-    this.productService.getFilteredProducts(this.keyword,0,[],0,1000).subscribe(
+    this.tagId = Number(this.activatedRoute.snapshot.paramMap.get('tagId'));
+    this.checkedTags.push(this.tagId);
+    console.log(this.checkedTags);
+    this.productService.getFilteredProducts(this.keyword,0,this.checkedTags,0,1000).subscribe(
       data => {
         this.resultList = data;
         this.totalResult = this.resultList.length;
@@ -107,11 +111,11 @@ export class SearchResultComponent implements OnInit{
     this.productService.getFilteredProducts(this.keyword,this.chosenCategory, this.checkedTags,this.minprice,this.maxprice).subscribe(
       data => {
         this.resultList = data;
+        this.totalResult = this.resultList.length;
       }
     )
   }
 
-  checkedTags: number[] = [];
   updateCheckedValues(event: any){
     const value = event.target.value;
     if(event.target.checked){
