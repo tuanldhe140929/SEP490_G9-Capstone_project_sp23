@@ -157,10 +157,13 @@ export class ProfileComponent implements OnInit {
   }
 
   becomeSeller() {
-    this.router.navigate(['/seller/createNewSeller']);
+    this.router.navigate(['becomeSeller']);
   }
 
   viewPayouts() {
     this.router.navigate(['payout']);
+  }
+  viewPurchased() {
+    this.router.navigate(['purchased']);
   }
 }

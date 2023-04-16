@@ -5,25 +5,11 @@
       <h3 class="section-title">New products</h3>
     </header>
     <div class="row">
-      <div class="col-lg-3 col-md-6 col-sm-6" *ngFor="let product of productList | 
-      paginate:{
-        itemsPerPage: 9, 
-        currentPage: page, 
-        totalItems:totalLength}">
-        <figure class="card-product-grid">
-          <a (click)="redirectProductDetails(product)" class="img-wrap rounded bg-gray-light">
-            <img height="250" class="mix-blend-multiply" [src]="getCoverImage(product)">
-          </a>
-          <a (click)="redirectProductDetails(product)" class="btn btn-primary">Chi tiết</a>
-        </figure>
-      </div>  -->
-      <!-- col end.// -->
-      <div class="col-lg-3 col-md-6 col-sm-6" *ngFor="let product of productList | paginate: {itemsPerPage: itemsPerPage, currentPage: p}">
+      <div class="col-lg-3 col-md-6 col-sm-6" *ngFor="let product of productList">
         <figure class="card-product-grid">
           <a (click)="redirectProductDetails(product)" class="img-wrap rounded bg-gray-light" style="cursor: pointer;"> 
             <img height="250" class="mix-blend-multiply" [src]="getCoverImage(product)"> 
           </a>
-
           <figcaption class="pt-2">
             <strong class="price">{{product.name}}</strong>
             <p class="title mb-2"><a (click)="searchByCategory(product.category.id)" style="cursor: pointer;">{{product.category.name}}</a> của <a (click)="searchBySeller(product.seller.id)" style="cursor: pointer;">{{product.seller.username}}</a></p>

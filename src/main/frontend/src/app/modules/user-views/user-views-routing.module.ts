@@ -53,7 +53,7 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-  path: 'seller/createNewSeller',
+  path: 'becomeSeller',
     component: LoginWithPaypalComponent,
     title: 'Trở thành người bán',
     canActivate: [AuthGuard]
