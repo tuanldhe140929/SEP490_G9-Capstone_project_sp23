@@ -61,7 +61,7 @@ const routes: Routes = [
 {
   path: 'purchased',
   component: PurchasedProductListComponent,
-  title: 'PurchasedProductList',
+  title: 'Lịch sử mua hàng',
   canActivate: [AuthGuard]
 }
 ];

@@ -6,14 +6,14 @@ import { Product } from "./Product";
 export class CartItem {
   
   product:Product;
-  cartId: Number;
-
+  cartId: number;
+	price:number;
 
 
   constructor() {
     this.cartId = new Cart().id;
   this.product = new Product;
-
+this.price = -1;
     
   }
  

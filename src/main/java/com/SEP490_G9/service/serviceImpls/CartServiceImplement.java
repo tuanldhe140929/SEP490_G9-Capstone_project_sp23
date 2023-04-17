@@ -78,6 +78,7 @@ public class CartServiceImplement implements CartService {
 			throw new IllegalArgumentException("Cannot add your own product");
 		}
 		CartItem item = new CartItem(cart, activeVersion);
+		item.setPrice(activeVersion.getPrice());
 		cartItemRepository.save(item);
 		cart.addItem(item);
 		Cart ret = cartRepository.save(cart);
@@ -174,12 +175,14 @@ public class CartServiceImplement implements CartService {
 						cartItemKey.setCartId(cart.getId());
 						cartItemKey.setProductVersionKey(pd.getProductVersionKey());
 						updatedItem.setCartItemKey(cartItemKey);
+						updatedItem.setPrice(pd.getPrice());
+						updatedItem.setCart(cart);
 						updatedItems.add(updatedItem);
 					}else {
 						cartItemRepository.delete(item);
 					}
 				}
-				System.out.println("cart size" + updatedItems.size());
+				updatedItems = cartItemRepository.saveAll(updatedItems);
 				cart.setItems(updatedItems);
 				ret = cartRepository.save(cart);
 			}
