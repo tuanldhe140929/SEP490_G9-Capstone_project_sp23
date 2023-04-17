@@ -61,5 +61,16 @@ class ViolationReposioryTest {
 		Violation result = (Violation) vioTypeRepo.findAll();
 		assertEquals(viotype, result);
 	}
+	
+	@Test
+	void testFindByName(){
+		Violation viotype = new Violation();
+		viotype.setId(1L);
+		viotype.setCreated_date(null);
+		viotype.setDescription(null);
+		viotype.setAccount(null);
+		Violation result = vioTypeRepo.findByName("Spam");
+		assertEquals(viotype, result);
+	}
 
 }
