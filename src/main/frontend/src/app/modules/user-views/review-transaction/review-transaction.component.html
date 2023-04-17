@@ -11,10 +11,10 @@
     <tbody>
       <tr *ngFor="let item of transaction.cart.items">
         <td>{{item.productDetails.name}}</td>
-        <td>{{item.productDetails.price}}</td>
+        <td>{{item.price}}</td>
       </tr>
       <tr>
-        <td>Fee</td>
+        <td>Phí</td>
         <td>{{fee}} ({{transaction.fee.percentage}}%)</td>
       </tr>
     </tbody>
@@ -40,7 +40,7 @@
 
 
   <button (click)="executePayment()" class="btn">Thanh toán</button>
-  <button (click)="cancelPayment()" class="btn cancel">Hủy bỏ</button>
+  <button (click)="cancelPayment()" class="btn cancel">Hủy</button>
 </div>
 
 

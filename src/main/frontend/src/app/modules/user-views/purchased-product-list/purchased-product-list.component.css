@@ -62,3 +62,31 @@ html {
   .my-pagination /deep/ .ngx-pagination .current {
     background: #4285f4;
   }
+
+.downloadBtn {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 3px;
+  color: #fff;
+  width: 150px;
+  text-decoration: none;
+  background-color: #FF2449;
+  border: white 1px solid;
+  cursor: pointer;
+}
+
+  .downloadBtn:hover {
+    color: #FF2449;
+    background-color: white;
+    border: #FF2449 1px solid;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+.pName:hover {
+  color: #FF2449;
+  text-decoration:underline;
+  transition: 0.15s;
+  cursor:pointer;
+  user-select:none;
+}

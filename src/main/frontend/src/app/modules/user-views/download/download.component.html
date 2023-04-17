@@ -1,3 +1,4 @@
+<app-header></app-header>
 <div class="container-fluid grad" *ngIf="product!=null">
   <div class="row padded">
     <div class="col-12 content">
@@ -33,11 +34,7 @@
       </div>
     </div>
   </div>
-  <div class="row padded">
-    <span style="font-size:20px;font-weight:600;padding:25px;">Các sản phẩm liên quan</span>
-    <div class="col-12 content"></div>
-  </div>
-</div>
+
 <ng-template #infoModal let-modal>
   <div class="modal-header">
     <h4 class="modal-title" style="color:black">Thông báo</h4>
@@ -47,3 +44,4 @@
     <small style="color:black;">{{info}}<br /></small>
   </div>
 </ng-template>
+<app-footer></app-footer>

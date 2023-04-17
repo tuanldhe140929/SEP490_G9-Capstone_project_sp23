@@ -79,7 +79,7 @@ export class CartComponent implements OnInit {
         this.isLoading = false;
         this.transaction = data;
         if (this.transaction.change) {
-          this.info = "Có sản phẩm không còn khả dụng trong giỏ hàng";
+          this.info = "Có thay đổi trong giỏ hàng";
           this.openInfoModal();
           this.getAllCartItem();
         }

@@ -6,9 +6,19 @@ export class Cart{
   items: Item[];
 }
 
+export class ProductVersionKey {
+  productId: number;
+  version: string;
+}
+export class CartItemKey {
+  productVersionKey: ProductVersionKey;
+  cartId: number;
+}
+
 export class Item {
-  cartItemKey: number;
+  cartItemKey: CartItemKey;
   productDetails: Product;
+  price:number
 }
 export enum TransactionStatus{
 	FAILED = "FAILED",COMPLETED="COMPLETED",CREATED="CREATED",

@@ -9,7 +9,7 @@ import jakarta.persistence.JoinColumns;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.Table;
-
+import jakarta.persistence.Column;
 import java.io.Serializable;
 
 import com.SEP490_G9.entities.embeddable.CartItemKey;
@@ -37,6 +37,9 @@ public class CartItem implements Serializable {
 	@JoinColumns({ @JoinColumn(name = "product_id", nullable = false),
 			@JoinColumn(name = "version", nullable = false) })
 	private ProductDetails productDetails;
+
+	@Column(name = "price", nullable = false)
+	private double price;
 
 	public CartItem() {
 
@@ -79,5 +82,13 @@ public class CartItem implements Serializable {
 
 	public void setProductDetails(ProductDetails productDetails) {
 		this.productDetails = productDetails;
+	}
+
+	public double getPrice() {
+		return price;
+	}
+
+	public void setPrice(double price) {
+		this.price = price;
 	}
 }

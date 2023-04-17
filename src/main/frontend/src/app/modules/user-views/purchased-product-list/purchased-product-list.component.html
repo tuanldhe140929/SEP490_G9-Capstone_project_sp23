@@ -1,32 +1,30 @@
 <app-header></app-header>
-<h1 style="text-align: center;">Lịch sử mua hàng</h1>
-<div class="table-responsive pb-5">
-	<table id="tbOrderHistory" class="table border ps-table w-100 mb-3">
-		<thead>
-			<tr>
-				<th class="font-weight-bold py-2 border-0 ">Tên</th>
-				<th class="font-weight-bold py-2 border-0 ">Mô tả sản phẩm</th>
-				<th class="font-weight-bold py-2 border-0 ">Giá tiền</th>
-				<th class="font-weight-bold py-2 border-0 ">Ngày mua</th>
-				<!-- <th class="font-weight-bold py-2 border-0 ">PayoutFee</th> -->
-				<!-- <th class="font-weight-bold py-2 border-0 ">Customer</th>
-							<th class="font-weight-bold py-2 border-0 ">Total</th>
-							<th class="font-weight-bold py-2 border-0 ">Status</th>
-							<th class="font-weight-bold py-2 border-0 ">Action</th> -->
-			</tr>
-			<tr *ngFor="let product of purchasedList|
+<div class="container" style="margin-top:30px;">
+	<h1 style="text-align: center;">Lịch sử mua hàng</h1>
+	<div class="table-responsive pb-5" style="min-height:400px;">
+		<table id="tbOrderHistory" class="table border ps-table w-100 mb-3">
+			<thead class="border">
+				<tr>
+					<th class="font-weight-bold py-2 border-0 ">Sản phẩm</th>
+					<th class="font-weight-bold py-2 border-0 ">Giá tiền</th>
+					<th class="font-weight-bold py-2 border-0 ">Ngày mua</th>
+					<th class="font-weight-bold py-2 border-0 ">Tải xuống</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr *ngFor="let item of displayItems|
 			paginate:{
-			   itemsPerPage: 5, 
-			   currentPage: page, 
+			   itemsPerPage: 5,
+			   currentPage: page,
 			   totalItems:totalLength}">
-				<td>{{product.name}}</td>
-				<td>{{product.description}}</td>
-				<td>{{product.price}}</td>
-				<td>{{formatTime(product.createdDate)}}</td>
-			</tr>
-		</thead>
-
-	</table>
-	<pagination-controls  class="text-center my-pagination" (pageChange) = "page = $event"></pagination-controls>
+					<td><span (click)="viewProduct(item)" class="pName">{{item.item.productDetails.name}}</span></td>
+					<td>{{item.item.price}}$</td>
+					<td>{{formatTime(item.date)}}</td>
+					<td><button class="downloadBtn" (click)="download(item)">Tải xuống</button></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<pagination-controls class="text-center my-pagination" (pageChange)="page = $event"></pagination-controls>
 </div>
 <app-footer></app-footer>
