@@ -42,7 +42,7 @@ public class ProductDetailsController {
 	public ResponseEntity<?> getFilteredProducts(@RequestParam("keyword") String keyword,
 			@RequestParam("categoryid") int categoryid, @RequestParam("tagidlist") List<Integer> tagidlist,
 			@RequestParam("min") int min, @RequestParam("max") int max) {
-		List<ProductDetails> filteredProducts = productDetailsService.getProductForS earching(keyword, categoryid,
+		List<ProductDetails> filteredProducts = productDetailsService.getProductForSearching(keyword, categoryid,
 				tagidlist, min, max);
 		List<ProductDetailsDTO> filteredProductsDto = new ArrayList<>();
 		for (ProductDetails result : filteredProducts) {
