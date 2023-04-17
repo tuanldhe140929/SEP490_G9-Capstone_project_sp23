@@ -7,6 +7,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -22,6 +23,7 @@ import com.SEP490_G9.entities.Report;
 import com.SEP490_G9.entities.Tag;
 import com.SEP490_G9.entities.Violation;
 import com.SEP490_G9.entities.ViolationType;
+import com.SEP490_G9.repository.ViolationRepository;
 import com.SEP490_G9.repository.ViolationTypeRepository;
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @DataJpaTest
@@ -30,7 +32,7 @@ import com.SEP490_G9.repository.ViolationTypeRepository;
 class ViolationReposioryTest {
 
 	@Autowired
-	Violation vioTypeRepo;
+	ViolationRepository vioTypeRepo;
 	
 	
 	@Test
@@ -45,7 +47,29 @@ class ViolationReposioryTest {
 		viotype.setCreated_date(null);
 		viotype.setDescription(null);
 		viotype.setAccount(null);
-		Violation result = vioTypeRepo.findById(1L);
+		Optional<Violation> result = vioTypeRepo.findById(1L);
+		assertEquals(viotype, result);
+	}
+	
+	@Test
+	void testFindAll(){
+		Violation viotype = new Violation();
+		viotype.setId(1L);
+		viotype.setCreated_date(null);
+		viotype.setDescription(null);
+		viotype.setAccount(null);
+		Violation result = (Violation) vioTypeRepo.findAll();
+		assertEquals(viotype, result);
+	}
+	
+	@Test
+	void testFindByName(){
+		Violation viotype = new Violation();
+		viotype.setId(1L);
+		viotype.setCreated_date(null);
+		viotype.setDescription(null);
+		viotype.setAccount(null);
+		Violation result = vioTypeRepo.findByName("Spam");
 		assertEquals(viotype, result);
 	}
 
