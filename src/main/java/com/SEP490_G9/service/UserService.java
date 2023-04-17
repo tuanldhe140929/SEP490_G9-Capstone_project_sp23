@@ -25,7 +25,7 @@ public interface UserService {
 
 	public User updateUser(String newUserName, String newFirstName, String newLastName);
 
-	public String uploadAvatar(MultipartFile coverImage) throws IOException;
+	public String uploadAvatar(MultipartFile coverImage);
 
 
 	List<User> getAllUsers();

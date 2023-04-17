@@ -24,6 +24,7 @@ import com.SEP490_G9.entities.Account;
 import com.SEP490_G9.entities.Product;
 import com.SEP490_G9.entities.Role;
 import com.SEP490_G9.entities.Seller;
+import com.SEP490_G9.entities.User;
 import com.SEP490_G9.repository.AccountRepository;
 import com.SEP490_G9.repository.ProductRepository;
 import com.SEP490_G9.repository.RoleRepository;
@@ -31,6 +32,7 @@ import com.SEP490_G9.repository.SellerRepository;
 import com.SEP490_G9.repository.UserRepository;
 import com.SEP490_G9.service.serviceImpls.AccountServiceImpl;
 import com.SEP490_G9.service.serviceImpls.SellerServiceImpl;
+
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @DataJpaTest
 @RunWith(SpringRunner.class)
@@ -38,27 +40,24 @@ import com.SEP490_G9.service.serviceImpls.SellerServiceImpl;
 class SellerServiceTest {
 	@Mock
 	AccountRepository accountRepo;
-	
-	@Autowired
+
+	@Mock
 	SellerRepository sellerRepo;
-	
+
 	@Autowired
 	UserRepository userRepo;
 
-	@InjectMocks
-	AccountServiceImpl accountServiceImpl;
-	
 	@Autowired
 	ProductRepository productRepo;
-	
+
 	@InjectMocks
 	SellerServiceImpl sellerImpl;
-	
+
 	@Mock
 	RoleRepository roleRepo;
-	
-	@Test 
-	void testGetAllSeller() {
+
+	@Test
+	void testGetAllSeller_1() {
 		Role sellerRoleInDB = new Role(4, "ROLE_SELLER");
 		when(roleRepo.findById(Constant.SELLER_ROLE_ID)).thenReturn(sellerRoleInDB);
 
@@ -66,57 +65,109 @@ class SellerServiceTest {
 		Role role = roleRepo.findById(Constant.SELLER_ROLE_ID);
 		sellerRole.add(role);
 
-		List<Account> expected = new ArrayList<>();
+		List<Seller> expected = new ArrayList<>();
 
 		Account sellerAccount = new Account();
+
 		sellerAccount.setRoles(sellerRole);
 		sellerAccount.setId((long) 1);
-		expected.add(sellerAccount);
-
+		
+		User u = new User(sellerAccount);
+		Seller s = new Seller(u);
+		expected.add(s);
+		
 		Account sellerAccount2 = new Account();
 		sellerAccount2.setRoles(sellerRole);
-		sellerAccount2.setId((long) 1);
-		expected.add(sellerAccount2);
-
-		when(accountRepo.findByRolesIn(sellerRole)).thenReturn(expected);
+		sellerAccount2.setId((long) 2);
+		
+		User u1 = new User(sellerAccount2);
+		Seller s1 = new Seller(u1);
+		expected.add(s1);
+		
+		when(sellerRepo.findAll()).thenReturn(expected);
 
 		int expectedSize = 1;
-		List<Account> result = accountServiceImpl.getAllStaffs();
+		List<Seller> result = sellerImpl.getAllSellers();
 		assertThat(result).isEqualTo(expected);
 		assertThat(result.size()).isEqualTo(2);
 	}
-	
+
 	@Test
+	void testGetAllSeller_2() {
+		Role sellerRoleInDB = new Role(4, "ROLE_SELLER");
+		when(roleRepo.findById(Constant.SELLER_ROLE_ID)).thenReturn(sellerRoleInDB);
+
+		List<Role> sellerRole = new ArrayList<>();
+		Role role = roleRepo.findById(Constant.SELLER_ROLE_ID);
+		sellerRole.add(role);
+
+		List<Seller> expected = new ArrayList<>();
+
+		Account sellerAccount = new Account();
+
+		sellerAccount.setRoles(sellerRole);
+		sellerAccount.setId((long) 1);
+		
+		User u = new User(sellerAccount);
+		Seller s = new Seller(u);
+		expected.add(s);
+		
+		
+		when(sellerRepo.findAll()).thenReturn(expected);
+
+		int expectedSize = 1;
+		List<Seller> result = sellerImpl.getAllSellers();
+		assertThat(result).isEqualTo(expected);
+		assertThat(result.size()).isEqualTo(1);
+	}
+	@Test
+	void testGetAllSeller_3() {
+		Role sellerRoleInDB = new Role(4, "ROLE_SELLER");
+		when(roleRepo.findById(Constant.SELLER_ROLE_ID)).thenReturn(sellerRoleInDB);
+
+		List<Role> sellerRole = new ArrayList<>();
+		Role role = roleRepo.findById(Constant.SELLER_ROLE_ID);
+		sellerRole.add(role);
+
+		List<Seller> expected = new ArrayList<>();
+		
+		when(sellerRepo.findAll()).thenReturn(expected);
+
+		int expectedSize = 1;
+		List<Seller> result = sellerImpl.getAllSellers();
+		assertThat(result).isEqualTo(expected);
+		assertThat(result.size()).isEqualTo(0);
+	}
+
 	void testGetSellerById() {
-		Long expectedId = (long)2;
+		Long expectedId = (long) 2;
 		Seller expected = new Seller();
 		expected.setId(expectedId);
-		
+
 		when(sellerRepo.findById(expectedId).get()).thenReturn(expected);
 		Seller result = sellerRepo.findById(expectedId).get();
 		assertThat(result.getId()).isEqualTo(expectedId);
 	}
-	@Test
+
 	void testgetSellerByAProduct() {
 		Seller seller = new Seller();
-		seller.setId((long)1);
-		
+		seller.setId((long) 1);
+
 		Product p1 = new Product();
-		p1.setId((long)1);
+		p1.setId((long) 1);
 		p1.setSeller(seller);
-		
+
 		Product p2 = new Product();
-		p2.setId((long)2);
+		p2.setId((long) 2);
 		p2.setSeller(seller);
-		
+
 		List<Product> expected = new ArrayList<>();
 		expected.add(p1);
 		expected.add(p2);
-		
-		when(productRepo.findById((long)1)).thenReturn(expected);
-		Seller result = sellerImpl.getSellerByAProduct((long)1);
-		
+
+		when(productRepo.findById((long) 1)).thenReturn(expected);
+		Seller result = sellerImpl.getSellerByAProduct((long) 1);
+
 	}
-	
 
 }

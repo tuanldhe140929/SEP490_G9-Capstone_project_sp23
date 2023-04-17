@@ -64,6 +64,9 @@ public class CartServiceImplement implements CartService {
 	@Override
 	public Cart addItem(Long productId, Long cartId) {
 		Cart cart = getById(cartId);
+		if(cart.getItems().size() == 10) {
+			throw new IllegalArgumentException("Exeeded max number of items");
+		}
 		if (isUserPurchasedProduct(cart.getUser().getId(), productId)) {
 			throw new IllegalArgumentException("User had already own product");
 		}
@@ -87,13 +90,14 @@ public class CartServiceImplement implements CartService {
 
 	@Override
 	public boolean isCartHadPurchased(Long cartId) {
+		boolean ret = false;
 		Cart cart = cartRepository.findById(cartId).orElseThrow();
 		for (Transaction transaction : cart.getTransactions()) {
 			if (transaction.getStatus().equals(Transaction.Status.COMPLETED)) {
-				return true;
+				ret = true;
 			}
 		}
-		return false;
+		return ret;
 	}
 
 	@Override

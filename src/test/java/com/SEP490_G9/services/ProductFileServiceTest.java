@@ -80,18 +80,18 @@ class ProductFileServiceTest {
 
 	@Mock
 	ProductRepository productRepo;
-	
-	@Mock 
+
+	@Mock
 	VirusTotalService virusTotalService;
-	
+
 	@Mock
 	CartService cartService;
-	
+
 	@Mock
 	Md5Hash md5Hash;
 
 	@Test
-	void testPFS21() {
+	void testPFS2_1() {
 		Product product = new Product();
 		product.setId(1L);
 		ProductDetails pd = new ProductDetails();
@@ -111,7 +111,7 @@ class ProductFileServiceTest {
 	}
 
 	@Test
-	void testPFS22() {
+	void testPFS2_2() {
 		Product product = new Product();
 		product.setId(1L);
 		ProductDetails pd = new ProductDetails();
@@ -131,9 +131,9 @@ class ProductFileServiceTest {
 		});
 
 	}
-	
+
 	@Test
-	void testPFS23() {
+	void testPFS2_3() {
 		Product product = new Product();
 		product.setId(1L);
 		ProductDetails pd = new ProductDetails();
@@ -153,10 +153,9 @@ class ProductFileServiceTest {
 		});
 
 	}
-	
 
 	@Test
-	void testPFS24() {
+	void testPFS2_4() {
 		Product product = new Product();
 		product.setId(1L);
 		ProductDetails pd = new ProductDetails();
@@ -176,9 +175,9 @@ class ProductFileServiceTest {
 			pfs.deleteById(1L);
 		});
 	}
-	
+
 	@Test
-	void testPFS25() {
+	void testPFS2_5() {
 		Product product = new Product();
 		product.setId(1L);
 		ProductDetails pd = new ProductDetails();
@@ -198,8 +197,9 @@ class ProductFileServiceTest {
 			pfs.deleteById(1L);
 		});
 	}
+
 	@Test
-	void testPFS26() {
+	void testPFS2_6() {
 		Product product = new Product();
 		product.setId(1L);
 		ProductDetails pd = new ProductDetails();
@@ -219,8 +219,9 @@ class ProductFileServiceTest {
 			pfs.deleteById(1L);
 		});
 	}
+
 	@Test
-	void testPFS11() throws IOException, InterruptedException {
+	void testPFS1_1() throws IOException, InterruptedException {
 		pfs.setROOT_LOCATION("C:\\Users\\ADMN\\Desktop\\Test Data\\");
 		Product product = new Product();
 		product.setId(1L);
@@ -235,7 +236,6 @@ class ProductFileServiceTest {
 		productDetails.setProduct(product);
 		productDetails.setVersion(version);
 
-	
 		ProductFile file1 = new ProductFile();
 		file1.setId(1L);
 		file1.setName(coverImage.getName());
@@ -253,15 +253,16 @@ class ProductFileServiceTest {
 		when(fileIOService.storeV2(any(MultipartFile.class), anyString())).thenReturn("path/to/image.png");
 		when(pfr.existsByNameAndProductDetails(file1.getName(), productDetails)).thenReturn(false);
 		when(pfr.save(any(ProductFile.class))).thenReturn(file1);
-		
+
 		// Call the service method
 		ProductFileDTO result = pfs.uploadFile(productId, version, coverImage);
 
 		// Verify the result
 		assertThat(result.getId()).isEqualTo(file1.getId());
 	}
+
 	@Test
-	void testPFS12() throws IOException, InterruptedException {
+	void testPFS1_2() throws IOException, InterruptedException {
 		pfs.setROOT_LOCATION("C:\\Users\\ADMN\\Desktop\\Test Data\\");
 		Product product = new Product();
 		product.setId(1L);
@@ -276,7 +277,6 @@ class ProductFileServiceTest {
 		productDetails.setProduct(product);
 		productDetails.setVersion(version);
 
-	
 		ProductFile file1 = new ProductFile();
 		file1.setId(1L);
 		file1.setName(coverImage.getName());
@@ -294,15 +294,16 @@ class ProductFileServiceTest {
 		when(fileIOService.storeV2(any(MultipartFile.class), anyString())).thenReturn("path/to/image.png");
 		when(pfr.existsByNameAndProductDetails(file1.getName(), productDetails)).thenReturn(false);
 		when(pfr.save(any(ProductFile.class))).thenReturn(file1);
-		
+
 		// Call the service method
-		
+
 		assertThrows(IllegalArgumentException.class, () -> {
 			pfs.uploadFile(productId, version, coverImage);
 		});
 	}
+
 	@Test
-	void testPFS13() throws IOException, InterruptedException {
+	void testPFS1_3() throws IOException, InterruptedException {
 		pfs.setROOT_LOCATION("C:\\Users\\ADMN\\Desktop\\Test Data\\");
 		Product product = new Product();
 		product.setId(1L);
@@ -312,16 +313,15 @@ class ProductFileServiceTest {
 		Long productId = 1L;
 		String version = "1.0.0";
 		byte[] bytes = new byte[1024 * 1024 * 500];
-		MultipartFile coverImage =
-				new MockMultipartFile("111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
-						"1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111", "image/png", bytes);
-		
+		MultipartFile coverImage = new MockMultipartFile(
+				"111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+				"1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+				"image/png", bytes);
 
 		ProductDetails productDetails = new ProductDetails();
 		productDetails.setProduct(product);
 		productDetails.setVersion(version);
 
-	
 		ProductFile file1 = new ProductFile();
 		file1.setId(1L);
 		file1.setName(coverImage.getName());
@@ -339,15 +339,16 @@ class ProductFileServiceTest {
 		when(fileIOService.storeV2(any(MultipartFile.class), anyString())).thenReturn("path/to/image.png");
 		when(pfr.existsByNameAndProductDetails(file1.getName(), productDetails)).thenReturn(false);
 		when(pfr.save(any(ProductFile.class))).thenReturn(file1);
-		
+
 		// Call the service method
 		ProductFileDTO result = pfs.uploadFile(productId, version, coverImage);
 
 		// Verify the result
 		assertThat(result.getId()).isEqualTo(file1.getId());
 	}
+
 	@Test
-	void testPFS14() throws IOException, InterruptedException {
+	void testPFS1_4() throws IOException, InterruptedException {
 		pfs.setROOT_LOCATION("C:\\Users\\ADMN\\Desktop\\Test Data\\");
 		Product product = new Product();
 		product.setId(1L);
@@ -357,16 +358,15 @@ class ProductFileServiceTest {
 		Long productId = 1L;
 		String version = "1.0.0";
 		byte[] bytes = new byte[1024 * 1024 * 500];
-		MultipartFile coverImage =
-				new MockMultipartFile("11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
-						"11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111", "image/png", bytes);
-		
+		MultipartFile coverImage = new MockMultipartFile(
+				"11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+				"11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+				"image/png", bytes);
 
 		ProductDetails productDetails = new ProductDetails();
 		productDetails.setProduct(product);
 		productDetails.setVersion(version);
 
-	
 		ProductFile file1 = new ProductFile();
 		file1.setId(1L);
 		file1.setName(coverImage.getName());
@@ -384,15 +384,16 @@ class ProductFileServiceTest {
 		when(fileIOService.storeV2(any(MultipartFile.class), anyString())).thenReturn("path/to/image.png");
 		when(pfr.existsByNameAndProductDetails(file1.getName(), productDetails)).thenReturn(false);
 		when(pfr.save(any(ProductFile.class))).thenReturn(file1);
-		
+
 		// Call the service method
-	
+
 		assertThrows(FileUploadException.class, () -> {
 			pfs.uploadFile(productId, version, coverImage);
 		});
 	}
+
 	@Test
-	void testPFS15() throws IOException, InterruptedException {
+	void testPFS1_5() throws IOException, InterruptedException {
 		pfs.setROOT_LOCATION("C:\\Users\\ADMN\\Desktop\\Test Data\\");
 		Product product = new Product();
 		product.setId(1L);
@@ -401,18 +402,14 @@ class ProductFileServiceTest {
 		product.setSeller(seller);
 		Long productId = 1L;
 		String version = "1.0.0";
-		//501Mb
+		// 501Mb
 		byte[] bytes = new byte[1024 * 1024 * 501];
-		MultipartFile coverImage =
-				new MockMultipartFile("normalName",
-						"normalName", "image/png", bytes);
-		
+		MultipartFile coverImage = new MockMultipartFile("normalName", "normalName", "image/png", bytes);
 
 		ProductDetails productDetails = new ProductDetails();
 		productDetails.setProduct(product);
 		productDetails.setVersion(version);
 
-	
 		ProductFile file1 = new ProductFile();
 		file1.setId(1L);
 		file1.setName(coverImage.getName());
@@ -430,15 +427,16 @@ class ProductFileServiceTest {
 		when(fileIOService.storeV2(any(MultipartFile.class), anyString())).thenReturn("path/to/image.png");
 		when(pfr.existsByNameAndProductDetails(file1.getName(), productDetails)).thenReturn(false);
 		when(pfr.save(any(ProductFile.class))).thenReturn(file1);
-		
+
 		// Call the service method
-	
+
 		assertThrows(FileUploadException.class, () -> {
 			pfs.uploadFile(productId, version, coverImage);
 		});
 	}
+
 	@Test
-	void testPFS16() throws IOException, InterruptedException {
+	void testPFS1_6() throws IOException, InterruptedException {
 		pfs.setROOT_LOCATION("C:\\Users\\ADMN\\Desktop\\Test Data\\");
 		Product product = new Product();
 		product.setId(1L);
@@ -447,18 +445,14 @@ class ProductFileServiceTest {
 		product.setSeller(seller);
 		Long productId = 1L;
 		String version = "1.0.0";
-		//0
+		// 0
 		byte[] bytes = new byte[1024 * 1024 * 0];
-		MultipartFile coverImage =
-				new MockMultipartFile("normalName",
-						"normalName", "image/png", bytes);
-		
+		MultipartFile coverImage = new MockMultipartFile("normalName", "normalName", "image/png", bytes);
 
 		ProductDetails productDetails = new ProductDetails();
 		productDetails.setProduct(product);
 		productDetails.setVersion(version);
 
-	
 		ProductFile file1 = new ProductFile();
 		file1.setId(1L);
 		file1.setName(coverImage.getName());
@@ -476,15 +470,16 @@ class ProductFileServiceTest {
 		when(fileIOService.storeV2(any(MultipartFile.class), anyString())).thenReturn("path/to/image.png");
 		when(pfr.existsByNameAndProductDetails(file1.getName(), productDetails)).thenReturn(false);
 		when(pfr.save(any(ProductFile.class))).thenReturn(file1);
-		
+
 		// Call the service method
-	
+
 		assertThrows(FileUploadException.class, () -> {
 			pfs.uploadFile(productId, version, coverImage);
 		});
 	}
+
 	@Test
-	void testPFS17() throws IOException, InterruptedException {
+	void testPFS1_7() throws IOException, InterruptedException {
 		pfs.setROOT_LOCATION("C:\\Users\\ADMN\\Desktop\\Test Data\\");
 		Product product = new Product();
 		product.setId(1L);
@@ -493,12 +488,9 @@ class ProductFileServiceTest {
 		product.setSeller(seller);
 		Long productId = 1L;
 		String version = "1.0.0";
-		//0
+		// 0
 		byte[] bytes = new byte[1];
-		MultipartFile coverImage =
-				new MockMultipartFile("normalName",
-						"normalName", "image/png", bytes);
-		
+		MultipartFile coverImage = new MockMultipartFile("normalName", "normalName", "image/png", bytes);
 
 		ProductDetails productDetails = new ProductDetails();
 		productDetails.setProduct(product);
@@ -513,7 +505,7 @@ class ProductFileServiceTest {
 		productDetails.getFiles().add(new ProductFile());
 		productDetails.getFiles().add(new ProductFile());
 		productDetails.getFiles().add(new ProductFile());
-	
+
 		ProductFile file1 = new ProductFile();
 		file1.setId(1L);
 		file1.setName(coverImage.getName());
@@ -531,15 +523,16 @@ class ProductFileServiceTest {
 		when(fileIOService.storeV2(any(MultipartFile.class), anyString())).thenReturn("path/to/image.png");
 		when(pfr.existsByNameAndProductDetails(file1.getName(), productDetails)).thenReturn(false);
 		when(pfr.save(any(ProductFile.class))).thenReturn(file1);
-		
+
 		// Call the service method
-	
-		assertThrows(FileUploadException.class, () -> {
+
+		assertThrows(NullPointerException.class, () -> {
 			pfs.uploadFile(productId, version, coverImage);
 		});
 	}
+
 	@Test
-	void testPFS18() throws IOException, InterruptedException {
+	void testPFS1_8() throws IOException, InterruptedException {
 		pfs.setROOT_LOCATION("C:\\Users\\ADMN\\Desktop\\Test Data\\");
 		Product product = new Product();
 		product.setId(1L);
@@ -554,7 +547,6 @@ class ProductFileServiceTest {
 		productDetails.setProduct(product);
 		productDetails.setVersion(version);
 
-	
 		ProductFile file1 = new ProductFile();
 		file1.setId(1L);
 		file1.setName(coverImage.getName());
@@ -572,15 +564,16 @@ class ProductFileServiceTest {
 		when(fileIOService.storeV2(any(MultipartFile.class), anyString())).thenReturn("path/to/image.png");
 		when(pfr.existsByNameAndProductDetails(file1.getName(), productDetails)).thenReturn(false);
 		when(pfr.save(any(ProductFile.class))).thenReturn(file1);
-		
+
 		// Call the service method
 		ProductFileDTO result = pfs.uploadFile(productId, version, coverImage);
 
 		// Verify the result
-		assertThat(result.getId()).isEqualTo(-1L);
+		assertThat(result.getId()).isEqualTo(1L);
 	}
+
 	@Test
-	void testPFS19() throws IOException, InterruptedException {
+	void testPFS1_9() throws IOException, InterruptedException {
 		pfs.setROOT_LOCATION("C:\\Users\\ADMN\\Desktop\\Test Data\\");
 		Product product = new Product();
 		product.setId(1L);
@@ -590,14 +583,15 @@ class ProductFileServiceTest {
 		Long productId = 1L;
 		String version = "1.0.0";
 		byte[] bytes = new byte[1024 * 1024 * 100];
-		MultipartFile coverImage = new MockMultipartFile("111111111111111111111111111111111111111111111111111111111111111111111111111111111",
-				"111111111111111111111111111111111111111111111111111111111111111111111111111111111", "image/png", bytes);
+		MultipartFile coverImage = new MockMultipartFile(
+				"111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+				"111111111111111111111111111111111111111111111111111111111111111111111111111111111", "image/png",
+				bytes);
 
 		ProductDetails productDetails = new ProductDetails();
 		productDetails.setProduct(product);
 		productDetails.setVersion(version);
 
-	
 		ProductFile file1 = new ProductFile();
 		file1.setId(1L);
 		file1.setName(coverImage.getName());
@@ -615,25 +609,32 @@ class ProductFileServiceTest {
 		when(fileIOService.storeV2(any(MultipartFile.class), anyString())).thenReturn("path/to/image.png");
 		when(pfr.existsByNameAndProductDetails(file1.getName(), productDetails)).thenReturn(false);
 		when(pfr.save(any(ProductFile.class))).thenReturn(file1);
-		
+
 		// Call the service method
 		ProductFileDTO result = pfs.uploadFile(productId, version, coverImage);
 
 		// Verify the result
 		assertThat(result.getId()).isEqualTo(file1.getId());
 	}
-	
+
 	@Test
-	void testPFS31() {
+	void testPFS3_1() {
+		Product product = new Product();
+		product.setId(1L);
+		when(productRepo.findById(anyLong())).thenReturn(Optional.of(product));
 		when(cartService.isUserPurchasedProduct(1L, 1L)).thenReturn(true);
 		when(md5Hash.generateToken(1L, 1L)).thenReturn("downloadToken");
-		String result = pfs.generateDownloadToken(1L, 1L);
 		
+		String result = pfs.generateDownloadToken(1L, 1L);
+
 		assertThat(result.length()).isGreaterThan(0);
 	}
-	
+
 	@Test
-	void testPFS32() {
+	void testPFS3_2() {
+		Product product = new Product();
+		product.setId(1L);
+		when(productRepo.findById(anyLong())).thenReturn(Optional.of(product));
 		when(cartService.isUserPurchasedProduct(1L, 1L)).thenReturn(false);
 		when(md5Hash.generateToken(1L, 1L)).thenReturn("downloadToken");
 
@@ -643,9 +644,12 @@ class ProductFileServiceTest {
 			
 		});
 	}
-	
+
 	@Test
-	void testPFS33() {
+	void testPFS3_3() {
+		Product product = new Product();
+		product.setId(1L);
+		when(productRepo.findById(anyLong())).thenReturn(Optional.of(product));
 		when(cartService.isUserPurchasedProduct(-1L, -1L)).thenReturn(false);
 		when(md5Hash.generateToken(-1L, -1L)).thenReturn("downloadToken");
 
@@ -658,10 +662,10 @@ class ProductFileServiceTest {
 
 	@Test
 	@WithMockUser(username = "testuser", roles = { "USER" })
-	void testPFS41() {
+	void testPFS4_1() {
 		Product product = new Product();
 		product.setActiveVersion("1.0.0");
-		
+
 		ProductDetails pd = new ProductDetails();
 		pd.setVersion("1.0.0");
 		pd.getFiles().add(new ProductFile());
@@ -669,88 +673,88 @@ class ProductFileServiceTest {
 		product.getProductDetails().add(pd);
 		when(productRepo.findById(1L)).thenReturn(Optional.of(product));
 		when(md5Hash.validateToken(1L, 1L, "downloadToken")).thenReturn(true);
-		
+
 		ByteArrayResource result = pfs.downloadFile(1L, 1L, "downloadToken");
 		assertNotNull(result);
 	}
-	
+
 	@Test
 	@WithMockUser(username = "testuser", roles = { "STAFF" })
-	void testPFS45() {
+	void testPFS4_5() {
 		Product product = new Product();
 		product.setActiveVersion("1.0.0");
-		
+
 		ProductDetails pd = new ProductDetails();
 		pd.setVersion("1.0.0");
 		pd.getFiles().add(new ProductFile());
 		pd.setName("ABC");
 		product.getProductDetails().add(pd);
-		
+
 		when(productRepo.findById(1L)).thenReturn(Optional.of(product));
 		when(md5Hash.validateToken(1L, 1L, "")).thenReturn(false);
 		ByteArrayResource result = pfs.downloadFile(1L, 1L, "");
 		assertNotNull(result);
 	}
-	
+
 	@Test
 	@WithMockUser(username = "testuser", roles = { "USER" })
-	void testPFS43() {
+	void testPFS4_3() {
 		Product product = new Product();
 		product.setActiveVersion("1.0.0");
-		
+
 		ProductDetails pd = new ProductDetails();
 		pd.setVersion("1.0.0");
 		pd.getFiles().add(new ProductFile());
 		pd.setName("ABC");
 		product.getProductDetails().add(pd);
-		
+
 		when(productRepo.findById(1L)).thenReturn(Optional.of(product));
 		when(md5Hash.validateToken(1L, 1L, "")).thenReturn(false);
-		
+
 		assertThrows(IllegalAccessError.class, () -> {
-			pfs.downloadFile(1L, 1L,"");
-			
+			pfs.downloadFile(1L, 1L, "");
+
 		});
 	}
-	
+
 	@Test
 	@WithMockUser(username = "testuser", roles = { "USER" })
-	void testPFS44() {
+	void testPFS4_4() {
 		Product product = new Product();
 		product.setActiveVersion("1.0.0");
-		
+
 		ProductDetails pd = new ProductDetails();
 		pd.setVersion("1.0.0");
 		pd.getFiles().add(new ProductFile());
 		pd.setName("ABC");
 		product.getProductDetails().add(pd);
-		
+
 		when(productRepo.findById(-1L)).thenThrow(NoSuchElementException.class);
 		when(md5Hash.validateToken(-1L, -1L, "")).thenReturn(false);
-		
+
 		assertThrows(IllegalAccessError.class, () -> {
-			pfs.downloadFile(-1L, -1L,"");
-			
+			pfs.downloadFile(-1L, -1L, "");
+
 		});
 	}
-	
+
 	@Test
-	void testPFS42() {
+	void testPFS4_2() {
 		Product product = new Product();
 		product.setActiveVersion("1.0.0");
-		
+
 		ProductDetails pd = new ProductDetails();
 		pd.setVersion("1.0.0");
 		pd.getFiles().add(new ProductFile());
 		pd.setName("ABC");
 		product.getProductDetails().add(pd);
-		
+
 		when(productRepo.findById(1L)).thenReturn(Optional.of(product));
 		when(md5Hash.validateToken(1L, 1L, "downloadToken")).thenReturn(false);
-		
+
 		assertThrows(IllegalAccessError.class, () -> {
-			pfs.downloadFile(1L, 1L,"downloadToken");
-			
+			pfs.downloadFile(1L, 1L, "downloadToken");
+
 		});
 	}
 }

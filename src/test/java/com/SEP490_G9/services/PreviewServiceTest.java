@@ -82,7 +82,7 @@ class PreviewServiceTest {
 		// Verify the result
 		assertThat(result.get(0).getId()).isEqualTo(1L);
 	}
-
+ 
 	@Test
 	void testPS2_2() {
 		Product product = new Product();

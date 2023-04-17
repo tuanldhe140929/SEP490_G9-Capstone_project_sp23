@@ -12,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.SEP490_G9.common.Validator;
 import com.SEP490_G9.entities.Account;
 import com.SEP490_G9.entities.User;
 import com.SEP490_G9.entities.UserDetailsImpl;
@@ -26,7 +27,6 @@ import com.paypal.base.rest.PayPalRESTException;
 
 import io.netty.handler.codec.http.HttpResponse;
 import jakarta.validation.Valid;
-
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -44,9 +44,13 @@ public class UserServiceImpl implements UserService {
 
 	@Value("${root.location}")
 	private String ROOT_LOCATION;
+
 	@Autowired
 	PaypalServiceImpl paypalimpl;
-	
+
+	@Autowired
+	Validator validator = new Validator();
+
 	@Override
 	public User getById(Long userId) {
 		User user = userRepository.findById(userId).get();
@@ -55,7 +59,7 @@ public class UserServiceImpl implements UserService {
 		}
 		return user;
 	}
-	
+
 	@Override
 	public User getByEmail(String email) {
 		User user = userRepository.findByEmail(email);
@@ -64,7 +68,7 @@ public class UserServiceImpl implements UserService {
 		}
 		return user;
 	}
-	
+
 	@Override
 	public User createUser(@Valid User user) {
 		if (userRepository.existsByEmail(user.getEmail())) {
@@ -80,6 +84,31 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User update(User user) {
+		user.setEmail(validator.removeSpareSpaces(user.getEmail().trim()));
+		user.setFirstName(validator.removeSpareSpaces(user.getFirstName().trim()));
+		user.setLastName(validator.removeSpareSpaces(user.getLastName().trim()));
+		user.setUsername(validator.removeSpareSpaces(user.getUsername().trim()));
+		
+		if (!validator.validateEmail(user.getEmail())) {
+			throw new IllegalArgumentException();
+		}
+		if (!validator.validateLength(user.getEmail(), 1, 320, false)) {
+			throw new IllegalArgumentException();
+		}
+
+		if (!validator.validateLength(user.getFirstName(), 0, 255, true)) {
+			throw new IllegalArgumentException();
+		}
+
+		if (!validator.validateLength(user.getLastName(), 0, 255, true)) {
+			throw new IllegalArgumentException();
+		}
+
+		if (!validator.validateLength(user.getUsername(), 3, 30, false)
+				|| validator.containsSpecialCharacter(user.getUsername())) {
+			throw new IllegalArgumentException();
+		}
+
 		return userRepository.save(user);
 	}
 
@@ -107,12 +136,24 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public String uploadAvatar(MultipartFile profileImage) throws IOException {
+	public String uploadAvatar(MultipartFile profileImage) {
 		if (!checkFileType(profileImage, IMAGE_EXTENSIONS)) {
 			throw new FileUploadException(profileImage.getContentType() + " file not accept");
 		} else {
+			
+			if(!validator.validateLength(profileImage.getOriginalFilename(), 1, 100, false)) {
+				throw new IllegalArgumentException();
+			}
+			if(!validator.validateNumber(profileImage.getSize(), 1, 1024*1024*20)) {
+				throw new IllegalArgumentException();
+			}
+			
+			
+			
+			
+			
 			User user = getUserById();
-			String profileImageLocation = "account_id_"+user.getId() + "/profile";
+			String profileImageLocation = "account_id_" + user.getId() + "/profile";
 			File coverImageDir = new File(ROOT_LOCATION + profileImageLocation);
 			coverImageDir.mkdirs();
 			String storedPath = fileIOService.storeV2(profileImage, ROOT_LOCATION + profileImageLocation);
@@ -134,7 +175,7 @@ public class UserServiceImpl implements UserService {
 	private User getUserById() {
 		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
 				.getAccount();
-		User user = userRepository.getReferenceById(account.getId());
+		User user = userRepository.findById(account.getId()).orElseThrow();
 		return user;
 	}
 
@@ -150,9 +191,6 @@ public class UserServiceImpl implements UserService {
 		return user;
 	}
 
-	
-	
-	
 	public String getROOT_LOCATION() {
 		return ROOT_LOCATION;
 	}
@@ -166,7 +204,5 @@ public class UserServiceImpl implements UserService {
 		List<User> allUsers = userRepository.findAll();
 		return allUsers;
 	}
-
-
 
 }
