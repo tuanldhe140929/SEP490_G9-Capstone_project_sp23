@@ -138,8 +138,9 @@ public class ReportServiceImpl implements ReportService {
 		}
 		if(accepted>0) {
 			pd.setFlagged(true);
-			pd.setApproved(Status.REJECTED);
-			productDetailsRepository.save(pd);
+			Product bannedProduct = pd.getProduct();
+			bannedProduct.setEnabled(false);
+			productRepository.save(bannedProduct);
 		}
 		return updatedList;
 	}

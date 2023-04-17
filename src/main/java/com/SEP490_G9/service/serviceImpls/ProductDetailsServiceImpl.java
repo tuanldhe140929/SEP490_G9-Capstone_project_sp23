@@ -547,45 +547,14 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 	// hien san pham cho nhan vien dua theo trang thai bao cao
 	@Override
 	public List<ProductDetails> getProductsByReportStatus(String status) {
-//		List<ProductDetails> finalResult = new ArrayList<>();
-//		List<Report> allReports = reportRepo.findAll();
-//		if (status.equalsIgnoreCase("PENDING")) {
-//			List<ProductDetails> latestVerPd = getAllByLatestVersion();
-//			for (ProductDetails pd : latestVerPd) {
-//				Product product = pd.getProduct();
-//				long productId = product.getId();
-//				String latestVer = product.getActiveVersion();
-//				for (Report report : allReports) {
-//					if (report.getReportKey().getProductId() == productId
-//							&& report.getVersion().equalsIgnoreCase(latestVer)
-//							&& report.getStatus().equalsIgnoreCase("PENDING")) {
-//						finalResult.add(pd);
-//					}
-//				}
-//			}
-//		} else {
-//			List<ProductDetails> allPd = productDetailsRepo.findAll();
-//			for (ProductDetails pd : allPd) {
-//				Product product = pd.getProduct();
-//				long productId = product.getId();
-//				String version = pd.getVersion();
-//				for (Report report : allReports) {
-//					if (report.getReportKey().getProductId() == productId
-//							&& report.getVersion().equalsIgnoreCase(version)
-//							&& (report.getStatus().equalsIgnoreCase("ACCEPTED")
-//									|| report.getStatus().equalsIgnoreCase("DENIED"))) {
-//						finalResult.add(pd);
-//					}
-//				}
-//			}
-//		}
-//		return finalResult;
 		List<ProductDetails> allPd = productDetailsRepo.findAll();
+		List<ProductDetails> allLatestPd = getByLatestVer(allPd);
 		List<Report> allReports = reportRepo.findAll();
 		List<ProductDetails> result = new ArrayList<>();
 		if(status.equalsIgnoreCase("PENDING")) {
 			for(Report report: allReports) {
-				if(report.getStatus().equals("PENDING")) {
+				Product product = report.getProduct();
+				if(report.getStatus().equals("PENDING")&&report.getVersion().equalsIgnoreCase(product.getActiveVersion())) {
 					ProductDetails pd = getByProductIdAndVersion(report.getProduct().getId(), report.getVersion());
 					result.add(pd);
 				}
@@ -593,7 +562,8 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		}
 		if(status.equalsIgnoreCase("HANDLED")) {
 			for(Report report: allReports) {
-				if(report.getStatus().equals("ACCEPTED")||report.getStatus().equals("DENIED")) {
+				Product product = report.getProduct();
+				if((report.getStatus().equals("ACCEPTED")||report.getStatus().equals("DENIED"))) {
 					ProductDetails pd = getByProductIdAndVersion(report.getProduct().getId(), report.getVersion());
 					result.add(pd);
 				}
