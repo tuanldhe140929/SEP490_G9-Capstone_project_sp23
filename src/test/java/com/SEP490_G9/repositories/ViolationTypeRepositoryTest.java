@@ -42,16 +42,16 @@ class ViolationTypeRepositoryTest {
 	}
 	
 	
-//	@Test
-//	void testFindAll() {
-//		ViolationType vio1 = new ViolationType(1, "Horror", listreport);
-//		ViolationType vio2 = new ViolationType(2, "Adventure", listreport);
-//		ViolationType vio3 = new ViolationType(3, "Action", listreport);
-//		vioTypeRepo.save(vio1);
-//		vioTypeRepo.save(vio2);
-//		vioTypeRepo.save(vio3);
-//		List<ViolationType> expected = vioTypeRepo.findAll();
-//		assertThat(expected.size()).isEqualTo(3);
-//	}
+	@Test
+	void testFindAll() {
+		ViolationType vio1 = new ViolationType(1, "Horror", listreport);
+		ViolationType vio2 = new ViolationType(2, "Adventure", listreport);
+		ViolationType vio3 = new ViolationType(3, "Action", listreport);
+		vioTypeRepo.save(vio1);
+		vioTypeRepo.save(vio2);
+		vioTypeRepo.save(vio3);
+		List<ViolationType> expected = vioTypeRepo.findAll();
+		assertThat(expected.size()).isEqualTo(3);
+	}
 	
 }
