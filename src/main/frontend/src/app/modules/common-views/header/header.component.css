@@ -29,9 +29,10 @@
   transition: all 0.15s;
 }
 .header-main{
-  background-color: black;
+  background-color: #111;
   color: white;
+
 }
-.btn-light{
+/* .btn-light{
   background: rgb(11, 196, 226);
-}
+} */
