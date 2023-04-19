@@ -46,7 +46,7 @@ public class Transaction {
 	private TransactionFee fee;
 
 	@Column(name = "created_date", nullable = false)
-	private Date createDate;
+	private Date createdDate;
 
 	@Column(name = "last_modified", nullable = false)
 	private Date lastModified;
@@ -65,6 +65,9 @@ public class Transaction {
 
 	@Transient
 	private Payer payer;
+	
+	@Transient
+	boolean isChange;
 
 	public Transaction() {
 		// TODO Auto-generated constructor stub
@@ -102,12 +105,12 @@ public class Transaction {
 		this.status = status;
 	}
 
-	public Date getCreateDate() {
-		return createDate;
+	public Date getCreatedDate() {
+		return createdDate;
 	}
 
-	public void setCreateDate(Date createDate) {
-		this.createDate = createDate;
+	public void setCreatedDate(Date createDate) {
+		this.createdDate = createDate;
 	}
 
 	public String getPaypalId() {
@@ -166,10 +169,18 @@ public class Transaction {
 		this.expiredDate = expiredDate;
 	}
 
+	public boolean isChange() {
+		return isChange;
+	}
+
+	public void setChange(boolean isChange) {
+		this.isChange = isChange;
+	}
+
 	@Override
 	public String toString() {
 		return "Transaction [id=" + id + ", cart=" + cart + ", amount=" + amount + ", status=" + status + ", fee=" + fee
-				+ ", createDate=" + createDate + ", lastModified=" + lastModified + ", description=" + description
+				+ ", createDate=" + createdDate + ", lastModified=" + lastModified + ", description=" + description
 				+ ", paypalId=" + paypalId + ", approvalUrl=" + approvalUrl + ", payer=" + payer + "]";
 	}
 

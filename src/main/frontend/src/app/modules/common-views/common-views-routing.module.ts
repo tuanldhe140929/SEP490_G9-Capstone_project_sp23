@@ -6,7 +6,8 @@ import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.compo
 const routes: Routes = [
   {
     path: 'error',
-    component: ErrorComponent
+    component: ErrorComponent,
+    title: 'Lỗi'
   },
   {
     path: 'spinner',

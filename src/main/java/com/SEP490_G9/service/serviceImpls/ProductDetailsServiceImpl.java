@@ -3,6 +3,7 @@ package com.SEP490_G9.service.serviceImpls;
 import java.io.File;
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collector;
@@ -45,6 +46,8 @@ import com.SEP490_G9.service.PreviewService;
 import com.SEP490_G9.service.ProductDetailsService;
 import com.SEP490_G9.service.ProductService;
 import com.SEP490_G9.service.ReportService;
+
+import io.jsonwebtoken.lang.Collections;
 
 @Service
 public class ProductDetailsServiceImpl implements ProductDetailsService {
@@ -92,9 +95,15 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		List<ProductDetails> latestVerPd = new ArrayList<>();
 		for (ProductDetails pd : listPd) {
 			Product product = pd.getProduct();
-			ProductDetails latestVer = getActiveVersion(product.getId());
-			latestVerPd.add(latestVer);
+			for (ProductDetails productDetails : product.getProductDetails()) {
+				if (productDetails.getVersion().equals(product.getActiveVersion())) {
+					latestVerPd.add(productDetails);
+				}
+			}
+//			ProductDetails latestVer = getActiveVersion(product.getId());
+//			latestVerPd.add(latestVer);
 		}
+		
 		return latestVerPd.stream().distinct().toList();
 	}
 
@@ -176,7 +185,7 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 				enabledPd.add(pd);
 			}
 		}
-		return enabledPd;
+		return enabledPd;	
 	}
 
 	@Override
@@ -190,7 +199,13 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		}
 		return disabledPd;
 	}
-
+	@Override
+	public List<ProductDetails> getProductByTime(List<ProductDetails> listPd) {
+		List<ProductDetails>lastestUpdatepd = new ArrayList<>();
+		java.util.Collections.sort(listPd);
+		return listPd;
+		
+	}
 	@Override
 	public List<ProductDetails> getByKeyword(List<ProductDetails> listPd, String keyword) {
 		if (keyword.trim().isEmpty()) {
@@ -284,7 +299,6 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 			}
 		} else {
 			if (!ret.getApproved().equals(Status.APPROVED)) {
-				System.out.println(account.getId());
 				if (!isStaff(account) && !ret.getProduct().getSeller().getId().equals(account.getId())) {
 					System.out.println(isStaff(account));
 					System.out.println(ret.getProduct().getSeller().getId());
@@ -497,11 +511,10 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 	public List<ProductDetails> getProductForSearching(String keyword, int categoryid, List<Integer> tagIdList, int min,
 			int max) {
 		List<ProductDetails> allPd = getAll();
-		List<ProductDetails> allApprovedPd = getByApproved(allPd);
+		List<ProductDetails> allLatestPd = getByLatestVer(allPd);
+		List<ProductDetails> allApprovedPd = getByApproved(allLatestPd);
 		List<ProductDetails> allEnabledPd = getByEnabled(allApprovedPd);
-		List<ProductDetails> allPublishedPd = getByPublished(allEnabledPd);
-		List<ProductDetails> allLatestPd = getByLatestVer(allPublishedPd);
-		List<ProductDetails> allKeywordPd = getByKeyword(allLatestPd, keyword);
+		List<ProductDetails> allKeywordPd = getByKeyword(allEnabledPd, keyword);
 		List<ProductDetails> allCategoryPd = getByCategory(allKeywordPd, categoryid);
 		List<ProductDetails> allTagsPd = getByTags(allCategoryPd, tagIdList);
 		List<ProductDetails> finalResult = getByPriceRange(allTagsPd, min, max);
@@ -513,10 +526,10 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 	public List<ProductDetails> getProductBySellerForSeller(long sellerId, String keyword, int categoryId,
 			List<Integer> tagidlist, int min, int max) {
 		List<ProductDetails> allPd = getAll();
-		List<ProductDetails> allSellerPd = getBySeller(allPd, sellerId);
+		List<ProductDetails> allLatestPd = getByLatestVer(allPd);
+		List<ProductDetails> allSellerPd = getBySeller(allLatestPd, sellerId);
 		List<ProductDetails> allEnabledPd = getByEnabled(allSellerPd);
-		List<ProductDetails> allLatestPd = getByLatestVer(allEnabledPd);
-		List<ProductDetails> allKeywordPd = getByKeyword(allLatestPd, keyword);
+		List<ProductDetails> allKeywordPd = getByKeyword(allEnabledPd, keyword);
 		List<ProductDetails> allCategoryPd = getByCategory(allKeywordPd, categoryId);
 		List<ProductDetails> allPricePd = getByPriceRange(allCategoryPd, min, max);
 
@@ -529,11 +542,10 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 	public List<ProductDetails> getProductBySellerForUser(long sellerId, String keyword, int categoryId,
 			List<Integer> tagidlist, int min, int max) {
 		List<ProductDetails> allPd = getAll();
-		List<ProductDetails> allApprovedPd = getByApproved(allPd);
+		List<ProductDetails> allLatestPd = getByLatestVer(allPd);
+		List<ProductDetails> allApprovedPd = getByApproved(allLatestPd);
 		List<ProductDetails> allEnabledPd = getByEnabled(allApprovedPd);
-		List<ProductDetails> allPublishedPd = getByPublished(allEnabledPd);
-		List<ProductDetails> allLatestPd = getByLatestVer(allPublishedPd);
-		List<ProductDetails> allKeywordPd = getByKeyword(allLatestPd, keyword);
+		List<ProductDetails> allKeywordPd = getByKeyword(allEnabledPd, keyword);
 		List<ProductDetails> allCategoryPd = getByCategory(allKeywordPd, categoryId);
 		List<ProductDetails> allPricePd = getByPriceRange(allCategoryPd, min, max);
 		List<ProductDetails> allSellerPd = getBySeller(allPricePd, sellerId);
@@ -544,45 +556,14 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 	// hien san pham cho nhan vien dua theo trang thai bao cao
 	@Override
 	public List<ProductDetails> getProductsByReportStatus(String status) {
-//		List<ProductDetails> finalResult = new ArrayList<>();
-//		List<Report> allReports = reportRepo.findAll();
-//		if (status.equalsIgnoreCase("PENDING")) {
-//			List<ProductDetails> latestVerPd = getAllByLatestVersion();
-//			for (ProductDetails pd : latestVerPd) {
-//				Product product = pd.getProduct();
-//				long productId = product.getId();
-//				String latestVer = product.getActiveVersion();
-//				for (Report report : allReports) {
-//					if (report.getReportKey().getProductId() == productId
-//							&& report.getVersion().equalsIgnoreCase(latestVer)
-//							&& report.getStatus().equalsIgnoreCase("PENDING")) {
-//						finalResult.add(pd);
-//					}
-//				}
-//			}
-//		} else {
-//			List<ProductDetails> allPd = productDetailsRepo.findAll();
-//			for (ProductDetails pd : allPd) {
-//				Product product = pd.getProduct();
-//				long productId = product.getId();
-//				String version = pd.getVersion();
-//				for (Report report : allReports) {
-//					if (report.getReportKey().getProductId() == productId
-//							&& report.getVersion().equalsIgnoreCase(version)
-//							&& (report.getStatus().equalsIgnoreCase("ACCEPTED")
-//									|| report.getStatus().equalsIgnoreCase("DENIED"))) {
-//						finalResult.add(pd);
-//					}
-//				}
-//			}
-//		}
-//		return finalResult;
 		List<ProductDetails> allPd = productDetailsRepo.findAll();
+		List<ProductDetails> allLatestPd = getByLatestVer(allPd);
 		List<Report> allReports = reportRepo.findAll();
 		List<ProductDetails> result = new ArrayList<>();
 		if(status.equalsIgnoreCase("PENDING")) {
 			for(Report report: allReports) {
-				if(report.getStatus().equals("PENDING")) {
+				Product product = report.getProduct();
+				if(report.getStatus().equals("PENDING")&&report.getVersion().equalsIgnoreCase(product.getActiveVersion())) {
 					ProductDetails pd = getByProductIdAndVersion(report.getProduct().getId(), report.getVersion());
 					result.add(pd);
 				}
@@ -590,7 +571,8 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		}
 		if(status.equalsIgnoreCase("HANDLED")) {
 			for(Report report: allReports) {
-				if(report.getStatus().equals("ACCEPTED")||report.getStatus().equals("DENIED")) {
+				Product product = report.getProduct();
+				if((report.getStatus().equals("ACCEPTED")||report.getStatus().equals("DENIED"))) {
 					ProductDetails pd = getByProductIdAndVersion(report.getProduct().getId(), report.getVersion());
 					result.add(pd);
 				}
@@ -619,7 +601,7 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		}
 		return allStatusPd;
 	}
-
+	
 	@Override
 	public ProductDetails updateApprovalStatus(long productId, String version, String status) {
 		ProductDetails pd = getByProductIdAndVersion(productId, version);
@@ -736,4 +718,6 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		String latestVer = product.getActiveVersion();
 		return latestVer;
 	}
+
+	
 }

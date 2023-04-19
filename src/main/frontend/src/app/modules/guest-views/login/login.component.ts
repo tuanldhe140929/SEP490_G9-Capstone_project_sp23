@@ -33,6 +33,7 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
     if (this.storageService.getToken()) {
       this.role = this.storageService.getAuthResponse().role;
     }

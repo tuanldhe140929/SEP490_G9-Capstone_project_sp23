@@ -109,6 +109,7 @@ export class ProductDetailsComponent implements OnInit {
         data => {
           this.product = data;
           this.version = this.product.version;
+          this.product.price = Number.parseFloat(this.product.price.toFixed(1));
           console.log(this.product);
           if (this.DescriptionTab) {
             this.DescriptionTab.innerHTML = this.product.details;
@@ -172,6 +173,15 @@ export class ProductDetailsComponent implements OnInit {
               }
             )
           }
+
+          this.productService.getTotalPurchasedCount(this.product.id).subscribe(
+            (data) => {
+              this.totalPurchasedCount = data;
+            },
+            (error) => {
+              console.log(error);
+            }
+          );
         },
         error => {
           this.router.navigate(['error']);
@@ -212,7 +222,7 @@ export class ProductDetailsComponent implements OnInit {
     if (this.owner.avatar != null && this.owner.avatar != '') {
       imageUrl = 'http://localhost:9000/public/serveMedia/serveProfileImage?userId=' + this.owner.id;
     } else {
-      imageUrl = 'https://img.freepik.com/premium-vector/cute-ladybug-vector-illustration-isolated-white-background_543090-46.jpg?w=2000';
+      imageUrl = 'http://ssl.gstatic.com/accounts/ui/avatar_2x.png';
     }
     this.SellerImage.setAttribute('style', 'width:30px; height:30px;background-size: cover;border:1px solid black; border-radius:5px; ; background-image:url("' + imageUrl + '");');
   }
@@ -242,8 +252,10 @@ export class ProductDetailsComponent implements OnInit {
   }
 
 
-  searchTag(tag: Tag) {
-
+  searchTag(tagId: number) {
+    this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
+      this.router.navigate(['tag/'+tagId]);
+    })
   }
 
   getSrc(p: DisplayPreview) {
@@ -345,7 +357,7 @@ export class ProductDetailsComponent implements OnInit {
 
 
   get Price() {
-    return this.getFormattedValue(this.product.price);
+    return this.product.price;
   }
 
   onCheckIfReported() {
@@ -463,5 +475,11 @@ export class ProductDetailsComponent implements OnInit {
       }
     );
   }
+
+  searchByCategory(categoryId: number){
+    this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
+      this.router.navigate(['category/'+categoryId]);
+    })
   }
+}
 

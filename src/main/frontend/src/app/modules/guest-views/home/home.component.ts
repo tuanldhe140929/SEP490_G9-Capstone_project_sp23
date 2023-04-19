@@ -1,8 +1,10 @@
 import { Product } from '../../../dtos/Product';
 import { ProductService } from 'src/app/services/product.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { data } from 'jquery';
 import { Router } from '@angular/router';
+import { SlideInterface } from './types/slide.interface';
+
 
 @Component({
   selector: 'app-home',
@@ -10,14 +12,19 @@ import { Router } from '@angular/router';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit{
+  @Input() slides: SlideInterface[] = [];
   productList: Product[] = [];
   itemsPerPage: number = 9;
   p: number = 1;
+  totalLength:any;
+  page:number = 1;
+  showpost:any = [];
+  currentIndex: number = 0;
+  timeoutId?: number;
   constructor(
     private productService: ProductService,
     private router:Router
   ){}
-
 
   ngOnInit(): void {
     this.getProduct();
@@ -41,8 +48,58 @@ export class HomeComponent implements OnInit{
       data => {
         console.log(data);
         this.productList = data;
+        for (let i = 0; i < this.productList.length; i++){
+          this.productList[i].price = Number.parseFloat(this.productList[i].price.toFixed(1));
+}
       }
     )
   }
+  ngOnDestroy() {
+    window.clearTimeout(this.timeoutId);
+  }
+  resetTimer() {
+    if (this.timeoutId) {
+      window.clearTimeout(this.timeoutId);
+    }
+    this.timeoutId = window.setTimeout(() => this.goToNext(), 3000);
+  }
+
+  goToPrevious(): void {
+    const isFirstSlide = this.currentIndex === 0;
+    const newIndex = isFirstSlide
+      ? this.slides.length - 1
+      : this.currentIndex - 1;
+
+    this.resetTimer();
+    this.currentIndex = newIndex;
+  }
+
+  goToNext(): void {
+    const isLastSlide = this.currentIndex === this.slides.length - 1;
+    const newIndex = isLastSlide ? 0 : this.currentIndex + 1;
+
+    this.resetTimer();
+    this.currentIndex = newIndex;
+  }
+
+  goToSlide(slideIndex: number): void {
+    this.resetTimer();
+    this.currentIndex = slideIndex;
+  }
+
+  getCurrentSlideUrl() {
+    return `url('${this.slides[this.currentIndex].url}')`;
+  }
   
+  searchByCategory(categoryId: number){
+    this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
+      this.router.navigate(['category/'+categoryId]);
+    })
+  }
+
+  searchBySeller(sellerId: number){
+    this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
+      this.router.navigate(['collection/'+sellerId]);
+    })
+  }
 }

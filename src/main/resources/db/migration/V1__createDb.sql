@@ -34,7 +34,7 @@ END $$;
  create sequence violations_seq start with 1 increment by 50;
  create table account_role (account_id bigint not null, role_id integer not null);
  create table accounts (id bigint not null, created_date timestamp(6) not null, email varchar(320) not null, enabled boolean not null, last_modified timestamp(6), password varchar(100) not null, primary key (id));
- create table cart_items (cart_id bigint not null, product_id bigint not null, version varchar(30) not null, primary key (cart_id, product_id, version));
+ create table cart_items (cart_id bigint not null, product_id bigint not null, version varchar(30) not null,price real not null, primary key (cart_id, product_id, version));
  create table carts (id bigint not null, account_id bigint not null, primary key (id));
  create table categories (id serial not null, name varchar(255) unique not null, primary key (id));
  create table files (id bigint not null, created_date timestamp(6) not null, enabled boolean not null, last_modified timestamp(6) not null, name varchar(255) not null, new_uploaded boolean not null, reviewed boolean not null, size bigint not null, source varchar(255), type varchar(255) not null, product_id bigint not null, version varchar(30) not null, primary key (id));

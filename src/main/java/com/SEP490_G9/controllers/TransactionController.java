@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.SEP490_G9.dto.CartDTO;
 import com.SEP490_G9.dto.ProductDetailsDTO;
 import com.SEP490_G9.entities.Account;
+import com.SEP490_G9.entities.Cart;
 import com.SEP490_G9.entities.ProductDetails;
 import com.SEP490_G9.entities.Transaction;
 import com.SEP490_G9.entities.UserDetailsImpl;
@@ -57,10 +59,6 @@ public class TransactionController {
 	@GetMapping("/reviewTransaction")
 	public ResponseEntity<?> reviewTransaction(@RequestParam("paymentId") String paymentId) {
 		Transaction transaction = transactionService.getByPaymentId(paymentId);
-		if (transaction.getStatus() == Transaction.Status.CREATED) {
-			transaction.setStatus(Transaction.Status.APPROVED);
-			transactionService.updateTransaction(transaction);
-		}
 		Payer payer = paypalService.getPayerById(paymentId);
 		transaction.setPayer(payer);
 		return ResponseEntity.ok(transaction);
@@ -95,11 +93,8 @@ public class TransactionController {
 	}
 	@GetMapping("/getPurchasedProductList")
 	public ResponseEntity<?> getPurchasedProductList(){
-		List<ProductDetails> allProductPurchased = transactionService.getListCartUserPurchasedProduct();
-		List<ProductDetailsDTO> allDtoPurchased = new ArrayList<>();
-		for(ProductDetails pd : allProductPurchased) {
-			allDtoPurchased.add(new ProductDetailsDTO(pd));
-		}
-		return ResponseEntity.ok(allDtoPurchased);
+		List<Transaction> completedTransaction = transactionService.getListCartUserPurchasedProduct();
+
+		return ResponseEntity.ok(completedTransaction);
 	}
 }

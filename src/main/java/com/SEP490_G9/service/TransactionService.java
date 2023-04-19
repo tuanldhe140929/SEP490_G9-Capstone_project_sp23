@@ -32,5 +32,5 @@ public interface TransactionService {
 	
 	public boolean isCartHadPurchased(Long cartId);
 	
-	public List<ProductDetails> getListCartUserPurchasedProduct();
+	public List<Transaction> getListCartUserPurchasedProduct();
 }

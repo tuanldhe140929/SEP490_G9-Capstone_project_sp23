@@ -69,7 +69,8 @@ public class SecurityConfig {
 			"/product/getProductsCountBySellerId",
 			"/user/getUserInfo",
 			"private/manageTag/tags",
-			"/user/getAllUsers"
+			"/user/getAllUsers",
+			"/public/serveMedia/serveProfileImage"
 			};
 	
 	private String[] userApis= {
@@ -93,7 +94,7 @@ public class SecurityConfig {
 			"/transaction/cancel/**",
 			"/transaction/executeTransaction",
 			"/transaction/checkTransactionStatus",
-			"/transaction/getPurchasedProductList",
+			"/transaction/getPurchasedProductList"
 			};
 	
 	private String[] sellerApis= {

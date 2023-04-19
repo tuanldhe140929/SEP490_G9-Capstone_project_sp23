@@ -168,7 +168,7 @@ public class ProductDetailsController {
 		if(notEdited.getApproved()!=Status.NEW) {
 			throw new IllegalArgumentException("Cannot edit this version");
 		}
-		
+		System.out.println(productDetailsDTO.getPrice());
 		notEdited.setLastModified(new Date());
 		Product product = notEdited.getProduct();
 		notEdited.setTags(productDetailsDTO.getTags());
@@ -240,20 +240,29 @@ public class ProductDetailsController {
 	@GetMapping(value = "GetAllProductForHomePage")
 	public ResponseEntity<?> GetAllProductForHomePage() {
 		List<ProductDetails> allProducts = productDetailsService.getAll();
-		List<ProductDetails> EnabledProducts = productDetailsService.getByEnabled(allProducts);
-		List<ProductDetails> PublishedProducts = productDetailsService.getByPublished(EnabledProducts);
-
-		List<ProductDetails> approvedProducts = productDetailsService.getByApproved(PublishedProducts);
-		List<ProductDetails> lastestProducts = productDetailsService.getByLatestVer(approvedProducts);
-
-
+		List<ProductDetails> enabledProducts = productDetailsService.getByEnabled(allProducts);
+		List<ProductDetails> latestProducts = productDetailsService.getByLatestVer(enabledProducts);
+		List<ProductDetails> approvedProducts = productDetailsService.getByApproved(latestProducts);	
+		
 		List<ProductDetailsDTO> allProductsDTO = new ArrayList<>();
-		for (ProductDetails p : lastestProducts) {
+		for (ProductDetails p : approvedProducts) {
 			allProductsDTO.add(new ProductDetailsDTO(p));
 		}
 		return ResponseEntity.ok(allProductsDTO);
 	}
-
+@GetMapping(value ="getLastestUpdatedProductForHomePage")
+public ResponseEntity<?> LastestUpdatedProductForHomePage() {
+	List<ProductDetails> allProducts = productDetailsService.getAll();
+	List<ProductDetails> enabledProducts = productDetailsService.getByEnabled(allProducts);
+	List<ProductDetails> latestProducts = productDetailsService.getByLatestVer(enabledProducts);
+	List<ProductDetails> approvedProducts = productDetailsService.getByApproved(latestProducts);	
+	List<ProductDetails> latestUpdatedProduts = productDetailsService.getProductByTime(approvedProducts);
+	List<ProductDetailsDTO> allProductsDTO = new ArrayList<>();
+	for (ProductDetails p : latestUpdatedProduts) {
+		allProductsDTO.add(new ProductDetailsDTO(p));
+	}
+	return ResponseEntity.ok(allProductsDTO);
+}
 	@GetMapping(value = "getTotalPurchasedCount")
 	public ResponseEntity<?> getTotalPurchasedCount(@RequestParam("productId") Long productId){
 		int count = this.productDetailsService.getTotalPurchasedCount(productId);

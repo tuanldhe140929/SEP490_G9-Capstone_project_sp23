@@ -135,7 +135,7 @@ export class ReportedProductDetailsComponent implements OnInit {
     if (this.owner.avatar != null && this.owner.avatar != '') {
       imageUrl = 'http://localhost:9000/public/serveMedia/serveProfileImage?userId=' + this.owner.id;
     } else {
-      imageUrl = 'https://img.freepik.com/premium-vector/cute-ladybug-vector-illustration-isolated-white-background_543090-46.jpg?w=2000';
+      imageUrl = 'http://ssl.gstatic.com/accounts/ui/avatar_2x.png';
     }
     this.SellerImage.setAttribute('style', 'width:30px; height:30px;background-size: cover;border:1px solid black; border-radius:5px; ; background-image:url("' + imageUrl + '");');
   }
@@ -170,6 +170,8 @@ export class ReportedProductDetailsComponent implements OnInit {
           if (this.DescriptionTab) {
             this.DescriptionTab.innerHTML = this.product.details;
           }
+          this.product.price = Number.parseFloat(this.product.price.toFixed(1));
+
           this.owner = data.seller;
           this.getSellerTotalProductCount(this.owner.id);
           this.getProfileImage();
@@ -305,7 +307,7 @@ export class ReportedProductDetailsComponent implements OnInit {
 
 
   get Price() {
-    return this.getFormattedValue(this.product.price);
+    return this.product.price;
   }
 
   redirectSellerPage() {
@@ -348,6 +350,7 @@ export class ReportedProductDetailsComponent implements OnInit {
       data => {
         this.displayPreviews = [];
         this.product = data;
+        this.product.price = Number.parseFloat(this.product.price.toFixed(1));
         if (this.DescriptionTab) {
           this.DescriptionTab.innerHTML = this.product.details;
         }
@@ -378,6 +381,7 @@ export class ReportedProductDetailsComponent implements OnInit {
       data: {
         productId: this.productId,
         version: this.data.version,
+       
         status: this.data.status
       },
       width: '80%'

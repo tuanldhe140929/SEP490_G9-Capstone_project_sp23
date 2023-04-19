@@ -14,4 +14,5 @@ config.removePlugins = 'elementspath,save,image';
 [*.md]
 max_line_length = off
 trim_trailing_whitespace = false
-config.removePlugins = 'elementspath,save,image';
+
+config.removePlugins = 'elementspath,save,image,flash,iframe,link,smiley,tabletools,find,pagebreak,templates,about,maximize,showblocks,newpage,language';

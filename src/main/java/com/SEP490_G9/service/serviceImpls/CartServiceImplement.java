@@ -29,6 +29,7 @@ import com.SEP490_G9.repository.UserRepository;
 import com.SEP490_G9.service.CartService;
 import com.SEP490_G9.service.ProductDetailsService;
 import com.SEP490_G9.entities.ProductDetails;
+import com.SEP490_G9.entities.ProductDetails.Status;
 import com.SEP490_G9.repository.ProductDetailsRepository;
 
 @Service
@@ -77,6 +78,7 @@ public class CartServiceImplement implements CartService {
 			throw new IllegalArgumentException("Cannot add your own product");
 		}
 		CartItem item = new CartItem(cart, activeVersion);
+		item.setPrice(activeVersion.getPrice());
 		cartItemRepository.save(item);
 		cart.addItem(item);
 		Cart ret = cartRepository.save(cart);
@@ -167,13 +169,20 @@ public class CartServiceImplement implements CartService {
 					String activeVersion = item.getProductDetails().getProduct().getActiveVersion();
 					ProductDetails pd = productDetailsRepository.findByProductIdAndProductVersionKeyVersion(productId,
 							activeVersion);
-					updatedItem.setProductDetails(pd);
-					CartItemKey cartItemKey = new CartItemKey();
-					cartItemKey.setCartId(cart.getId());
-					cartItemKey.setProductVersionKey(pd.getProductVersionKey());
-					updatedItem.setCartItemKey(cartItemKey);
-					updatedItems.add(updatedItem);
+					if (pd.getProduct().isEnabled() && pd.getApproved().equals(Status.APPROVED)) {
+						updatedItem.setProductDetails(pd);
+						CartItemKey cartItemKey = new CartItemKey();
+						cartItemKey.setCartId(cart.getId());
+						cartItemKey.setProductVersionKey(pd.getProductVersionKey());
+						updatedItem.setCartItemKey(cartItemKey);
+						updatedItem.setPrice(pd.getPrice());
+						updatedItem.setCart(cart);
+						updatedItems.add(updatedItem);
+					}else {
+						cartItemRepository.delete(item);
+					}
 				}
+				updatedItems = cartItemRepository.saveAll(updatedItems);
 				cart.setItems(updatedItems);
 				ret = cartRepository.save(cart);
 			}

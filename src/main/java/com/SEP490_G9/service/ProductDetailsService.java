@@ -57,6 +57,8 @@ public interface ProductDetailsService {
 	public List<ProductDetails> getByTags(List<ProductDetails> listPd, List<Integer> tagIdList);
 
 	public List<ProductDetails> getByPriceRange(List<ProductDetails> listPd, int min, int max);
+	
+	public List<ProductDetails> getProductByTime(List<ProductDetails> listPd);
 
 	public List<ProductDetails> getAllByProductId(Long id);
 	
@@ -90,4 +92,7 @@ public interface ProductDetailsService {
 	public int getTotalPurchasedCount(Long productId);
 	
 	public String getCurrentVersion(long productId);
+	
+	
+	
 }

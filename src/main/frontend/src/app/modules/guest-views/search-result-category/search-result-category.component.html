@@ -120,7 +120,7 @@
         <div *ngIf="resultList.length>0">
           <strong class="d-block py-2">Tìm thấy {{resultList.length}} sản phẩm</strong>
         </div>
-        <div class="ms-auto ">
+        <!-- <div class="ms-auto ">
           <select class="form-select d-inline-block w-auto me-1">
             <option value="0">Best match</option>
             <option value="1">Recommended</option>
@@ -134,8 +134,8 @@
           <a href="#" class="btn btn-light active" data-bs-toggle="tooltip" title="Grid view"> 
             <i class="fa fa-th"></i>
           </a>
-          </div> <!-- btn-group end.// -->
-        </div>
+          </div> 
+        </div> -->
       </header>
     
       <!-- ========= content items ========= -->
@@ -143,19 +143,18 @@
         <div class="col-lg-4 col-md-6 col-sm-6" *ngFor="let result of resultList | paginate: {itemsPerPage: itemsPerPage, currentPage: p}">
           <figure class="card card-product-grid">
           <div class="img-wrap"> 
-            <img [src]="getCoverImage(result)"> 
+            <img [src]="getCoverImage(result)" (click)="openDetails(result.id)" style="cursor: pointer;"> 
           </div>
           <figcaption class="info-wrap border-top">
             <div class="price-wrap">
-            <strong class="price">{{result.name}}</strong>
+              <strong class="price">{{result.name}}</strong>
+              <p class="title mb-2"><a (click)="searchByCategory(result.category.id)" style="cursor: pointer;">{{result.category.name}}</a> bởi <a (click)="searchBySeller(result.seller.id)" style="cursor: pointer;">{{result.seller.username}}</a></p>
             </div> <!-- price-wrap.// -->
-            <p class="title mb-2">{{result.price}}</p>
-            
-            <a (click)="openDetails(result.id)" class="btn btn-primary">Chi tiết</a>
+            <strong><p class="title mb-2">${{result.price}}</p></strong>
+            <a (click)="openDetails(result.id)" class="btn viewProduct">Chi tiết</a>
           </figcaption>
           </figure>
         </div> <!-- col end.// -->
-    
       </div> <!-- row end.// -->
     
       <hr>

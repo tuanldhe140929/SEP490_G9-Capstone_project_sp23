@@ -23,6 +23,7 @@ import com.SEP490_G9.entities.User;
 import com.SEP490_G9.entities.UserDetailsImpl;
 import com.SEP490_G9.exception.InternalServerException;
 import com.SEP490_G9.exception.ResourceNotFoundException;
+import com.SEP490_G9.repository.CartItemRepository;
 import com.SEP490_G9.repository.CartRepository;
 import com.SEP490_G9.repository.TransactionFeeRepository;
 import com.SEP490_G9.repository.TransactionRepository;
@@ -65,9 +66,29 @@ public class TransactionServiceImpl implements TransactionService {
 	@Autowired
 	ProductDetailsService pds;
 
+	@Autowired
+	CartItemRepository cartItemRepo;
+
 	@Override
 	public Transaction getByPaymentId(String paymentId) {
 		Transaction ret = transactionRepo.findByPaypalId(paymentId);
+		List<CartItem> removeItems = new ArrayList<>();
+		for (CartItem item : ret.getCart().getItems()) {
+			if (!item.getProductDetails().getProduct().isEnabled()
+					|| !item.getProductDetails().getApproved().equals(ProductDetails.Status.APPROVED)) {
+				removeItems.add(item);
+				ret.setChange(true);
+			}
+		}
+		ret.getCart().getItems().removeAll(removeItems);
+		cartItemRepo.deleteAll(removeItems);
+		if (ret.isChange()) {
+			ret.setDescription("Canceled by DPM system");
+			ret.setStatus(Transaction.Status.CANCELED);
+		} else if (!ret.isChange() && ret.getStatus().equals(Transaction.Status.CREATED)) {
+			ret.setStatus(Transaction.Status.APPROVED);
+		}
+		transactionRepo.save(ret);
 		return ret;
 	}
 
@@ -89,20 +110,39 @@ public class TransactionServiceImpl implements TransactionService {
 	public Transaction createTransaction(Long cartId, Long accountId) {
 		Cart cart = cartService.getById(cartId);
 		User user = userService.getById(accountId);
-
+		Transaction transaction = new Transaction();
 		if (!cartService.isUserOwnCart(user.getId(), cart.getId())) {
 			throw new IllegalAccessError("You don't have right to purchase this cart");
 		}
 		if (cartService.isCartHadPurchased(cart.getId())) {
 			throw new IllegalArgumentException("Cart had already purchased");
 		}
+
 		if (cart.getItems().size() == 0) {
 			throw new IllegalArgumentException("Cart is empty");
 		}
+		List<CartItem> removeItems = new ArrayList<>();
+		List<CartItem> updatedItems = new ArrayList<>();
 		for (CartItem item : cart.getItems()) {
 			if (cartService.isUserPurchasedProduct(user.getId(), item.getProductDetails().getProduct().getId())) {
 				throw new IllegalArgumentException("User already own item in cart");
 			}
+
+			if (!item.getProductDetails().getProduct().isEnabled()
+					|| !item.getProductDetails().getApproved().equals(ProductDetails.Status.APPROVED)) {
+				removeItems.add(item);
+				transaction.setChange(true);
+			} else if (item.getPrice() != item.getProductDetails().getPrice()) {
+				item.setPrice(item.getProductDetails().getPrice());
+				updatedItems.add(item);
+				transaction.setChange(true);
+			}
+		}
+		cart.getItems().removeAll(removeItems);
+		cartItemRepo.deleteAll(removeItems);
+		cartItemRepo.saveAll(updatedItems);
+		if (transaction.isChange()) {
+			return transaction;
 		}
 
 		TransactionFee fee = transFeeRepo.findById(1).get();
@@ -113,11 +153,9 @@ public class TransactionServiceImpl implements TransactionService {
 		System.out.println(afterFeeCaculated);
 		double afterFeeCaculatedRounded = new BigDecimal(afterFeeCaculated).setScale(2, RoundingMode.HALF_UP)
 				.doubleValue();
-		System.out.println(afterFeeCaculatedRounded);
-		Transaction transaction = new Transaction();
 		transaction.setCart(cart);
 		transaction.setAmount(afterFeeCaculatedRounded);
-		transaction.setCreateDate(new Date());
+		transaction.setCreatedDate(new Date());
 		transaction.setFee(fee);
 		Long time = System.currentTimeMillis() + 60 * 15 * 1000;
 		transaction.setExpiredDate(new Date(time));
@@ -166,22 +204,22 @@ public class TransactionServiceImpl implements TransactionService {
 
 	private Runnable checkTransactionStatus(Long transactionId) {
 		return () -> {
-			Transaction tx = transactionRepo.findById(transactionId).orElseThrow();
-			while (tx.getStatus() != Status.COMPLETED && tx.getStatus() != Status.CANCELED
-					&& tx.getStatus() != Status.FAILED) {
+			Transaction tx;
+			do {
+				tx = transactionRepo.findById(transactionId).orElseThrow();
 				if (new Date().after(tx.getExpiredDate())) {
 					tx.setStatus(Transaction.Status.EXPIRED);
 					tx.setDescription("Transaction is expired");
 					transactionRepo.save(tx);
 					payoutService.cancelPayout(transactionId);
 				}
-
 				try {
 					Thread.sleep(3000);
 				} catch (InterruptedException e) {
 					Thread.currentThread().interrupt();
 				}
-			}
+			} while (tx.getStatus().equals(Status.CREATED) || tx.getStatus().equals(Status.APPROVED));
+
 		};
 	}
 
@@ -196,15 +234,29 @@ public class TransactionServiceImpl implements TransactionService {
 	@Override
 	public Transaction executeTransaction(String paymentId, String payerId) {
 		Transaction transaction = transactionRepo.findByPaypalId(paymentId);
-
-		Transaction ret = null;
-
-		if (payerId.isBlank() || payerId.isEmpty()) {
-			throw new IllegalArgumentException("PayerId can not be blank");
-		}
 		if (transaction == null) {
 			throw new ResourceNotFoundException("transaction", "paymentId", paymentId);
 		}
+		Transaction ret = null;
+		List<CartItem> removeItems = new ArrayList<>();
+		for (CartItem item : transaction.getCart().getItems()) {
+			if (!item.getProductDetails().getProduct().isEnabled()
+					|| !item.getProductDetails().getApproved().equals(ProductDetails.Status.APPROVED)) {
+				removeItems.add(item);
+				transaction.setChange(true);
+			}
+		}
+		transaction.getCart().getItems().removeAll(removeItems);
+		cartItemRepo.deleteAll(removeItems);
+		if (transaction.isChange()) {
+			transaction.setStatus(Transaction.Status.CANCELED);
+			transactionRepo.save(transaction);
+			return transaction;
+		}
+		if (payerId.isBlank() || payerId.isEmpty()) {
+			throw new IllegalArgumentException("PayerId can not be blank");
+		}
+
 		if (transaction.getStatus().equals(Transaction.Status.CREATED)
 				|| transaction.getStatus().equals(Transaction.Status.COMPLETED)
 				|| transaction.getStatus().equals(Transaction.Status.FAILED)
@@ -311,25 +363,33 @@ public class TransactionServiceImpl implements TransactionService {
 	}
 
 	@Override
-	public List<ProductDetails> getListCartUserPurchasedProduct() {
+	public List<Transaction> getListCartUserPurchasedProduct() {
 		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
 				.getAccount();
+		List<Transaction> completedTransaction = new ArrayList<>();
+
 		List<Cart> carts = cartRepo.findByUserId(account.getId());
 		List<Cart> purchasedCart = new ArrayList<>();
 		for (Cart cart : carts) {
 			if (isCartHadPurchased(cart.getId()))
 				purchasedCart.add(cart);
 		}
-		List<ProductDetails> purchasedProductList = new ArrayList<>();
-		List<CartItem> purchasedCartItem = new ArrayList<>();
+//		List<ProductDetails> purchasedProductList = new ArrayList<>();
+//		List<CartItem> purchasedCartItem = new ArrayList<>();
 
 		for (Cart c : purchasedCart) {
-			List<CartItem> pCI = c.getItems();
-			for (CartItem CI : pCI) {
-				purchasedProductList.add(pds.getActiveVersion(CI.getProductDetails().getProduct().getId()));
+//			List<CartItem> pCI = c.getItems();
+//			for (CartItem CI : pCI) {
+//				purchasedProductList.add(pds.getActiveVersion(CI.getProductDetails().getProduct().getId()));
+//			}
+			for (Transaction transaction : c.getTransactions()) {
+				if (transaction.getStatus().equals(Status.COMPLETED)) {
+					completedTransaction.add(transaction);
+				}
 			}
 		}
-		return purchasedProductList;
+
+		return completedTransaction;
 	}
 
 }

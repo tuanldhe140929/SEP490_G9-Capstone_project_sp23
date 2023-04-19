@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Cart } from 'src/app/dtos/Cart';
 import { CartItem } from 'src/app/dtos/CartItem';
@@ -26,7 +27,8 @@ export class CartComponent implements OnInit {
 
   constructor(private cartService: CartService,
     private transactionService: TransactionService,
-    private modalService: NgbModal  ) {
+    private modalService: NgbModal,
+    private router: Router) {
 
   }
   ngOnInit(): void {
@@ -38,6 +40,9 @@ export class CartComponent implements OnInit {
         console.log(data);
         this.cart = data;
         this.cartItemList = data.items;
+        for (let i = 0; i < data.items.length; i++) {
+          data.items[i].product.price = Number.parseFloat(data.items[i].product.price.toFixed(1));
+        }
       },
       (error) => {
         console.log(error);
@@ -71,15 +76,19 @@ export class CartComponent implements OnInit {
     this.isLoading = true;
     this.transactionService.purchase(this.cart.id).subscribe(
       data => {
-        this.isLoading = true;
+        this.isLoading = false;
         this.transaction = data;
+        if (this.transaction.change) {
+          this.info = "Có thay đổi trong giỏ hàng";
+          this.openInfoModal();
+          this.getAllCartItem();
+        }
         if (this.transaction.amount > 0) {
           var strWindowFeatures = "location=yes,height=570,width=520,scrollbars=yes,status=yes";
           var URL = data.approvalUrl;
           window.open(URL, "_blank", strWindowFeatures);
-        } else {
-
         }
+
         this.fetchTransactionStatus();
       },
       error => {
@@ -129,7 +138,8 @@ export class CartComponent implements OnInit {
 
 
   get TotalPrice() {
-    return this.cart.totalPrice;
+
+    return this.cart.totalPrice.toFixed(2);
   }
   openInfoModal() {
     this.modalService.open(this.infoModal, { centered: true });
@@ -139,4 +149,17 @@ export class CartComponent implements OnInit {
     this.modalService.dismissAll();
   }
 
+  toViewProduct(item: CartItem) {
+    this.router.navigate(['products/' + item.product.id]);
+  }
+
+  get Fee() {
+    const fee = Number.parseFloat(this.TotalPrice) / 10;
+    return fee.toFixed(2);
+  }
+
+  get LastPrice() {
+    const lastPrice = Number.parseFloat(this.Fee) + Number.parseFloat(this.TotalPrice);
+    return lastPrice.toFixed(2);
+  }
 }

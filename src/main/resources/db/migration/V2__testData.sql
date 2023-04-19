@@ -45,20 +45,26 @@
  insert into tags(id, name) VALUES(3, 'adventure');
  insert into tags(id, name) VALUES(4, 'sci-fi');
  insert into tags(id, name) VALUES(5, 'sport'); 
+ insert into tags(id, name) VALUES(6, 'horror');
+ insert into tags(id, name) VALUES(7, 'PC');
+ insert into tags(id, name) VALUES(8, 'mobile'); 
+ insert into tags(id, name) VALUES(9, 'pixel');
+ insert into tags(id, name) VALUES(10, 'cartoon'); 
+ insert into tags(id, name) VALUES(11, 'action'); 
+ insert into tags(id, name) VALUES(12, 'tileset');
+ insert into tags(id, name) VALUES(13, 'top-down'); 
+ insert into tags(id, name) VALUES(14, '16-bit'); 
+ insert into tags(id, name) VALUES(15, 'dungeon');
 
- insert into categories(id,name) VALUES(1, 'Sprites');
- insert into categories(id, name) VALUES(2, 'Sound effects');
- insert into categories(id, name) VALUES(3, 'Music');
+ insert into categories(id,name) VALUES(1, 'Characters');
+ insert into categories(id, name) VALUES(2, 'Environments');
+ insert into categories(id, name) VALUES(3, 'Audio');
  insert into categories(id, name) VALUES(4, 'Textures');
- insert into categories(id, name) VALUES(5, 'Characters');
- insert into categories(id, name) VALUES(6, 'Tileset');
+ insert into categories(id, name) VALUES(5, 'Animations');
+ insert into categories(id, name) VALUES(6, 'User Interfaces (UI)');
  insert into categories(id, name) VALUES(7, 'Backgrounds');
- insert into categories(id, name) VALUES(8, 'Fonts');
- insert into categories(id, name) VALUES(9, 'Icons');
- insert into categories(id, name) VALUES(10, 'Scripts');
- insert into categories(id, name) VALUES(11, 'User interfaces');
- insert into categories(id, name) VALUES(12, 'Lore');
- insert into categories(id, name) VALUES(13, 'Others');
+ insert into categories(id, name) VALUES(8, 'Props');
+ insert into categories(id, name) VALUES(9, 'Others');
 
  insert into licenses(id, acrynosm, details, name, reference_link) VALUES(1, '', 'The copyright owner exclusive rights to control the use, distribution, and modification of their work, and anyone who wishes to use the work in any way must obtain permission from the copyright owner. This license is the most restrictive and does not allow for any form of sharing, copying, or modification without explicit permission from the copyright holder.','All Rights Reserved','');
  insert into licenses(id, acrynosm, details, name, reference_link) VALUES(2, 'CC BY', 'This license lets others distribute, remix, adapt, and build upon your work, even commercially, as long as they credit you for the original creation. This is the most accommodating of licenses offered. Recommended for maximum dissemination and use of licensed materials.','Attribution','https://creativecommons.org/licenses/by/4.0/');

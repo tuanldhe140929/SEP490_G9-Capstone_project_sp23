@@ -22,6 +22,7 @@ export class ReportService {
     return this.httpClient.post<any>(this.BaseUrl+"/sendReport", null, {params});
   }
 
+  //xem 1 thằng đã report version ấy chưa
   getReportByProductUserVersion(productId: number, accountId: number, version: string): Observable<any>{
     const params = {
       productId: productId,
@@ -31,11 +32,13 @@ export class ReportService {
     return this.httpClient.get<any>(this.BaseUrl+"/getByProductUserVersion",{params});
   }
 
+  //cập nhật trạng thái report
   updateReportStatus(productId: number, version: string, userIdList: number[], statusList: string[]){
     let params = new HttpParams().set('productId', productId).set('version',version).set('userIdList',userIdList.join(',')).set('statusList',statusList.join(','));
     return this.httpClient.put<any>(this.BaseUrl+"/updateReportStatus",null,{params})
   }
 
+  //lấy các sản phẩm theo product details
   getByProductDetailsAndStatus(productId: number, version: string, status: string): Observable<any>{
     const params = {
       productId: productId,

@@ -51,5 +51,19 @@ const formattedTime = date.getHours().toString().padStart(2, '0') + ':' +
 const formattedTimestamp = formattedDate + ' ' + formattedTime;
 console.log(formattedTimestamp);
 return formattedTimestamp;
- }
+  }
+
+  payoutStatus(payout: Payout) {
+    switch (payout.status.toString()) {
+      case 'SUCCESS':
+        return 'Thành công';
+        break;
+      case 'FAILED':
+        return 'Thất bại';
+        break;
+      default:
+        return '';
+        break;
+    }
+  }
 }
