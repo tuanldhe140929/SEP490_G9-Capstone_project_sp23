@@ -263,7 +263,6 @@ public class ProductDetailsController {
 		}
 		return ResponseEntity.ok(allProductsDTO);
 	}
-<<<<<<< Updated upstream
 @GetMapping(value ="getLastestUpdatedProductForHomePage")
 public ResponseEntity<?> LastestUpdatedProductForHomePage() {
 	List<ProductDetails> allProducts = productDetailsService.getAll();
@@ -277,17 +276,6 @@ public ResponseEntity<?> LastestUpdatedProductForHomePage() {
 	}
 	return ResponseEntity.ok(allProductsDTO);
 }
-	@GetMapping(value = "getTotalPurchasedCount")
-	public ResponseEntity<?> getTotalPurchasedCount(@RequestParam("productId") Long productId){
-		int count = this.productDetailsService.getTotalPurchasedCount(productId);
-				return ResponseEntity.ok(count);
-	}
 	
-	@GetMapping(value = "getCurrentVersion")
-	public String getCurrentVersion(@RequestParam("productId") Long productId){
-		String currentVer = productDetailsService.getCurrentVersion(productId);
-		return currentVer;
-	}
-=======
->>>>>>> Stashed changes
+
 }

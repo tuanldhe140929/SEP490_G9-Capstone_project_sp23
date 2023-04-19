@@ -97,8 +97,12 @@ export class ProfileComponent implements OnInit {
       this.UsernameInput.removeAttribute('readonly');
       this.FirstNameInput.removeAttribute('readonly');
       this.LastNameInput.removeAttribute('readonly');
+      this.Submitbtn.removeAttribute('disabled')
     }
     console.log("abc")
+  }
+  get Submitbtn(){
+    return document.getElementById('Submitbtn') as HTMLButtonElement;
   }
   get ProfileImage(){
     return document.getElementById('Image') as HTMLImageElement;

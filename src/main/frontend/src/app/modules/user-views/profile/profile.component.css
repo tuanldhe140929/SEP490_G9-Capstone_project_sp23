@@ -1,12 +1,13 @@
-app-header{
-    width: 100%;
+app-header {
+  width: 100%;
 }
-app-footer{
-    width: 100%;
+
+app-footer {
+  width: 100%;
 }
-*{
-    
-}
+
+* {}
+
 .uploadBtn {
   color: #FF2449;
   background-color: white;
@@ -16,18 +17,16 @@ app-footer{
   height: 25px;
 }
 
-  .uploadBtn:hover {
-    color: white;
-    background-color: #FF2449;
-    border: 1px solid white;
-    transition: 0.15s all;
-  }
+.uploadBtn:hover {
+  color: white;
+  background-color: #FF2449;
+  border: 1px solid white;
+  transition: 0.15s all;
+}
 
-  .actions{
-  
-  }
+.actions {}
 
-  .actionBtn{
+ .actionBtn1{
       background-color:white;
       border: 1px solid black;
       border-radius:3px;
@@ -38,26 +37,68 @@ app-footer{
       margin-bottom:10px;
   }
 
-    .actionBtn:hover {
-      background-color: #f8f9fa;
+    .actionBtn1:hover {
+      background-color: #04fe00;
       color: black;
       transition: all 0.15s;
-    }
+    } 
 
-  a{
-      color:black;
-      text-decoration:none;
-  }
+a {
+  color: black;
+  text-decoration: none;
+}
 
-  a:hover{
-      color:black;
-      text-decoration:none;
-  }
+a:hover {
+  color: black;
+  text-decoration: none;
+}
 
-  input{
-      border-radius:3px;
-  }
+input {
+  border-radius: 3px;
+}
 
-  .form-group{
-      margin-bottom:5px;
-  }
+.form-group {
+  margin-bottom: 5px;
+}
+
+
+.actionBtn {
+  border: 1px solid #000000;
+  background: none;
+  padding: 10px 20px;
+  font-size: 20px;
+  font-family: "montserrat";
+  cursor: pointer;
+  margin: 10px;
+  transition: 0.8s;
+  position: relative;
+  overflow: hidden;
+}
+
+.actionBtn {
+  color: #000000;
+}
+
+.actionBtn:hover {
+  color: #ffffff;
+}
+
+.actionBtn::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 0%;
+  background: rgb(58, 56, 56);
+  z-index: -1;
+  transition: 0.8s;
+}
+
+.actionBtn::before {
+  top: 0;
+  border-radius: 0 0 50% 50%;
+}
+
+.actionBtn:hover::before {
+  height: 180%;
+}
