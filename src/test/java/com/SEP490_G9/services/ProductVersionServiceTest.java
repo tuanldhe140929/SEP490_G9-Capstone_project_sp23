@@ -36,7 +36,7 @@ import com.SEP490_G9.service.serviceImpls.ProductDetailsServiceImpl;
 @DataJpaTest
 @RunWith(SpringRunner.class)
 @Import(TestConfig.class)
-class ProductDetailsServiceTest {
+class ProductVersionServiceTest {
 
 	@Mock
 	ProductDetailsRepository productDetailsRepo;
