@@ -53,7 +53,7 @@ public class ReportServiceImpl implements ReportService {
 		}
 		Report report = new Report();
 		Product product = productRepository.findById(productId).get();
-		User user = userRepository.findById(accountId);
+		User user = userRepository.findById(accountId).orElseThrow();
 		report.setProduct(product);
 		report.setUser(user);
 		report.setVersion(version);
@@ -98,7 +98,7 @@ public class ReportServiceImpl implements ReportService {
 	@Override
 	public Report getByProductUserVersion(long productId, long userId, String version) {
 		Product product = productRepository.findById(productId).get();
-		User user = userRepository.findById(userId);
+		User user = userRepository.findById(userId).orElseThrow();
 		List<Report> allReports = getAllReports();
 		List<Report> reportsByProduct = getByProductDetails(allReports, product, version);
 		List<Report> reportsByUser = getByUser(reportsByProduct, user);

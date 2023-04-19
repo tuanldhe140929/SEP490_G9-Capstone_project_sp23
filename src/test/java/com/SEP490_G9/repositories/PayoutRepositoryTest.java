@@ -91,7 +91,7 @@ class PayoutRepositoryTest {
 		transaction.setId(1L);
 		transaction.setCart(saved);
 		transaction.setPaypalId("ABC");
-		transaction.setCreateDate(new Date());
+		transaction.setCreatedDate(new Date());
 		transaction.setLastModified(new Date());
 		transaction.setAmount(10);
 		transaction.setFee(fee);
@@ -132,7 +132,7 @@ class PayoutRepositoryTest {
 		transaction.setId(1L);
 		transaction.setCart(saved);
 		transaction.setPaypalId("ABC");
-		transaction.setCreateDate(new Date());
+		transaction.setCreatedDate(new Date());
 		transaction.setLastModified(new Date());
 		transaction.setAmount(10);
 		transaction.setFee(fee);
@@ -173,7 +173,7 @@ class PayoutRepositoryTest {
 		transaction.setId(1L);
 		transaction.setCart(saved);
 		transaction.setPaypalId("ABC");
-		transaction.setCreateDate(new Date());
+		transaction.setCreatedDate(new Date());
 		transaction.setLastModified(new Date());
 		transaction.setAmount(10);
 		transaction.setFee(fee);
