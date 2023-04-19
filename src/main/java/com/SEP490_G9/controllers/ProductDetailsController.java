@@ -250,7 +250,19 @@ public class ProductDetailsController {
 		}
 		return ResponseEntity.ok(allProductsDTO);
 	}
-
+@GetMapping(value ="getLastestUpdatedProductForHomePage")
+public ResponseEntity<?> LastestUpdatedProductForHomePage() {
+	List<ProductDetails> allProducts = productDetailsService.getAll();
+	List<ProductDetails> enabledProducts = productDetailsService.getByEnabled(allProducts);
+	List<ProductDetails> latestProducts = productDetailsService.getByLatestVer(enabledProducts);
+	List<ProductDetails> approvedProducts = productDetailsService.getByApproved(latestProducts);	
+	List<ProductDetails> latestUpdatedProduts = productDetailsService.getProductByTime(approvedProducts);
+	List<ProductDetailsDTO> allProductsDTO = new ArrayList<>();
+	for (ProductDetails p : latestUpdatedProduts) {
+		allProductsDTO.add(new ProductDetailsDTO(p));
+	}
+	return ResponseEntity.ok(allProductsDTO);
+}
 	@GetMapping(value = "getTotalPurchasedCount")
 	public ResponseEntity<?> getTotalPurchasedCount(@RequestParam("productId") Long productId){
 		int count = this.productDetailsService.getTotalPurchasedCount(productId);

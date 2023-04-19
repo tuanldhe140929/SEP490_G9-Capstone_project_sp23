@@ -3,6 +3,7 @@ package com.SEP490_G9.service.serviceImpls;
 import java.io.File;
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collector;
@@ -45,6 +46,8 @@ import com.SEP490_G9.service.PreviewService;
 import com.SEP490_G9.service.ProductDetailsService;
 import com.SEP490_G9.service.ProductService;
 import com.SEP490_G9.service.ReportService;
+
+import io.jsonwebtoken.lang.Collections;
 
 @Service
 public class ProductDetailsServiceImpl implements ProductDetailsService {
@@ -196,7 +199,13 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		}
 		return disabledPd;
 	}
-
+	@Override
+	public List<ProductDetails> getProductByTime(List<ProductDetails> listPd) {
+		List<ProductDetails>lastestUpdatepd = new ArrayList<>();
+		java.util.Collections.sort(listPd);
+		return listPd;
+		
+	}
 	@Override
 	public List<ProductDetails> getByKeyword(List<ProductDetails> listPd, String keyword) {
 		if (keyword.trim().isEmpty()) {
@@ -592,7 +601,7 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		}
 		return allStatusPd;
 	}
-
+	
 	@Override
 	public ProductDetails updateApprovalStatus(long productId, String version, String status) {
 		ProductDetails pd = getByProductIdAndVersion(productId, version);
@@ -709,4 +718,6 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		String latestVer = product.getActiveVersion();
 		return latestVer;
 	}
+
+	
 }

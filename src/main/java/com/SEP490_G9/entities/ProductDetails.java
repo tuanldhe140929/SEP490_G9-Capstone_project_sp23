@@ -15,7 +15,7 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "product_details", uniqueConstraints = {
 		@UniqueConstraint(name = "uk_product_version", columnNames = { "product_id", "version" }) })
-public class ProductDetails implements Serializable {
+public class ProductDetails implements Serializable,Comparable<ProductDetails> {
 	public enum Status {
 		NEW, PENDING, APPROVED, REJECTED
 	}
@@ -251,6 +251,11 @@ public class ProductDetails implements Serializable {
 
 	public void setFlagged(boolean flagged) {
 		this.flagged = flagged;
+	}
+
+	@Override
+	public int compareTo(ProductDetails o) {
+		return this.getLastModified().compareTo(this.getLastModified());
 	}
 
 }
