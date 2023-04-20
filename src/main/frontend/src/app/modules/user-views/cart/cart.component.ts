@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Cart } from 'src/app/dtos/Cart';
+import { Cart, Change, Type } from 'src/app/dtos/Cart';
 import { CartItem } from 'src/app/dtos/CartItem';
 import { Product } from 'src/app/dtos/Product';
 import { Transaction, TransactionStatus } from 'src/app/dtos/Transaction';
@@ -16,6 +16,7 @@ import { TransactionService } from 'src/app/services/transaction.service';
 export class CartComponent implements OnInit {
 
   @ViewChild('infoModal', { static: false }) private infoModal: any;
+  @ViewChild('change', { static: false }) private change: any;
 
   isLoading = false;
   info = "";
@@ -24,7 +25,8 @@ export class CartComponent implements OnInit {
   itemname: any;
   itemprice: any;
   transaction: Transaction = new Transaction;
-
+  updated: Change[] = [];
+  removed: Change[] = [];
   constructor(private cartService: CartService,
     private transactionService: TransactionService,
     private modalService: NgbModal,
@@ -37,11 +39,26 @@ export class CartComponent implements OnInit {
   public getAllCartItem() {
     this.cartService.getAllProduct().subscribe(
       data => {
-        console.log(data);
+      
         this.cart = data;
+        console.log(this.cart);
         this.cartItemList = data.items;
         for (let i = 0; i < data.items.length; i++) {
           data.items[i].product.price = Number.parseFloat(data.items[i].product.price.toFixed(1));
+        }
+
+        if (this.cart.changes.length != 0) {
+          for (let i = 0; i < this.cart.changes.length; i++) {
+            if (this.cart.changes[i].type == Type.REMOVED) {
+              console.log(this.cart.changes[i]);
+              this.removed.push(this.cart.changes[i]);
+            }
+            if(this.cart.changes[i].type == Type.UPDATED) {
+              this.updated.push(this.cart.changes[i]);
+            } 
+            this.openChangeModal();
+          }
+         
         }
       },
       (error) => {
@@ -79,8 +96,20 @@ export class CartComponent implements OnInit {
         this.isLoading = false;
         this.transaction = data;
         if (this.transaction.change) {
-          this.info = "Có thay đổi trong giỏ hàng";
-          this.openInfoModal();
+          this.removed = [];
+          this.updated = [];
+          if (this.transaction.cart.changes.length != 0) {
+            for (let i = 0; i < this.transaction.cart.changes.length; i++) {
+              if (this.transaction.cart.changes[i].type == Type.REMOVED) {
+                console.log(this.cart.changes[i]);
+                this.removed.push(this.transaction.cart.changes[i]);
+              }
+              if (this.transaction.cart.changes[i].type == Type.UPDATED) {
+                this.updated.push(this.transaction.cart.changes[i]);
+              }
+            }
+              this.openChangeModal();
+            }
           this.getAllCartItem();
         }
         if (this.transaction.amount > 0) {
@@ -144,8 +173,12 @@ export class CartComponent implements OnInit {
   openInfoModal() {
     this.modalService.open(this.infoModal, { centered: true });
   }
+
+  openChangeModal() {
+    this.modalService.open(this.change, { centered: true });
+  }
   dismiss() {
-    window.location.reload();
+    //window.location.reload();
     this.modalService.dismissAll();
   }
 

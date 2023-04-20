@@ -1,9 +1,11 @@
 
 import { TransactionFee } from "./TransactionFee";
 import { Product } from "./Product";
+import { Change } from "./Cart";
 export class Cart{
   id: number;
   items: Item[];
+  changes: Change[];
 }
 
 export class ProductVersionKey {

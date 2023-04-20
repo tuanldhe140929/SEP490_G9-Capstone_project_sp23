@@ -1,8 +1,16 @@
 <app-header></app-header>
 
+<!--Image Slider-->
+<div *ngIf="images && images.length > 0" class="carousel-container">
+  <img *ngFor="let image of images; let i = index" 
+  [src]="image.imageSrc" [alt]="image.imageAlt"
+  [ngClass]="{'image-active': selectedIndex === i}"
+  >
+</div>
+<!--Show product-->
   <div class="container">
     <header class="section-heading">
-      <h3 class="section-title">New products</h3>
+      <h3 class="section-title">Tất cả sản phẩm</h3>
     </header>
     <div class="row">
       <div class="col-lg-3 col-md-6 col-sm-6" *ngFor="let product of productList|
@@ -24,7 +32,23 @@
       </div>
       <pagination-controls class="text-center my-pagination" (pageChange)="page = $event"></pagination-controls>
       <!-- col end.// -->
-
+      <header class="section-heading">
+        <h3 class="section-title">Sản phẩm mới nhất</h3>
+      </header>
+      <div class="row">
+        <div class="col-lg-3 col-md-6 col-sm-6" *ngFor="let product of lastestProductList">
+          <figure class="card-product-grid">
+            <a (click)="redirectProductDetails(product)" class="img-wrap rounded bg-gray-light" style="cursor: pointer;"> 
+              <img height="250" class="mix-blend-multiply" [src]="getCoverImage(product)"> 
+            </a>
+            <figcaption class="pt-2">
+              <strong class="price">{{product.name}}</strong>
+              <p class="title mb-2"><a (click)="searchByCategory(product.category.id)" style="cursor: pointer;">{{product.category.name}}</a> của <a (click)="searchBySeller(product.seller.id)" style="cursor: pointer;">{{product.seller.username}}</a></p>
+              <strong><p class="text-muted">${{product.price}}</p></strong>
+              <a (click)="redirectProductDetails(product)" class="btn viewProduct">Chi tiết</a>
+            </figcaption>
+          </figure>
+        </div>
       <!-- col end.// -->
     </div> <!-- row end.// -->
   </div> <!-- container end.// -->

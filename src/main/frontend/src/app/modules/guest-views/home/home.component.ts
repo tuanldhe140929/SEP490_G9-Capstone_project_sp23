@@ -4,7 +4,10 @@ import { Component, Input, OnInit } from '@angular/core';
 import { data } from 'jquery';
 import { Router } from '@angular/router';
 import { SlideInterface } from './types/slide.interface';
-
+interface carouselImage{
+  imageSrc: string;
+  imageAlt: string;
+}
 
 @Component({
   selector: 'app-home',
@@ -14,6 +17,7 @@ import { SlideInterface } from './types/slide.interface';
 export class HomeComponent implements OnInit{
   @Input() slides: SlideInterface[] = [];
   productList: Product[] = [];
+  lastestProductList: Product[] = [];
   itemsPerPage: number = 9;
   p: number = 1;
   totalLength:any;
@@ -28,6 +32,7 @@ export class HomeComponent implements OnInit{
 
   ngOnInit(): void {
     this.getProduct();
+    this.getLatestProduct();
   }
 
   public getCoverImage(product: Product): string {
@@ -51,6 +56,17 @@ export class HomeComponent implements OnInit{
         for (let i = 0; i < this.productList.length; i++){
           this.productList[i].price = Number.parseFloat(this.productList[i].price.toFixed(1));
 }
+      }
+    )
+  }
+  getLatestProduct(){
+    this.productService.getLastestUpdatedProductForHomePage().subscribe(
+      data => {
+        console.log(data);
+        this.lastestProductList = data;
+        for (let i = 0; i<this.lastestProductList.length; i++){
+          this.lastestProductList[i].price = Number.parseFloat(this.lastestProductList[i].price.toFixed(1));
+        }
       }
     )
   }
@@ -102,4 +118,7 @@ export class HomeComponent implements OnInit{
       this.router.navigate(['collection/'+sellerId]);
     })
   }
+  //Image slider//
+  @Input() images: carouselImage[] = []
+  selectedIndex = 0;
 }

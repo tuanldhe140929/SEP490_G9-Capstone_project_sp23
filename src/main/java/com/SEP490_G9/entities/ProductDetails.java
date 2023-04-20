@@ -13,7 +13,7 @@ import jakarta.persistence.*;
 
 @JsonIgnoreProperties(value = { "product", "cartItems" })
 @Entity
-@Table(name = "product_details", uniqueConstraints = {
+@Table(name = "product_versions", uniqueConstraints = {
 		@UniqueConstraint(name = "uk_product_version", columnNames = { "product_id", "version" }) })
 public class ProductDetails implements Serializable,Comparable<ProductDetails> {
 	public enum Status {
@@ -68,7 +68,7 @@ public class ProductDetails implements Serializable,Comparable<ProductDetails> {
 	private Category category;
 
 	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "product_details_tag", joinColumns = {
+	@JoinTable(name = "product_version_tag", joinColumns = {
 			@JoinColumn(name = "product_id", referencedColumnName = "product_id"),
 			@JoinColumn(name = "version", referencedColumnName = "version") }, inverseJoinColumns = @JoinColumn(name = "tag_id"))
 	private List<Tag> tags = new ArrayList<Tag>();

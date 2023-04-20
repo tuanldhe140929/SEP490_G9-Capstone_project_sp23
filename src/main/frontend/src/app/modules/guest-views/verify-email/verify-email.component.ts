@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { StorageService } from 'src/app/services/storage.service';
 import { UserService } from 'src/app/services/user.service';
 
@@ -9,8 +9,10 @@ import { UserService } from 'src/app/services/user.service';
   styleUrls: ['./verify-email.component.css']
 })
 export class VerifyEmailComponent implements OnInit {
+  message = "";
 	constructor(private userService: UserService,private activatedRoute: ActivatedRoute,
-	private storageService:StorageService){
+    private storageService: StorageService,
+    private router: Router) {
 		
 	}
     ngOnInit(): void {
@@ -20,10 +22,11 @@ if(email!=null){
        var verifyLink = this.activatedRoute.snapshot.paramMap.get('verifyLink');
        this.userService.verifyEmail(verifyLink,email).subscribe(
 		   (data)=>{
-			   console.log(data);
+           console.log(data);
+           this.message = "Xác thực email thành công";
 		   },
-		   (error)=>{
-			   console.log(error);
+         (error) => {
+           //this.router.navigate(['error']);
 		   }
 	   )
     }
