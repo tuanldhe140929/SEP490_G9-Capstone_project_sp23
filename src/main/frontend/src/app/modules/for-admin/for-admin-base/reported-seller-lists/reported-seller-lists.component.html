@@ -18,27 +18,27 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header="enabled"> Trạng thái </th>
         <td mat-cell *matCellDef="let row"> 
           <div *ngIf="row.enabled">
-            Đang bật
+            Chưa Cấm
           </div>
           <div *ngIf="!row.enabled">
-            Đang tắt
+            Đã Cấm
           </div>
         </td>
       </ng-container>
       <ng-container matColumnDef="Cấm">
         <th mat-header-cell *matHeaderCellDef mat-sort-header=""> Hành động </th>
         <td mat-cell *matCellDef="let row">
-          <mat-dialog-actions><button type="button" class="btn btn-success" (click)="openViolationDialog(row.id)">Thêm Vi Phạm</button>
+          <mat-dialog-actions><button type="button" [disabled]="!row.enabled" class="btn btn-success" (click)="openViolationDialog(row.id,row.email,row.enabled)">Thêm Vi Phạm</button>
           </mat-dialog-actions>
           <!-- <ng-container matColumnDef="Hành động">
         <th mat-header-cell *matHeaderCellDef> Hành động </th> -->
         <!-- <td mat-cell *matCellDef="let row">  -->
-          <div *ngIf="row.enabled">
+          <!-- <div *ngIf="row.enabled">
             <button class="btn btn-danger" (click)="openBanSellerDialog(row.id, row.email, row.enabled)">Cấm</button>
-          </div>
-          <div *ngIf="!row.enabled">
+          </div> -->
+          <!-- <div *ngIf="!row.enabled">
             <button class="btn btn-warning" (click)="openBanSellerDialog(row.id, row.email, row.enabled)">Ngừng Cấm</button>
-          </div>
+          </div> -->
         <!-- </td>
       </ng-container> -->
         </td>
