@@ -16,6 +16,8 @@
       <ng-container matColumnDef="Cấm">
         <th mat-header-cell *matHeaderCellDef mat-sort-header=""> Hành động </th>
         <td mat-cell *matCellDef="let row">
+          <mat-dialog-actions><button type="button" class="btn btn-success" (click)="openViolationDialog(row.id)">Thêm Vi Phạm</button>
+          </mat-dialog-actions>
           <mat-dialog-actions><button type="button" class="btn btn-danger" (click)="openViolationDialog(row.id)">Cấm</button>
           </mat-dialog-actions>
         </td>

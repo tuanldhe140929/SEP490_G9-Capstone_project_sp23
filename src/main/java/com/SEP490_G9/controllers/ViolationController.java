@@ -61,7 +61,7 @@ public class ViolationController {
 		return ResponseEntity.ok(canAdd);
 	}
 	
-	@PutMapping("/updateSellerStatus")
+	@PutMapping("updateSellerStatus")
 	public ResponseEntity<?> updateSellerStatus(@RequestParam(name = "account_id") long account_id){
 		boolean updateStatus = violationService.updateSellerStatus(account_id);
 		return ResponseEntity.ok(updateStatus);

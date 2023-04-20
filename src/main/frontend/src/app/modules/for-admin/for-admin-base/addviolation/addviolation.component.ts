@@ -17,6 +17,7 @@ export class AddviolationComponent implements OnInit{
   constructor(private formBuilder: FormBuilder, private addviolationService: AddviolationService, private toastr: ToastrService, @Inject(MAT_DIALOG_DATA) public data: { account_id: number}) { }
   
   account_id: number;
+  // formerStatus: boolean = this.data.enabled;
 
       ngOnInit(): void {
       console.log(this.account_id)
@@ -55,12 +56,13 @@ export class AddviolationComponent implements OnInit{
             this.toastr.success('Thêm vi phạm thành công');
           }
         )
-        this.addviolationService.updateSellerStatus(this.account_id).subscribe(
-          data => {
-            console.log(data);
-            this.toastr.success('Đã tiến hành cấm người bán vi phạm');
-          }
-        )
+        // this.formerStatus = false;
+        // this.addviolationService.updateSellerStatus(this.account_id).subscribe(
+        //   data => {
+        //     console.log(data);
+        //     this.toastr.success('Đã tiến hành cấm người bán vi phạm');
+        //   }
+        // )
       // } else {
       //   this.toastr.error('Vui lòng sử dụng tên khác', 'Tên chủ đề đã được sử dụng');
       // }
