@@ -38,7 +38,7 @@
         <div class="tab-content">
           <div class="tab-pane active" id="home">
             <hr>
-            <form [formGroup]="Profileform" (submit)="onChangeName()" class="form" action="##" method="post"
+            <form [formGroup]="Profileform"  class="form" action="##" method="post"
                   id="registrationForm">
               <div class="form-group">
                 <div class="col-xs-6">
@@ -92,17 +92,13 @@
               <div>
 
                 <div class="col-xs-12" style="margin-top:30px;">
-                  <button class="actionBtn" type="submit" [disabled]="Profileform.invalid">Lưu</button>
+                  <button class="actionBtn1" (click)="onChangeName()" type="submit" id="Submitbtn" disabled >Lưu</button>
                 </div>
               </div>
             </form>
           </div>
-
-
         </div>
-
       </div>
-
     </div>
   </div>
 </div>
