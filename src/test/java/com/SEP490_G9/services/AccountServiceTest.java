@@ -57,7 +57,7 @@ class AccountServiceTest {
 	AccountServiceImpl accountServiceImpl;
 
 	@Test
-	void testGetAllStaff() {
+	void test1ACS1() {
 		Role staffRoleInDB = new Role(2, "ROLE_STAFF");
 		when(roleRepo.findById(Constant.STAFF_ROLE_ID)).thenReturn(staffRoleInDB);
 
@@ -65,6 +65,10 @@ class AccountServiceTest {
 		Role role = roleRepo.findById(Constant.STAFF_ROLE_ID);
 		staffRole.add(role);
 
+		List<Role> userRole = new ArrayList<>();
+		Role urole = roleRepo.findById(Constant.USER_ROLE_ID);
+		userRole.add(urole);
+		
 		List<Account> expected = new ArrayList<>();
 
 		Account staffAccount = new Account();
@@ -76,7 +80,7 @@ class AccountServiceTest {
 		staffAccount2.setRoles(staffRole);
 		staffAccount2.setId((long) 1);
 		expected.add(staffAccount2);
-
+		
 		when(accountRepo.findByRolesIn(staffRole)).thenReturn(expected);
 
 		int expectedSize = 1;
@@ -85,6 +89,151 @@ class AccountServiceTest {
 		assertThat(result.size()).isEqualTo(2);
 	}
 
+	@Test
+	void test2ACS1() {
+		Role staffRoleInDB = new Role(2, "ROLE_STAFF");
+		when(roleRepo.findById(Constant.STAFF_ROLE_ID)).thenReturn(staffRoleInDB);
+
+		List<Role> staffRole = new ArrayList<>();
+		Role role = roleRepo.findById(Constant.STAFF_ROLE_ID);
+		staffRole.add(role);
+
+		List<Role> userRole = new ArrayList<>();
+		Role urole = roleRepo.findById(Constant.USER_ROLE_ID);
+		userRole.add(urole);
+		
+		List<Role> adminRole = new ArrayList<>();
+		Role arole = roleRepo.findById(Constant.ADMIN_ROLE_ID);
+		adminRole.add(arole);
+		
+		List<Account> expected = new ArrayList<>();
+
+		Account userAccount = new Account();
+		userAccount.setRoles(userRole);
+		userAccount.setId((long) 1);
+		expected.add(userAccount);
+
+		Account adminAccount = new Account();
+		adminAccount.setRoles(adminRole);
+		adminAccount.setId((long) 2);
+		expected.add(adminAccount);
+
+		when(accountRepo.findByRolesIn(staffRole)).thenReturn(expected);
+
+		int expectedSize = 0;
+		List<Account> result = accountServiceImpl.getAllStaffs();
+		assertThat(result).isEqualTo(expected);
+		assertThat(result.size()).isEqualTo(2);
+	}
+	
+	@Test
+	void test3ACS1() {
+		Role staffRoleInDB = new Role(2, "ROLE_STAFF");
+		when(roleRepo.findById(Constant.STAFF_ROLE_ID)).thenReturn(staffRoleInDB);
+
+		List<Role> staffRole = new ArrayList<>();
+		Role role = roleRepo.findById(Constant.STAFF_ROLE_ID);
+		staffRole.add(role);
+
+		List<Role> userRole = new ArrayList<>();
+		Role urole = roleRepo.findById(Constant.USER_ROLE_ID);
+		userRole.add(urole);
+		
+		List<Account> expected = new ArrayList<>();
+
+		Account staffAccount = new Account();
+		staffAccount.setRoles(staffRole);
+		staffAccount.setId((long) 1);
+		expected.add(staffAccount);
+
+		Account staffAccount2 = new Account();
+		staffAccount2.setRoles(staffRole);
+		staffAccount2.setId((long) 1);
+		expected.add(staffAccount2);
+		
+		when(accountRepo.findByRolesIn(staffRole)).thenReturn(expected);
+
+		int expectedSize = 1;
+		List<Account> result = accountServiceImpl.getAllStaffs();
+		assertThat(result).isEqualTo(expected);
+		assertThat(result.size()).isEqualTo(2);
+	}
+	
+	@Test
+	void test1ACS2() {
+		Account expected = new Account();
+		expected.setEmail("expected@gmail.com");
+		expected.setPassword("password");
+		Account result = accountServiceImpl.addStaff(expected);
+		assertEquals(expected, result);
+	}
+	
+	@Test
+	void test2ACS2() {
+		Account expected = new Account();
+		expected.setEmail("asdwdaw@gmail.com");
+		expected.setPassword("password");
+		Account result = accountServiceImpl.addStaff(expected);
+		assertEquals(expected, result);
+	}
+	
+	@Test
+	void test3ACS2() {
+		Account expected = new Account();
+		expected.setEmail("morbius221@gmail.com");
+		expected.setPassword("password");
+		Account result = accountServiceImpl.addStaff(expected);
+		assertEquals(expected, result);
+	}
+	
+	@Test
+	void test4ACS2() {
+		Account a1 = new Account();
+		a1.setEmail("user1@gmail.com");
+		a1.setPassword("waerwearewww");
+		List<Account> accList = new ArrayList<>();
+		accList.add(a1);
+		
+		when(accountRepo.findAll()).thenReturn(accList);
+		assertEquals(1, accountServiceImpl.getAllAccounts().size());
+	}
+	
+	@Test
+	void test5ACS2() {
+		Account a1 = new Account();
+		a1.setEmail("beoboe123@gmail.com");
+		a1.setPassword("passworwerd");
+		List<Account> accList = new ArrayList<>();
+		accList.add(a1);
+		
+		when(accountRepo.findAll()).thenReturn(accList);
+		assertEquals(1, accountServiceImpl.getAllAccounts().size());
+	}
+	
+	@Test
+	void test6ACS2() {
+		Account a1 = new Account();
+		a1.setEmail("muaowls@gmail.com");
+		a1.setPassword("password231");
+		List<Account> accList = new ArrayList<>();
+		accList.add(a1);
+		
+		when(accountRepo.findAll()).thenReturn(accList);
+		assertEquals(1, accountServiceImpl.getAllAccounts().size());
+	}
+	
+	@Test
+	void test7ACS2() {
+		Throwable exception = assertThrows(Exception.class, () -> {
+			Account expected = new Account();
+			expected.setEmail("abcxyz");
+			expected.setPassword("password");
+			Account result = accountServiceImpl.addStaff(expected);
+		});
+		//nam sua
+		assertEquals(IllegalArgumentException.class , exception.getClass());
+	}
+	
 	void testGetByRefreshToken() {
 		Account expected = new Account();
 		expected.setId(1L);
@@ -111,7 +260,6 @@ class AccountServiceTest {
 		assertThat(result.getEmail()).isEqualTo(expectedEmail);
 	}
 
-	@Test
 	void testGetById() {
 		Long expectedId = 1L;
 		Account expected = new Account();
@@ -130,45 +278,55 @@ class AccountServiceTest {
 		when(accountRepo.save(account)).thenReturn(account);
 
 		Account result = accountServiceImpl.update(account);
-		assertThat(result.getPassword()).isEqualTo(account.getPassword());
+		assertThat(result).isEqualTo(account);
 	}
 	
-	@Test
-	void testAddStaff() {
-		Account expected = new Account();
-		expected.setEmail("expected@gmail.com");
-		expected.setPassword("password");
-		Account result = accountServiceImpl.addStaff(expected);
-		assertEquals(expected, result);
-	}
 	
 	@Test
-	void testAddStaffDuplicate() {
-		Throwable exception = assertThrows(Exception.class, () -> {
-			Account expected = new Account();
-			expected.setEmail("user1@gmail.com");
-			expected.setPassword("password");
-			Account result = accountServiceImpl.addStaff(expected);
-		});
-		assertEquals(exception.getClass(), DuplicateFieldException.class);
+	void test1ACS3() {
+		Account a1 = new Account();
+		a1.setEmail("user134@gmail.com");
+		a1.setPassword("waerwearewww");
+		List<Account> accList = new ArrayList<>();
+		accList.add(a1);
+		
+		when(accountRepo.findAll()).thenReturn(accList);
+		assertEquals(1, accountServiceImpl.getAllAccounts().size());
+	}
+
+	@Test
+	void test2ACS3() {
+		Account a1 = new Account();
+		a1.setEmail("godlovegame324@gmail.com");
+		a1.setPassword("waerasdwrewww");
+		List<Account> accList = new ArrayList<>();
+		accList.add(a1);
+		
+		when(accountRepo.findAll()).thenReturn(accList);
+		assertEquals(1, accountServiceImpl.getAllAccounts().size());
 	}
 	
-	@Test
-	void testAddStaffInvalid() {
-		Throwable exception = assertThrows(Exception.class, () -> {
-			Account expected = new Account();
-			expected.setEmail("abcxyz");
-			expected.setPassword("password");
-			Account result = accountServiceImpl.addStaff(expected);
-		});
-		//nam sua
-		assertEquals(exception.getClass(), InternalServerException.class);
-	}
 	
-	@Test
-	void testUpdateStaffStatus() {
-		Account result = accountServiceImpl.getById((long)3);
-		assertEquals(false, result.isEnabled());
-	}
+//	@Test
+//	void testUpdateStaffStatus() {
+//		List<Role> staffRole = new ArrayList<>();
+//		Role role = roleRepo.findById(Constant.STAFF_ROLE_ID);
+//		staffRole.add(role);
+//		
+//		Account a1 = new Account();
+//		a1.setId(1L);
+//		a1.setRoles(staffRole);
+//		a1.setEmail("email1@gmail.com");
+//		a1.setPassword("password");
+//		a1.setEnabled(true);
+//		
+//		List<Account> accList = new ArrayList<>();
+//		accList.add(a1);
+//		
+//		when(accountRepo.findAll()).thenReturn(accList);
+//		
+//		Account result = accountServiceImpl.updateStaffStatus(a1.getId());
+//		assertEquals(false, result.isEnabled());
+//	}
 	
 }

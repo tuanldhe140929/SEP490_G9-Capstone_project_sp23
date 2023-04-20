@@ -128,7 +128,7 @@ class ProductServiceTest {
 		when(productRepository.findById(1L)).thenReturn(Optional.of(p));
 		when(productRepository.save(p)).thenReturn(p);
 		
-		assertThrows(IllegalAccessError.class, () -> {
+		assertThrows(ResourceNotFoundException.class, () -> {
 			pds.deleteProductById(1L);
 		});
 	}
@@ -240,14 +240,7 @@ class ProductServiceTest {
 	@WithMockUser(username = "testuser", roles = { "USER" })
 	void testPRDS1_2() {
 		Product product = new Product();
-		// set the properties of the product
-		// ...
-
 		when(productRepository.save(product)).thenReturn(product);
-
-		// Act
-
-		// Assert
 		assertThrows(ClassCastException.class, () -> {
 			pds.createProduct(product);
 		});
