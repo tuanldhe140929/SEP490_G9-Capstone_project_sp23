@@ -4,6 +4,7 @@ import java.io.File;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collector;
@@ -203,14 +204,19 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		return disabledPd;
 	}
 
+	
 	@Override
 	public List<ProductDetails> getProductByTime(List<ProductDetails> listPd) {
-		List<ProductDetails> lastestUpdatepd = new ArrayList<>();
-		java.util.Collections.sort(listPd);
-		return listPd;
-
+		List<ProductDetails> Listpd;
+		java.util.Collections.sort(listPd, new Comparator<ProductDetails>() {
+		        public int compare(ProductDetails pd1, ProductDetails pd2) {
+		            return pd1.getLastModified().compareTo(pd2.getLastModified())<0?1:-1;
+		           
+		        }
+		    });
+		    return listPd;
 	}
-
+	
 	@Override
 	public List<ProductDetails> getByKeyword(List<ProductDetails> listPd, String keyword) {
 		if (keyword.trim().isEmpty()) {
@@ -669,7 +675,7 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 			}
 			break;
 		}
-
+pd.setLastModified(new Date());
 		productDetailsRepo.save(pd);
 		return pd;
 	}
