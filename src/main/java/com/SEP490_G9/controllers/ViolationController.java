@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -54,10 +55,16 @@ public class ViolationController {
 		vio.setAccount(account1);
 //		Violation newvio = new Violation(vio); 
 		boolean canAdd = violationService.addViolation(vio);
-		account1.setEnabled(false);
+//		account1.setEnabled(false);
 		System.out.println(description+account_id);
 //		boolean canAdd2 = violationService.addViolation(vio);
 		return ResponseEntity.ok(canAdd);
+	}
+	
+	@PutMapping("/updateSellerStatus")
+	public ResponseEntity<?> updateSellerStatus(@RequestParam(name = "account_id") long account_id){
+		boolean updateStatus = violationService.updateSellerStatus(account_id);
+		return ResponseEntity.ok(updateStatus);
 	}
 	
 	@GetMapping("getAllVioTypes")

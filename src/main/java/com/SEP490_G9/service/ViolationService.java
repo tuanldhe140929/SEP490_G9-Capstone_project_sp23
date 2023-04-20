@@ -8,6 +8,6 @@ import com.SEP490_G9.entities.ViolationType;
 
 public interface ViolationService {
 	public boolean addViolation(Violation vio);
-	
+	public boolean updateSellerStatus(long account_id);
 	public List<ViolationType> getVioTypeList(); 
 }
