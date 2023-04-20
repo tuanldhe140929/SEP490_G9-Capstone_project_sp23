@@ -1,12 +1,26 @@
 <app-header></app-header>
 <!--Image Slider-->
-<div *ngIf="images && images.length > 0" class="carousel-container">
-  <img *ngFor="let image of images; let i = index" 
-  [src]="image.imageSrc" [alt]="image.imageAlt"
+
+<div class="carousel-container">
+  <img *ngFor="let product of lastestProductList; let i=index" 
+  [src]="getCoverImage(product)"
   [ngClass]="{'image-active': selectedIndex === i}"
+  class=""
   >
+  <div *ngIf="indicators" class="carousel-dot-container">
+    <span *ngFor="let dot of productList; let i =index" 
+    class="dot"
+    [ngClass]="{'active': selectedIndex === i}"
+    (click)="selectImage(i)"
+    >
+    </span>
+  </div>
+  <div *ngIf="controls" class="btn-carousel btn-prev">
+    
+  </div>
 </div>
 <!--Show product-->
+<i class="fas fa-long-arrow-left"></i>
   <div class="container">
     <header class="section-heading">
       <h3 class="section-title">Tất cả sản phẩm</h3>
