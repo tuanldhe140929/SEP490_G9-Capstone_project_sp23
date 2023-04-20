@@ -161,6 +161,8 @@ public class UserController {
 			User user = userService.getByEmail(account.getEmail());
 			user.setEmailVerified(ret);
 			userService.update(user);
+		}else {
+			throw new IllegalArgumentException("Cannot verify email");
 		}
 		return ResponseEntity.ok(ret);
 	}
