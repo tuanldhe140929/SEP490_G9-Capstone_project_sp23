@@ -1,0 +1,12 @@
+<div class="banSellerContainer">
+    <mat-dialog-content>
+        <div *ngIf="data.enabled; then toDisable else toEnable">
+        </div>
+        <ng-template #toDisable><p>Bạn có muốn <b>Cấm</b> tài khoản {{data.email}}?</p></ng-template>
+        <ng-template #toEnable><p>Bạn có muốn <b>Ngừng Cấm</b> tài khoản {{data.email}}</p></ng-template>
+        <div class="form-group" align="end">
+            <button class="btn btn-warning" [mat-dialog-close]="true">Không</button>
+            <button class="btn btn-danger" [mat-dialog-close]="true" (click)="onBanSeller()">Có</button>
+        </div>
+    </mat-dialog-content>
+</div>

@@ -10,6 +10,7 @@ import { MatInputModule } from '@angular/material/input';
 import { ActivatedRoute, Router } from '@angular/router';
 import { data } from 'jquery';
 import { Account } from 'src/app/dtos/Account';
+import { BansellerComponent } from '../banseller/banseller.component';
 
 @Component({
   selector: 'app-reported-seller-lists',
@@ -17,7 +18,7 @@ import { Account } from 'src/app/dtos/Account';
   styleUrls: ['./reported-seller-lists.component.css']
 })
 export class ReportedSellerListsComponent implements OnInit{
-  displayedColumns: string[] = ['ID','Email', 'Ngày tạo', 'Cấm'];
+  displayedColumns: string[] = ['ID','Email', 'Ngày tạo', 'Trạng thái', 'Cấm'];
   dataSource: MatTableDataSource<Seller>;
 
   account_id: number;
@@ -54,9 +55,24 @@ export class ReportedSellerListsComponent implements OnInit{
         account_id: account_id,
       }
     });
-
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+      setTimeout(() => this.refresh(),400)
+    });
   }
-
+  openBanSellerDialog(id: number, email: string, enabled: boolean) {
+    const dialogRef = this.dialog.open(BansellerComponent, {
+      data: {
+        id: id,
+        email: email,
+        enabled: enabled
+      }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+      setTimeout(() => this.refresh(),400)
+    });
+  }
 
   refresh() {
     this.sellerService.getAllSellers().subscribe((data: any) => {

@@ -148,6 +148,9 @@ export class ProductService {
   getAllProductForHome(){
     return this.httpClient.get<any>("http://localhost:9000/productDetails/GetAllProductForHomePage");
   }
+  getLastestUpdatedProductForHomePage(){
+    return this.httpClient.get<any>("http://localhost:9000/productDetails/getLastestUpdatedProductForHomePage");
+  }
 
   private handleException(err: HttpErrorResponse): Observable<any> {
     if (err.status === 403) {

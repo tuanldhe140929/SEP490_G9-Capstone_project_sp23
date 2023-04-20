@@ -31,6 +31,7 @@ import com.SEP490_G9.repository.ViolationTypeRepository;
 import com.SEP490_G9.service.ReportService;
 import com.SEP490_G9.service.authService.authServiceImpl.ReportServiceImpl;
 
+import jakarta.persistence.Query;
 import jakarta.transaction.Transactional;
 
 @SpringBootTest
@@ -822,8 +823,7 @@ public class ReportServiceTest {
 		when(productDetailsRepo.findAll()).thenReturn(allPd);
 		when(userRepo.findAll()).thenReturn(allUsers);
 		when(vioTypeRepo.findAll()).thenReturn(vioTypes);
-		
-		
+
 		List<Report> allReports = new ArrayList<>();
 		
 		when(reportRepo.findAll()).thenReturn(allReports);
