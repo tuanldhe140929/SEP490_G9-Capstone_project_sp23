@@ -169,7 +169,7 @@ class PayoutServiceTest {
 	void testPOS1_3() {
 		// Set up a mock Transaction
 		Transaction transaction = new Transaction();
-		Cart cart = new Cart();
+		Cart cart = new Cart(); 
 		List<CartItem> items = new ArrayList<>();
 		Product product1 = new Product();
 		ProductDetails details1 = new ProductDetails();

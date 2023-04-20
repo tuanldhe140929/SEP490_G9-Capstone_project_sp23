@@ -69,7 +69,7 @@ class FileIOServiceTest {
 		// Cleanup
 		Files.delete(storedFile.toPath());
 	}
-
+  
 	@Test
 	void testFIS2(@TempDir Path tempDir) throws IOException {
 		// Given

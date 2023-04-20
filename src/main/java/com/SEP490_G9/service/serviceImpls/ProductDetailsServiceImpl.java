@@ -585,7 +585,7 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 				}
 			}
 		}
-		return result;
+		return result.stream().distinct().toList();
 	}
 
 	@Override

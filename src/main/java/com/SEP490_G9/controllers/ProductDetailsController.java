@@ -106,14 +106,14 @@ public class ProductDetailsController {
 		ProductDetailsDTO dto = new ProductDetailsDTO(pd);
 		return ResponseEntity.ok(dto);
 	}
-	
-	@GetMapping(value="getActiveVersionForDownload")
+
+	@GetMapping(value = "getActiveVersionForDownload")
 	public ResponseEntity<?> getActiveVersionForDownload(@RequestParam(name = "productId") Long productId) {
 		ProductDetails pd = productDetailsService.getActiveVersionForDownload(productId);
 		ProductDetailsDTO dto = new ProductDetailsDTO(pd);
 		return ResponseEntity.ok(dto);
 	}
-	
+
 	@GetMapping(value = "getAllVersion")
 	public ResponseEntity<?> getAllVersion(@RequestParam(name = "productId", required = true) Long productId) {
 		List<ProductDetails> productDetailss = productDetailsService.getAllByProductId(productId);
@@ -140,7 +140,7 @@ public class ProductDetailsController {
 		ProductDetailsDTO ret = new ProductDetailsDTO(pd);
 		return ResponseEntity.ok(ret);
 	}
-	
+
 	@PostMapping(value = "cancelVerifyProduct")
 	public ResponseEntity<?> cancelVerfyProduct(@RequestParam(name = "productId", required = true) Long productId,
 			@RequestParam(name = "version", required = true) String version) {
@@ -148,8 +148,6 @@ public class ProductDetailsController {
 		ProductDetailsDTO ret = new ProductDetailsDTO(pd);
 		return ResponseEntity.ok(ret);
 	}
-	
-	
 
 	@PostMapping(value = "createNewVersionV2")
 	public ResponseEntity<?> createNewVersionV2(@RequestBody ProductDetailsDTO productDetailsDTO,
@@ -165,7 +163,7 @@ public class ProductDetailsController {
 		ProductDetailsDTO ret = null;
 		ProductDetails notEdited = productDetailsRepo
 				.findByProductIdAndProductVersionKeyVersion(productDetailsDTO.getId(), productDetailsDTO.getVersion());
-		if(notEdited.getApproved()!=Status.NEW) {
+		if (notEdited.getApproved() != Status.NEW) {
 			throw new IllegalArgumentException("Cannot edit this version");
 		}
 		System.out.println(productDetailsDTO.getPrice());
@@ -237,35 +235,21 @@ public class ProductDetailsController {
 		return ResponseEntity.ok(allDtoPd);
 	}
 
-	
-
-	@GetMapping(value = "getTotalPurchasedCount")
-	public ResponseEntity<?> getTotalPurchasedCount(@RequestParam("productId") Long productId){
-		int count = this.productDetailsService.getTotalPurchasedCount(productId);
-				return ResponseEntity.ok(count);
-	}
-	
-	@GetMapping(value = "getCurrentVersion")
-	public String getCurrentVersion(@RequestParam("productId") Long productId){
-		String currentVer = productDetailsService.getCurrentVersion(productId);
-		return currentVer;
-	}
 	@GetMapping(value = "GetAllProductForHomePage")
 	public ResponseEntity<?> GetAllProductForHomePage() {
 		List<ProductDetails> allProducts = productDetailsService.getAll();
 		List<ProductDetails> enabledProducts = productDetailsService.getByEnabled(allProducts);
 		List<ProductDetails> latestProducts = productDetailsService.getByLatestVer(enabledProducts);
-		List<ProductDetails> approvedProducts = productDetailsService.getByApproved(latestProducts);	
-		
+		List<ProductDetails> approvedProducts = productDetailsService.getByApproved(latestProducts);
+
 		List<ProductDetailsDTO> allProductsDTO = new ArrayList<>();
 		for (ProductDetails p : approvedProducts) {
 			allProductsDTO.add(new ProductDetailsDTO(p));
 		}
 		return ResponseEntity.ok(allProductsDTO);
 	}
-	
 @GetMapping(value ="getLastestUpdatedProductForHomePage")
-public ResponseEntity<?> getLastestUpdatedProductForHomePage() {
+public ResponseEntity<?> LastestUpdatedProductForHomePage() {
 	List<ProductDetails> allProducts = productDetailsService.getAll();
 	List<ProductDetails> enabledProducts = productDetailsService.getByEnabled(allProducts);
 	List<ProductDetails> latestProducts = productDetailsService.getByLatestVer(enabledProducts);
