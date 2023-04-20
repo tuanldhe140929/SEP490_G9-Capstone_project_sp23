@@ -86,7 +86,7 @@ public class UserController {
 		List<Role> userRoles = new ArrayList<>();
 		userRoles.add(roleService.getRoleById(Constant.USER_ROLE_ID));
 		String encodedPassword = new BCryptPasswordEncoder().encode(user.getPassword());
-		
+
 		User newUser = new User();
 		newUser.setUsername(user.getUsername());
 		newUser.setEmail(user.getEmail());
@@ -105,20 +105,21 @@ public class UserController {
 			throws ClientProtocolException, IOException {
 		System.out.println(code);
 		User googleLoginUser = googleAuthService.getUserInfo(code);
-		if(userService.getByEmail(googleLoginUser.getEmail())!=null) {
+		if (userService.getByEmail(googleLoginUser.getEmail()) != null) {
 			String randomPassword = passwordGenerator.generatePassword(8).toString();
 			String encodedPassword = new BCryptPasswordEncoder().encode(randomPassword);
 			googleLoginUser.setPassword(encodedPassword);
-			googleLoginUser.setUsername(googleLoginUser.getEmail().substring(0, googleLoginUser.getEmail().indexOf("@")));
+			googleLoginUser
+					.setUsername(googleLoginUser.getEmail().substring(0, googleLoginUser.getEmail().indexOf("@")));
 			googleLoginUser.setCreatedDate(new Date());
 			googleLoginUser.setEmailVerified(true);
 			googleLoginUser.setEnabled(true);
 			List<Role> userRoles = new ArrayList<>();
 			userRoles.add(roleService.getRoleById(Constant.USER_ROLE_ID));
 			googleLoginUser.setRoles(userRoles);
-			User saved = userService.createUser(googleLoginUser);	
+			User saved = userService.createUser(googleLoginUser);
 		}
-		
+
 		Account account = accountService.getByEmail(googleLoginUser.getEmail());
 
 		UserDetailsImpl userDetails = new UserDetailsImpl();
@@ -197,9 +198,9 @@ public class UserController {
 		user = userService.updateUser(newUserName, newFirstName, newLastName);
 		return ResponseEntity.ok(user);
 	}
-	
+
 	@GetMapping(value = "getAllUsers")
-	public ResponseEntity<?> getAllUsers(){
+	public ResponseEntity<?> getAllUsers() {
 		List<User> userList = userService.getAllUsers();
 		return ResponseEntity.ok(userList);
 	}

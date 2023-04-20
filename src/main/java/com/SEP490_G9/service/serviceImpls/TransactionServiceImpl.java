@@ -234,6 +234,9 @@ public class TransactionServiceImpl implements TransactionService {
 	@Override
 	public Transaction executeTransaction(String paymentId, String payerId) {
 		Transaction transaction = transactionRepo.findByPaypalId(paymentId);
+		if (payerId.isBlank() || payerId.isEmpty()) {
+			throw new IllegalArgumentException("PayerId can not be blank");
+		}
 		if (transaction == null) {
 			throw new ResourceNotFoundException("transaction", "paymentId", paymentId);
 		}
@@ -253,9 +256,7 @@ public class TransactionServiceImpl implements TransactionService {
 			transactionRepo.save(transaction);
 			return transaction;
 		}
-		if (payerId.isBlank() || payerId.isEmpty()) {
-			throw new IllegalArgumentException("PayerId can not be blank");
-		}
+		
 
 		if (transaction.getStatus().equals(Transaction.Status.CREATED)
 				|| transaction.getStatus().equals(Transaction.Status.COMPLETED)
