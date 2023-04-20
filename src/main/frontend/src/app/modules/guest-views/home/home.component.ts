@@ -54,6 +54,17 @@ export class HomeComponent implements OnInit{
       }
     )
   }
+  getLatestProduct(){
+    this.productService.getLastestUpdatedProductForHomePage().subscribe(
+      data => {
+        console.log(data);
+        this.productList = data;
+        for (let i = 0; i<this.productList.length; i++){
+          this.productList[i].price = Number.parseFloat(this.productList[i].price.toFixed(1));
+        }
+      }
+    )
+  }
   ngOnDestroy() {
     window.clearTimeout(this.timeoutId);
   }
