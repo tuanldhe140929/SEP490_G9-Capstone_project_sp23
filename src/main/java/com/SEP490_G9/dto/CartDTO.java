@@ -13,7 +13,7 @@ public class CartDTO {
 	private User user;
 	private List<CartItemDTO> items;
 	private double totalPrice;
-
+	private List<Change> changes;
 	public CartDTO(Long id, User user, List<CartItemDTO> items, int totalPrice) {
 		super();
 		this.id = id;
@@ -37,6 +37,7 @@ public class CartDTO {
 		for (CartItem item : cart.getItems()) {
 			this.totalPrice += item.getPrice();
 		}
+		this.changes = cart.getChanges();
 	}
 
 	public Long getId() {
@@ -69,6 +70,14 @@ public class CartDTO {
 
 	public void setTotalPrice(double totalPrice) {
 		this.totalPrice = totalPrice;
+	}
+
+	public List<Change> getChanges() {
+		return changes;
+	}
+
+	public void setChanges(List<Change> changes) {
+		this.changes = changes;
 	}
 
 }

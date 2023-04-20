@@ -37,6 +37,7 @@ import com.SEP490_G9.entities.UserDetailsImpl;
 import com.SEP490_G9.exception.DuplicateFieldException;
 import com.SEP490_G9.exception.NumberException;
 import com.SEP490_G9.exception.ResourceNotFoundException;
+import com.SEP490_G9.repository.CartItemRepository;
 import com.SEP490_G9.repository.ProductDetailsRepository;
 import com.SEP490_G9.repository.ProductFileRepository;
 import com.SEP490_G9.repository.ProductRepository;
@@ -84,6 +85,8 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 	@Autowired
 	TransactionRepository transactionRepo;
 	// Supporting methods
+	@Autowired
+	CartItemRepository cartItemRepository;
 
 	@Override
 	public List<ProductDetails> getAll() {
@@ -104,7 +107,7 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 //			ProductDetails latestVer = getActiveVersion(product.getId());
 //			latestVerPd.add(latestVer);
 		}
-		
+
 		return latestVerPd.stream().distinct().toList();
 	}
 
@@ -186,7 +189,7 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 				enabledPd.add(pd);
 			}
 		}
-		return enabledPd;	
+		return enabledPd;
 	}
 
 	@Override
@@ -200,6 +203,7 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		}
 		return disabledPd;
 	}
+
 	
 	@Override
 	public List<ProductDetails> getProductByTime(List<ProductDetails> listPd) {
@@ -326,7 +330,8 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 	public Account getCurrentAccount() {
 		System.out.println(SecurityContextHolder.getContext().getAuthentication().getName());
 		if (!SecurityContextHolder.getContext().getAuthentication().getName().equalsIgnoreCase("anonymousUser")) {
-			return ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getAccount();
+			return ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
+					.getAccount();
 		}
 		return null;
 	}
@@ -567,19 +572,20 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		List<ProductDetails> allLatestPd = getByLatestVer(allPd);
 		List<Report> allReports = reportRepo.findAll();
 		List<ProductDetails> result = new ArrayList<>();
-		if(status.equalsIgnoreCase("PENDING")) {
-			for(Report report: allReports) {
+		if (status.equalsIgnoreCase("PENDING")) {
+			for (Report report : allReports) {
 				Product product = report.getProduct();
-				if(report.getStatus().equals("PENDING")&&report.getVersion().equalsIgnoreCase(product.getActiveVersion())) {
+				if (report.getStatus().equals("PENDING")
+						&& report.getVersion().equalsIgnoreCase(product.getActiveVersion())) {
 					ProductDetails pd = getByProductIdAndVersion(report.getProduct().getId(), report.getVersion());
 					result.add(pd);
 				}
 			}
 		}
-		if(status.equalsIgnoreCase("HANDLED")) {
-			for(Report report: allReports) {
+		if (status.equalsIgnoreCase("HANDLED")) {
+			for (Report report : allReports) {
 				Product product = report.getProduct();
-				if((report.getStatus().equals("ACCEPTED")||report.getStatus().equals("DENIED"))) {
+				if ((report.getStatus().equals("ACCEPTED") || report.getStatus().equals("DENIED"))) {
 					ProductDetails pd = getByProductIdAndVersion(report.getProduct().getId(), report.getVersion());
 					result.add(pd);
 				}
@@ -608,7 +614,7 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		}
 		return allStatusPd;
 	}
-	
+
 	@Override
 	public ProductDetails updateApprovalStatus(long productId, String version, String status) {
 		ProductDetails pd = getByProductIdAndVersion(productId, version);
@@ -630,7 +636,11 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		switch (status) {
 		case "APPROVED":
 			pd.setApproved(Status.APPROVED);
-
+			List<CartItem> items = cartItemRepository.findByProductDetails(pd);
+			for (CartItem item : items) {
+				item.setChanged(true);
+			}
+			cartItemRepository.saveAll(items);
 			for (ProductFile file : newFiles) {
 				file.setNewUploaded(false);
 				file.setReviewed(true);
@@ -726,5 +736,4 @@ pd.setLastModified(new Date());
 		return latestVer;
 	}
 
-	
 }

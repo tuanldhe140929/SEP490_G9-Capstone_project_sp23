@@ -3,11 +3,12 @@ package com.SEP490_G9.entities;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.SEP490_G9.dto.Change;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.*;
 
-@JsonIgnoreProperties(value = {"user","transactions"})
+@JsonIgnoreProperties(value = { "user", "transactions" })
 @Entity
 @Table(name = "carts")
 public class Cart {
@@ -22,9 +23,12 @@ public class Cart {
 	@ManyToOne
 	@JoinColumn(name = "account_id", nullable = false)
 	private User user;
-	
-	@OneToMany(mappedBy="cart",fetch = FetchType.EAGER)
+
+	@OneToMany(mappedBy = "cart", fetch = FetchType.EAGER)
 	private List<Transaction> transactions = new ArrayList<>();
+
+	@Transient
+	List<Change> changes = new ArrayList<>();
 
 	public Cart() {
 		// TODO Auto-generated constructor stub
@@ -80,6 +84,14 @@ public class Cart {
 
 	public void setTransactions(List<Transaction> transactions) {
 		this.transactions = transactions;
+	}
+
+	public List<Change> getChanges() {
+		return changes;
+	}
+
+	public void setChanges(List<Change> changes) {
+		this.changes = changes;
 	}
 
 }
