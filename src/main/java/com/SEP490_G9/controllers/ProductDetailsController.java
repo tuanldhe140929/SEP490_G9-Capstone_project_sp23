@@ -263,8 +263,9 @@ public class ProductDetailsController {
 		}
 		return ResponseEntity.ok(allProductsDTO);
 	}
+	
 @GetMapping(value ="getLastestUpdatedProductForHomePage")
-public ResponseEntity<?> LastestUpdatedProductForHomePage() {
+public ResponseEntity<?> getLastestUpdatedProductForHomePage() {
 	List<ProductDetails> allProducts = productDetailsService.getAll();
 	List<ProductDetails> enabledProducts = productDetailsService.getByEnabled(allProducts);
 	List<ProductDetails> latestProducts = productDetailsService.getByLatestVer(enabledProducts);
