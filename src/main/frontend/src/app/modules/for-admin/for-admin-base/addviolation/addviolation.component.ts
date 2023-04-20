@@ -49,10 +49,16 @@ export class AddviolationComponent implements OnInit{
         this.account_id = this.data.account_id;
     //  console.log(this.violation_id,this.createdDate,this.description,this.account_id);
         // this.description = this.addViolationForm.controls.description.value;
-        this.addviolationService.addViolation(this.addViolationForm.value).subscribe(
+        this.addviolationService.addViolation(this.account_id,"description").subscribe(
           data => {
             console.log(data);
-            this.toastr.success('Thêm chủ đề thành công');
+            this.toastr.success('Thêm vi phạm thành công');
+          }
+        )
+        this.addviolationService.updateSellerStatus(this.account_id).subscribe(
+          data => {
+            console.log(data);
+            this.toastr.success('Đã tiến hành cấm người bán vi phạm');
           }
         )
       // } else {

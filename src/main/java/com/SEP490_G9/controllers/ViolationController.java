@@ -39,8 +39,8 @@ public class ViolationController {
 	AccountService accountService;
 	
 	@PostMapping("addviolation")
-	public ResponseEntity<?> addViolation(@RequestBody Violation vio, @RequestParam("account_id") int account_id) {
-		
+	public ResponseEntity<?> addViolation(@RequestParam("account_id") int account_id, @RequestParam("description") String description) {
+//		@RequestBody Violation vio,
 //		Violation vionew = new Violation();
 //		Account account = accountRepo.findById(account_id).get();
 //		vionew.setId(violation_id);
@@ -48,10 +48,15 @@ public class ViolationController {
 //		vionew.setDescription(description);
 //		vionew.setAccount(account);
 //		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getAccount();
+		Violation vio = new Violation();
+		vio.setDescription(description);
 		Account account1 = accountService.getById(account_id);
 		vio.setAccount(account1);
 //		Violation newvio = new Violation(vio); 
 		boolean canAdd = violationService.addViolation(vio);
+		account1.setEnabled(false);
+		System.out.println(description+account_id);
+//		boolean canAdd2 = violationService.addViolation(vio);
 		return ResponseEntity.ok(canAdd);
 	}
 	
