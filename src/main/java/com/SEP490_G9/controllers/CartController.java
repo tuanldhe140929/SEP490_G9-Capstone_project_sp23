@@ -19,6 +19,7 @@ public class CartController {
 	@PostMapping("/add/{productId}")
 	public ResponseEntity<?> addProduct(@PathVariable(name = "productId") Long productId) {
 		Cart currentCart = cartService.getCurrentCart();
+		System.out.println(currentCart.getId() + " cart id");
 		Cart cart = cartService.addItem(productId, currentCart.getId());
 		CartDTO dto = new CartDTO(cart);
 		return ResponseEntity.ok(dto);
@@ -27,6 +28,7 @@ public class CartController {
 	@DeleteMapping("/remove/{productId}")
 	public ResponseEntity<?> removeProduct(@PathVariable(name = "productId") Long productId) {
 		Cart currentCart = cartService.getCurrentCart();
+		
 		Cart cart = cartService.removeItem(productId, currentCart.getId());
 		CartDTO dto = new CartDTO(cart);
 		return ResponseEntity.ok(dto);
@@ -35,6 +37,7 @@ public class CartController {
 	@GetMapping("/getCurrentCartDTO")
 	public ResponseEntity<?> getCart() {
 		Cart cart = cartService.getCurrentCart();
+		System.out.println(cart.getId());
 		CartDTO dto = new CartDTO(cart);
 		return ResponseEntity.ok(dto);
 	}

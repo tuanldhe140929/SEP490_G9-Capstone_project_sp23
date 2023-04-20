@@ -185,7 +185,8 @@ public class ProductDetailsController {
 			notEdited.setLicense(productDetailsDTO.getLicense());
 		else
 			notEdited.setLicense(null);
-
+		
+		notEdited.setLastModified(new Date());
 		notEdited.setName(productDetailsDTO.getName().trim());
 		notEdited.setPrice(productDetailsDTO.getPrice());
 		notEdited.setInstruction(instructionDetails.trim());
