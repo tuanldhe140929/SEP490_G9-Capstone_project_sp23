@@ -2,15 +2,15 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { AccountService } from 'src/app/services/account.service';
-
+import { AddviolationService } from 'src/app/services/addviolation.service';
 
 @Component({
-  selector: 'app-update-staff-status',
-  templateUrl: './update-staff-status.component.html',
-  styleUrls: ['./update-staff-status.component.css']
+  selector: 'app-banseller',
+  templateUrl: './banseller.component.html',
+  styleUrls: ['./banseller.component.css']
 })
-export class UpdateStaffStatusComponent implements OnInit{
-  constructor(@Inject(MAT_DIALOG_DATA) public data: {id: number, email: string, enabled: boolean}, private accountService: AccountService, private toastr: ToastrService){}
+export class BansellerComponent implements OnInit{
+  constructor(@Inject(MAT_DIALOG_DATA) public data: {id: number, email: string, enabled: boolean}, private vioService: AddviolationService, private toastr: ToastrService){}
 
   formerStatus: boolean = this.data.enabled;
 
@@ -18,8 +18,8 @@ export class UpdateStaffStatusComponent implements OnInit{
     console.log(this.data.id);
   }
 
-  onUpdateStatus(){
-    this.accountService.updateStaffStatus(this.data.id).subscribe(
+  onBanSeller(){
+    this.vioService.updateSellerStatus(this.data.id).subscribe(
       data => {
         console.log(data);
         if(this.formerStatus){
@@ -30,5 +30,5 @@ export class UpdateStaffStatusComponent implements OnInit{
       }
     )
   }
-  
+
 }

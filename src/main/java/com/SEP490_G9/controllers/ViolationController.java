@@ -1,3 +1,4 @@
+
 package com.SEP490_G9.controllers;
 
 import java.util.ArrayList;
@@ -62,8 +63,8 @@ public class ViolationController {
 	}
 	
 	@PutMapping("updateSellerStatus")
-	public ResponseEntity<?> updateSellerStatus(@RequestParam(name = "account_id") long account_id){
-		boolean updateStatus = violationService.updateSellerStatus(account_id);
+	public ResponseEntity<?> updateSellerStatus(@RequestParam(name = "id") long id){
+		Account updateStatus = violationService.updateSellerStatus(id);
 		return ResponseEntity.ok(updateStatus);
 	}
 	

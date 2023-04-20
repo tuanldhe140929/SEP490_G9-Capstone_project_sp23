@@ -11,7 +11,6 @@ public interface SellerService {
 	Seller getSellerByAProduct(long productId);
 	
 	int getSellerNumberOfFlags(long sellerId);
-	
 
 	//supporting methods
 	
