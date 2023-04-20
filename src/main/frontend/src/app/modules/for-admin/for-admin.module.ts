@@ -29,6 +29,7 @@ import { AddTagComponent } from './for-admin-base/tags/add-tag/add-tag.component
 import { UpdateTagComponent } from './for-admin-base/tags/update-tag/update-tag.component';
 import { ReportedSellerListsComponent } from './for-admin-base/reported-seller-lists/reported-seller-lists.component';
 import { AddviolationComponent } from './for-admin-base/addviolation/addviolation.component';
+import { BansellerComponent } from './for-admin-base/banseller/banseller.component';
 
 
 @NgModule({
@@ -46,6 +47,7 @@ import { AddviolationComponent } from './for-admin-base/addviolation/addviolatio
     AddTagComponent,
     UpdateTagComponent,
     ReportedSellerListsComponent,
+    BansellerComponent,
   ],
   imports: [
     CommonModule,
