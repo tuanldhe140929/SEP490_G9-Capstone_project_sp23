@@ -10,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.SEP490_G9.dto.CartDTO;
+import com.SEP490_G9.dto.Change;
 import com.SEP490_G9.entities.Account;
 import com.SEP490_G9.entities.Cart;
 import com.SEP490_G9.entities.CartItem;
@@ -64,7 +65,7 @@ public class CartServiceImplement implements CartService {
 	@Override
 	public Cart addItem(Long productId, Long cartId) {
 		Cart cart = getById(cartId);
-		if(cart.getItems().size() == 10) {
+		if (cart.getItems().size() == 10) {
 			throw new IllegalArgumentException("Exeeded max number of items");
 		}
 		if (isUserPurchasedProduct(cart.getUser().getId(), productId)) {
@@ -155,6 +156,7 @@ public class CartServiceImplement implements CartService {
 			Cart cart = new Cart();
 			cart.setUser(user);
 			ret = createCart(cart);
+			System.out.println("firstCart");
 		} else {
 			Cart cart = cartRepository.findFirstByUserOrderByIdDesc(user);
 
@@ -166,29 +168,45 @@ public class CartServiceImplement implements CartService {
 				ret = createCart(newCart);
 				// cart chua thanh toan thi update lai active version
 			} else {
+				List<CartItem> removedItems = new ArrayList<>();
 				List<CartItem> updatedItems = new ArrayList<>();
+				List<Change> changes = new ArrayList<>();
 				for (CartItem item : cart.getItems()) {
+					Change change = new Change();
 					CartItem updatedItem = new CartItem();
 					Long productId = item.getProductDetails().getProductVersionKey().getProductId();
 					String activeVersion = item.getProductDetails().getProduct().getActiveVersion();
 					ProductDetails pd = productDetailsRepository.findByProductIdAndProductVersionKeyVersion(productId,
 							activeVersion);
-					if (pd.getProduct().isEnabled() && pd.getApproved().equals(Status.APPROVED)) {
+
+					if (!item.getProductDetails().getVersion().equalsIgnoreCase(activeVersion) || item.isChanged()) {
 						updatedItem.setProductDetails(pd);
 						CartItemKey cartItemKey = new CartItemKey();
 						cartItemKey.setCartId(cart.getId());
 						cartItemKey.setProductVersionKey(pd.getProductVersionKey());
-						updatedItem.setCartItemKey(cartItemKey);
-						updatedItem.setPrice(pd.getPrice());
-						updatedItem.setCart(cart);
-						updatedItems.add(updatedItem);
-					}else {
+						item.setCartItemKey(cartItemKey);
+						item.setPrice(pd.getPrice());
+						item.setChanged(false);
+						updatedItems.add(item);
+						change.setItem(item.getProductDetails().getName());
+						change.setType(Change.Type.UPDATED);
+						changes.add(change);
+					} else if (!pd.getProduct().isEnabled() || !pd.getApproved().equals(Status.APPROVED)) {
 						cartItemRepository.delete(item);
+						change.setItem(item.getProductDetails().getName());
+						change.setType(Change.Type.REMOVED);
+						changes.add(change);
+						removedItems.add(item);
 					}
+
 				}
-				updatedItems = cartItemRepository.saveAll(updatedItems);
-				cart.setItems(updatedItems);
-				ret = cartRepository.save(cart);
+				
+				// ret = cartRepository.save(cart);
+
+				cart.getItems().removeAll(removedItems);
+				cart.setChanges(changes);
+				cartItemRepository.saveAll(cart.getItems());
+				ret = cart;
 			}
 		}
 		return ret;
