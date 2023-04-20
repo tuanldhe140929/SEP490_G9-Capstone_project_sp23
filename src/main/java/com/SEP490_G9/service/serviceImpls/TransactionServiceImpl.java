@@ -11,9 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.SEP490_G9.dto.Change;
 import com.SEP490_G9.entities.Account;
 import com.SEP490_G9.entities.Cart;
 import com.SEP490_G9.entities.CartItem;
+import com.SEP490_G9.entities.Product;
 import com.SEP490_G9.entities.ProductDetails;
 import com.SEP490_G9.entities.Seller;
 import com.SEP490_G9.entities.Transaction;
@@ -31,6 +33,7 @@ import com.SEP490_G9.service.CartService;
 import com.SEP490_G9.service.PayoutService;
 import com.SEP490_G9.service.PaypalService;
 import com.SEP490_G9.service.ProductDetailsService;
+import com.SEP490_G9.service.ProductService;
 import com.SEP490_G9.service.TransactionService;
 import com.SEP490_G9.service.UserService;
 import com.paypal.api.payments.Links;
@@ -67,25 +70,45 @@ public class TransactionServiceImpl implements TransactionService {
 	ProductDetailsService pds;
 
 	@Autowired
+	ProductService ps;
+
+	@Autowired
 	CartItemRepository cartItemRepo;
 
 	@Override
 	public Transaction getByPaymentId(String paymentId) {
 		Transaction ret = transactionRepo.findByPaypalId(paymentId);
+		List<Change> changes = new ArrayList<>();
 		List<CartItem> removeItems = new ArrayList<>();
+		List<CartItem> updatedItems = new ArrayList<>();
 		for (CartItem item : ret.getCart().getItems()) {
-			if (!item.getProductDetails().getProduct().isEnabled()
-					|| !item.getProductDetails().getApproved().equals(ProductDetails.Status.APPROVED)) {
-				removeItems.add(item);
+			Product product = ps.getProductById(item.getProductDetails().getProduct().getId());
+			ProductDetails activeVersion = null;
+			for(ProductDetails pd : product.getProductDetails()) {
+				if(product.getActiveVersion().equals(pd.getVersion())) {
+					activeVersion = pd;
+					break;
+				}
+			}
+			
+			if (!item.getProductDetails().getVersion().equalsIgnoreCase(product.getActiveVersion())
+					|| item.isChanged()) {
+				item.setProductDetails(activeVersion);
+				item.getCartItemKey().getProductVersionKey().setVersion(product.getActiveVersion());
+				item.setChanged(false);
+				updatedItems.add(item);
 				ret.setChange(true);
+				Change change = new Change();
+				change.setItem(item.getProductDetails().getName());
+				change.setType(Change.Type.UPDATED);
+				changes.add(change);
 			}
 		}
-		ret.getCart().getItems().removeAll(removeItems);
-		cartItemRepo.deleteAll(removeItems);
-		if (ret.isChange()) {
-			ret.setDescription("Canceled by DPM system");
-			ret.setStatus(Transaction.Status.CANCELED);
-		} else if (!ret.isChange() && ret.getStatus().equals(Transaction.Status.CREATED)) {
+		
+		ret.getCart().setChanges(changes);
+		cartItemRepo.saveAll(ret.getCart().getItems());
+		
+		if (ret.getStatus().equals(Transaction.Status.CREATED)) {
 			ret.setStatus(Transaction.Status.APPROVED);
 		}
 		transactionRepo.save(ret);
@@ -121,27 +144,51 @@ public class TransactionServiceImpl implements TransactionService {
 		if (cart.getItems().size() == 0) {
 			throw new IllegalArgumentException("Cart is empty");
 		}
+		List<Change> changes = new ArrayList<>();
 		List<CartItem> removeItems = new ArrayList<>();
 		List<CartItem> updatedItems = new ArrayList<>();
 		for (CartItem item : cart.getItems()) {
 			if (cartService.isUserPurchasedProduct(user.getId(), item.getProductDetails().getProduct().getId())) {
 				throw new IllegalArgumentException("User already own item in cart");
 			}
-
-			if (!item.getProductDetails().getProduct().isEnabled()
+			Product product = ps.getProductById(item.getProductDetails().getProduct().getId());
+			ProductDetails activeVersion = null;
+			for(ProductDetails pd : product.getProductDetails()) {
+				if(product.getActiveVersion().equals(pd.getVersion())) {
+					activeVersion = pd;
+					break;
+				}
+			}
+			
+			if (!item.getProductDetails().getVersion().equalsIgnoreCase(product.getActiveVersion())
+					|| item.isChanged()) {
+				item.setPrice(activeVersion.getPrice());
+				item.setProductDetails(activeVersion);
+				item.getCartItemKey().getProductVersionKey().setVersion(product.getActiveVersion());
+				item.setChanged(false);
+				updatedItems.add(item);
+				transaction.setChange(true);
+				Change change = new Change();
+				change.setItem(item.getProductDetails().getName());
+				change.setType(Change.Type.UPDATED);
+				changes.add(change);
+			} else if (!item.getProductDetails().getProduct().isEnabled()
 					|| !item.getProductDetails().getApproved().equals(ProductDetails.Status.APPROVED)) {
 				removeItems.add(item);
 				transaction.setChange(true);
-			} else if (item.getPrice() != item.getProductDetails().getPrice()) {
-				item.setPrice(item.getProductDetails().getPrice());
-				updatedItems.add(item);
-				transaction.setChange(true);
+				Change change = new Change();
+				change.setItem(item.getProductDetails().getName());
+				change.setType(Change.Type.REMOVED);
+				changes.add(change);
 			}
+
 		}
 		cart.getItems().removeAll(removeItems);
 		cartItemRepo.deleteAll(removeItems);
-		cartItemRepo.saveAll(updatedItems);
+		cartItemRepo.saveAll(cart.getItems());
 		if (transaction.isChange()) {
+			cart.setChanges(changes);
+			transaction.setCart(cart);
 			return transaction;
 		}
 
@@ -241,22 +288,39 @@ public class TransactionServiceImpl implements TransactionService {
 			throw new ResourceNotFoundException("transaction", "paymentId", paymentId);
 		}
 		Transaction ret = null;
+		List<Change> changes = new ArrayList<>();
 		List<CartItem> removeItems = new ArrayList<>();
+		List<CartItem> updatedItems = new ArrayList<>();
 		for (CartItem item : transaction.getCart().getItems()) {
-			if (!item.getProductDetails().getProduct().isEnabled()
-					|| !item.getProductDetails().getApproved().equals(ProductDetails.Status.APPROVED)) {
-				removeItems.add(item);
+			Product product = ps.getProductById(item.getProductDetails().getProduct().getId());
+			ProductDetails activeVersion = null;
+			for(ProductDetails pd : product.getProductDetails()) {
+				if(product.getActiveVersion().equals(pd.getVersion())) {
+					activeVersion = pd;
+					break;
+				}
+			}
+			
+			if (!item.getProductDetails().getVersion().equalsIgnoreCase(product.getActiveVersion())
+					|| item.isChanged()) {
+				item.setProductDetails(activeVersion);
+				item.getCartItemKey().getProductVersionKey().setVersion(product.getActiveVersion());
+				item.setChanged(false);
+				updatedItems.add(item);
 				transaction.setChange(true);
+				Change change = new Change();
+				change.setItem(item.getProductDetails().getName());
+				change.setType(Change.Type.UPDATED);
+				changes.add(change);
 			}
 		}
-		transaction.getCart().getItems().removeAll(removeItems);
-		cartItemRepo.deleteAll(removeItems);
+		
+		transaction.getCart().setChanges(changes);
+		cartItemRepo.saveAll(transaction.getCart().getItems());
+		
 		if (transaction.isChange()) {
-			transaction.setStatus(Transaction.Status.CANCELED);
-			transactionRepo.save(transaction);
 			return transaction;
 		}
-		
 
 		if (transaction.getStatus().equals(Transaction.Status.CREATED)
 				|| transaction.getStatus().equals(Transaction.Status.COMPLETED)

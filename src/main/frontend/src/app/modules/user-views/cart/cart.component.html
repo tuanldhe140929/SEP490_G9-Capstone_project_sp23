@@ -11,7 +11,7 @@
       <div class="col-lg-9">
 
         <div class="card" style="border-radius:3px;">
-          <div class="content-body">
+          <div class="content-body" style="min-height:400px;">
             <h4 class="card-title mb-4">Giỏ hàng của bạn</h4>
             <div *ngIf="cartItemList.length == 0">
               <b>Chưa có sản phẩm nào trong giỏ hàng </b>
@@ -106,6 +106,29 @@
   </div>
   <div class="modal-body">
     <small style="color:black;">{{info}}<br /></small>
+  </div>
+</ng-template>
+
+
+<ng-template #change let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" style="color:black">Thông báo</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="dismiss()"></button>
+  </div>
+  <div class="modal-body">
+      <div *ngIf="updated.length!=0">
+      <div>Có sự thay đổi trong sản phẩm: </div><br />
+        <div *ngFor="let update of updated">
+        <small style="color: red; font-size: 20px;">- {{update.item}}</small>
+        </div>
+      </div>
+      <div *ngIf="removed.length!=0">
+      <div>Sản phẩm không còn khả dụng: </div><br />
+        <div *ngFor="let remove of removed">
+        <small style="color:red; font-size:20px;">- {{remove.item}}</small>
+       
+        </div>
+      </div>
   </div>
 </ng-template>
 <app-footer></app-footer>

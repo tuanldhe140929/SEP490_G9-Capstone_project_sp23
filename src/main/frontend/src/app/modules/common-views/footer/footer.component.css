@@ -1,9 +1,8 @@
-.section-footer
-{
-    border-top:1px solid;
-    border-color: gainsboro;
-    background-color: #111;
-    color: white;
+.section-footer {
+  border-top: 1px solid;
+  border-color: gainsboro;
+  background-color: #212121;
+  color: white;
 }
 
 h6{

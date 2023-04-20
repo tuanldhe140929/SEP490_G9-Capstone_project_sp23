@@ -10,7 +10,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatMenuModule } from '@angular/material/menu';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbCarouselModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ForAdminModule } from './modules/for-admin/for-admin.module';
 import { ToastrModule } from 'ngx-toastr';
@@ -48,6 +48,7 @@ import { StaffViewsModule } from './modules/staff-views/staff-views.module';
     MatMenuModule,
     MatSortModule,
     DataTablesModule,
+    
     ToastrModule.forRoot(
       {
         timeOut: 2000,
@@ -59,7 +60,8 @@ import { StaffViewsModule } from './modules/staff-views/staff-views.module';
     CommonViewsModule,
     GuestViewsModule,
     StaffViewsModule,
-    NgxPaginationModule
+    NgxPaginationModule,
+    NgbCarouselModule,
   ],
   providers: [
     {

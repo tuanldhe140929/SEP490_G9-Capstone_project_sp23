@@ -43,7 +43,27 @@
   <button (click)="cancelPayment()" class="btn cancel">Hủy</button>
 </div>
 
+<ng-template #change let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" style="color:black">Thông báo</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    <div *ngIf="updated.length!=0">
+      <div>Có sự thay đổi trong sản phẩm: </div><br />
+      <div *ngFor="let update of updated">
+        <small style="color: red; font-size: 20px;">- {{update.item}}</small>
+      </div>
+    </div>
+    <div *ngIf="removed.length!=0">
+      <div>Sản phẩm không còn khả dụng: </div><br />
+      <div *ngFor="let remove of removed">
+        <small style="color:red; font-size:20px;">- {{remove.item}}</small>
 
+      </div>
+    </div>
+  </div>
+</ng-template>
 <ng-template #infoModal let-modal>
   <div class="modal-header">
     <h4 class="modal-title" style="color:black">Thông báo</h4>

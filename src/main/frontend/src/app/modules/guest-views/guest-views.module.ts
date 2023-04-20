@@ -25,8 +25,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { BrowserModule } from '@angular/platform-browser';
 import { ReportProductComponent } from './product-details/report-product/report-product.component';
-
-
+import { MatIconModule } from '@angular/material/icon';
 
 import { HomeComponent } from './home/home.component';
 import { SearchResultComponent } from './search-result/search-result.component';
@@ -71,7 +70,9 @@ import { SearchResultTagComponent } from './search-result-tag/search-result-tag.
     GuestViewsRoutingModule,
     NgbRating,
     CommonViewsModule,
-    NgxPaginationModule
+    NgxPaginationModule,
+    MatIconModule,
+    
   ]
 })
 export class GuestViewsModule { }
