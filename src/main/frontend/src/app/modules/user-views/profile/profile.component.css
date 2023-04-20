@@ -35,6 +35,7 @@ app-footer {
       width:280px;
       color:black;
       margin-bottom:10px;
+      cursor: pointer;
   }
 
     .actionBtn1:hover {
@@ -73,6 +74,12 @@ input {
   transition: 0.8s;
   position: relative;
   overflow: hidden;
+  border-radius:3px;
+  height: 40px;
+  font-size:20px;
+  width:280px;
+  color:black;
+  margin-bottom:10px;
 }
 
 .actionBtn {

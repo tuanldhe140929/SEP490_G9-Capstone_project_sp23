@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import org.apache.http.client.ClientProtocolException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -182,7 +183,7 @@ public class UserController {
 
 	@PostMapping(value = "uploadProfileImage")
 	public ResponseEntity<?> uploadProfileImage(@RequestParam(name = "profileImage") MultipartFile profileImage)
-			throws IOException {
+			throws IOException, InterruptedException, ExecutionException {
 		String src = userService.uploadAvatar(profileImage);
 		return ResponseEntity.ok(src);
 	}
