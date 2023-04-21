@@ -18,7 +18,7 @@
             <div style="">
               <h5>Trạng thái: </h5>
               <h5 style="font-size: 17px; color: #6c757d;" *ngIf="product.approved==ProductStatus.NEW">{{getApproved(product.approved)}}</h5>
-              <h5 style="font-size:17px; color:yellow;" *ngIf="product.approved==ProductStatus.PENDING">{{getApproved(product.approved)}}</h5>
+              <h5 style="font-size:17px; color:red;" *ngIf="product.approved==ProductStatus.PENDING">{{getApproved(product.approved)}}</h5>
               <h5 style="font-size:17px; color:green;" *ngIf="product.approved==ProductStatus.APPROVED">{{getApproved(product.approved)}}</h5>
               <h5 style="font-size:17px; color:red;" *ngIf="product.approved==ProductStatus.REJECTED">{{getApproved(product.approved)}}</h5>
 

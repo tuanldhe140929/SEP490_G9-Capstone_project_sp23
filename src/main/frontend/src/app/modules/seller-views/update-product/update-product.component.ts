@@ -247,15 +247,19 @@ export class UpdateProductComponent implements OnInit {
               var ret: ProductFile = event.body;
               fileDisplay.file = ret;
               console.log(ret);
+              if (ret.fileState == FileState.MALICIOUS) {
+                this.info = "Không thể tải lên file " + file.name + "có thể tệp chứa virus";
+                this.openInfoModal();
+              }
               if (index >= 1) {
                 this.uploadFileIndex(index - 1, files);
               }
             }
           },
-          (error) => {
-            if (error.status===400)
+          (error) => { console.log(error);
+            if (error.status === 400)
             fileDisplay.file.fileState = FileState.ERROR;
-            this.info = "Không thể tải lên file " + file.name + "có thể tệp chứa virus";
+            this.info = "Không thể tải lên file " + file.name;
             this.openInfoModal();
             var index = -1;
             console.log(fileDisplay);
