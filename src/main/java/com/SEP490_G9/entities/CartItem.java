@@ -11,6 +11,7 @@ import jakarta.persistence.MapsId;
 import jakarta.persistence.Table;
 import jakarta.persistence.Column;
 import java.io.Serializable;
+import java.util.Date;
 
 import com.SEP490_G9.entities.embeddable.CartItemKey;
 import com.SEP490_G9.entities.embeddable.ProductVersionKey;
@@ -40,6 +41,9 @@ public class CartItem implements Serializable {
 
 	@Column(name = "price", nullable = false)
 	private double price;
+
+	@Column(name = "changed", nullable = false)
+	private boolean changed;
 
 	public CartItem() {
 
@@ -90,5 +94,13 @@ public class CartItem implements Serializable {
 
 	public void setPrice(double price) {
 		this.price = price;
+	}
+
+	public boolean isChanged() {
+		return changed;
+	}
+
+	public void setChanged(boolean changed) {
+		this.changed = changed;
 	}
 }

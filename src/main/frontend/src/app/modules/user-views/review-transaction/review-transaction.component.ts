@@ -2,6 +2,7 @@ import { OnInit, ViewChild } from '@angular/core';
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Change, Type } from '../../../dtos/Cart';
 import { Transaction, TransactionStatus } from '../../../dtos/Transaction';
 import { TransactionService } from '../../../services/transaction.service';
 
@@ -12,6 +13,7 @@ import { TransactionService } from '../../../services/transaction.service';
 })
 export class ReviewTransactionComponent implements OnInit {
   @ViewChild('infoModal', { static: false }) private infoModal: any;
+  @ViewChild('change', { static: false }) private change: any;
   isLoading = false;
   info = "";
   fee: number;
@@ -21,9 +23,11 @@ export class ReviewTransactionComponent implements OnInit {
   paymentId: string;
   payerId: string;
   token: string;
+  updated: Change[] = [];
+  removed: Change[] = [];
   constructor(private route: ActivatedRoute,
     private transactionService: TransactionService,
-    private modalService: NgbModal  ) {
+    private modalService: NgbModal) {
 
   }
   ngOnInit(): void {
@@ -33,33 +37,41 @@ export class ReviewTransactionComponent implements OnInit {
     const $request = this.transactionService.reviewTransaction(this.paymentId, this.token, this.payerId);
     $request.subscribe(
       data => {
-        
+
         this.transaction = data;
         for (let i = 0; i < this.transaction.cart.items.length; i++) {
           this.transaction.cart.items[i].productDetails.price = Number.parseFloat(this.transaction.cart.items[i].productDetails.price.toFixed(2));
         }
         this.caculateFee();
-        if (this.transaction.change) {
-          this.info = "Có sản phẩm không còn khả dụng trong giỏ hàng, giao dịch này sẽ bị hủy";
-          this.openInfoModal();
-          this.transaction.status = TransactionStatus.CANCELED;
-          return;
+        if (this.transaction.cart.changes.length != 0) {
+          for (let i = 0; i < this.transaction.cart.changes.length; i++) {
+            if (this.transaction.cart.changes[i].type == Type.REMOVED) {
+              this.removed.push(this.transaction.cart.changes[i]);
+            }
+            if (this.transaction.cart.changes[i].type == Type.UPDATED) {
+              this.updated.push(this.transaction.cart.changes[i]);
+            }
+          }
+          this.openChangeModal();
+
         }
       },
       error => {
         console.log(error);
       })
   }
-
+  openChangeModal() {
+    this.modalService.open(this.change, { centered: true });
+  }
   caculateFee(): void {
     if (this.transaction.id != -1) {
-     
+
       var feePercentage = this.transaction.fee.percentage;
       this.originalPrice = this.transaction.amount;
-      this.fee =  this.originalPrice /(100+feePercentage) * 10;
-		  this.fee = parseFloat(this.fee.toFixed(2));
-	
-      this.originalPrice = Math.round(this.originalPrice * 100) / (100+feePercentage);
+      this.fee = this.originalPrice / (100 + feePercentage) * 10;
+      this.fee = parseFloat(this.fee.toFixed(2));
+
+      this.originalPrice = Math.round(this.originalPrice * 100) / (100 + feePercentage);
       this.originalPrice = parseFloat(this.originalPrice.toFixed(2))
       this.fee = Math.round(this.fee * 100) / 100;
       this.total = this.originalPrice + this.fee;
@@ -80,11 +92,20 @@ export class ReviewTransactionComponent implements OnInit {
       data => {
         this.isLoading = false;
         this.transaction = data;
-        if (this.transaction.change) {
-          this.info = "Có sản phẩm không còn khả dụng trong giỏ hàng, giao dịch này đã bị hủy";
-          this.transaction.status = TransactionStatus.CANCELED;
-          this.openInfoModal();
-        }
+        this.removed = [];
+        this.updated = [];
+        if (this.transaction.cart.changes.length != 0) {
+          for (let i = 0; i < this.transaction.cart.changes.length; i++) {
+            if (this.transaction.cart.changes[i].type == Type.REMOVED) {
+              this.removed.push(this.transaction.cart.changes[i]);
+            }
+            if (this.transaction.cart.changes[i].type == Type.UPDATED) {
+              this.updated.push(this.transaction.cart.changes[i]);
+            }
+          }
+          this.openChangeModal();
+        } else {
+        
         switch (data.status) {
           case TransactionStatus.EXPIRED:
             this.info = "Giao dịch hết hạn";
@@ -107,7 +128,8 @@ export class ReviewTransactionComponent implements OnInit {
             console.log('CANCELED');
             break;
         }
-        this.openInfoModal();
+          this.openInfoModal();
+        }
       },
       error => {
         this.isLoading = false;
@@ -122,16 +144,16 @@ export class ReviewTransactionComponent implements OnInit {
     this.isLoading = true;
     this.transactionService.cancelPayment(this.transaction.id).subscribe(
       data => {
-		  this.isLoading = false;
+        this.isLoading = false;
         this.transaction = data;
-        if(data.status == TransactionStatus.EXPIRED){
-			this.info = "Giao dịch hết hạn";
+        if (data.status == TransactionStatus.EXPIRED) {
+          this.info = "Giao dịch hết hạn";
 
-		}else{
-			this.info = "Hủy thanh toán thành công";
+        } else {
+          this.info = "Hủy thanh toán thành công";
 
-		}
-		 this.openInfoModal();
+        }
+        this.openInfoModal();
       },
       error => {
         this.isLoading = false;
