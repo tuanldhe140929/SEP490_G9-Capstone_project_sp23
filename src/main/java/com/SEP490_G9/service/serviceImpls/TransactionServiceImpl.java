@@ -110,7 +110,10 @@ public class TransactionServiceImpl implements TransactionService {
 		
 		if (ret.getStatus().equals(Transaction.Status.CREATED)) {
 			ret.setStatus(Transaction.Status.APPROVED);
+			Long time = System.currentTimeMillis() + 15 * 60 * 1000;
+			ret.setExpiredDate(new Date(time));
 		}
+		
 		transactionRepo.save(ret);
 		return ret;
 	}
