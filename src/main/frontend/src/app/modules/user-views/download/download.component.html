@@ -1,5 +1,5 @@
 <app-header></app-header>
-<div class="container-fluid grad" *ngIf="product!=null">
+<div class="container-fluid grad" *ngIf="product!=null" style="margin-bottom:20px;">
   <div class="row padded">
     <div class="col-12 content">
       <div class="row label">
@@ -13,11 +13,13 @@
           </a>
         </div>
       </div>
-      <div class="row download" *ngFor="let file of product.files">
-        <div class="row downloader" style="display: flex;" *ngIf="(file.enabled==true && file.newUploaded==false && file.reviewed==true) || (file.enabled == false && file.newUploaded == false && file.reviewed == false)">
-          <div class="download_file" style="width: auto; padding: 5px; ">
-            <span style="font-weight:500; font-size:18px;padding-top:5px;">{{file.name}}</span>&nbsp;
-            <span style="font-weight: 500; font-size: 18px; padding-top: 5px; color: #606060;">{{getFileSize(file)}}</span>
+      <div style="min-height:200px;">
+        <div class="row download" *ngFor="let file of product.files">
+          <div class="row downloader" style="display: flex;" *ngIf="(file.enabled==true && file.newUploaded==false && file.reviewed==true) || (file.enabled == false && file.newUploaded == false && file.reviewed == false)">
+            <div class="download_file" style="width: auto; padding: 5px; ">
+              <span style="font-weight:500; font-size:18px;padding-top:5px;">{{file.name}}</span>&nbsp;
+              <span style="font-weight: 500; font-size: 18px; padding-top: 5px; color: #606060;">{{getFileSize(file)}}</span>
+            </div>
           </div>
         </div>
       </div>
@@ -33,6 +35,7 @@
         <button (click)="download()">Tải xuống</button>
       </div>
     </div>
+  </div>
   </div>
 
 <ng-template #infoModal let-modal>

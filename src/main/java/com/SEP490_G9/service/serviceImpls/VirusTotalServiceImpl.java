@@ -47,16 +47,21 @@ public class VirusTotalServiceImpl implements VirusTotalService {
 	private final String UPLOAD_ENDPOINT = "https://www.virustotal.com/api/v3/files";
 	private final String ANALYSIS_ENDPOINT = "https://www.virustotal.com/api/v3/analyses/";
 
+	private final static int CHUNK_SIZE = 1024 * 1024 * 25;
+
 	@Override
 	public boolean scanFile(File file) {
-
-		if (fileHasPassword(file)) {
-			throw new FileUploadException("CompressedFile can not have password");
-		}
+//		if (file.getName().endsWith(".zip") || file.getName().endsWith(".rar")) {
+//			if (fileHasPassword(file)) {
+//				throw new FileUploadException("CompressedFile can not have password");
+//			}
+//		}
 		long startTime = System.currentTimeMillis();
+
 		List<byte[]> chunks;
 		try {
 			chunks = splitFileIntoChunks(file.getPath().toString());
+			System.out.println(chunks.size() + " chunk size");
 		} catch (IOException e1) {
 			throw new InternalServerException("Error when split file");
 		}
@@ -70,10 +75,8 @@ public class VirusTotalServiceImpl implements VirusTotalService {
 				long uploadChunkStart = System.currentTimeMillis();
 				String analysisId = uploadChunk(UPLOAD_ENDPOINT, chunk);
 				long uploadChunkEnd = System.currentTimeMillis();
-				// System.out.println("upload chunk " + (chunks.indexOf(chunk) + 1) + " takes "
-				// + (uploadChunkEnd - uploadChunkStart) / 1000 + "s");
 
-				boolean isChunkSafe = getAnalysis(analysisId, chunks.indexOf(chunk));
+				boolean isChunkSafe = getAnalysis(analysisId);
 				long analysisEnd = System.currentTimeMillis();
 				System.out.println("analysis chunk " + (chunks.indexOf(chunk) + 1) + " takes "
 						+ (analysisEnd - uploadChunkEnd) / 1000 + "s");
@@ -100,10 +103,9 @@ public class VirusTotalServiceImpl implements VirusTotalService {
 		}
 
 		long finishTime = System.currentTimeMillis();
-		// System.out.println("total: " + (finishTime - startTime) / 1000);
+		System.out.println("total: " + (finishTime - startTime) / 1000);
 		return isMalicious;
 	}
-
 
 	private boolean fileHasPassword(File productFile) {
 		char[] password = "password".toCharArray(); // replace with the password to test
@@ -123,22 +125,18 @@ public class VirusTotalServiceImpl implements VirusTotalService {
 		return false; // file is not password-protected
 	}
 
-	private boolean getAnalysis(String analysisId, int index) {
+	private boolean getAnalysis(String analysisId) {
 		boolean isSafe = false;
 		OkHttpClient client = new OkHttpClient();
 		boolean notCompleted = true;
 		while (notCompleted) {
 			Request request = new Request.Builder().url(ANALYSIS_ENDPOINT + analysisId).get()
 					.addHeader("accept", "application/json").addHeader("x-apikey", virusTotalKey).build();
-			System.out.println("Request URL: " + request.url());
-			System.out.println("Request method: " + request.method());
-			System.out.println("Request headers: " + request.headers());
-			System.out.println("Request body: " + request.body());
 			try {
 				Response response = client.newCall(request).execute();
 				ObjectMapper objectMapper = new ObjectMapper();
 				JsonNode rootNode = objectMapper.readTree(response.body().string());
-				System.out.println(rootNode.toPrettyString());
+				//System.out.println(rootNode.toPrettyString());
 				// Check if the analysis is completed
 				String status = rootNode.get("data").get("attributes").get("status").asText();
 				if (status.equals("completed")) {
@@ -153,7 +151,7 @@ public class VirusTotalServiceImpl implements VirusTotalService {
 					break;
 				}
 				// Wait for a few seconds before sending the next request
-				TimeUnit.SECONDS.sleep(40);
+				TimeUnit.SECONDS.sleep(30);
 			} catch (IOException | InterruptedException e) {
 				throw new FileUploadException("Error when get analysis result" + e.getMessage());
 			}
@@ -198,12 +196,12 @@ public class VirusTotalServiceImpl implements VirusTotalService {
 	}
 
 	public static List<byte[]> splitFileIntoChunks(String filePath) throws IOException {
-		int chunkSize = 5 * 1024 * 1024;
+
 		List<byte[]> chunks = new ArrayList<>();
 
 		try (BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(filePath))) {
 			while (true) {
-				byte[] buffer = new byte[chunkSize];
+				byte[] buffer = new byte[CHUNK_SIZE];
 				int bytesRead = inputStream.read(buffer);
 				if (bytesRead == -1) {
 					break;

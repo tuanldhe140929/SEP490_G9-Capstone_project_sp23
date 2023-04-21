@@ -196,6 +196,7 @@ public class ProductFileServiceImpl implements ProductFileService {
 
 		if (productFile.getOriginalFilename().endsWith(".zip") || productFile.getOriginalFilename().endsWith(".rar")) {
 			if (fileHasPassword(productFile)) {
+				System.out.println("compressed");
 				throw new FileUploadException("Compressed file cannot has password");
 			}
 		}
@@ -206,7 +207,10 @@ public class ProductFileServiceImpl implements ProductFileService {
 		File file = new File(tempFilePath.toString());
 //		try {
 //			isSafe = virusTotalApi.scanFile(file);
+//			System.out.println("zxczxc");
 //		} catch (IOException e1) {
+//			throw new FileUploadException("Cannot scan file");
+//		} catch (InterruptedException e) {
 //			throw new FileUploadException("Cannot scan file");
 //		}
 		if (true) {
@@ -251,6 +255,7 @@ public class ProductFileServiceImpl implements ProductFileService {
 				// do nothing, just read through the archive
 			}
 		} catch (IOException e) {
+			System.out.println(e.getMessage());
 			throw new InternalServerException("Error occurred when trying to extract compressed file", e);
 		} catch (ArchiveException e) {
 			if (e.getCause() instanceof ZipException && e.getCause().getMessage().toLowerCase().contains("password")) {
