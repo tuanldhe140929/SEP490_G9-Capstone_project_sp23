@@ -1,6 +1,7 @@
 package com.SEP490_G9.controllers;
 
 import java.util.ArrayList;
+
 import java.util.Date;
 import java.util.List;
 
@@ -263,5 +264,20 @@ public ResponseEntity<?> LastestUpdatedProductForHomePage() {
 	return ResponseEntity.ok(allProductsDTO);
 }
 	
+
+
+	@GetMapping(value = "getTotalPurchasedCount")
+	public ResponseEntity<?> getTotalPurchasedCount(@RequestParam("productId") Long productId) {
+		int count = this.productDetailsService.getTotalPurchasedCount(productId);
+		return ResponseEntity.ok(count);
+	}
+
+	@GetMapping(value = "getCurrentVersion")
+	public String getCurrentVersion(@RequestParam("productId") Long productId) {
+		String currentVer = productDetailsService.getCurrentVersion(productId);
+		return currentVer;
+	}
+
+
 
 }

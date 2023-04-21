@@ -401,14 +401,14 @@ export class ProductDetailsComponent implements OnInit {
     this.cartService.addToCart(this.product.id).subscribe(
       (data) => {
         // Success, show a message to the user
-        // this.toastr.success('Sản phẩm đã được thêm vào giỏ hàng.')
-        alert('Sản phẩm đã được thêm vào giỏ hàng.');
+        this.toastr.success('Sản phẩm đã được thêm vào giỏ hàng.')
+      
       },
       (err) => {
         console.log(err);
         // Error, show an error message to the user
-        // this.toastr.error('Đã có lỗi xảy ra, vui lòng thử lại sau.')
-        alert('Đã có lỗi xảy ra, vui lòng thử lại sau.');
+         this.toastr.error('Đã có lỗi xảy ra, vui lòng thử lại sau.')
+        
       }
     );
   }
