@@ -20,7 +20,7 @@ import { BansellerComponent } from '../banseller/banseller.component';
 export class ReportedSellerListsComponent implements OnInit{
   displayedColumns: string[] = ['ID','Email', 'Ngày tạo', 'Trạng thái', 'Cấm'];
   dataSource: MatTableDataSource<Seller>;
-
+// clicked = false;
   account_id: number;
 
   reportedsellerList: Seller[] = [];
@@ -48,31 +48,34 @@ export class ReportedSellerListsComponent implements OnInit{
 // });
   }
 
-  openViolationDialog(account_id: number) {
+  openViolationDialog(account_id: number, email: string, enabled: boolean) {
     const dialogRef = this.dialog.open(AddviolationComponent, {
       width: '350px',
       data: {
         account_id: account_id,
-      }
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
-      setTimeout(() => this.refresh(),400)
-    });
-  }
-  openBanSellerDialog(id: number, email: string, enabled: boolean) {
-    const dialogRef = this.dialog.open(BansellerComponent, {
-      data: {
-        id: id,
         email: email,
         enabled: enabled
       }
+      
     });
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
       setTimeout(() => this.refresh(),400)
     });
   }
+  // openBanSellerDialog(id: number, email: string, enabled: boolean) {
+  //   const dialogRef = this.dialog.open(BansellerComponent, {
+  //     data: {
+  //       id: id,
+  //       email: email,
+  //       enabled: enabled
+  //     }
+  //   });
+  //   dialogRef.afterClosed().subscribe(result => {
+  //     console.log(`Dialog result: ${result}`);
+  //     setTimeout(() => this.refresh(),400)
+  //   });
+  // }
 
   refresh() {
     this.sellerService.getAllSellers().subscribe((data: any) => {

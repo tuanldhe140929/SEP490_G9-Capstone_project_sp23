@@ -120,5 +120,11 @@ export class HomeComponent implements OnInit{
   }
   //Image slider//
   @Input() images: carouselImage[] = []
+  @Input() indicators = true;
+  @Input() controls = true;
   selectedIndex = 0;
+  //set index for image dot slider
+  selectImage(index: number): void {
+    this.selectedIndex = index;
+  }
 }

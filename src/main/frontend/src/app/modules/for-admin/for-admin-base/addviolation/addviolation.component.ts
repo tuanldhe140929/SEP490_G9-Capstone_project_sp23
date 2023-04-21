@@ -14,7 +14,7 @@ import { violation } from 'src/app/DTOS/Violation';
 })
 export class AddviolationComponent implements OnInit{
 
-  constructor(private formBuilder: FormBuilder, private addviolationService: AddviolationService, private toastr: ToastrService, @Inject(MAT_DIALOG_DATA) public data: { account_id: number}) { }
+  constructor(private formBuilder: FormBuilder, private addviolationService: AddviolationService,private vioService: AddviolationService, private toastr: ToastrService, @Inject(MAT_DIALOG_DATA) public data: { account_id: number, email: string, enabled: boolean}) { }
   
   account_id: number;
   // formerStatus: boolean = this.data.enabled;
@@ -56,6 +56,18 @@ export class AddviolationComponent implements OnInit{
             this.toastr.success('Thêm vi phạm thành công');
           }
         )
+        this.vioService.updateSellerStatus(this.data.account_id).subscribe(
+          data => {
+            console.log(data);
+            // if(this.formerStatus){
+              this.toastr.success("Đã cấm tài khoản thành công!");
+            // }else{
+            //   this.toastr.success("Bật tài khoản thành công!");
+            // }
+            
+          }
+        )
+
         // this.formerStatus = false;
         // this.addviolationService.updateSellerStatus(this.account_id).subscribe(
         //   data => {

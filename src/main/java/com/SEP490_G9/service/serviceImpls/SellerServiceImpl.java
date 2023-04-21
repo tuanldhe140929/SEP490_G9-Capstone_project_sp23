@@ -2,6 +2,7 @@ package com.SEP490_G9.service.serviceImpls;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -21,6 +22,7 @@ import com.SEP490_G9.repository.UserRepository;
 import com.SEP490_G9.common.Constant;
 import com.SEP490_G9.entities.Account;
 import com.SEP490_G9.entities.Product;
+import com.SEP490_G9.entities.ProductDetails;
 import com.SEP490_G9.entities.Role;
 import com.SEP490_G9.service.SellerService;
 
@@ -65,9 +67,12 @@ public class SellerServiceImpl implements SellerService {
 		Seller seller = sellerRepository.findById(sellerId);
 		List<Product> sellerProducts = seller.getProducts();
 		for (Product product : sellerProducts) {
-			if (!product.isEnabled()) {
-				amountOfFlags = amountOfFlags + 1;
+			for (int j = 0; j < product.getProductDetails().size(); j++) {
+				if (product.getProductDetails().get(j).isFlagged()) {
+					amountOfFlags = amountOfFlags + 1;
+				}	
 			}
+			
 		}
 		return amountOfFlags;
 	}
