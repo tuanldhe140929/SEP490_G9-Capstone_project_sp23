@@ -20,6 +20,7 @@ import com.SEP490_G9.entities.ProductDetails;
 import com.SEP490_G9.entities.Seller;
 import com.SEP490_G9.entities.Transaction;
 import com.SEP490_G9.entities.Transaction.Status;
+import com.SEP490_G9.entities.embeddable.CartItemKey;
 import com.SEP490_G9.entities.TransactionFee;
 import com.SEP490_G9.entities.User;
 import com.SEP490_G9.entities.UserDetailsImpl;
@@ -84,18 +85,27 @@ public class TransactionServiceImpl implements TransactionService {
 		for (CartItem item : ret.getCart().getItems()) {
 			Product product = ps.getProductById(item.getProductDetails().getProduct().getId());
 			ProductDetails activeVersion = null;
-			for(ProductDetails pd : product.getProductDetails()) {
-				if(product.getActiveVersion().equals(pd.getVersion())) {
+			for (ProductDetails pd : product.getProductDetails()) {
+				if (product.getActiveVersion().equals(pd.getVersion())) {
 					activeVersion = pd;
 					break;
 				}
 			}
-			
+
 			if (!item.getProductDetails().getVersion().equalsIgnoreCase(product.getActiveVersion())
 					|| item.isChanged()) {
-				item.setProductDetails(activeVersion);
-				item.getCartItemKey().getProductVersionKey().setVersion(product.getActiveVersion());
-				item.setChanged(false);
+				cartItemRepo.delete(item);
+				CartItem newItem = new CartItem();
+				CartItemKey cartItemKey = new CartItemKey();
+				cartItemKey.setCartId(ret.getCart().getId());
+				cartItemKey.setProductVersionKey(activeVersion.getProductVersionKey());
+				newItem.setPrice(activeVersion.getPrice());
+				newItem.setProductDetails(activeVersion);
+				newItem.setCartItemKey(cartItemKey);
+				newItem.getCartItemKey().getProductVersionKey().setVersion(product.getActiveVersion());
+				newItem.setChanged(false);
+				newItem.setCart(ret.getCart());
+				cartItemRepo.save(newItem);
 				updatedItems.add(item);
 				ret.setChange(true);
 				Change change = new Change();
@@ -104,16 +114,16 @@ public class TransactionServiceImpl implements TransactionService {
 				changes.add(change);
 			}
 		}
-		
+
 		ret.getCart().setChanges(changes);
 		cartItemRepo.saveAll(ret.getCart().getItems());
-		
+
 		if (ret.getStatus().equals(Transaction.Status.CREATED)) {
 			ret.setStatus(Transaction.Status.APPROVED);
 			Long time = System.currentTimeMillis() + 15 * 60 * 1000;
 			ret.setExpiredDate(new Date(time));
 		}
-		
+
 		transactionRepo.save(ret);
 		return ret;
 	}
@@ -156,19 +166,30 @@ public class TransactionServiceImpl implements TransactionService {
 			}
 			Product product = ps.getProductById(item.getProductDetails().getProduct().getId());
 			ProductDetails activeVersion = null;
-			for(ProductDetails pd : product.getProductDetails()) {
-				if(product.getActiveVersion().equals(pd.getVersion())) {
+			for (ProductDetails pd : product.getProductDetails()) {
+				if (product.getActiveVersion().equals(pd.getVersion())) {
 					activeVersion = pd;
 					break;
 				}
 			}
-			
+
 			if (!item.getProductDetails().getVersion().equalsIgnoreCase(product.getActiveVersion())
 					|| item.isChanged()) {
-				item.setPrice(activeVersion.getPrice());
-				item.setProductDetails(activeVersion);
-				item.getCartItemKey().getProductVersionKey().setVersion(product.getActiveVersion());
-				item.setChanged(false);
+				removeItems.add(item);
+				cartItemRepo.delete(item);
+				
+				CartItem newItem = new CartItem();
+				CartItemKey cartItemKey = new CartItemKey();
+				cartItemKey.setCartId(cart.getId());
+				cartItemKey.setProductVersionKey(activeVersion.getProductVersionKey());
+				newItem.setPrice(activeVersion.getPrice());
+				newItem.setProductDetails(activeVersion);
+				newItem.setCartItemKey(cartItemKey);
+				newItem.getCartItemKey().getProductVersionKey().setVersion(product.getActiveVersion());
+				newItem.setChanged(false);
+				newItem.setCart(cart);
+				cartItemRepo.save(newItem);
+
 				updatedItems.add(item);
 				transaction.setChange(true);
 				Change change = new Change();
@@ -178,6 +199,8 @@ public class TransactionServiceImpl implements TransactionService {
 			} else if (!item.getProductDetails().getProduct().isEnabled()
 					|| !item.getProductDetails().getApproved().equals(ProductDetails.Status.APPROVED)) {
 				removeItems.add(item);
+				cartItemRepo.delete(item);
+				
 				transaction.setChange(true);
 				Change change = new Change();
 				change.setItem(item.getProductDetails().getName());
@@ -187,7 +210,6 @@ public class TransactionServiceImpl implements TransactionService {
 
 		}
 		cart.getItems().removeAll(removeItems);
-		cartItemRepo.deleteAll(removeItems);
 		cartItemRepo.saveAll(cart.getItems());
 		if (transaction.isChange()) {
 			cart.setChanges(changes);
@@ -297,18 +319,26 @@ public class TransactionServiceImpl implements TransactionService {
 		for (CartItem item : transaction.getCart().getItems()) {
 			Product product = ps.getProductById(item.getProductDetails().getProduct().getId());
 			ProductDetails activeVersion = null;
-			for(ProductDetails pd : product.getProductDetails()) {
-				if(product.getActiveVersion().equals(pd.getVersion())) {
+			for (ProductDetails pd : product.getProductDetails()) {
+				if (product.getActiveVersion().equals(pd.getVersion())) {
 					activeVersion = pd;
 					break;
 				}
 			}
-			
+
 			if (!item.getProductDetails().getVersion().equalsIgnoreCase(product.getActiveVersion())
 					|| item.isChanged()) {
-				item.setProductDetails(activeVersion);
-				item.getCartItemKey().getProductVersionKey().setVersion(product.getActiveVersion());
-				item.setChanged(false);
+				cartItemRepo.delete(item);
+				CartItem newItem = new CartItem();
+				CartItemKey cartItemKey = new CartItemKey();
+				cartItemKey.setCartId(transaction.getCart().getId());
+				cartItemKey.setProductVersionKey(activeVersion.getProductVersionKey());
+				newItem.setProductDetails(activeVersion);
+				newItem.setCartItemKey(cartItemKey);
+				newItem.getCartItemKey().getProductVersionKey().setVersion(product.getActiveVersion());
+				newItem.setChanged(false);
+				newItem.setCart(transaction.getCart());
+				cartItemRepo.save(newItem);
 				updatedItems.add(item);
 				transaction.setChange(true);
 				Change change = new Change();
@@ -317,10 +347,9 @@ public class TransactionServiceImpl implements TransactionService {
 				changes.add(change);
 			}
 		}
-		
+
 		transaction.getCart().setChanges(changes);
-		cartItemRepo.saveAll(transaction.getCart().getItems());
-		
+	
 		if (transaction.isChange()) {
 			return transaction;
 		}
