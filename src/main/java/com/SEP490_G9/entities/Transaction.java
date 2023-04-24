@@ -23,7 +23,7 @@ import jakarta.persistence.Transient;
 public class Transaction {
 
 	public enum Status {
-		COMPLETED, CANCELED, FAILED, CREATED, APPROVED, EXPIRED
+		COMPLETED, CANCELED, FAILED, CREATED, APPROVED, EXPIRED, PROCESSING
 	}
 
 	@Id
