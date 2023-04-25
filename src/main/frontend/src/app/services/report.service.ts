@@ -23,7 +23,7 @@ export class ReportService {
   }
 
   //xem 1 thằng đã report version ấy chưa
-  getReportByProductUserVersion(productId: number, accountId: number, version: string): Observable<any>{
+  getReportByProductVersionAndUser(productId: number, accountId: number, version: string): Observable<any>{
     const params = {
       productId: productId,
       accountId: accountId,
