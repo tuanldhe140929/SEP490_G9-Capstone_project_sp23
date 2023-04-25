@@ -262,7 +262,7 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 	}
 
 	@Override
-	public List<ProductDetails> getByPriceRange(List<ProductDetails> listPd, int min, int max) {
+	public List<ProductDetails> getByPriceRange(List<ProductDetails> listPd, double min, double max) {
 		if (min > max) {
 			throw new NumberException("Min cannot be greater than max");
 		}
@@ -517,8 +517,8 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 
 	// hien san pham theo tu khoa
 	@Override
-	public List<ProductDetails> getProductForSearching(String keyword, int categoryid, List<Integer> tagIdList, int min,
-			int max) {
+	public List<ProductDetails> getProductForSearching(String keyword, int categoryid, List<Integer> tagIdList, double min,
+			double max) {
 		List<ProductDetails> allPd = getAll();
 		List<ProductDetails> allLatestPd = getByLatestVer(allPd);
 		List<ProductDetails> allApprovedPd = getByApproved(allLatestPd);
@@ -533,7 +533,7 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 	// hien san pham nguoi dung cho chinh no
 	@Override
 	public List<ProductDetails> getProductBySellerForSeller(long sellerId, String keyword, int categoryId,
-			List<Integer> tagidlist, int min, int max) {
+			List<Integer> tagidlist, double min, double max) {
 		List<ProductDetails> allPd = getAll();
 		List<ProductDetails> allLatestPd = getByLatestVer(allPd);
 		List<ProductDetails> allSellerPd = getBySeller(allLatestPd, sellerId);
@@ -549,7 +549,7 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 	// hien san pham nguoi dung cho nguoi khac
 	@Override
 	public List<ProductDetails> getProductBySellerForUser(long sellerId, String keyword, int categoryId,
-			List<Integer> tagidlist, int min, int max) {
+			List<Integer> tagidlist, double min, double max) {
 		List<ProductDetails> allPd = getAll();
 		List<ProductDetails> allLatestPd = getByLatestVer(allPd);
 		List<ProductDetails> allApprovedPd = getByApproved(allLatestPd);

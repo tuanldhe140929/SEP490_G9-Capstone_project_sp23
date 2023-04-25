@@ -39,9 +39,9 @@ public class ProductDetailsController {
 	ProductService productService;
 
 	@GetMapping(value = "/getProductsForSearching")
-	public ResponseEntity<?> getFilteredProducts(@RequestParam("keyword") String keyword,
+	public ResponseEntity<?> getProductsForSearching(@RequestParam("keyword") String keyword,
 			@RequestParam("categoryid") int categoryid, @RequestParam("tagidlist") List<Integer> tagidlist,
-			@RequestParam("min") int min, @RequestParam("max") int max) {
+			@RequestParam("min") double min, @RequestParam("max") double max) {
 		List<ProductDetails> filteredProducts = productDetailsService.getProductForSearching(keyword, categoryid,
 				tagidlist, min, max);
 		List<ProductDetailsDTO> filteredProductsDto = new ArrayList<>();
@@ -64,8 +64,8 @@ public class ProductDetailsController {
 	@GetMapping(value = "/getProductsBySellerForSeller")
 	public ResponseEntity<?> getProductsBySellerForSeller(@RequestParam("sellerid") Long sellerid,
 			@RequestParam("keyword") String keyword, @RequestParam("categoryid") int categoryid,
-			@RequestParam("tagidlist") List<Integer> tagidlist, @RequestParam("min") int min,
-			@RequestParam("max") int max) {
+			@RequestParam("tagidlist") List<Integer> tagidlist, @RequestParam("min") double min,
+			@RequestParam("max") double max) {
 		List<ProductDetails> finalList = productDetailsService.getProductBySellerForSeller(sellerid, keyword,
 				categoryid, tagidlist, min, max);
 		List<ProductDetailsDTO> finalListDto = new ArrayList<>();
@@ -78,8 +78,8 @@ public class ProductDetailsController {
 	@GetMapping(value = "/getProductsBySellerForUser")
 	public ResponseEntity<?> getProductsBySellerForUser(@RequestParam("sellerid") Long sellerid,
 			@RequestParam("keyword") String keyword, @RequestParam("categoryid") int categoryid,
-			@RequestParam("tagidlist") List<Integer> tagidlist, @RequestParam("min") int min,
-			@RequestParam("max") int max) {
+			@RequestParam("tagidlist") List<Integer> tagidlist, @RequestParam("min") double min,
+			@RequestParam("max") double max) {
 		List<ProductDetails> finalList = productDetailsService.getProductBySellerForUser(sellerid, keyword, categoryid,
 				tagidlist, min, max);
 		List<ProductDetailsDTO> finalListDto = new ArrayList<>();

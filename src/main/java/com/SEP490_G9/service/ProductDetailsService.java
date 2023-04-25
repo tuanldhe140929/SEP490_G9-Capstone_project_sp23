@@ -56,7 +56,7 @@ public interface ProductDetailsService {
 
 	public List<ProductDetails> getByTags(List<ProductDetails> listPd, List<Integer> tagIdList);
 
-	public List<ProductDetails> getByPriceRange(List<ProductDetails> listPd, int min, int max);
+	public List<ProductDetails> getByPriceRange(List<ProductDetails> listPd, double min, double max);
 	
 	public List<ProductDetails> getProductByTime(List<ProductDetails> listPd);
 
@@ -67,13 +67,13 @@ public interface ProductDetailsService {
 	
 	// by Quan Nguyen
 
-	public List<ProductDetails> getProductForSearching(String keyword, int categoryid, List<Integer> tagIdList, int min, int max);
+	public List<ProductDetails> getProductForSearching(String keyword, int categoryid, List<Integer> tagIdList, double min, double max);
 
-	public List<ProductDetails> getProductBySellerForSeller(long sellerId, String keyword, int categoryId, List<Integer> tagidlist, int min,
-			int max);
+	public List<ProductDetails> getProductBySellerForSeller(long sellerId, String keyword, int categoryId, List<Integer> tagidlist, double min,
+			double max);
 
-	public List<ProductDetails> getProductBySellerForUser(long sellerId, String keyword, int categoryId, List<Integer> tagidlist ,int min,
-			int max);
+	public List<ProductDetails> getProductBySellerForUser(long sellerId, String keyword, int categoryId, List<Integer> tagidlist ,double min,
+			double max);
 
 	public ProductDetails getByProductIdAndVersion(Long productId, String version);
 	
