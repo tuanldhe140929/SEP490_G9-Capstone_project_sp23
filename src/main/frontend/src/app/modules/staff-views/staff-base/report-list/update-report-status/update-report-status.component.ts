@@ -53,7 +53,7 @@ export class UpdateReportStatusComponent implements AfterViewInit{
     private dialog: MatDialog,
     private toastr: ToastrService 
   ){
-    this.reportService.getByProductDetailsAndStatus(dataInjected.productId, dataInjected.version, dataInjected.status).subscribe(reports => {
+    this.reportService.getByProductVersionAndStatus(dataInjected.productId, dataInjected.version, dataInjected.status).subscribe(reports => {
       this.reportList = reports
       this.userService.getAllUsers().subscribe(users => {
         this.userList = users
