@@ -52,10 +52,10 @@ public class ViolationController {
 //		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getAccount();
 		Violation vio = new Violation();
 		vio.setDescription(description);
-		Account account1 = accountService.getById(account_id);
-		vio.setAccount(account1);
+		Account account = accountService.getById(account_id);
+		vio.setAccount(account);
 //		Violation newvio = new Violation(vio); 
-		boolean canAdd = violationService.addViolation(vio);
+		Violation canAdd = violationService.addViolation(vio);
 //		account1.setEnabled(false);
 		System.out.println(description+account_id);
 //		boolean canAdd2 = violationService.addViolation(vio);
