@@ -57,6 +57,8 @@ export class CartComponent implements OnInit {
               this.updated.push(this.cart.changes[i]);
             } 
             this.openChangeModal();
+
+            this.getAllCartItem();
           }
          
         }

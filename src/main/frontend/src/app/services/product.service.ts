@@ -87,7 +87,7 @@ export class ProductService {
     return this.httpClient.get<any>(baseUrl + "/getProductsByKeyword/" + keyword);
   }
 
-  getFilteredProducts(keyword: string, categoryid: number, tagidlist: number[], min: number, max: number): Observable<any>{
+  getProductsForSearching(keyword: string, categoryid: number, tagidlist: number[], min: number, max: number): Observable<any>{
     let params = new HttpParams().set('keyword', keyword).set('categoryid',categoryid).set('tagidlist',tagidlist.join(',')).set("min",min).set("max",max);
     return this.httpClient.get<any>("http://localhost:9000/productDetails/getProductsForSearching", {params});
   }

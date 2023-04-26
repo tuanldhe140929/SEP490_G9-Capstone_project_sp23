@@ -167,7 +167,7 @@ export class ProductDetailsComponent implements OnInit {
               console.log(error);
             }
           )
-                this.reportService.getReportByProductUserVersion(this.productId, this.visitorId, this.version).subscribe((data: any) => {
+                this.reportService.getReportByProductVersionAndUser(this.productId, this.visitorId, this.version).subscribe((data: any) => {
                   this.report = data;
                 })
               }
@@ -451,7 +451,7 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   refresh() {
-    this.reportService.getReportByProductUserVersion(this.product.id, this.visitorId, this.version).subscribe((data: any) => {
+    this.reportService.getReportByProductVersionAndUser(this.product.id, this.visitorId, this.version).subscribe((data: any) => {
       this.report = data;
     })
   }
