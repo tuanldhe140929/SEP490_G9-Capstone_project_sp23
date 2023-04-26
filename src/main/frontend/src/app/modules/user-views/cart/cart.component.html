@@ -117,13 +117,13 @@
   </div>
   <div class="modal-body">
       <div *ngIf="updated.length!=0">
-      <div>Có sự thay đổi trong sản phẩm: </div><br />
+      <div>Có sự thay đổi trong sản phẩm: </div>
         <div *ngFor="let update of updated">
         <small style="color: red; font-size: 20px;">- {{update.item}}</small>
         </div>
       </div>
       <div *ngIf="removed.length!=0">
-      <div>Sản phẩm không còn khả dụng: </div><br />
+      <div>Sản phẩm không còn khả dụng: </div>
         <div *ngFor="let remove of removed">
         <small style="color:red; font-size:20px;">- {{remove.item}}</small>
        

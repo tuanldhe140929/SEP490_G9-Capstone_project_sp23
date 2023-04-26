@@ -43,7 +43,7 @@ export class SearchResultComponent implements OnInit{
 
   getSearchResult(){
     this.keyword = this.activatedRoute.snapshot.paramMap.get('keyword')?.trim().toLowerCase().replace(/\s+/g,' ');;
-    this.productService.getFilteredProducts(this.keyword,0,[],0,1000).subscribe(
+    this.productService.getProductsForSearching(this.keyword,0,[],0,1000).subscribe(
       data => {
         this.resultList = data;
         this.totalResult = this.resultList.length;
@@ -104,7 +104,7 @@ export class SearchResultComponent implements OnInit{
 
   refresh(){
     console.log(this.checkedTags);
-    this.productService.getFilteredProducts(this.keyword,this.chosenCategory, this.checkedTags,this.minprice,this.maxprice).subscribe(
+    this.productService.getProductsForSearching(this.keyword,this.chosenCategory, this.checkedTags,this.minprice,this.maxprice).subscribe(
       data => {
         this.resultList = data;
       }

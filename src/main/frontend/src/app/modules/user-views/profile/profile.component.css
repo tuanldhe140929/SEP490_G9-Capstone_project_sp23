@@ -68,16 +68,15 @@ input {
   background: none;
   padding: 10px 20px;
   font-size: 20px;
-  font-family: "montserrat";
   cursor: pointer;
   margin: 10px;
-  transition: 0.8s;
+  transition: 0.15s;
   position: relative;
   overflow: hidden;
   border-radius:3px;
   height: 40px;
   font-size:20px;
-  width:280px;
+  width:240px;
   color:black;
   margin-bottom:10px;
 }

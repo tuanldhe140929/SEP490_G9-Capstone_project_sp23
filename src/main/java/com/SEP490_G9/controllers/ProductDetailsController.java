@@ -39,9 +39,9 @@ public class ProductDetailsController {
 	ProductService productService;
 
 	@GetMapping(value = "/getProductsForSearching")
-	public ResponseEntity<?> getFilteredProducts(@RequestParam("keyword") String keyword,
+	public ResponseEntity<?> getProductsForSearching(@RequestParam("keyword") String keyword,
 			@RequestParam("categoryid") int categoryid, @RequestParam("tagidlist") List<Integer> tagidlist,
-			@RequestParam("min") int min, @RequestParam("max") int max) {
+			@RequestParam("min") double min, @RequestParam("max") double max) {
 		List<ProductDetails> filteredProducts = productDetailsService.getProductForSearching(keyword, categoryid,
 				tagidlist, min, max);
 		List<ProductDetailsDTO> filteredProductsDto = new ArrayList<>();
@@ -64,8 +64,8 @@ public class ProductDetailsController {
 	@GetMapping(value = "/getProductsBySellerForSeller")
 	public ResponseEntity<?> getProductsBySellerForSeller(@RequestParam("sellerid") Long sellerid,
 			@RequestParam("keyword") String keyword, @RequestParam("categoryid") int categoryid,
-			@RequestParam("tagidlist") List<Integer> tagidlist, @RequestParam("min") int min,
-			@RequestParam("max") int max) {
+			@RequestParam("tagidlist") List<Integer> tagidlist, @RequestParam("min") double min,
+			@RequestParam("max") double max) {
 		List<ProductDetails> finalList = productDetailsService.getProductBySellerForSeller(sellerid, keyword,
 				categoryid, tagidlist, min, max);
 		List<ProductDetailsDTO> finalListDto = new ArrayList<>();
@@ -78,8 +78,8 @@ public class ProductDetailsController {
 	@GetMapping(value = "/getProductsBySellerForUser")
 	public ResponseEntity<?> getProductsBySellerForUser(@RequestParam("sellerid") Long sellerid,
 			@RequestParam("keyword") String keyword, @RequestParam("categoryid") int categoryid,
-			@RequestParam("tagidlist") List<Integer> tagidlist, @RequestParam("min") int min,
-			@RequestParam("max") int max) {
+			@RequestParam("tagidlist") List<Integer> tagidlist, @RequestParam("min") double min,
+			@RequestParam("max") double max) {
 		List<ProductDetails> finalList = productDetailsService.getProductBySellerForUser(sellerid, keyword, categoryid,
 				tagidlist, min, max);
 		List<ProductDetailsDTO> finalListDto = new ArrayList<>();
@@ -185,7 +185,7 @@ public class ProductDetailsController {
 			notEdited.setLicense(productDetailsDTO.getLicense());
 		else
 			notEdited.setLicense(null);
-		
+
 		notEdited.setLastModified(new Date());
 		notEdited.setName(productDetailsDTO.getName().trim());
 		notEdited.setPrice(productDetailsDTO.getPrice());
@@ -240,28 +240,33 @@ public class ProductDetailsController {
 	public ResponseEntity<?> GetAllProductForHomePage() {
 		List<ProductDetails> allProducts = productDetailsService.getAll();
 		List<ProductDetails> enabledProducts = productDetailsService.getByEnabled(allProducts);
-		List<ProductDetails> latestProducts = productDetailsService.getByLatestVer(enabledProducts);
-		List<ProductDetails> approvedProducts = productDetailsService.getByApproved(latestProducts);
+		List<ProductDetails> approvedProducts = productDetailsService.getByApproved(enabledProducts);
+		List<ProductDetails> latestProducts = productDetailsService.getByLatestVer(approvedProducts);
 
 		List<ProductDetailsDTO> allProductsDTO = new ArrayList<>();
-		for (ProductDetails p : approvedProducts) {
+		for (ProductDetails p : latestProducts) {
 			allProductsDTO.add(new ProductDetailsDTO(p));
 		}
 		return ResponseEntity.ok(allProductsDTO);
 	}
-@GetMapping(value ="getLastestUpdatedProductForHomePage")
-public ResponseEntity<?> LastestUpdatedProductForHomePage() {
-	List<ProductDetails> allProducts = productDetailsService.getAll();
-	List<ProductDetails> enabledProducts = productDetailsService.getByEnabled(allProducts);
-	List<ProductDetails> latestProducts = productDetailsService.getByLatestVer(enabledProducts);
-	List<ProductDetails> approvedProducts = productDetailsService.getByApproved(latestProducts);	
-	List<ProductDetails> latestUpdatedProduts = productDetailsService.getProductByTime(approvedProducts);
-	List<ProductDetailsDTO> allProductsDTO = new ArrayList<>();
-	for (ProductDetails p : latestUpdatedProduts) {
-		allProductsDTO.add(new ProductDetailsDTO(p));
-	}
-	return ResponseEntity.ok(allProductsDTO);
-}
-	
 
+	@GetMapping(value = "getLastestUpdatedProductForHomePage")
+	public ResponseEntity<?> LastestUpdatedProductForHomePage() {
+		List<ProductDetails> allProducts = productDetailsService.getAll();
+		List<ProductDetails> enabledProducts = productDetailsService.getByEnabled(allProducts);
+		List<ProductDetails> approvedProducts = productDetailsService.getByApproved(enabledProducts);
+		List<ProductDetails> latestProducts = productDetailsService.getByLatestVer(approvedProducts);
+		List<ProductDetails> latestUpdatedProduts = productDetailsService.getProductByTime(latestProducts);
+		List<ProductDetailsDTO> allProductsDTO = new ArrayList<>();
+		for (ProductDetails p : latestUpdatedProduts) {
+			allProductsDTO.add(new ProductDetailsDTO(p));
+		}
+		return ResponseEntity.ok(allProductsDTO);
+	}
+
+	@GetMapping(value = "getTotalPurchasedCount")
+	public ResponseEntity<?> getTotalPurchasedCount(@RequestParam("productId") Long productId) {
+		int count = this.productDetailsService.getTotalPurchasedCount(productId);
+		return ResponseEntity.ok(count);
+	}
 }

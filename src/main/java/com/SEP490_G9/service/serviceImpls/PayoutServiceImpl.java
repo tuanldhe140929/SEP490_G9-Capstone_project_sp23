@@ -180,10 +180,10 @@ public class PayoutServiceImpl implements PayoutService {
 		if (payouts.isEmpty()) {
 			throw new ResourceNotFoundException("payout", "trans id", transactionId);
 		} else {
-			if(payouts.get(0).getTransaction().getStatus()!=Status.APPROVED &&
-					payouts.get(0).getTransaction().getStatus()!=Status.CREATED) {
-				throw new IllegalArgumentException("Cannot cancel committed transaction");
-			}
+//			if(payouts.get(0).getTransaction().getStatus()!=Status.APPROVED &&
+//					payouts.get(0).getTransaction().getStatus()!=Status.CREATED) {
+//				throw new IllegalArgumentException("Cannot cancel committed transaction");
+//			}
 			for (Payout payout : payouts) {
 				
 				payout.setLastModified(new Date());

@@ -70,7 +70,8 @@ public class SecurityConfig {
 			"/user/getUserInfo",
 			"private/manageTag/tags",
 			"/user/getAllUsers",
-			"/public/serveMedia/serveProfileImage"
+			"/public/serveMedia/serveProfileImage",
+			"/productDetails/getLastestUpdatedProductForHomePage"
 			};
 	
 	private String[] userApis= {
@@ -138,7 +139,7 @@ public class SecurityConfig {
 
 		http.cors().configurationSource(request -> {
 			CorsConfiguration configuration = new CorsConfiguration();
-			configuration.setAllowedOrigins(List.of("http://localhost:4200","ap.ngrok.io"));
+			configuration.setAllowedOrigins(List.of("http://localhost:4200"));
 			configuration.setAllowCredentials(true);
 			configuration.setAllowedMethods(List.of("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
 			configuration.addExposedHeader("Message");
