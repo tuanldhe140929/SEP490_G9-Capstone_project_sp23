@@ -5,7 +5,6 @@ import { AddviolationService } from 'src/app/services/addviolation.service';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
-import { violation } from 'src/app/DTOS/Violation';
 
 @Component({
   selector: 'app-addviolation',
@@ -24,7 +23,7 @@ export class AddviolationComponent implements OnInit{
       }
 
   addViolationForm = this.formBuilder.group({
-    "description": ['', [Validators.required]],
+    "description": ['', [Validators.required]]
   });
 
   get form() {
@@ -50,7 +49,7 @@ export class AddviolationComponent implements OnInit{
         this.account_id = this.data.account_id;
     //  console.log(this.violation_id,this.createdDate,this.description,this.account_id);
         // this.description = this.addViolationForm.controls.description.value;
-        this.addviolationService.addViolation(this.account_id,"description").subscribe(
+        this.addviolationService.addViolation(this.account_id, "description").subscribe(
           data => {
             console.log(data);
             this.toastr.success('Thêm vi phạm thành công');
