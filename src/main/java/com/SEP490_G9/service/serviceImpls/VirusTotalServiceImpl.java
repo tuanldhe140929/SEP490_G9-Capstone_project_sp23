@@ -151,7 +151,7 @@ public class VirusTotalServiceImpl implements VirusTotalService {
 					break;
 				}
 				// Wait for a few seconds before sending the next request
-				TimeUnit.SECONDS.sleep(30);
+				TimeUnit.SECONDS.sleep(7);
 			} catch (IOException | InterruptedException e) {
 				throw new FileUploadException("Error when get analysis result" + e.getMessage());
 			}

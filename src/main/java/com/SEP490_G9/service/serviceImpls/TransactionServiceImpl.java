@@ -378,7 +378,6 @@ public class TransactionServiceImpl implements TransactionService {
 		while (!transaction.getExpiredDate().before(new Date())) {
 			Payment payment = paypalService.getPaymentByPaypalId(transaction.getPaypalId());
 			String state = payment.getState();
-			System.out.println("Payment State: " + state);
 			if (state.equals("approved")) {
 				System.out.println("Payment has been approved.");
 				transaction.setStatus(Transaction.Status.COMPLETED);
