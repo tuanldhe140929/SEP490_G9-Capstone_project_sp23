@@ -534,13 +534,14 @@ when(payoutRepository.saveAll(anyList())).thenReturn(payouts);
 	    double expectedFee = 2.5;
 	    Mockito.when(paypalService.getPayoutFee(batchId)).thenReturn(String.valueOf(expectedFee));
 
-	    // Act
+
 	    Payout result = payoutService.fetchPayoutStatus(payoutId, batchId);
 
-	    // Assert
+
 	    Mockito.verify(payoutRepository, Mockito.times(1)).save(payout);
 	    assertEquals(Payout.Status.SUCCESS, result.getStatus());
 	    assertEquals(expectedFee, result.getPayoutFee(), 0.01);
+
 	}
 	
 	
@@ -562,10 +563,8 @@ when(payoutRepository.saveAll(anyList())).thenReturn(payouts);
 	    double expectedFee = 2.5;
 	    Mockito.when(paypalService.getPayoutFee(batchId)).thenReturn(String.valueOf(expectedFee));
 
-	    // Act
-	    Payout result = payoutService.fetchPayoutStatus(payoutId, batchId);
 
-	    // Assert
+	    Payout result = payoutService.fetchPayoutStatus(payoutId, batchId);
 	    Mockito.verify(payoutRepository, Mockito.times(1)).save(payout);
 	    assertEquals(Payout.Status.PROCESSING, result.getStatus());
 	    assertEquals(expectedFee, result.getPayoutFee(), 0.01);
@@ -589,13 +588,13 @@ when(payoutRepository.saveAll(anyList())).thenReturn(payouts);
 	    double expectedFee = 2.5;
 	    Mockito.when(paypalService.getPayoutFee(batchId)).thenReturn(String.valueOf(expectedFee));
 
-	    // Act
+
 	    Payout result = payoutService.fetchPayoutStatus(payoutId, batchId);
 
-	    // Assert
 	    Mockito.verify(payoutRepository, Mockito.times(1)).save(payout);
 	    assertEquals(Payout.Status.FAILED, result.getStatus());
 	    assertEquals(expectedFee, result.getPayoutFee(), 0.01);
+
 	}
 	
 	@Test
@@ -616,10 +615,9 @@ when(payoutRepository.saveAll(anyList())).thenReturn(payouts);
 	    double expectedFee = 2.5;
 	    Mockito.when(paypalService.getPayoutFee(batchId)).thenReturn(String.valueOf(expectedFee));
 
-	    // Act
+
 	    Payout result = payoutService.fetchPayoutStatus(payoutId, batchId);
 
-	    // Assert
 	    assertEquals(Payout.Status.FAILED, result.getStatus());
 	}
 }

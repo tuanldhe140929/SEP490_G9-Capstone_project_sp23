@@ -194,12 +194,12 @@ public class ProductFileServiceImpl implements ProductFileService {
 			throw new FileUploadException("Exeeded max storage for version");
 		}
 
-		if (productFile.getOriginalFilename().endsWith(".zip") || productFile.getOriginalFilename().endsWith(".rar")) {
-			if (fileHasPassword(productFile)) {
-				System.out.println("compressed");
-				throw new FileUploadException("Compressed file cannot has password");
-			}
-		}
+//		if (productFile.getOriginalFilename().endsWith(".zip") || productFile.getOriginalFilename().endsWith(".rar")) {
+//			if (fileHasPassword(productFile)) {
+//				System.out.println("compressed");
+//				throw new FileUploadException("Compressed file cannot has password");
+//			}
+//		}
 
 		Path tempFilePath = createTempFile(productFile);
 

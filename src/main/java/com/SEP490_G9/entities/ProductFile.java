@@ -39,6 +39,9 @@ public class ProductFile {
 	@Column(name="enabled", nullable = false)
 	private boolean enabled;
 	
+	@Column(name="deleted", nullable = false)
+	private boolean deleted = false;
+	
 	@Column(name="new_uploaded", nullable = false)
 	private boolean newUploaded;
 	
@@ -157,6 +160,14 @@ public class ProductFile {
 
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
+	}
+
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
 	}
 
 }

@@ -120,8 +120,6 @@ public class TransactionServiceImpl implements TransactionService {
 
 		if (ret.getStatus().equals(Transaction.Status.CREATED)) {
 			ret.setStatus(Transaction.Status.APPROVED);
-			Long time = System.currentTimeMillis() + 15 * 60 * 1000;
-			ret.setExpiredDate(new Date(time));
 		}
 
 		transactionRepo.save(ret);
@@ -366,6 +364,7 @@ public class TransactionServiceImpl implements TransactionService {
 		}
 		Long time = System.currentTimeMillis() + 15 * 60 * 1000;
 		transaction.setExpiredDate(new Date(time));
+		transaction.setStatus(Status.PROCESSING);
 		transactionRepo.save(transaction);
 		Payment payment = paypalService.executePayment(paymentId, payerId);
 		ret = fetchTransactionStatus(transaction.getId());
@@ -379,7 +378,6 @@ public class TransactionServiceImpl implements TransactionService {
 		while (!transaction.getExpiredDate().before(new Date())) {
 			Payment payment = paypalService.getPaymentByPaypalId(transaction.getPaypalId());
 			String state = payment.getState();
-			System.out.println("Payment State: " + state);
 			if (state.equals("approved")) {
 				System.out.println("Payment has been approved.");
 				transaction.setStatus(Transaction.Status.COMPLETED);
