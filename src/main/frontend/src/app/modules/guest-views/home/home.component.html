@@ -2,14 +2,16 @@
 
 <!--Image Slider-->
 
-<div class="carousel-container">
-  <img *ngFor="let product of lastestProductList; let i=index" 
+<div class="carousel-container" *ngFor="let product of lastestProductList; let i=index">
+  <a (click)="redirectProductDetails(product)" style="cursor: pointer;">
+  <img  
   [src]="getCoverImage(product)"
   [ngClass]="{'image-active': selectedIndex === i}"
   class=""
   >
+</a>
   <div *ngIf="indicators" class="carousel-dot-container">
-    <span *ngFor="let dot of productList; let i =index" 
+    <span *ngFor="let dot of lastestProductList; let i = index" 
     class="dot"
     [ngClass]="{'active': selectedIndex === i}"
     (click)="selectImage(i)"
