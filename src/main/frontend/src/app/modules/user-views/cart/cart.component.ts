@@ -17,7 +17,7 @@ export class CartComponent implements OnInit {
 
   @ViewChild('infoModal', { static: false }) private infoModal: any;
   @ViewChild('change', { static: false }) private change: any;
-
+  isPopupShown = false;
   isLoading = false;
   info = "";
   cart: Cart = new Cart;
@@ -91,7 +91,19 @@ export class CartComponent implements OnInit {
     console.log('xóa thành công ' + cartItem.product.id)
     this.RemoveItem === null
   }
+  showPopup() {
+    this.isPopupShown = true;
+  }
+  
+  hidePopup() {
+    this.isPopupShown = false;
+  }
   public checkout(): void {
+    const userPolicyCheckbox = document.getElementsByName('user-policy')[0] as HTMLInputElement;
+    if (!userPolicyCheckbox.checked) {
+      alert('Bạn phải đồng ý với các điều khoản thanh toán trước khi thanh toán.');
+      return;
+    }
     this.isLoading = true;
     this.transactionService.purchase(this.cart.id).subscribe(
       data => {
@@ -197,4 +209,5 @@ export class CartComponent implements OnInit {
     const lastPrice = Number.parseFloat(this.Fee) + Number.parseFloat(this.TotalPrice);
     return lastPrice.toFixed(2);
   }
+  
 }

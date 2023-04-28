@@ -80,6 +80,10 @@
               <dd class="text-end text-dark h5"> {{LastPrice}}$ </dd>
             </dl>
             <div class="d-grid gap-2 my-3">
+              <label>
+                <input type="checkbox" name="user-policy" required> 
+                Tôi đồng ý với các <a (click)="showPopup()">điều khoản thanh toán</a>
+              </label>
               <a button (click)="checkout()" class="btn w-100 buyBtn"> Thanh toán  </a>
             </div>
           </div> <!-- card-body.// -->
@@ -95,7 +99,11 @@
   </div> <!-- container .//  -->
 </section>
 
-
+<div class="popup" [hidden]="!isPopupShown">
+  <h2>Điều khoản thanh toán</h2>
+  <p>Thông tin về điều khoản thanh toán sẽ được hiển thị tại đây ok.</p>
+  <button (click)="hidePopup()">Đóng</button>
+</div>
 
 <!-- ============== SECTION  ============== -->
 <!-- ============== SECTION END// ============== -->
