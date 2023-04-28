@@ -52,9 +52,6 @@ public class ProductDetails implements Serializable,Comparable<ProductDetails> {
 	@Column(name = "last_update", nullable = false)
 	private Date lastModified;
 
-	@Column(name= "approved_date")
-	private Date approvedDate;
-	
 	@Column(name = "flagged", nullable = false)
 	private boolean flagged;
 
@@ -102,14 +99,6 @@ public class ProductDetails implements Serializable,Comparable<ProductDetails> {
 		this.detailDescription = productDetailsDTO.getDetails();
 		this.flagged = productDetailsDTO.isFlagged();
 
-	}
-
-	public Date getApprovedDate() {
-		return approvedDate;
-	}
-
-	public void setApprovedDate(Date approvedDate) {
-		this.approvedDate = approvedDate;
 	}
 
 	public String getVersion() {

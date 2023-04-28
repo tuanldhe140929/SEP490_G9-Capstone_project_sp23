@@ -20,8 +20,8 @@ public class License  {
 	private int id;
 	@Column(name = "name", nullable = false)
 	private String name;
-	@Column(name = "acronyms")
-	private String acronyms;
+	@Column(name = "acrynosm")
+	private String acrynosm;
 
 	@Column(name = "details", length = 1024, nullable = false)
 	private String details;
@@ -43,7 +43,7 @@ public class License  {
 		super();
 		this.id = id;
 		this.name = name;
-		this.acronyms = acrynosm;
+		this.acrynosm = acrynosm;
 		this.details = details;
 		this.productDetails = productDetails;
 	}
@@ -56,12 +56,12 @@ public class License  {
 		this.provider = provider;
 	}
 
-	public String getAcronyms() {
-		return acronyms;
+	public String getAcrynosm() {
+		return acrynosm;
 	}
 
-	public void setAcronyms(String acronyms) {
-		this.acronyms = acronyms;
+	public void setAcrynosm(String acrynosm) {
+		this.acrynosm = acrynosm;
 	}
 
 	public List<ProductDetails> getProductDetails() {
@@ -106,7 +106,7 @@ public class License  {
 
 	@Override
 	public String toString() {
-		return "License [id=" + id + ", name=" + name + ", acrynosm=" + acronyms + ", details=" + details
+		return "License [id=" + id + ", name=" + name + ", acrynosm=" + acrynosm + ", details=" + details
 				+ ", referenceLink=" + referenceLink + ", productDetails=" + productDetails + "]";
 	}
 	
