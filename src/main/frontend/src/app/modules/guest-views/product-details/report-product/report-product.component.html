@@ -1,4 +1,4 @@
-<div class="addReportContainer">
+<!-- <div class="addReportContainer">
     <form [formGroup]="addReportForm" (submit)="toSendReport()">
         <h2>Báo cáo sản phẩm này</h2>
         <p>Lý do vi phạm:</p>
@@ -17,4 +17,37 @@
         </div>
         
     </form>
-</div>
+</div> -->
+
+<div class="container-fluid grad">
+    <div class="row">
+  
+    <div class="row padded">
+      <div class="row title"><h2>Báo cáo sản phẩm</h2></div>
+
+        <div>
+          <form [formGroup]="addReportForm" (submit)="toSendReport()">
+            <div class="input_row classification_picker">
+                <label for="type_list">Kiểu vi phạm:</label>&nbsp;<small *ngIf="violationTypeId==0" style="color: red">Vui lòng chọn kiểu vi phạm</small>
+
+                <div class="">
+                  <select #violation (change)="onChange(violation.value)" class="classification_picker_body" id="type_list" name="type" formControlName="violationtype">
+                    <option *ngFor="let type of vioTypeList" [value]="type.id">{{type.name}}</option>
+                  </select>
+                </div>
+              </div>
+                
+              <div>
+                  <label>Mô tả chi tiết: </label> &nbsp; <small *ngIf="descriptionEmpty()||descriptionExceed()" style="color: red">Vui lòng để mô tả từ 10 đến 255 ký tự</small>
+                <textarea id="instruction_details" style="height:100px;width:100%;resize: none;" [(ngModel)]="description" (input)="onDescriptionChange()" formControlName="description"></textarea>
+              </div>
+                <div align="end">
+                    <button class="dismissBtn" mat-dialog-close="">Hủy</button>
+                    <button type="submit" class="submitButton" [disabled]="violationTypeId==0||descriptionEmpty()||descriptionExceed()" mat-dialog-close="">Gửi</button>
+                </div>
+            
+  </form>
+        </div>
+    </div>
+    </div>
+  </div>

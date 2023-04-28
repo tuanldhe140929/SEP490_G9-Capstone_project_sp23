@@ -74,13 +74,11 @@
  insert into licenses(id, acrynosm, details, name, reference_link) VALUES(6, 'CC BY-NC-SA', 'This license lets others remix, adapt, and build upon your work non-commercially, as long as they credit you and license their new creations under the identical terms.','Attribution-NonCommercial-ShareAlike','https://creativecommons.org/licenses/by-nc-sa/4.0/');
  insert into licenses(id, acrynosm, details, name, reference_link) VALUES(7, 'CC BY-NC-ND', 'This license is the most restrictive of our six main licenses, only allowing others to download your works and share them with others as long as they credit you, but they can’t change them in any way or use them commercially.','Attribution-NonCommercial-NoDerivs','https://creativecommons.org/licenses/by-nc-nd/4.0/');
  
- insert into violation_types VALUES (1,'Sexual content');
- insert into violation_types VALUES (2,'Violent content');
- insert into violation_types VALUES (3,'Hateful content');
- insert into violation_types VALUES (4,'Misinformation');
- insert into violation_types VALUES (5,'Spam');
- insert into violation_types VALUES (6,'Copyright infringement');
- insert into violation_types VALUES (7,'Promote terrorism');
+ insert into violation_types VALUES (1,'Spam');
+ insert into violation_types VALUES (2,'Đạo nhái');
+ insert into violation_types VALUES (3,'Vi phạm bản quyền');
+ insert into violation_types VALUES (4,'Quảng cáo sai sự thật');
+ 
  
  
  

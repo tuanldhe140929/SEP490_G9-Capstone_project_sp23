@@ -8,7 +8,6 @@ interface carouselImage{
   imageSrc: string;
   imageAlt: string;
 }
-
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -127,4 +126,6 @@ export class HomeComponent implements OnInit{
   selectImage(index: number): void {
     this.selectedIndex = index;
   }
+
+
 }
