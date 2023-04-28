@@ -144,7 +144,7 @@
                   <option value="0" selected>Không giấy phép</option>
                   <option *ngFor="let license of licenseList index as i;" value="{{license.id}}"
                           [attr.selected]="isTypeSelected(license.id)">
-                    {{license.name}} - {{license.acrynosm}}
+                    {{license.name}} - {{license.acronyms}}
                   </option>
                 </select>
               </div>

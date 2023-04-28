@@ -647,6 +647,7 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 				file.setNewUploaded(false);
 				file.setReviewed(true);
 			}
+			pd.setApprovedDate(new Date());
 			break;
 		case "REJECTED":
 			pd.setApproved(Status.REJECTED);

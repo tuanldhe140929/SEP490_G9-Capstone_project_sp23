@@ -1,13 +1,13 @@
 export class License {
   id: number;
   name: string;
-  acrynosm:string;
+  acronyms:string;
   details: string;
   referenceLink: string;
   constructor() {
     this.id = -1;
     this.name = "";
-    this.acrynosm = "";
+    this.acronyms = "";
     this.details = "";
     this.referenceLink = "";
   }
