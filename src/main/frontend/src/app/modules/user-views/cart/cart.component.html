@@ -80,11 +80,7 @@
               <dd class="text-end text-dark h5"> {{LastPrice}}$ </dd>
             </dl>
             <div class="d-grid gap-2 my-3">
-              <label>
-                <input type="checkbox" name="user-policy" required> 
-                Tôi đồng ý với các <a (click)="showPopup()">điều khoản thanh toán</a>
-              </label>
-              <a button (click)="checkout()" class="btn w-100 buyBtn"> Thanh toán  </a>
+              <a button (click)="showPopups()" class="btn w-100 buyBtn"> Thanh toán  </a>
             </div>
           </div> <!-- card-body.// -->
         </div> <!-- card.// -->
@@ -101,8 +97,15 @@
 
 <div class="popup" [hidden]="!isPopupShown">
   <h2>Điều khoản thanh toán</h2>
-  <p>Thông tin về điều khoản thanh toán sẽ được hiển thị tại đây ok.</p>
+  <p>- Tất cả sản phẩm được bán trên trang web đều thuộc quyền sở hữu trí tuệ của người tạo ra sản phẩm.</p>
+  <p>- Người mua sản phẩm chỉ được sử dụng sản phẩm đó theo những hạn chế và điều kiện được nêu rõ trong giấy phép đi kèm với sản phẩm.</p>
+  <p>- Việc chia sẻ, bán lại sản phẩm mà không được sự cho phép của chủ sở hữu bản quyền là vi phạm quyền sở hữu trí tuệ và có thể bị phạt theo quy định của pháp luật.</p> 
+  <label>
+    <input type="checkbox" name="user-policy" required> 
+    Tôi đồng ý với các điều khoản thanh toán
+  </label>
   <button (click)="hidePopup()">Đóng</button>
+  <button button (click)="checkout()" name="continue"> Tiếp tục thanh toán</button>
 </div>
 
 <!-- ============== SECTION  ============== -->
