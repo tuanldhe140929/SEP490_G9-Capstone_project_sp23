@@ -27,6 +27,9 @@ public class Category implements Serializable{
 	@OneToMany(mappedBy = "category")
 	private List<ProductDetails> productDetails = new ArrayList<>();
 
+	@Column(name="description")
+	private String description;
+	
 	public Category() {
 		// TODO Auto-generated constructor stub
 	}
@@ -56,6 +59,14 @@ public class Category implements Serializable{
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 }

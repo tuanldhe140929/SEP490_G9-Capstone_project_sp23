@@ -16,8 +16,11 @@ interface carouselImage{
 })
 export class HomeComponent implements OnInit{
   @Input() slides: SlideInterface[] = [];
+
   productList: Product[] = [];
+
   lastestProductList: Product[] = [];
+
   itemsPerPage: number = 9;
   p: number = 1;
   totalLength:any;
