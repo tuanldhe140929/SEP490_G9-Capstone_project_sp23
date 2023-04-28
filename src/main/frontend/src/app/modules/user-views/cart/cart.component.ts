@@ -152,7 +152,7 @@ export class CartComponent implements OnInit {
               this.openInfoModal();
               break;
             case TransactionStatus.CANCELED:
-              this.info = "Bạn đã hủy thanh toán";
+              this.info = "Đã hủy thanh toán";
               this.openInfoModal();
               break;
           }

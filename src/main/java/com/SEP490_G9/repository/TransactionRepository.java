@@ -15,4 +15,6 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
 
 	List<Transaction> findByStatus(Status completed);
 
+	List<Transaction> findByCartId(Long cartId);
+
 }

@@ -70,7 +70,7 @@ public class ApplicationConfig implements WebMvcConfigurer {
 //	                  .setPathMatcher(new AntPathMatcher());
 //	    }
 //	 
-//	 @Bean
+//	    @Bean
 //	    public HandlerMappingIntrospector mvcHandlerMappingIntrospector() {
 //	        return new HandlerMappingIntrospector();
 //	    }
