@@ -20,6 +20,7 @@ import com.SEP490_G9.entities.ProductDetails;
 import com.SEP490_G9.entities.Seller;
 import com.SEP490_G9.entities.Transaction;
 import com.SEP490_G9.entities.Transaction.Status;
+import com.SEP490_G9.entities.embeddable.CartItemKey;
 import com.SEP490_G9.entities.TransactionFee;
 import com.SEP490_G9.entities.User;
 import com.SEP490_G9.entities.UserDetailsImpl;
@@ -84,18 +85,27 @@ public class TransactionServiceImpl implements TransactionService {
 		for (CartItem item : ret.getCart().getItems()) {
 			Product product = ps.getProductById(item.getProductDetails().getProduct().getId());
 			ProductDetails activeVersion = null;
-			for(ProductDetails pd : product.getProductDetails()) {
-				if(product.getActiveVersion().equals(pd.getVersion())) {
+			for (ProductDetails pd : product.getProductDetails()) {
+				if (product.getActiveVersion().equals(pd.getVersion())) {
 					activeVersion = pd;
 					break;
 				}
 			}
-			
+
 			if (!item.getProductDetails().getVersion().equalsIgnoreCase(product.getActiveVersion())
 					|| item.isChanged()) {
-				item.setProductDetails(activeVersion);
-				item.getCartItemKey().getProductVersionKey().setVersion(product.getActiveVersion());
-				item.setChanged(false);
+				cartItemRepo.delete(item);
+				CartItem newItem = new CartItem();
+				CartItemKey cartItemKey = new CartItemKey();
+				cartItemKey.setCartId(ret.getCart().getId());
+				cartItemKey.setProductVersionKey(activeVersion.getProductVersionKey());
+				newItem.setPrice(activeVersion.getPrice());
+				newItem.setProductDetails(activeVersion);
+				newItem.setCartItemKey(cartItemKey);
+				newItem.getCartItemKey().getProductVersionKey().setVersion(product.getActiveVersion());
+				newItem.setChanged(false);
+				newItem.setCart(ret.getCart());
+				cartItemRepo.save(newItem);
 				updatedItems.add(item);
 				ret.setChange(true);
 				Change change = new Change();
@@ -104,16 +114,20 @@ public class TransactionServiceImpl implements TransactionService {
 				changes.add(change);
 			}
 		}
-		
+
 		ret.getCart().setChanges(changes);
 		cartItemRepo.saveAll(ret.getCart().getItems());
-		
+		for(Change change: ret.getCart().getChanges()) {
+			if(change.getType().equals(Change.Type.REMOVED)) {
+				ret.setStatus(Transaction.Status.CANCELED);
+				ret.setDescription("Canceled by the system");
+				ret = transactionRepo.save(ret);
+			}
+		}
 		if (ret.getStatus().equals(Transaction.Status.CREATED)) {
 			ret.setStatus(Transaction.Status.APPROVED);
-			Long time = System.currentTimeMillis() + 15 * 60 * 1000;
-			ret.setExpiredDate(new Date(time));
 		}
-		
+
 		transactionRepo.save(ret);
 		return ret;
 	}
@@ -147,6 +161,20 @@ public class TransactionServiceImpl implements TransactionService {
 		if (cart.getItems().size() == 0) {
 			throw new IllegalArgumentException("Cart is empty");
 		}
+		
+		List<Transaction> cartTransactions = transactionRepo.findByCartId(cart.getId());
+		for(Transaction processing: cartTransactions) {
+			if(processing.getStatus().equals(Transaction.Status.PROCESSING)) {
+				throw new IllegalArgumentException("Another transaction is processing");
+			}
+		}
+		for(Transaction pending: cartTransactions) {
+			if(pending.getStatus().equals(Transaction.Status.CREATED) || pending.getStatus().equals(Transaction.Status.APPROVED)) {
+				pending.setStatus(Status.CANCELED);
+				pending.setDescription("Canceled by transaction");
+				transactionRepo.save(pending);
+			}
+		}
 		List<Change> changes = new ArrayList<>();
 		List<CartItem> removeItems = new ArrayList<>();
 		List<CartItem> updatedItems = new ArrayList<>();
@@ -156,19 +184,30 @@ public class TransactionServiceImpl implements TransactionService {
 			}
 			Product product = ps.getProductById(item.getProductDetails().getProduct().getId());
 			ProductDetails activeVersion = null;
-			for(ProductDetails pd : product.getProductDetails()) {
-				if(product.getActiveVersion().equals(pd.getVersion())) {
+			for (ProductDetails pd : product.getProductDetails()) {
+				if (product.getActiveVersion().equals(pd.getVersion())) {
 					activeVersion = pd;
 					break;
 				}
 			}
-			
+
 			if (!item.getProductDetails().getVersion().equalsIgnoreCase(product.getActiveVersion())
 					|| item.isChanged()) {
-				item.setPrice(activeVersion.getPrice());
-				item.setProductDetails(activeVersion);
-				item.getCartItemKey().getProductVersionKey().setVersion(product.getActiveVersion());
-				item.setChanged(false);
+				removeItems.add(item);
+				cartItemRepo.delete(item);
+
+				CartItem newItem = new CartItem();
+				CartItemKey cartItemKey = new CartItemKey();
+				cartItemKey.setCartId(cart.getId());
+				cartItemKey.setProductVersionKey(activeVersion.getProductVersionKey());
+				newItem.setPrice(activeVersion.getPrice());
+				newItem.setProductDetails(activeVersion);
+				newItem.setCartItemKey(cartItemKey);
+				newItem.getCartItemKey().getProductVersionKey().setVersion(product.getActiveVersion());
+				newItem.setChanged(false);
+				newItem.setCart(cart);
+				cartItemRepo.save(newItem);
+
 				updatedItems.add(item);
 				transaction.setChange(true);
 				Change change = new Change();
@@ -178,6 +217,8 @@ public class TransactionServiceImpl implements TransactionService {
 			} else if (!item.getProductDetails().getProduct().isEnabled()
 					|| !item.getProductDetails().getApproved().equals(ProductDetails.Status.APPROVED)) {
 				removeItems.add(item);
+				cartItemRepo.delete(item);
+
 				transaction.setChange(true);
 				Change change = new Change();
 				change.setItem(item.getProductDetails().getName());
@@ -187,7 +228,6 @@ public class TransactionServiceImpl implements TransactionService {
 
 		}
 		cart.getItems().removeAll(removeItems);
-		cartItemRepo.deleteAll(removeItems);
 		cartItemRepo.saveAll(cart.getItems());
 		if (transaction.isChange()) {
 			cart.setChanges(changes);
@@ -203,6 +243,13 @@ public class TransactionServiceImpl implements TransactionService {
 		System.out.println(afterFeeCaculated);
 		double afterFeeCaculatedRounded = new BigDecimal(afterFeeCaculated).setScale(2, RoundingMode.HALF_UP)
 				.doubleValue();
+		if (cart.getItems().size() == 0) {
+			throw new IllegalArgumentException("Cannot create transaction for 0 items");
+		}
+
+		if (afterFeeCaculatedRounded <= 0) {
+			throw new IllegalArgumentException("Cannot create transaction with zero or negative ammount");
+		}
 		transaction.setCart(cart);
 		transaction.setAmount(afterFeeCaculatedRounded);
 		transaction.setCreatedDate(new Date());
@@ -297,18 +344,26 @@ public class TransactionServiceImpl implements TransactionService {
 		for (CartItem item : transaction.getCart().getItems()) {
 			Product product = ps.getProductById(item.getProductDetails().getProduct().getId());
 			ProductDetails activeVersion = null;
-			for(ProductDetails pd : product.getProductDetails()) {
-				if(product.getActiveVersion().equals(pd.getVersion())) {
+			for (ProductDetails pd : product.getProductDetails()) {
+				if (product.getActiveVersion().equals(pd.getVersion())) {
 					activeVersion = pd;
 					break;
 				}
 			}
-			
+
 			if (!item.getProductDetails().getVersion().equalsIgnoreCase(product.getActiveVersion())
 					|| item.isChanged()) {
-				item.setProductDetails(activeVersion);
-				item.getCartItemKey().getProductVersionKey().setVersion(product.getActiveVersion());
-				item.setChanged(false);
+				cartItemRepo.delete(item);
+				CartItem newItem = new CartItem();
+				CartItemKey cartItemKey = new CartItemKey();
+				cartItemKey.setCartId(transaction.getCart().getId());
+				cartItemKey.setProductVersionKey(activeVersion.getProductVersionKey());
+				newItem.setProductDetails(activeVersion);
+				newItem.setCartItemKey(cartItemKey);
+				newItem.getCartItemKey().getProductVersionKey().setVersion(product.getActiveVersion());
+				newItem.setChanged(false);
+				newItem.setCart(transaction.getCart());
+				cartItemRepo.save(newItem);
 				updatedItems.add(item);
 				transaction.setChange(true);
 				Change change = new Change();
@@ -316,12 +371,27 @@ public class TransactionServiceImpl implements TransactionService {
 				change.setType(Change.Type.UPDATED);
 				changes.add(change);
 			}
+			if(item.getProductDetails().getApproved() != ProductDetails.Status.APPROVED || !item.getProductDetails().getProduct().isEnabled()) {
+				cartItemRepo.delete(item);
+				Change change = new Change();
+				change.setItem(item.getProductDetails().getName());
+				change.setType(Change.Type.REMOVED);
+				changes.add(change);
+				transaction.setChange(true);
+			}
 		}
-		
+
 		transaction.getCart().setChanges(changes);
-		cartItemRepo.saveAll(transaction.getCart().getItems());
-		
+
 		if (transaction.isChange()) {
+			for(Change change: transaction.getCart().getChanges()) {
+				if(change.getType().equals(Change.Type.REMOVED)) {
+					transaction.setStatus(Transaction.Status.CANCELED);
+					transaction.setDescription("Canceled by the system");
+					transactionRepo.save(transaction);
+					break;
+				}
+			}
 			return transaction;
 		}
 
@@ -337,6 +407,7 @@ public class TransactionServiceImpl implements TransactionService {
 		}
 		Long time = System.currentTimeMillis() + 15 * 60 * 1000;
 		transaction.setExpiredDate(new Date(time));
+		transaction.setStatus(Status.PROCESSING);
 		transactionRepo.save(transaction);
 		Payment payment = paypalService.executePayment(paymentId, payerId);
 		ret = fetchTransactionStatus(transaction.getId());
@@ -350,7 +421,6 @@ public class TransactionServiceImpl implements TransactionService {
 		while (!transaction.getExpiredDate().before(new Date())) {
 			Payment payment = paypalService.getPaymentByPaypalId(transaction.getPaypalId());
 			String state = payment.getState();
-			System.out.println("Payment State: " + state);
 			if (state.equals("approved")) {
 				System.out.println("Payment has been approved.");
 				transaction.setStatus(Transaction.Status.COMPLETED);

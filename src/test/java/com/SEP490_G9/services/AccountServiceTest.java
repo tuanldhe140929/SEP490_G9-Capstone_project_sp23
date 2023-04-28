@@ -4,10 +4,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -233,7 +235,7 @@ class AccountServiceTest {
 		//nam sua
 		assertEquals(IllegalArgumentException.class , exception.getClass());
 	}
-	
+	@Test
 	void testGetByRefreshToken() {
 		Account expected = new Account();
 		expected.setId(1L);
@@ -247,7 +249,7 @@ class AccountServiceTest {
 		Account result = accountServiceImpl.getByRefreshToken(refreshToken);
 		assertThat(result.getId()).isEqualTo(expected.getId());
 	}
-
+	@Test
 	void testGetByEmail() {
 		String expectedEmail = "seller1@gmail.com";
 		Account expected = new Account();
@@ -259,18 +261,18 @@ class AccountServiceTest {
 
 		assertThat(result.getEmail()).isEqualTo(expectedEmail);
 	}
-
+	@Test
 	void testGetById() {
 		Long expectedId = 1L;
 		Account expected = new Account();
 		expected.setId(expectedId);
 
-		when(accountRepo.findById(expectedId).get()).thenReturn(expected);
+		when(accountRepo.findById(anyLong())).thenReturn(Optional.of(expected));
 
 		Account result = accountRepo.findById(expectedId).get();
 		assertThat(result.getId()).isEqualTo(expectedId);
 	}
-
+	@Test
 	void testUpdate() {
 		Account account = new Account();
 		account.setId(1L);

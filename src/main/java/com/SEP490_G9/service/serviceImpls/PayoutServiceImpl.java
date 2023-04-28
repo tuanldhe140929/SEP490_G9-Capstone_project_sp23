@@ -61,7 +61,7 @@ public class PayoutServiceImpl implements PayoutService {
 		double total = 0;
 		for (CartItem item : cart.getItems()) {
 			if (item.getProductDetails().getProduct().getSeller().getId() == seller.getId()) {
-				total += item.getProductDetails().getPrice();
+				total += item.getPrice();
 			}
 		}
 
@@ -180,10 +180,10 @@ public class PayoutServiceImpl implements PayoutService {
 		if (payouts.isEmpty()) {
 			throw new ResourceNotFoundException("payout", "trans id", transactionId);
 		} else {
-			if(payouts.get(0).getTransaction().getStatus()!=Status.APPROVED &&
-					payouts.get(0).getTransaction().getStatus()!=Status.CREATED) {
-				throw new IllegalArgumentException("Cannot cancel committed transaction");
-			}
+//			if(payouts.get(0).getTransaction().getStatus()!=Status.APPROVED &&
+//					payouts.get(0).getTransaction().getStatus()!=Status.CREATED) {
+//				throw new IllegalArgumentException("Cannot cancel committed transaction");
+//			}
 			for (Payout payout : payouts) {
 				
 				payout.setLastModified(new Date());

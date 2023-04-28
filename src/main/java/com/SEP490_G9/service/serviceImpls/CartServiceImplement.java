@@ -180,17 +180,21 @@ public class CartServiceImplement implements CartService {
 							activeVersion);
 
 					if (!item.getProductDetails().getVersion().equalsIgnoreCase(activeVersion) || item.isChanged()) {
-						updatedItem.setProductDetails(pd);
+						cartItemRepository.delete(item);
+						CartItem newItem = new CartItem();
 						CartItemKey cartItemKey = new CartItemKey();
 						cartItemKey.setCartId(cart.getId());
 						cartItemKey.setProductVersionKey(pd.getProductVersionKey());
-						item.setCartItemKey(cartItemKey);
-						item.setPrice(pd.getPrice());
-						item.setChanged(false);
-						updatedItems.add(item);
-						change.setItem(item.getProductDetails().getName());
+						newItem.setCartItemKey(cartItemKey);
+						newItem.setPrice(pd.getPrice());
+						newItem.setProductDetails(pd);
+						newItem.setChanged(false);
+						newItem.setCart(cart);
+						removedItems.add(item);
+						change.setItem(newItem.getProductDetails().getName());
 						change.setType(Change.Type.UPDATED);
 						changes.add(change);
+						cartItemRepository.save(newItem);
 					} else if (!pd.getProduct().isEnabled() || !pd.getApproved().equals(Status.APPROVED)) {
 						cartItemRepository.delete(item);
 						change.setItem(item.getProductDetails().getName());
@@ -200,13 +204,9 @@ public class CartServiceImplement implements CartService {
 					}
 
 				}
-				
-				// ret = cartRepository.save(cart);
 
-				cart.getItems().removeAll(removedItems);
-				cart.setChanges(changes);
-				cartItemRepository.saveAll(cart.getItems());
-				ret = cart;
+				ret = cartRepository.findById(cart.getId()).orElseThrow();
+				ret.setChanges(changes);
 			}
 		}
 		return ret;
@@ -255,6 +255,21 @@ public class CartServiceImplement implements CartService {
 					ret = true;
 				}
 
+			}
+		}
+		return ret;
+	}
+
+	@Override
+	public boolean isProductPurchased(Long pid) {
+		boolean ret = false;
+		List<Transaction> transactions = transactionRepo.findByStatus(Transaction.Status.COMPLETED);
+		for (Transaction transaction : transactions) {
+			for (CartItem item : transaction.getCart().getItems()) {
+				if (item.getCartItemKey().getProductVersionKey().getProductId().equals(pid)) {
+					ret = true;
+					break;
+				}
 			}
 		}
 		return ret;

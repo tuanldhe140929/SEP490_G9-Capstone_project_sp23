@@ -45,7 +45,7 @@ export class SearchResultCategoryComponent {
   getSearchResult(){
     this.categoryId = Number(this.activatedRoute.snapshot.paramMap.get('categoryId'));
     this.chosenCategory = this.categoryId;
-    this.productService.getFilteredProducts(this.keyword,this.categoryId,[],0,1000).subscribe(
+    this.productService.getProductsForSearching(this.keyword,this.categoryId,[],0,1000).subscribe(
       data => {
         this.resultList = data;
         this.totalResult = this.resultList.length;
@@ -106,7 +106,7 @@ export class SearchResultCategoryComponent {
 
   refresh(){
     console.log(this.checkedTags);
-    this.productService.getFilteredProducts(this.keyword,this.chosenCategory, this.checkedTags,this.minprice,this.maxprice).subscribe(
+    this.productService.getProductsForSearching(this.keyword,this.chosenCategory, this.checkedTags,this.minprice,this.maxprice).subscribe(
       data => {
         this.resultList = data;
         this.totalResult = this.resultList.length;

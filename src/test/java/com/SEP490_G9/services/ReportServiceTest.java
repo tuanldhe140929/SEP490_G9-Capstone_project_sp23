@@ -1401,6 +1401,76 @@ public class ReportServiceTest {
 		List<Report> actual = reportService.getByProductDetailsAndStatus(p1.getId(),"1.0.0", "PENDING");
 		assertEquals(expected, actual);
 	}
+	@Test
+	public void test1RES3() {
+		Product p1 = new Product();
+		p1.setId(1L);
+		
+		ProductDetails pd1 = new ProductDetails();
+		pd1.setProduct(p1);
+		pd1.setVersion("1.0.0");
+		
+		Product p2 = new Product();
+		p2.setId(2L);
+		
+		ProductDetails pd2 = new ProductDetails();
+		pd2.setProduct(p2);
+		pd2.setVersion("1.0.0");
+		
+		Product p3 = new Product();
+		p3.setId(3L);
+		
+		ProductDetails pd3 = new ProductDetails();
+		pd3.setProduct(p3);
+		pd3.setVersion("1.0.0");
+		
+		User u1 = new User();
+		u1.setId(1L);
+		
+		User u2 = new User();
+		u2.setId(2L);
+		
+		User u3 = new User();
+		u3.setId(3L);
+		
+		ViolationType vt1 = new ViolationType();
+		vt1.setId(1L);
+		vt1.setName("vio1");
+		
+		
+		List<Product> allProducts = new ArrayList<>();
+		allProducts.add(p1);
+		allProducts.add(p2);
+		allProducts.add(p3);
+		
+		List<ProductDetails> allPd = new ArrayList<>();
+		allPd.add(pd1);
+		allPd.add(pd2);
+		allPd.add(pd3);
+		
+		List<User> allUsers = new ArrayList<>();
+		allUsers.add(u1);
+		allUsers.add(u2);
+		allUsers.add(u3);
+		
+		List<ViolationType> vioTypes = new ArrayList<>();
+		vioTypes.add(vt1);
+		
+		when(productRepo.findAll()).thenReturn(allProducts);
+		when(productDetailsRepo.findAll()).thenReturn(allPd);
+		when(userRepo.findAll()).thenReturn(allUsers);
+		when(vioTypeRepo.findAll()).thenReturn(vioTypes);
+		
+		
+		List<Report> allReports = new ArrayList<>();
+		
+		when(reportRepo.findAll()).thenReturn(allReports);
+		
+		List<Report> expected = new ArrayList<>();
+		
+		List<Report> actual = reportService.getByProductDetailsAndStatus(p1.getId(),"1.0.0", "PENDING");
+		assertEquals(expected, actual);
+	}
 	
 	@Test
 	public void test2RES3() {
