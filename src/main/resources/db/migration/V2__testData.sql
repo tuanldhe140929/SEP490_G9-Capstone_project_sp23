@@ -88,7 +88,7 @@ VALUES (6, 'CC BY-NC-SA', 'cho phép bất kỳ ai sử dụng, chia sẻ, chỉ
 
 -- Giấy phép CC BY-NC-ND
 INSERT INTO licenses (id, acronyms, details, name, reference_link)
-VALUES (7, 'CC BY-NC-SA', 'cho phép bất kỳ ai sử dụng tác phẩm của bạn cho mục đích phi thương mại và không có tác phẩm phái sinh, miễn là họ ghi công bạn theo cách bạn yêu cầu.', 'Attribution-NonCommercial-ShareAlike', 'https://creativecommons.org/licenses/by-nc-sa/4.0/');
+VALUES (7, 'CC BY-NC-ND', 'cho phép bất kỳ ai sử dụng tác phẩm của bạn cho mục đích phi thương mại và không có tác phẩm phái sinh, miễn là họ ghi công bạn theo cách bạn yêu cầu.', 'Attribution-NonCommercial-NoDerivatives', 'https://creativecommons.org/licenses/by-nc-sa/4.0/');
 
  insert into violation_types VALUES (1,'Spam');
  insert into violation_types VALUES (2,'Đạo nhái');

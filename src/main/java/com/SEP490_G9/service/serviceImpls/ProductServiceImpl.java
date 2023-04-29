@@ -348,4 +348,20 @@ public class ProductServiceImpl implements ProductService {
 		return false;
 	}
 
+	@Override
+	public License getLicenceByProductId(Long productId) {
+		Product product = productRepository.findById(productId).orElseThrow();
+		
+		return product.getLicense();
+	}
+
+	@Override
+	public boolean applyLicense(Long productId, int licenseId) {
+		Product product = productRepository.findById(productId).orElseThrow();
+		License license = licenseRepository.findById(licenseId).orElseThrow();
+		product.setLicense(license);
+		productRepository.save(product);
+		return true;
+	}
+
 }

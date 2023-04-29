@@ -33,19 +33,10 @@ public class License  {
 	private String provider;
 
 	@OneToMany(mappedBy = "license", fetch = FetchType.EAGER)
-	List<ProductDetails> productDetails = new ArrayList<>();
+	List<Product> products = new ArrayList<>();
 
 	public License() {
 		// TODO Auto-generated constructor stub
-	}
-
-	public License(int id, String name, String acrynosm, String details, List<ProductDetails> productDetails) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.acronyms = acrynosm;
-		this.details = details;
-		this.productDetails = productDetails;
 	}
 
 	public String getProvider() {
@@ -62,14 +53,6 @@ public class License  {
 
 	public void setAcronyms(String acronyms) {
 		this.acronyms = acronyms;
-	}
-
-	public List<ProductDetails> getProductDetails() {
-		return productDetails;
-	}
-
-	public void setProductDetails(List<ProductDetails> productDetails) {
-		this.productDetails = productDetails;
 	}
 
 	public int getId() {
@@ -107,7 +90,7 @@ public class License  {
 	@Override
 	public String toString() {
 		return "License [id=" + id + ", name=" + name + ", acrynosm=" + acronyms + ", details=" + details
-				+ ", referenceLink=" + referenceLink + ", productDetails=" + productDetails + "]";
+				+ ", referenceLink=" + referenceLink + ", productDetails=" + products + "]";
 	}
 	
 }

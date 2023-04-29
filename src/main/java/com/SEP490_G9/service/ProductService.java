@@ -31,4 +31,8 @@ public interface ProductService {
 	Product createNewProduct();
 	
 	boolean isProductDisabled(long productId);
+
+	License getLicenceByProductId(Long productId);
+
+	boolean applyLicense(Long productId, int licenseId);
 }

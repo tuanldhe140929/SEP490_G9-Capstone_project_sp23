@@ -73,7 +73,7 @@ export class CartComponent implements OnInit {
       return 'http://localhost:9000/public/serveMedia/image?source=' + cartItem.product.coverImage.replace(/\\/g, '/');
     }
     else {
-      return "";
+      return "assets/images/noimage.png";
     }
   }
 

@@ -147,11 +147,11 @@
             <div class="row metadata_details">
               <div class="col-5"><label>Giấy phép</label></div>
               <div class="col-7 sen">
-                <div *ngIf="product.license!=null">
-                  <a class="details_value" href="{{product.license.referenceLink}}">{{product.license.name}}</a>
-                  <span class="details_value_hover">{{product.license.details}}</span>
+                <div *ngIf="license!=null">
+                  <a class="details_value" href="{{license.referenceLink}}">{{license.name}}</a>
+                  <span class="details_value_hover">{{license.details}}</span>
                 </div>
-                <div *ngIf="product.license==null">
+                <div *ngIf="license==null">
                   <a class="details_value">Không</a>
 
                 </div>
@@ -171,10 +171,10 @@
             <div class="card">
               <header class="card-header">
                 <ul class="nav nav-tabs card-header-tabs">
-                  <li class="nav-item">
+                  <li class="nav-item" style="border-radius:3px;">
                     <a href="#" data-bs-target="#tab_overview" data-bs-toggle="tab" class="nav-link active">Thông tin</a>
                   </li>
-                  <li class="nav-item">
+                  <li class="nav-item" style="border-radius:3px;">
                     <a href="#" data-bs-target="#tab_details" data-bs-toggle="tab" class="nav-link">Chi tiết</a>
                   </li>
                 </ul>
