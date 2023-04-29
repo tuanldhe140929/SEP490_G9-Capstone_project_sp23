@@ -1,0 +1,18 @@
+<div class="containter" style="background-color:white; padding:20px; min-height:400px">
+  <h4>Áp dụng giấy phép Common Creative cho sản phẩm của bạn</h4>
+  <div class="row">
+    <div class="col-8">
+      <select class="classification_picker_body" id="type_list" name="type" (change)="onLicenseSelect($event)">
+        <option value="0" selected>Chọn giấy phép</option>
+        <option *ngFor="let license of licenseList; index as i;" value="{{license.id}}">
+          {{license.name}}
+        </option>
+      </select>
+    </div>
+    <div class="col-4">
+      <button class="apply_btn" id="apply_btn" (click)="applyLicense()">Áp dụng</button>
+    </div>
+  </div>
+  <div class="license_Details" id="license_Details" style="margin-top:20px;">
+  </div>
+</div>

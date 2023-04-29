@@ -126,7 +126,9 @@ section {
   font-weight: bold;
   height: 35px;
 }
-
+.my-dialog-container {
+  border-radius: 3px;
+}
   .button:active {
     transform: translateY(1px);
   }
@@ -173,7 +175,7 @@ section {
   clip-path: polygon(100% 0%, 100% 53%, 100% 100%, 9% 100%, 0% 50%, 9% 0);
   text-align: center;
   padding: 7px;
-  width: 80px;
+  width: 85px;
   height: 40px;
   background-color: #FF2449;
   color: white;
@@ -376,6 +378,7 @@ section {
 }
 
 .license_details_content {
+  position:absolute;
   background-color: #fff;
   border: 1px solid #ccc;
   padding: 10px;
@@ -426,4 +429,5 @@ section {
 .back_to_shop:hover{
     opacity:.7;
 }
+
 

@@ -3,6 +3,7 @@ package com.SEP490_G9.dto;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.SEP490_G9.entities.License;
 import com.SEP490_G9.entities.Product;
 import com.SEP490_G9.entities.ProductDetails;
 import com.SEP490_G9.entities.Seller;
@@ -17,9 +18,11 @@ public class ProductDTO {
 	private Seller seller;
 
 	private List<ProductDetailsDTO> productDetails = new ArrayList<>();
-	
+
+	private License license;
+
 	private boolean draft;
-	
+
 	public ProductDTO(Product product) {
 		this.id = product.getId();
 		this.enabled = product.isEnabled();
@@ -30,6 +33,7 @@ public class ProductDTO {
 				this.productDetails.add(new ProductDetailsDTO(pd));
 			}
 		}
+		this.license = product.getLicense();
 	}
 
 	public Long getId() {
@@ -54,6 +58,14 @@ public class ProductDTO {
 
 	public void setSeller(Seller seller) {
 		this.seller = seller;
+	}
+
+	public License getLicense() {
+		return license;
+	}
+
+	public void setLicense(License license) {
+		this.license = license;
 	}
 
 	public List<ProductDetailsDTO> getProductDetails() {
