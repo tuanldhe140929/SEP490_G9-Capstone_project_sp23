@@ -21,7 +21,7 @@ export class AddviolationComponent implements OnInit{
       }
 
   addViolationForm = this.formBuilder.group({
-    "description": ['', [Validators.required], Validators.pattern("[a-zA-Z].*")]
+    "description": ['', [Validators.required]]
   });
 
   get form() {
@@ -32,9 +32,6 @@ export class AddviolationComponent implements OnInit{
     return this.addViolationForm.controls.description.value?.length;
 
   }
-  // get Description() {
-  //   return this.addViolationForm.get("description") as FormControl;
-  // }
 
   get description() {
     return this.addViolationForm.controls.description;
@@ -43,7 +40,7 @@ export class AddviolationComponent implements OnInit{
   addViolation() {
     if (this.addViolationForm.valid) {
         this.account_id = this.data.account_id;
-        this.addviolationService.addViolation(this.account_id, "description").subscribe(
+        this.addviolationService.addViolation(this.account_id,""+this.addViolationForm.controls.description.value).subscribe(
           data => {
             console.log(data);
             this.toastr.success('Thêm vi phạm thành công');
