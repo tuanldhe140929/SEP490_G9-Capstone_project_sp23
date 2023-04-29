@@ -63,15 +63,15 @@ public class ApplicationConfig implements WebMvcConfigurer {
 	        return mailSender;
 	    }
 	 
-	 @Override
-	    public void configurePathMatch(PathMatchConfigurer configurer) {
-	        configurer.setUseSuffixPatternMatch(false)
-	                  .setUseTrailingSlashMatch(false)
-	                  .setPathMatcher(new AntPathMatcher());
-	    }
-	 
-	    @Bean
-	    public HandlerMappingIntrospector mvcHandlerMappingIntrospector() {
-	        return new HandlerMappingIntrospector();
-	    }
+//	 @Override
+//	    public void configurePathMatch(PathMatchConfigurer configurer) {
+//	        configurer.setUseSuffixPatternMatch(false)
+//	                  .setUseTrailingSlashMatch(false)
+//	                  .setPathMatcher(new AntPathMatcher());
+//	    }
+//	 
+//	    @Bean
+//	    public HandlerMappingIntrospector mvcHandlerMappingIntrospector() {
+//	        return new HandlerMappingIntrospector();
+//	    }
 }

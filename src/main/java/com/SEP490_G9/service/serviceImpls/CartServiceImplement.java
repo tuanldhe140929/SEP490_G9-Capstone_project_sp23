@@ -205,7 +205,6 @@ public class CartServiceImplement implements CartService {
 
 				}
 
-				cartItemRepository.flush();
 				ret = cartRepository.findById(cart.getId()).orElseThrow();
 				ret.setChanges(changes);
 			}
@@ -256,6 +255,21 @@ public class CartServiceImplement implements CartService {
 					ret = true;
 				}
 
+			}
+		}
+		return ret;
+	}
+
+	@Override
+	public boolean isProductPurchased(Long pid) {
+		boolean ret = false;
+		List<Transaction> transactions = transactionRepo.findByStatus(Transaction.Status.COMPLETED);
+		for (Transaction transaction : transactions) {
+			for (CartItem item : transaction.getCart().getItems()) {
+				if (item.getCartItemKey().getProductVersionKey().getProductId().equals(pid)) {
+					ret = true;
+					break;
+				}
 			}
 		}
 		return ret;

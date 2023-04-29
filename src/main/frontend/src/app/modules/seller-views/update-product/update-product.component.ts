@@ -1433,6 +1433,6 @@ export class UpdateProductComponent implements OnInit {
   }
 
   backToShop() {
-    this.router.navigate(['collection',2]);
+    this.router.navigate(['collection/', this.product.seller.id]);
   }
 }
