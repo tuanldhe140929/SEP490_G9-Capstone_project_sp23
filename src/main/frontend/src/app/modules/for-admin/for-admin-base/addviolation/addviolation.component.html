@@ -1,17 +1,31 @@
 <mat-dialog-content class="mat-typography">
-        <h2 style="color:white;">Thêm vi phạm</h2>
-        <form [formGroup]="addViolationForm" (submit)="addViolation()">
-
-            <div class="form-group">
-                <label>Mô tả vi phạm</label>
-                <input type="text" class="form-control" formControlName="description" >
-            </div>           
-            <!-- <label>ID</label>
-            <input type="text" value="{{data.account_id}}"> -->
-            <div class="form-group" align="end" style="margin-top: 20px;">
-                <button mat-dialog-close="false" class="btn btn-warning">Hủy</button>
-                <button mat-dialog-close="false" type="submit" class="btn btn-success">Thêm vi phạm</button>
+    <h2 style="color:white;">Thêm vi phạm</h2>
+    <form [formGroup]="addViolationForm" (submit)="addViolation()">
+        <div class="form-group">
+            <label>Mô tả vi phạm</label>
+            <input type="text" class="form-control" formControlName="description" placeholder="Điền mô tả vi phạm">
+            <div *ngIf="form.description.invalid&&(form.description.dirty||form.description.touched)">
+                <div *ngIf="form.description.errors">
+                    <small style="color: red;" id="descriptionHelp" class="form-text">Mô tả không được để rỗng.</small>
+                </div>
             </div>
-        </form>
+            <div *ngIf="lengthform">
+                <div *ngIf="lengthform>36">
+                    <small style="color: red;" id="descriptionHelp" class="form-text">Mô tả tối đa 36 ký tự</small>
+                </div>
+                <div *ngIf="lengthform<8">
+                    <small style="color: red;" id="descriptionHelp" class="form-text">Mô tả tối thiểu 8 ký tự</small>
+                </div>
+            </div>
+            <div *ngIf="form.description.errors?.['pattern']&&(form.description.dirty||form.description.touched)">
+                <div>
+                    <small style="color: red;" id="descriptionHelp" class="form-text">Mô tả không được chứa ký tự đặc biệt</small>
+                </div>
+            </div>
+        </div>
+        <div class="form-group" align="end" style="margin-top: 20px;">
+            <button mat-dialog-close="false" class="btn btn-warning">Hủy</button>
+            <button mat-dialog-close="false" type="submit" class="btn btn-success">Thêm vi phạm</button>
+        </div>
+    </form>
 </mat-dialog-content>
-
