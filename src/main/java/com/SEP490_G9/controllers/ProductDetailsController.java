@@ -162,11 +162,14 @@ public class ProductDetailsController {
 	public ResponseEntity<?> updateProduct(@Valid @RequestBody ProductDetailsDTO productDetailsDTO,
 			@RequestParam(name = "instruction") String instructionDetails) {
 		ProductDetailsDTO ret = null;
+		
 		ProductDetails notEdited = productDetailsRepo
 				.findByProductIdAndProductVersionKeyVersion(productDetailsDTO.getId(), productDetailsDTO.getVersion());
+		
 		if (notEdited.getApproved() != Status.NEW) {
 			throw new IllegalArgumentException("Cannot edit this version");
 		}
+	
 		System.out.println(productDetailsDTO.getPrice());
 		notEdited.setLastModified(new Date());
 		Product product = notEdited.getProduct();
@@ -181,12 +184,7 @@ public class ProductDetailsController {
 			notEdited.setDetailDescription(productDetailsDTO.getDetails().trim());
 		else
 			notEdited.setDetailDescription("");
-
-		if (productDetailsDTO.getLicense() != null)
-			notEdited.setLicense(productDetailsDTO.getLicense());
-		else
-			notEdited.setLicense(null);
-
+		
 		notEdited.setLastModified(new Date());
 		notEdited.setName(productDetailsDTO.getName().trim());
 		notEdited.setPrice(productDetailsDTO.getPrice());

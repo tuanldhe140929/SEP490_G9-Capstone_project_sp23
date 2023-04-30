@@ -32,6 +32,7 @@ public interface CartService {
 	public boolean isCartHadPurchased(Long cartId);
 
 	public boolean isUserPurchasedProduct(Long userId, Long productId);
-
+	
+	public boolean isProductPurchased(Long pid);
 	
 }

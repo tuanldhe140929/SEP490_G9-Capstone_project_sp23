@@ -9,6 +9,7 @@ import { Seller } from 'src/app/dtos/Seller';
 import { ReportService } from 'src/app/services/report.service';
 import { UserService } from 'src/app/services/user.service';
 import { AuthResponse } from '../../../dtos/AuthResponse';
+import { License } from '../../../dtos/License';
 import { Preview } from '../../../dtos/Preview';
 import { Product } from '../../../dtos/Product';
 import { ProductFile } from '../../../dtos/ProductFile';
@@ -39,8 +40,6 @@ class DisplayPreview {
       ret.thumb = this.getSrc(preview.source);
     else
       ret.thumb = 'https://xn--b1akdajq8j.xn--p1ai/app/plugins/video-thumbnails/default.jpg';
-
-    console.log(ret);
     return ret;
   }
 
@@ -63,7 +62,7 @@ class DisplayPreview {
 export class ProductDetailsComponent implements OnInit {
 
   own: boolean = false;
-
+  license: License;
   owner: Seller = new Seller;
   visitorAuth: AuthResponse = new AuthResponse;
   visitor: User = new User;//thằng đang xem trang ấy
@@ -89,7 +88,6 @@ export class ProductDetailsComponent implements OnInit {
     private cartService: CartService,
     private productFileService: ProductFileService,
     private toastr: ToastrService,
-
     private userService: UserService,
     private reportService: ReportService) {
   }
@@ -103,8 +101,13 @@ export class ProductDetailsComponent implements OnInit {
     // tôi đang có việc cần phải cho hẳn vào đây
     var productIdAndName = this.activatedRoute.snapshot.paramMap.get('productId');
     if (productIdAndName) {
+      
       var productId = productIdAndName.split("-")[0];
-
+      this.productService.getLicenceByProductId(+productId).subscribe(
+        data => {
+          this.license = data;
+        }
+        );
       this.productService.getProductById(+productId).subscribe(
         data => {
           this.product = data;

@@ -42,24 +42,13 @@ public class ViolationController {
 	
 	@PostMapping("addviolation")
 	public ResponseEntity<?> addViolation(@RequestParam("account_id") int account_id, @RequestParam("description") String description) {
-//		@RequestBody Violation vio,
-//		Violation vionew = new Violation();
-//		Account account = accountRepo.findById(account_id).get();
-//		vionew.setId(violation_id);
-//		vionew.setCreated_date(createdDate);
-//		vionew.setDescription(description);
-//		vionew.setAccount(account);
-//		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getAccount();
 		Violation vio = new Violation();
 		vio.setDescription(description);
-		Account account1 = accountService.getById(account_id);
-		vio.setAccount(account1);
-//		Violation newvio = new Violation(vio); 
-		boolean canAdd = violationService.addViolation(vio);
-//		account1.setEnabled(false);
+		Account account = accountService.getById(account_id);
+		vio.setAccount(account);
+		Violation vioAdd = violationService.addViolation(vio);
 		System.out.println(description+account_id);
-//		boolean canAdd2 = violationService.addViolation(vio);
-		return ResponseEntity.ok(canAdd);
+		return ResponseEntity.ok(vioAdd);
 	}
 	
 	@PutMapping("updateSellerStatus")
@@ -74,4 +63,3 @@ public class ViolationController {
 		return ResponseEntity.ok(vioTypeList);
 	}
 }
-//(name="violation_id") long violation_id,@RequestParam(name="createdDate") Date createdDate,@RequestParam(name="description") String description,@RequestParam(name="account_id") long account_id

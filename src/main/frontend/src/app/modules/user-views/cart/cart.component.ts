@@ -73,7 +73,7 @@ export class CartComponent implements OnInit {
       return 'http://localhost:9000/public/serveMedia/image?source=' + cartItem.product.coverImage.replace(/\\/g, '/');
     }
     else {
-      return "";
+      return "assets/images/noimage.png";
     }
   }
 
@@ -186,7 +186,7 @@ export class CartComponent implements OnInit {
               this.openInfoModal();
               break;
             case TransactionStatus.CANCELED:
-              this.info = "Bạn đã hủy thanh toán";
+              this.info = "Đã hủy thanh toán";
               this.openInfoModal();
               break;
           }

@@ -34,7 +34,7 @@
           <form class="" (submit)="toSearchResult()">
             <div class="input-group">
               <input style="border-radius:3px;" type="search" class="form-control" style="width:55%" placeholder="Search" [formControl]="myControl" [matAutocomplete]="auto" [(ngModel)]="keyword">
-              <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" (optionSelected)="onOptionSelected($event)">
+              <mat-autocomplete autoActiveFirstOption="false" #auto="matAutocomplete" (optionSelected)="onOptionSelected($event)">
                 <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
                   {{option}}
                 </mat-option>
@@ -65,9 +65,12 @@
               Phân loại
             </a>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink" style="border-radius:3px">
-              <li *ngFor="let category of categoryList">
+              <li *ngFor="let category of categoryList" class="cate">
                 <a class="dropdown-item" (click)="searchByCategory(category.id)" style="cursor: pointer;">{{category.name}}</a>
-              </li>
+                <div class="category_details" style="height:fit-content; width:250px; border:1px solid black; border-radius:3px; background-color:white; padding:7px;">
+                  <p class=""> {{category.description}}</p>
+                </div>
+                </li>
             </ul>
           </li>
           <li class="nav-item dropdown">

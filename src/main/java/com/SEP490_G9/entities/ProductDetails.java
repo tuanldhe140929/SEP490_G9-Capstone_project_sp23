@@ -52,12 +52,11 @@ public class ProductDetails implements Serializable,Comparable<ProductDetails> {
 	@Column(name = "last_update", nullable = false)
 	private Date lastModified;
 
+	@Column(name= "approved_date")
+	private Date approvedDate;
+	
 	@Column(name = "flagged", nullable = false)
 	private boolean flagged;
-
-	@ManyToOne
-	@JoinColumn(name = "license_id")
-	private License license;
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "status", nullable = false)
@@ -94,11 +93,18 @@ public class ProductDetails implements Serializable,Comparable<ProductDetails> {
 		this.name = productDetailsDTO.getName();
 		this.description = productDetailsDTO.getDescription();
 		this.price = productDetailsDTO.getPrice();
-		this.license = productDetailsDTO.getLicense();
 		this.tags = productDetailsDTO.getTags();
 		this.detailDescription = productDetailsDTO.getDetails();
 		this.flagged = productDetailsDTO.isFlagged();
 
+	}
+
+	public Date getApprovedDate() {
+		return approvedDate;
+	}
+
+	public void setApprovedDate(Date approvedDate) {
+		this.approvedDate = approvedDate;
 	}
 
 	public String getVersion() {
@@ -187,14 +193,6 @@ public class ProductDetails implements Serializable,Comparable<ProductDetails> {
 
 	public void setLastModified(Date lastModified) {
 		this.lastModified = lastModified;
-	}
-
-	public License getLicense() {
-		return license;
-	}
-
-	public void setLicense(License license) {
-		this.license = license;
 	}
 
 	public Category getCategory() {

@@ -41,6 +41,16 @@ public class Product implements Serializable {
 	@OneToMany(mappedBy = "product")
 	private List<Report> reports = new ArrayList<>();
 
+	@Column(name="created_date")
+	private Date createdDate;
+	
+	@Column(name="last_modified")
+	private Date lastModified;
+	
+	@ManyToOne
+	@JoinColumn(name = "license_id")
+	private License license;
+	
 	public Product() {
 	}
 
@@ -100,6 +110,14 @@ public class Product implements Serializable {
 		return activeVersion;
 	}
 
+	public License getLicense() {
+		return license;
+	}
+
+	public void setLicense(License license) {
+		this.license = license;
+	}
+
 	public void setActiveVersion(String activeVersion) {
 		this.activeVersion = activeVersion;
 	}
@@ -110,6 +128,22 @@ public class Product implements Serializable {
 
 	public void setDraft(boolean draft) {
 		this.draft = draft;
+	}
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public Date getLastModified() {
+		return lastModified;
+	}
+
+	public void setLastModified(Date lastModified) {
+		this.lastModified = lastModified;
 	}
 
 }

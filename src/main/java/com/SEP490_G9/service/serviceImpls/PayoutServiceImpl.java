@@ -61,7 +61,7 @@ public class PayoutServiceImpl implements PayoutService {
 		double total = 0;
 		for (CartItem item : cart.getItems()) {
 			if (item.getProductDetails().getProduct().getSeller().getId() == seller.getId()) {
-				total += item.getProductDetails().getPrice();
+				total += item.getPrice();
 			}
 		}
 

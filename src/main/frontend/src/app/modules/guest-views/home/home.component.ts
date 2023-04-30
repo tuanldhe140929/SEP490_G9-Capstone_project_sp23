@@ -8,7 +8,6 @@ interface carouselImage{
   imageSrc: string;
   imageAlt: string;
 }
-
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -16,8 +15,11 @@ interface carouselImage{
 })
 export class HomeComponent implements OnInit{
   @Input() slides: SlideInterface[] = [];
+
   productList: Product[] = [];
+
   lastestProductList: Product[] = [];
+
   itemsPerPage: number = 9;
   p: number = 1;
   totalLength:any;
@@ -44,7 +46,6 @@ export class HomeComponent implements OnInit{
       return "https://lyon.palmaresdudroit.fr/images/joomlart/demo/default.jpg";
     }
   }
-
   redirectProductDetails(product:Product){
 	this.router.navigate(['/products', product.id]);
   }
@@ -63,7 +64,7 @@ export class HomeComponent implements OnInit{
     this.productService.getLastestUpdatedProductForHomePage().subscribe(
       data => {
         console.log(data);
-        this.lastestProductList = data;
+        this.lastestProductList = data.slice(0,4);
         for (let i = 0; i<this.lastestProductList.length; i++){
           this.lastestProductList[i].price = Number.parseFloat(this.lastestProductList[i].price.toFixed(1));
         }
@@ -118,6 +119,7 @@ export class HomeComponent implements OnInit{
       this.router.navigate(['collection/'+sellerId]);
     })
   }
+
   //Image slider//
   @Input() images: carouselImage[] = []
   @Input() indicators = true;
@@ -125,6 +127,8 @@ export class HomeComponent implements OnInit{
   selectedIndex = 0;
   //set index for image dot slider
   selectImage(index: number): void {
-    this.selectedIndex = index;
+    this.selectedIndex = index
   }
+
+
 }

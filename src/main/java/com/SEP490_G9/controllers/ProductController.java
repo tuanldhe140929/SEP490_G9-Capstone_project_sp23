@@ -69,10 +69,23 @@ public class ProductController {
 	@Autowired
 	ProductDetailsRepository productDetailsRepo;
 
+	@GetMapping("applyLicense")
+	public ResponseEntity<?> applyLicense(@RequestParam("productId") Long productId,
+			@RequestParam("licenseId") int licenseId) {
+		boolean ret = productService.applyLicense(productId, licenseId);
+		return ResponseEntity.ok(ret);
+	}
+	
 	@GetMapping("getLicense")
 	public ResponseEntity<?> getAllLicense() {
 		List<License> licenses = productService.getAllLicense();
 		return ResponseEntity.ok(licenses);
+	}
+	
+	@GetMapping("getLicenseByProductId")
+	public ResponseEntity<?> getLicenceByProductId(@RequestParam("productId") Long productId) {
+		License license = productService.getLicenceByProductId(productId);
+		return ResponseEntity.ok(license);
 	}
 
 	// create new Product

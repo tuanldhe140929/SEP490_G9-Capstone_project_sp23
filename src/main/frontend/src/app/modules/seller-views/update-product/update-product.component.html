@@ -56,11 +56,17 @@
               <div class="">
                 <select class="classification_picker_body" id="type_list" name="type" [(ngModel)]="productCate">
                   <option value="0" selected>Select product category</option>
-                  <option *ngFor="let category of typeList; index as i;" value="{{category.id}}"
+                  <option class="license_details" *ngFor="let category of typeList; index as i;" value="{{category.id}}"
                           [attr.selected]="isTypeSelected(category.id)">
                     {{category.name}}
-                  </option>s
+                  </option>
                 </select>
+                <div *ngIf="productCate>0">
+                  <div class="license_details" style="width:fit-content;" *ngIf="productCate>0">
+                    <i class="fa fa-info-circle" aria-hidden="true"></i>
+                    <p class="license_details_content">{{CateDetails}}</p>
+                  </div>
+                </div>
               </div>
             </div>
             <div class="input_row tag_picker">
@@ -91,6 +97,18 @@
 
               </div>
             </div>
+            <div class="license_picker">
+              <div class="input_row">
+                <div><label for="license_input">Giấy phép</label></div>
+                <div><small>Người mua có thể sử dụng sản phẩm này như thế nào</small></div>
+                <div *ngIf="license==null"><input type="text" value="{{getLicenseName()}}" id="license_input" autocomplete="off" style="cursor:pointer; user-select:none;" (click)="openLicense()" /></div>
+                <div *ngIf="license!=null"><input type="text" value="{{getLicenseName()}}" id="license_input" autocomplete="off" style="cursor:pointer; user-select:none;" (click)="licenseInfo()"/></div>
+                <div class="license_details" style="width:fit-content;" *ngIf="license!=null">
+                  <i class="fa fa-info-circle" aria-hidden="true"></i>
+                  <p class="license_details_content">{{LicenseDetails}}</p>
+                </div>
+              </div>
+            </div>
             <section class="price_picker">
               <h2>Giá sản phẩm</h2>
               <div class="price_picker_drop">
@@ -112,7 +130,7 @@
                         <div>
                           <div class="input-group">
                             <input type="number" step="0.1" min="0" max="1000" placeholder="$0.0" [(ngModel)]="product.price"
-                            [ngModelOptions]="{standalone: true}" />
+                                   [ngModelOptions]="{standalone: true}" />
                           </div>
 
                           <div *ngFor="let error of priceErrorr">
@@ -130,30 +148,6 @@
                 </div>
               </div>
             </section>
-            <div class="input_row classification_picker">
-              <div class="classification_picker_label">
-                <div>
-                  <h5 for="type_list" style="font-weight: 600;">Giấy phép</h5>
-                </div>
-                <div>
-                  <small>Những người sử dụng sản phẩm này có quyền gì?</small>
-                </div>
-              </div>
-              <div class="">
-                <select class="classification_picker_body" id="license_list" name="type" [(ngModel)]="productLicense">
-                  <option value="0" selected>Không giấy phép</option>
-                  <option *ngFor="let license of licenseList index as i;" value="{{license.id}}"
-                          [attr.selected]="isTypeSelected(license.id)">
-                    {{license.name}} - {{license.acrynosm}}
-                  </option>
-                </select>
-              </div>
-
-              <div class="license_details" style="position: relative; cursor: pointer; width:180px;" *ngIf="productLicense>=1">
-                <img src="https://png.pngtree.com/png-clipart/20190705/original/pngtree-vector-information-icon-png-image_4184479.jpg" style="height:20px;width:20px;" />Details about this license
-                <span class="license_details_content" style="position: absolute; text-align:justify;">{{LicenseDetails}}<br />{{LicenseReferenceLink}}</span>
-              </div>
-            </div>
             <section class="upload_editor">
               <h2>Tệp có thể tải xuống</h2>
               <div class="upload_drop">
@@ -369,7 +363,7 @@
   </div>
 </ng-template>
 
-<ng-template #specifyVersionModal let-modal>
+<ng-template #specifyVersionModal let-modal style="border-radius: 3px;">
   <div class="modal-header">
     <h4 class="modal-title" style="color:black"> Cập nhật phiên bản mới của sản phẩm</h4>
     <button type="button" class="btn-close" aria-label="Close" (click)="dismissError()"></button>
@@ -383,14 +377,14 @@
         <th style="width:200px;">Chỉnh sửa cuối</th>
         <th>Trạng thái</th>
       </tr>
-      <tr *ngFor="let ver of productVersions">
+      <tr *ngFor="let ver of productVersions" style="margin-bottom:10px;">
         <td><div class="ver" (click)="chooseVersion(ver)">{{ver.version}}</div></td>
         <td>
           <div *ngIf="isCurrent(ver); then showActive else optionActive"></div>
-          <ng-template #showActive> <div class="current_version">Hiện tại</div></ng-template>
+          <ng-template #showActive> <div class="current_version" style="border-radius:3px;">Hiện tại</div></ng-template>
           <ng-template #optionActive>
-            <div *ngIf="ver.approved == ProductStatus.APPROVED" class="option_active" (click)="activeVersion(ver)">Sử dụng</div>
-            <div *ngIf="ver.approved !=ProductStatus.APPROVED" class="option_active">Sử dụng</div>
+            <div *ngIf="ver.approved == ProductStatus.APPROVED" class="option_active" style="border-radius:3px;" (click)="activeVersion(ver)">Sử dụng</div>
+            <div *ngIf="ver.approved !=ProductStatus.APPROVED" style="border-radius:3px;" class="option_active">Sử dụng</div>
           </ng-template>
         </td>
         <td><div>{{dateFormat(ver.createdDate)}}</div></td>
@@ -400,11 +394,11 @@
 
     </table>
 
-    <input style="width:75%;" type="text" name="new_version" value="{{product.version}}" id="new_version" placeholder="{{product.version}}" (keydown)="checkInputVersion($event)" />
+    <input style="width:75%;" type="text" name="new_version" value="{{product.version}}" id="new_version" placeholder="{{product.version}}" autocomplete="off" (keydown)="checkInputVersion($event)" />
     <div *ngFor="let err of versionError">
       <small style="color:red;">{{err}}</small>
     </div>
-    <button style=" width:20%;margin-left: 15px; border-radius: 5px; background-color: #FF2449; color: white; border: 1px solid rgba(0, 0, 0, 0.1);height:35px;" class="update_version_btn" (click)="createNewVersion()">Cập nhật</button>
+    <button style=" width:20%;margin-left: 15px; border-radius: 3px; background-color: #FF2449; color: white; border: 1px solid rgba(0, 0, 0, 0.1);height:35px;" class="update_version_btn" (click)="createNewVersion()">Cập nhật</button>
   </div>
 </ng-template>
 <app-footer></app-footer>

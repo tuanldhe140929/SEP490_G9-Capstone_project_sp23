@@ -17,6 +17,7 @@ import { ProductService } from 'src/app/services/product.service';
 import { ReportService } from 'src/app/services/report.service';
 import { StorageService } from 'src/app/services/storage.service';
 import { UserService } from 'src/app/services/user.service';
+import { License } from '../../../../../dtos/License';
 import { ApprovalDownloadComponent } from '../approval-download/approval-download.component';
 import { UpdateApprovalComponent } from '../update-approval/update-approval.component';
 
@@ -86,7 +87,8 @@ export class ApprovalProductDetailsComponent implements OnInit {
     private reportService: ReportService) {
   }
 
-
+  version = '';
+  license: License;
   ngOnInit(): void {
     this.getProduct();
     this.productId = this.data.productId;
@@ -163,17 +165,25 @@ export class ApprovalProductDetailsComponent implements OnInit {
   src = 'http://localhost:9000/public/serveMedia/image?source=account_id_2%2Fproducts%2F2%2FDatabase%20V2.drawio%20(2).png';
 
   getProduct() {
-    var productIdAndName = this.data.productId;
-    if (productIdAndName) {
-      var productId = productIdAndName;
-
-      this.productService.getProductByIdAndVersion(productId, this.data.version).subscribe(
+    var productId = this.data.productId;
+    if (productId) {
+      this.productService.getLicenceByProductId(+productId).subscribe(
+        data => {
+          this.license = data;
+        }
+      );
+      this.productService.getProductById(+productId).subscribe(
         data => {
           this.product = data;
+          this.version = this.product.version;
+          this.product.price = Number.parseFloat(this.product.price.toFixed(1));
+          console.log(this.product);
           if (this.DescriptionTab) {
             this.DescriptionTab.innerHTML = this.product.details;
+
           }
-          this.product.price = Number.parseFloat(this.product.price.toFixed(1));
+
+
 
           this.owner = data.seller;
           this.getSellerTotalProductCount(this.owner.id);
@@ -185,15 +195,27 @@ export class ApprovalProductDetailsComponent implements OnInit {
             for (let i = 0; i < this.product.previewPictures.length; i++) {
               var a = DisplayPreview.fromPreview(this.product.previewPictures[i]);
               this.displayPreviews.push(a);
-              console.log(a);
-            }
 
+            }
+          console.log(this.displayPreviews);
           if (this.BlackThumbs.length > 0)
             this.BlackThumbs.item(0)?.setAttribute("style", "border-radius: 4px; position: absolute; top: 0; right: 9px; bottom: 0; left: 0; background: #000; opacity: 0;");
 
+          if (this.product.previewVideo == null && this.product.previewPictures.length == 0) {
+            var dum: DisplayPreview = new DisplayPreview;
+            var dumPreview = new Preview;
+            dumPreview.id = -1;
+            dumPreview.type = "picture";
+            dumPreview.source = "https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty.jpg";
+            dum.preview = dumPreview;
+            dum.thumb = "https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty.jpg";
+            this.displayPreviews.push(dum);
+          }
+
+          this.currentPreview = this.displayPreviews[0];
         },
         error => {
-          console.log(error);
+          this.router.navigate(['error']);
         })
     }
   }
@@ -217,9 +239,12 @@ export class ApprovalProductDetailsComponent implements OnInit {
   }
 
   getPreviewPictureSource(): string {
+
+    if (this.currentPreview.preview.id == -1) {
+      return "https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty.jpg";
+    }
     return 'http://localhost:9000/public/serveMedia/image?source=' + this.currentPreview.preview.source.replace(/\\/g, '/');
   }
-
   get TotalSize() {
     var totalSize = 0;
     for (let i = 0; i < this.product.files.length; i++) {
@@ -364,14 +389,20 @@ export class ApprovalProductDetailsComponent implements OnInit {
   }
 
   refresh(productId: number) {
+    this.displayPreviews = [];
     this.productService.getProductById(productId).subscribe(
       data => {
-        this.displayPreviews = [];
         this.product = data;
+        this.version = this.product.version;
+        this.product.price = Number.parseFloat(this.product.price.toFixed(1));
+        console.log(this.product);
         if (this.DescriptionTab) {
           this.DescriptionTab.innerHTML = this.product.details;
+
         }
-        this.product.price = Number.parseFloat(this.product.price.toFixed(1));
+
+
+
         this.owner = data.seller;
         this.getSellerTotalProductCount(this.owner.id);
         this.getProfileImage();
@@ -382,12 +413,24 @@ export class ApprovalProductDetailsComponent implements OnInit {
           for (let i = 0; i < this.product.previewPictures.length; i++) {
             var a = DisplayPreview.fromPreview(this.product.previewPictures[i]);
             this.displayPreviews.push(a);
-            console.log(a);
-          }
 
+          }
+        console.log(this.displayPreviews);
         if (this.BlackThumbs.length > 0)
           this.BlackThumbs.item(0)?.setAttribute("style", "border-radius: 4px; position: absolute; top: 0; right: 9px; bottom: 0; left: 0; background: #000; opacity: 0;");
 
+        if (this.product.previewVideo == null && this.product.previewPictures.length == 0) {
+          var dum: DisplayPreview = new DisplayPreview;
+          var dumPreview = new Preview;
+          dumPreview.id = -1;
+          dumPreview.type = "picture";
+          dumPreview.source = "https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty.jpg";
+          dum.preview = dumPreview;
+          dum.thumb = "https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty.jpg";
+          this.displayPreviews.push(dum);
+        }
+
+        this.currentPreview = this.displayPreviews[0];
       },
       error => {
         console.log(error);

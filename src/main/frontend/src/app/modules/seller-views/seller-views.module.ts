@@ -20,11 +20,15 @@ import { DecimalPipe } from '@angular/common';
 import { PayoutHistoryComponent } from './payout-history/payout-history.component';
 import { CommonViewsModule } from "../common-views/common-views.module";
 import { NgxPaginationModule } from 'ngx-pagination';
+import { ApplyLicenseComponent } from './update-product/apply-license/apply-license.component';
+import { ConfirmComponent } from './update-product/apply-license/confirm/confirm.component';
 
 @NgModule({
     declarations: [
         UpdateProductComponent,
-        PayoutHistoryComponent
+        PayoutHistoryComponent,
+        ApplyLicenseComponent,
+        ConfirmComponent
     ],
     providers: [SellerGuardGuard, DecimalPipe],
     imports: [
