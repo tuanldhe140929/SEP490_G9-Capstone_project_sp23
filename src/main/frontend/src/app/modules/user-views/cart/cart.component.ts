@@ -112,6 +112,7 @@ export class CartComponent implements OnInit {
         continueButton.disabled = true;
       } else {
         continueButton.disabled = false;
+        
       }
     });
     
