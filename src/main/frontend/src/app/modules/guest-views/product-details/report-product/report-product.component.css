@@ -338,3 +338,10 @@ a:hover {
     margin: 6px 0;
     cursor: pointer;
   }
+button{
+    min-width:75px;
+}
+  button:active {
+    box-shadow: 0 1px #666;
+    transform: translateY(3px);
+  }
