@@ -162,10 +162,13 @@ export class ProfileComponent implements OnInit {
 		this.router.navigate(['becomeSeller']);
 	}
 
-	viewPayouts() {
-		this.router.navigate(['payout']);
-	}
-	viewPurchased() {
-		this.router.navigate(['purchased']);
-	}
+
+  viewPayouts() {
+    this.router.navigate(['payout']);
+  }
+  viewPurchased() {
+    this.router.navigate(['purchased']);
+  }
+
+
 }

@@ -71,7 +71,9 @@ public class SecurityConfig {
 			"private/manageTag/tags",
 			"/user/getAllUsers",
 			"/public/serveMedia/serveProfileImage",
-			"/productDetails/getLastestUpdatedProductForHomePage"
+			"/productDetails/getLastestUpdatedProductForHomePage",
+			"/private/manageTag/tags",
+			"/product/getLicenseByProductId"
 			};
 	
 	private String[] userApis= {

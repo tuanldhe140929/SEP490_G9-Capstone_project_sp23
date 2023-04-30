@@ -39,7 +39,7 @@
                 </div>
                 <div class="col-lg-2 col-sm-4 col-6">
                   <div class="price-wrap lh-sm">
-                    <var class="price h6">Price ${{cartitem.product.price}}</var>  <br>
+                    <var class="price h6">Price ${{cartitem.product.price}} (~{{cartitem.product.price * convertRate}}VND)</var>  <br>
                  
                   </div> <!-- price-wrap .// -->
 
@@ -68,16 +68,16 @@
           <div class="card-body">
             <dl class="dlist-align">
               <dt style="">Giỏ hàng:</dt>
-              <dd class="text-end text-dark h5"> {{TotalPrice}}$ </dd>
+              <dd class="text-end text-dark h5"> ${{TotalPrice}} (~${{TotalPriceVND}}VND)</dd>
             </dl>
             <dl class="dlist-align">
               <dt>Phí:</dt>
-              <dd class="text-end text-dark h5"> {{Fee}}$ </dd>
+              <dd class="text-end text-dark h5"> ${{Fee}} (~${{FeeVND}}VND)</dd>
             </dl>
             <hr>
             <dl class="dlist-align">
               <dt>Tổng tiền:</dt>
-              <dd class="text-end text-dark h5"> {{LastPrice}}$ </dd>
+              <dd class="text-end text-dark h5"> ${{LastPrice}} (~${{LastPriceVND}}VND)</dd>
             </dl>
             <div class="d-grid gap-2 my-3">
               <a button (click)="showPopups()" class="btn w-100 buyBtn"> Thanh toán  </a>

@@ -6,6 +6,7 @@ import { CartItem } from 'src/app/dtos/CartItem';
 import { Product } from 'src/app/dtos/Product';
 import { Transaction, TransactionStatus } from 'src/app/dtos/Transaction';
 import { CartService } from 'src/app/services/cart.service';
+import { ProductService } from 'src/app/services/product.service';
 import { TransactionService } from 'src/app/services/transaction.service';
 
 @Component({
@@ -27,13 +28,16 @@ export class CartComponent implements OnInit {
   transaction: Transaction = new Transaction;
   updated: Change[] = [];
   removed: Change[] = [];
+  convertRate: number;
   constructor(private cartService: CartService,
     private transactionService: TransactionService,
     private modalService: NgbModal,
-    private router: Router) {
+    private router: Router,
+    private productService: ProductService) {
 
   }
   ngOnInit(): void {
+    this.getVNDPrice();
     this.getAllCartItem();
   }
   public getAllCartItem() {
@@ -203,8 +207,11 @@ export class CartComponent implements OnInit {
 
 
   get TotalPrice() {
-
     return this.cart.totalPrice.toFixed(2);
+  }
+
+  get TotalPriceVND(){
+    return Number(this.cart.totalPrice.toFixed(2)) * this.convertRate;
   }
   openInfoModal() {
     this.modalService.open(this.infoModal, { centered: true });
@@ -227,9 +234,28 @@ export class CartComponent implements OnInit {
     return fee.toFixed(2);
   }
 
+  get FeeVND(){
+    const fee = Number.parseFloat(this.TotalPrice)*this.convertRate / 10;
+    return fee.toFixed(2);
+  }
+
   get LastPrice() {
     const lastPrice = Number.parseFloat(this.Fee) + Number.parseFloat(this.TotalPrice);
     return lastPrice.toFixed(2);
   }
   
+  get LastPriceVND() {
+    const lastPrice = (Number.parseFloat(this.Fee) + Number.parseFloat(this.TotalPrice))* this.convertRate;
+    return lastPrice.toFixed(2);
+  }
+
+  getVNDPrice(){
+    this.productService.getVNDRate().subscribe(
+      data => {
+        const convertData = data;
+        this.convertRate  = Number(convertData.conversion_rate);
+      }
+    )
+  }
+
 }

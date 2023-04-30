@@ -76,6 +76,7 @@ export class ProductDetailsComponent implements OnInit {
   report: Report;
   dots: number[] = [0];
   isOwner: boolean;
+  convertRate: number;
 
   displayPreviews: DisplayPreview[] = [];
   constructor(private activatedRoute: ActivatedRoute,
@@ -97,7 +98,7 @@ export class ProductDetailsComponent implements OnInit {
 
 
     // this.getProduct();
-
+    this.getVNDPrice();
     // tôi đang có việc cần phải cho hẳn vào đây
     var productIdAndName = this.activatedRoute.snapshot.paramMap.get('productId');
     if (productIdAndName) {
@@ -112,7 +113,7 @@ export class ProductDetailsComponent implements OnInit {
         data => {
           this.product = data;
           this.version = this.product.version;
-          this.product.price = Number.parseFloat(this.product.price.toFixed(1));
+          this.product.price = Number.parseFloat(this.product.price.toFixed(2));
           console.log(this.product);
           if (this.DescriptionTab) {
             this.DescriptionTab.innerHTML = this.product.details;
@@ -471,10 +472,11 @@ export class ProductDetailsComponent implements OnInit {
         this.router.navigate(['cart']);
       },
       (err) => {
-        console.log(err);
-        // Error, show an error message to the user
-        // this.toastr.error('Đã có lỗi xảy ra, vui lòng thử lại sau.')
-        alert('Đã có lỗi xảy ra, vui lòng thử lại sau.');
+        if (err.error.messages.includes('Cart already has item')) {
+          this.router.navigate(['cart']);
+        } else {
+          console.log(err);
+        }
       }
     );
   }
@@ -483,6 +485,15 @@ export class ProductDetailsComponent implements OnInit {
     this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
       this.router.navigate(['category/'+categoryId]);
     })
+  }
+
+  getVNDPrice(){
+    this.productService.getVNDRate().subscribe(
+      data => {
+        const convertData = data;
+        this.convertRate  = Number(convertData.conversion_rate);
+      }
+    )
   }
 }
 
