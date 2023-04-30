@@ -348,8 +348,6 @@ public class ProductFileServiceImpl implements ProductFileService {
 		ZipOutputStream zos = new ZipOutputStream(baos);
 
 		try {
-			ZipEntry zipEntry = new ZipEntry(activeVersion.getName());
-			zos.putNextEntry(zipEntry);
 			for (File file : productFiles) {
 				ZipEntry entry = new ZipEntry(file.getName());
 				zos.putNextEntry(entry);
@@ -361,6 +359,7 @@ public class ProductFileServiceImpl implements ProductFileService {
 				}
 				fis.close();
 				zos.closeEntry();
+				System.out.println("Added file " + file.getName() + " (" + file.length() + " bytes) to zip archive");
 			}
 		} catch (IOException e) {
 
