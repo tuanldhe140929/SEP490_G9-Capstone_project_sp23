@@ -110,7 +110,7 @@
             </div>
           </div>
 
-          <div class="mb-3">
+          <div class="mb-3" style="margin-top: 12px;">
             <var class="price h5" style="color: #212529; font-size: 28px; font-weight: 600; line-height: 1.2; ">${{Price}}</var>
 
           </div>
@@ -125,13 +125,19 @@
             </div>
             <div class="row metadata_details" style="margin-top:10px;">
               <div class="col-5"><label>Phân loại</label></div>
-              <div class="col-7"><a class="details_value">{{product.category.name}}</a></div>
+              <div class="col-7 cateSen">
+                <a class="details_value">{{product.category.name}}</a>
+                <span id="cate">{{product.category.description}}</span>
+              </div>
             </div>
             <div class="row metadata_details">
               <div class="col-5" style="display: flex; align-items: center; "><label>Nhãn</label></div>
-              <div class="col-7" style="display:flex;">
-                <div class="tags" *ngFor="let tag of product.tags" style="width: auto; ">
-                  <a style="cursor: pointer; text-decoration: none; color: white; background-color: #FF2449;">{{tag.name}}</a>
+              <div class="col-7 tagSen">
+                <i class="tagSen"><img src="assets/images/61099.png" style="height:17px;" /></i>
+                <div class="pTags">
+                  <div *ngFor="let tag of product.tags" class="t">
+                    {{tag.name}}
+                  </div>
                 </div>
               </div>
             </div>

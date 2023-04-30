@@ -170,4 +170,5 @@ export class ProfileComponent implements OnInit {
   viewPurchased() {
     this.router.navigate(['purchased']);
   }
+
 }
