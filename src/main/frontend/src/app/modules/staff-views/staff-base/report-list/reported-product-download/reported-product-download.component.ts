@@ -64,7 +64,7 @@ export class ReportedProductDownloadComponent implements OnInit{
   }
 
   download() {
-    this.productFileService.download(this.data.productId, this.token).subscribe(
+    this.productFileService.downloadForStaff(this.data.productId, this.data.version).subscribe(
       response => {
         console.log(response);
 

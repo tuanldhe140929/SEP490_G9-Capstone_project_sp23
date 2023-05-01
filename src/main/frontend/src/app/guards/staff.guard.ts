@@ -20,7 +20,7 @@ export class StaffGuard implements CanActivate {
         if(authResponse.roles.includes('ROLE_STAFF')){
           return true;
         }else{
-          this.router.navigate(['login']);
+          this.router.navigate(['unauthorized']);
         }
       }
       return false;
