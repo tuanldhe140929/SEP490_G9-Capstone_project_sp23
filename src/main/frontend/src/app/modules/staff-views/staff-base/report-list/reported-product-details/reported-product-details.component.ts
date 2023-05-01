@@ -450,7 +450,8 @@ export class ReportedProductDetailsComponent implements OnInit {
     var count = 0;
     for (let i = 0; i < this.product.files.length; i++) {
       var pf = this.product.files[i];
-      if (pf.enabled) {
+      if ((pf.enabled && pf.reviewed && !pf.newUploaded) ||
+        !pf.enabled && !pf.reviewed && !pf.newUploaded) {
         count++;
       }
     }
