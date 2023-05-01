@@ -184,7 +184,11 @@ export class ProductDetailsComponent implements OnInit {
           );
         },
         error => {
-          this.router.navigate(['error']);
+          if (error.status === 403) {
+            this.router.navigate(['unauthorized']);
+          } else {
+            this.router.navigate(['error']);
+          }
         })
     }
   }
@@ -406,9 +410,19 @@ export class ProductDetailsComponent implements OnInit {
       },
       (err) => {
         console.log(err);
-        // Error, show an error message to the user
-         this.toastr.error('Đã có lỗi xảy ra, vui lòng thử lại sau.')
-        
+        if (err.error.messages.includes('Cart already has item')) {
+          this.toastr.error('Sản phẩm đã có trong giỏ hàng')
+        } else if (err.error.messages.includes('Exeeded max number of items')) {
+          this.toastr.error('Giỏ hàng chỉ có thể chứa tối đa 10 sản phẩm')
+        } else if (err.error.messages.includes('Cart already has item')) {
+          this.toastr.error('Bạn đã sở hữu sản phẩm này')
+        } else if (err.error.messages.includes('Cannot add your own product')) {
+          this.toastr.error('Sản phẩm này là của bạn')
+        } else if (err.error.messages.includes('Cannot add your own product')) {
+          this.toastr.error('Sản phẩm này là của bạn')
+        } else {
+          this.toastr.error('Sản phẩm này không còn khả dụng')
+        }
       }
     );
   }
