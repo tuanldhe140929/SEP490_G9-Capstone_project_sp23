@@ -345,7 +345,7 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 	@Override
 	public ProductDetails getByProductIdAndVersion(Long productId, String version) {
 		ProductDetails ret = productDetailsRepo.findByProductIdAndProductVersionKeyVersion(productId, version);
-		if (ret == null) {
+		if (ret == null || !ret.getProduct().isEnabled()) {
 			throw new ResourceNotFoundException("product", "id and version", productId + " " + version);
 		}
 		return ret;
@@ -573,7 +573,7 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 			for (Report report : allReports) {
 				Product product = report.getProduct();
 				if (report.getStatus().equals("PENDING")
-						&& report.getVersion().equalsIgnoreCase(product.getActiveVersion())) {
+						&& report.getVersion().equalsIgnoreCase(product.getActiveVersion()) && product.isEnabled()) {
 					ProductDetails pd = getByProductIdAndVersion(report.getProduct().getId(), report.getVersion());
 					result.add(pd);
 				}
@@ -596,13 +596,14 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		List<ProductDetails> allPd = getAll();
 		List<ProductDetails> allStatusPd = new ArrayList<>();
 		for (ProductDetails pd : allPd) {
+			Product product = pd.getProduct();
 			if (status.equalsIgnoreCase("APPROVED") && pd.getApproved().equals(Status.APPROVED)) {
 				allStatusPd.add(pd);
 			}
 			if (status.equalsIgnoreCase("REJECTED") && pd.getApproved().equals(Status.REJECTED)) {
 				allStatusPd.add(pd);
 			}
-			if (status.equalsIgnoreCase("PENDING") && pd.getApproved().equals(Status.PENDING)) {
+			if (status.equalsIgnoreCase("PENDING") && pd.getApproved().equals(Status.PENDING) && product.isEnabled()) {
 				allStatusPd.add(pd);
 			}
 			if (status.equalsIgnoreCase("NEW") && pd.getApproved().equals(Status.NEW)) {

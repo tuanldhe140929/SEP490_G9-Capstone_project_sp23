@@ -1,12 +1,15 @@
-<h1>Danh sách các sản phẩm bị báo cáo</h1>
+<h1 style="text-align: center;">Danh sách các sản phẩm bị báo cáo</h1>
+
+<select (change)="onChangeStatus($event)" class="classification_picker_body" [(ngModel)]="selectedOption">
+  <option value="PENDING">Đang chờ xem xét</option>
+  <option value="HANDLED">Đã được xử lý</option>
+</select>
+
 <mat-form-field>
   <mat-label>Bộ lọc</mat-label>
   <input matInput (keyup)="applyFilter($event)" #input>
 </mat-form-field>
-<select (change)="onChangeStatus($event)" [(ngModel)]="selectedOption">
-  <option value="PENDING">Đang chờ xem xét</option>
-  <option value="HANDLED">Đã được xử lý</option>
-</select>
+
 <div class="mat-elevation-z8">
   <table mat-table [dataSource]="dataSource" matSort>
 
@@ -29,7 +32,7 @@
 
     <ng-container matColumnDef="Chi tiết">
         <th mat-header-cell *matHeaderCellDef> Chi tiết </th>
-        <td mat-cell *matCellDef="let row"> <button class="btn btn-success" (click)="openDetails(row.id, row.version)">Mở</button> </td>
+        <td mat-cell *matCellDef="let row"> <button class="actionButton" (click)="openDetails(row.id, row.version)">Mở</button> </td>
       </ng-container>
 
       

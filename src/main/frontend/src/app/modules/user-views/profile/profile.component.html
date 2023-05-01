@@ -11,7 +11,7 @@
     <div class="row">
       <div class="col-sm-3" style="border-right: 1px solid #dee2e6">
         <div class="text-center">
-          <img src="" class="avatar img-circle img-thumbnail" alt="avatar" id="Image">
+          <img  src="" class="avatar img-circle img-thumbnail" alt="avatar" id="Image">
           <button class="uploadBtn" (click)="uploadavatar.click()">Chọn ảnh</button>
           <input id="uploadavatar" #uploadavatar type="file" class="file-upload" (change)="UploadProfileImage($event)" hidden>
         </div>
@@ -26,12 +26,11 @@
           <button class="actionBtn" (click)="UpdateInfo()">Cập nhật thông tin</button>
 
           <button class="actionBtn" (click)="changePassword()">Đổi mật khẩu <i class="fa-sharp fa-solid fa-arrow-right" style="color: #262626;"></i></button>
-
-          <button class="actionBtn" (click)="becomeSeller()">Trở thành người bán <i class="fa-sharp fa-solid fa-arrow-right" style="color: #262626;"></i></button>
-
           <button class="actionBtn" (click)="viewPurchased()">Sản phẩm đã mua <i class="fa-sharp fa-solid fa-arrow-right" style="color: #262626;"></i></button>
 
           <button *ngIf="isSeller()" class="actionBtn" (click)="viewPayouts()">Lịch sử bán hàng <i class="fa-sharp fa-solid fa-arrow-right" style="color: #262626;"></i></button>
+          <button class="actionBtn" *ngIf="!isSeller()" (click)="becomeSeller()">Trở thành người bán <i class="fa-sharp fa-solid fa-arrow-right" style="color: #262626;"></i></button>
+
         </div>
       </div><!--/col-3-->
       <div class="col-sm-9">
@@ -102,6 +101,26 @@
     </div>
   </div>
 </div>
+
+<ng-template #fileSizeErrorModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" style="color:red">Lỗi</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="dismissError()"></button>
+  </div>
+  <div class="modal-body">
+    <small style="color:red;">{{fileError}}<br /></small>
+  </div>
+</ng-template>
+
+<ng-template #notAcceptFormatModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" style="color:red">Lỗi</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="dismissError()"></button>
+  </div>
+  <div class="modal-body">
+    <small style="color:red;">{{fileFormatError}}<br /></small>
+  </div>
+</ng-template>
 
 <app-footer></app-footer>
 

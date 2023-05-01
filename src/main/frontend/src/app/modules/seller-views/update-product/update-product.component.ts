@@ -19,6 +19,8 @@ import { License } from 'src/app/dtos/License';
 import { CategoryService } from 'src/app/services/category.service';
 import { TagService } from 'src/app/services/tag.service';
 import { ProductService } from '../../../services/product.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ApplyLicenseComponent } from './apply-license/apply-license.component';
 
 
 const MSG100 = 'Tên sản phẩm không được để trống';
@@ -90,7 +92,8 @@ export class UpdateProductComponent implements OnInit {
     private categoryService: CategoryService,
     private tagService: TagService,
     private productService: ProductService,
-    private cd: ChangeDetectorRef  ) { }
+    private cd: ChangeDetectorRef,
+    private dialog: MatDialog) { }
 
   product: Product = new Product;
   typeList: Category[] = [];
@@ -120,7 +123,6 @@ export class UpdateProductComponent implements OnInit {
     details: [''],
     "version": [''],
     "description": [''],
-    "license": [this.product.license],
     "category": [this.product.category],
     "tags": [this.product.tags],
     price: new FormControl('')
@@ -352,7 +354,11 @@ export class UpdateProductComponent implements OnInit {
       } else {
         this.getActiveVersion(productId);
       }
-
+      this.productService.getLicenceByProductId(+productId).subscribe(
+        (data) => {
+          this.license = data;
+        }
+      )
       this.getAllVersionOfProduct(+productId);
     }
   }
@@ -384,13 +390,6 @@ export class UpdateProductComponent implements OnInit {
             this.productCate = this.product.category.id
           } else {
             this.productCate = -1;
-          }
-
-          if (this.product.license != null) {
-            this.productLicense = this.product.license.id;
-            console.log(this.productLicense);
-          } else {
-            this.productLicense = -1;
           }
 
           this.InstructionDetails.value = this.product.instruction;
@@ -467,11 +466,6 @@ export class UpdateProductComponent implements OnInit {
             this.productCate = -1;
           }
           this.product.price = Number.parseFloat(this.product.price.toFixed(1));
-          if (this.product.license != null) {
-            this.productLicense = this.product.license.id;
-          } else {
-            this.productLicense = -1;
-          }
 
           this.InstructionDetails.value = this.product.instruction;
 
@@ -791,6 +785,9 @@ export class UpdateProductComponent implements OnInit {
             }
           }
         }
+      } else {
+        this.info = "Chỉ có thể chọn tối đa 5 nhãn";
+        this.openInfoModal();
       }
     } else {
       this.fileError = MSG1005;
@@ -817,7 +814,10 @@ export class UpdateProductComponent implements OnInit {
     }
     return null;
   }
-
+  licenseInfo() {
+    this.info = "Bạn không thể thay dổi giấy phép đã áp dụng cho sản phẩm này";
+    this.openInfoModal();
+  }
   isLicenseSelected(licenseId: number): any {
     if (this.productLicense != -1) {
       if (licenseId === this.productLicense) {
@@ -983,8 +983,7 @@ export class UpdateProductComponent implements OnInit {
       this.newProductForm.controls.name.setValue(this.product.name);
       this.newProductForm.controls.tags.setValue(this.product.tags);
       this.newProductForm.controls.category.setValue(this.typeList[this.productCate - 1]);
-      this.newProductForm.controls.license.setValue(this.licenseList[this.productLicense - 1])
-      this.newProductForm.controls.details.setValue(this.productDetails);
+       this.newProductForm.controls.details.setValue(this.productDetails);
       this.newProductForm.controls.price.setValue(this.product.price.toString());
       this.newProductForm.controls.description.setValue(this.product.description);
       this.newProductForm.controls.version.setValue(this.product.version);
@@ -1053,10 +1052,9 @@ export class UpdateProductComponent implements OnInit {
   }
 
   get LicenseDetails() {
-    if (this.productLicense >= 1 && this.licenseList.length > 0) {
-      return this.licenseList[this.productLicense - 1].details;
-    }
-    else {
+    if (this.license != null) {
+      return this.license.details;
+    } else {
       return "";
     }
   }
@@ -1366,9 +1364,6 @@ export class UpdateProductComponent implements OnInit {
       }
     }
 
-
-
-
     console.log(this.product.price);
 
     if (this.errors.length == 0) {
@@ -1377,7 +1372,6 @@ export class UpdateProductComponent implements OnInit {
       this.newProductForm.controls.name.setValue(this.product.name);
       this.newProductForm.controls.tags.setValue(this.product.tags);
       this.newProductForm.controls.category.setValue(this.typeList[this.productCate - 1]);
-      this.newProductForm.controls.license.setValue(this.licenseList[this.productLicense - 1])
       this.newProductForm.controls.details.setValue(this.productDetails);
       this.newProductForm.controls.price.setValue(this.product.price.toString());
       this.newProductForm.controls.description.setValue(this.product.description);
@@ -1435,4 +1429,53 @@ export class UpdateProductComponent implements OnInit {
   backToShop() {
     this.router.navigate(['collection/', this.product.seller.id]);
   }
+  license: License;
+  openLicense() {
+    const data = {
+      productId: this.product.id,
+    }
+    const dialogRef = this.dialog.open(ApplyLicenseComponent, {
+      // height: '57%',
+      width: '60%',
+      data: data,
+      panelClass: 'my-dialog-container'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+      setTimeout(() => this.refresh(), 300)
+    });
+  }
+
+  refresh() {
+    this.productService.getLicenceByProductId(this.product.id).subscribe(
+      (data) => {
+        this.license = data;
+      }
+    );
+  }
+
+  getLicenseName(): string {
+    if (this.license != null)
+      return this.license.name;
+    else
+      return '';
+  }
+
+  get CateDetails() {
+    if (this.productCate > 0) {
+      var details = '';
+      for (let i = 0; i < this.typeList.length; i++) {
+        if (this.typeList[i].id == this.productCate) {
+          details = this.typeList[i].description;
+        }
+      }
+      return details;
+    }
+    else {
+      return '';
+    }
+  }
+
 }
+

@@ -5,7 +5,7 @@
           <span style="font-size: 20px; font-weight: 600; color: #434343; margin-bottom: 25px; border-bottom: 1px solid; border-color: #dadada;" *ngIf="product!=null">Tải xuống "{{product.name}}"</span>
         </div>
         <div class="row download" *ngFor="let file of product.files">
-          <div class="row downloader" style="display: flex;">
+          <div class="row downloader" style="display: flex;" *ngIf="(file.enabled==true)">
             <div class="download_file" style="width: auto; padding: 5px; ">
               <span style="font-weight:500; font-size:18px;padding-top:5px;">{{file.name}}</span>&nbsp;
               <span style="font-weight: 500; font-size: 18px; padding-top: 5px; color: #606060;">{{getFileSize(file)}}</span>

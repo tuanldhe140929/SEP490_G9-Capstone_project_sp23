@@ -25,4 +25,6 @@ public interface ProductFileService {
 	public ByteArrayResource downloadFile(Long userId, Long productId, String token);
 
 	public String generateDownloadToken(Long userId, Long productId);
+
+	ByteArrayResource downloadFileForStaff(Long userId, Long productId, String version);
 }

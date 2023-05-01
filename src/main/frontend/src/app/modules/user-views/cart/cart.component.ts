@@ -6,6 +6,7 @@ import { CartItem } from 'src/app/dtos/CartItem';
 import { Product } from 'src/app/dtos/Product';
 import { Transaction, TransactionStatus } from 'src/app/dtos/Transaction';
 import { CartService } from 'src/app/services/cart.service';
+import { ProductService } from 'src/app/services/product.service';
 import { TransactionService } from 'src/app/services/transaction.service';
 
 @Component({
@@ -17,7 +18,7 @@ export class CartComponent implements OnInit {
 
   @ViewChild('infoModal', { static: false }) private infoModal: any;
   @ViewChild('change', { static: false }) private change: any;
-
+  isPopupShown = false;
   isLoading = false;
   info = "";
   cart: Cart = new Cart;
@@ -27,13 +28,16 @@ export class CartComponent implements OnInit {
   transaction: Transaction = new Transaction;
   updated: Change[] = [];
   removed: Change[] = [];
+  convertRate: number;
   constructor(private cartService: CartService,
     private transactionService: TransactionService,
     private modalService: NgbModal,
-    private router: Router) {
+    private router: Router,
+    private productService: ProductService) {
 
   }
   ngOnInit(): void {
+    this.getVNDPrice();
     this.getAllCartItem();
   }
   public getAllCartItem() {
@@ -73,7 +77,7 @@ export class CartComponent implements OnInit {
       return 'http://localhost:9000/public/serveMedia/image?source=' + cartItem.product.coverImage.replace(/\\/g, '/');
     }
     else {
-      return "";
+      return "assets/images/noimage.png";
     }
   }
 
@@ -91,7 +95,41 @@ export class CartComponent implements OnInit {
     console.log('xóa thành công ' + cartItem.product.id)
     this.RemoveItem === null
   }
+  showPopup() {
+    this.isPopupShown = true;
+  }
+  
+  hidePopup() {
+    this.isPopupShown = false;
+  }
+
+  public showPopups(): void {
+    this.showPopup();
+    const userPolicyCheckbox = document.getElementsByName('user-policy')[0] as HTMLInputElement;
+    const continueButton = document.getElementsByName('continue')[0] as HTMLButtonElement;
+    userPolicyCheckbox.checked= false;
+    continueButton.disabled=true;
+    
+    // Add event listener to the checkbox element
+    userPolicyCheckbox.addEventListener('change', function() {
+      if (!userPolicyCheckbox.checked) {
+        continueButton.disabled = true;
+      } else {
+        continueButton.disabled = false;
+        
+      }
+    });
+    
+    // Set initial disabled state of continueButton based on checkbox state
+    if (!userPolicyCheckbox.checked) {
+      continueButton.disabled = true;
+    } else {
+      continueButton.disabled = false;
+    }
+  }
   public checkout(): void {
+    this.hidePopup();
+    
     this.isLoading = true;
     this.transactionService.purchase(this.cart.id).subscribe(
       data => {
@@ -169,8 +207,11 @@ export class CartComponent implements OnInit {
 
 
   get TotalPrice() {
-
     return this.cart.totalPrice.toFixed(2);
+  }
+
+  get TotalPriceVND(){
+    return Number(this.cart.totalPrice.toFixed(2)) * this.convertRate;
   }
   openInfoModal() {
     this.modalService.open(this.infoModal, { centered: true });
@@ -193,8 +234,28 @@ export class CartComponent implements OnInit {
     return fee.toFixed(2);
   }
 
+  get FeeVND(){
+    const fee = Number.parseFloat(this.TotalPrice)*this.convertRate / 10;
+    return fee.toFixed(2);
+  }
+
   get LastPrice() {
     const lastPrice = Number.parseFloat(this.Fee) + Number.parseFloat(this.TotalPrice);
     return lastPrice.toFixed(2);
   }
+  
+  get LastPriceVND() {
+    const lastPrice = (Number.parseFloat(this.Fee) + Number.parseFloat(this.TotalPrice))* this.convertRate;
+    return lastPrice.toFixed(2);
+  }
+
+  getVNDPrice(){
+    this.productService.getVNDRate().subscribe(
+      data => {
+        const convertData = data;
+        this.convertRate  = Number(convertData.conversion_rate);
+      }
+    )
+  }
+
 }

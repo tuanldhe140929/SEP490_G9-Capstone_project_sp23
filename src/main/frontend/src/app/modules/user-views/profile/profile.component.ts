@@ -2,29 +2,36 @@ import { AppComponent } from 'src/app/app.component';
 import { HttpClient } from '@angular/common/http';
 import { AuthResponse } from 'src/app/dtos/AuthResponse';
 import { FormBuilder, Validators } from '@angular/forms';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { User } from 'src/app/dtos/User';
 import { StorageService } from 'src/app/services/storage.service';
 import { UserService } from 'src/app/services/user.service';
 import { Role } from 'src/app/dtos/Role';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
+const MSG105 = 'Định dạng này không được hỗ trợ';
 
-
+const IMAGE_EXTENSIONS = ['image/png', 'image/jpeg', 'image/svg+xml'];
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
+  @ViewChild('notAcceptFormatModal', { static: false }) private notAcceptFormatModal: any;
+  @ViewChild('fileSizeErrorModal', { static: false }) private fileSizeErrorModal: any;
 
   authResponse: AuthResponse = new AuthResponse();
   user: User = new User();
+  fileError = "";
   constructor(private FormBuilder: FormBuilder,
     private httpClient: HttpClient,
     private app: AppComponent,
     private storageService: StorageService,
+    private modalService: NgbModal,
+    private cd: ChangeDetectorRef,
     private userService: UserService,
     private router: Router) {
 
@@ -36,9 +43,9 @@ export class ProfileComponent implements OnInit {
   }
 
   public Profileform = this.FormBuilder.group({
-    "newFirstName": ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
+    "newFirstName": ['', [Validators.required, Validators.minLength(1), Validators.maxLength(50)]],
     "newUsername": ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
-    "newLastName": ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]]
+    "newLastName": ['', [Validators.required, Validators.minLength(1), Validators.maxLength(50)]]
   });
 
   get Form() {
@@ -116,23 +123,34 @@ export class ProfileComponent implements OnInit {
   get LastNameInput() {
     return document.getElementById('last_name') as HTMLInputElement;
   }
-
+  fileFormatError = MSG105;
   UploadProfileImage($event: any) {
     const file: File = $event.target.files[0];
+    if(file.name.length>100){
+      this.fileError = "Tên tệp từ 1 đến 100 kí tự";
+        this.openFileSizeErrorModal();
+        return;
+    }
     if (file) {
+      console.log(file.type);
+      if (!this.checkFileType(file.type, IMAGE_EXTENSIONS)) {
+        this.openFormatErrorModal();
+      }else{
       const formData = new FormData();
       formData.append("thumbnail", file);
       const upload$ = this.userService.uploadProfileImage(file).subscribe(
-        data => {
+        (data:string) => {
           this.user.avatar = data;
           console.log(data);
           this.ProfileImage.setAttribute('src',"" );
           this.ProfileImage.setAttribute('src',"http://localhost:9000/public/serveMedia/serveProfileImage?userId=" + this.user.id);
         },
-        error => {
-          console.log(error)
+        (error: any) => {
+          this.fileError = 'Tải lên hình ảnh không thành công';
+            this.openFileSizeErrorModal();
         }
       )
+      }
     }
   }
   isSeller(): boolean {
@@ -169,5 +187,21 @@ export class ProfileComponent implements OnInit {
   }
   viewPurchased() {
     this.router.navigate(['purchased']);
+  }
+  errors: string[] = [];
+  dismissError() {
+    this.errors = [];
+    this.cd.detectChanges();
+    this.modalService.dismissAll();
+  }
+  //Lien quan den upload avatar
+  openFileSizeErrorModal() {
+    this.modalService.open(this.fileSizeErrorModal, { centered: true });
+  }
+  checkFileType(fileType: string, acceptType: string[]): boolean {
+    return acceptType.includes(fileType);
+  }
+  openFormatErrorModal() {
+    this.modalService.open(this.notAcceptFormatModal, { centered: true });
   }
 }

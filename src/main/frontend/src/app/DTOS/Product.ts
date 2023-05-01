@@ -23,7 +23,6 @@ export class Product {
   instruction: string;
   createdDate: Date
   lastModified: Date
-  license: License;
   draft: boolean;
   engine:Engine;
   approved:Status;
@@ -46,7 +45,6 @@ export class Product {
     this.price = 0;
     this.seller = new Seller();
     this.category = new Category();
-    this.license = new License();
     this.files = [];
     this.activeVersion = '';
     this.tags = [];

@@ -46,6 +46,11 @@ public class Product implements Serializable {
 	
 	@Column(name="last_modified")
 	private Date lastModified;
+	
+	@ManyToOne
+	@JoinColumn(name = "license_id")
+	private License license;
+	
 	public Product() {
 	}
 
@@ -103,6 +108,14 @@ public class Product implements Serializable {
 
 	public String getActiveVersion() {
 		return activeVersion;
+	}
+
+	public License getLicense() {
+		return license;
+	}
+
+	public void setLicense(License license) {
+		this.license = license;
 	}
 
 	public void setActiveVersion(String activeVersion) {

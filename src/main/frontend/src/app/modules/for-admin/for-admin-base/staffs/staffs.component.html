@@ -1,6 +1,6 @@
 
-  <h1>Quản lý nhân viên</h1>
-<button class="btn btn-primary" (click)="openAddDialog(emailList)">Thêm nhân viên</button>
+  <h1 style="text-align: center;">Quản lý nhân viên</h1>
+<button class="addBtn" (click)="openAddDialog(emailList)" align="end">Thêm nhân viên</button>
 
   <mat-form-field>
     <mat-label>Bộ lọc</mat-label>
@@ -37,10 +37,10 @@
         <th mat-header-cell *matHeaderCellDef> Hành động </th>
         <td mat-cell *matCellDef="let row"> 
           <div *ngIf="row.enabled">
-            <button class="btn btn-danger" (click)="openUpdateDialog(row.id, row.email, row.enabled)">Tắt</button>
+            <button class="actionBtn" (click)="openUpdateDialog(row.id, row.email, row.enabled)">Tắt</button>
           </div>
           <div *ngIf="!row.enabled">
-            <button class="btn btn-success" (click)="openUpdateDialog(row.id, row.email, row.enabled)">Bật</button>
+            <button class="actionBtn" (click)="openUpdateDialog(row.id, row.email, row.enabled)">Bật</button>
           </div>
         </td>
       </ng-container>

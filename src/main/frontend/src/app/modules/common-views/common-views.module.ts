@@ -9,7 +9,11 @@ import { ErrorComponent } from './error/error.component';
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.component';
+
 import { ContactComponent } from './contact/contact.component';
+
+import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
+
 
 @NgModule({
   declarations: [
@@ -18,6 +22,7 @@ import { ContactComponent } from './contact/contact.component';
     FooterComponent,
     LoadingSpinnerComponent,
     ContactComponent,
+    UnauthorizedComponent,
   ],
   imports: [
     CommonModule,

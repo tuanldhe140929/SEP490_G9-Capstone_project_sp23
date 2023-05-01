@@ -42,7 +42,6 @@ public class ProductDetailsDTO {
 
 	private Date lastModified = new Date();
 
-	private License license;
 
 	private String activeVersion;
 
@@ -86,7 +85,7 @@ public class ProductDetailsDTO {
 		this.draft = productDetails.getProduct().isDraft();
 		this.price = productDetails.getPrice();
 		this.activeVersion = productDetails.getProduct().getActiveVersion();
-		this.license = productDetails.getLicense();
+
 		this.previewVideo = getPreviewVideoSource(productDetails);
 		this.previewPictures = getPreviewPicturesSource(productDetails);
 		this.seller = new SellerDTO(productDetails.getProduct().getSeller());
@@ -252,14 +251,6 @@ public class ProductDetailsDTO {
 
 	public void setActiveVersion(String activeVersion) {
 		this.activeVersion = activeVersion;
-	}
-
-	public License getLicense() {
-		return license;
-	}
-
-	public void setLicense(License license) {
-		this.license = license;
 	}
 
 	public List<Tag> getTags() {

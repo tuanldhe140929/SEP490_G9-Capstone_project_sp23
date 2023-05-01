@@ -1,6 +1,6 @@
 <div class="addFormContainer">
     <mat-dialog-content class="mat-typography">
-        <h2>Thêm nhân viên</h2>
+        <h2 class="row title">Thêm nhân viên</h2>
         <form [formGroup]="addStaffForm" (submit)="onAddStaff()">
             <div class="form-group">
                 <label>Email</label>
@@ -28,8 +28,8 @@
                     <ng-template #repasswordOkay><small>&nbsp;</small></ng-template>
             </div>
             <div class="form-group" align="end">
-                <button mat-dialog-close="true" class="btn btn-warning">Hủy</button>
-                <button type="submit" [mat-dialog-close]="true" [disabled]="addStaffForm.invalid||!onPasswordMatch()||checkEmailExists()" class="btn btn-success">Thêm</button>
+                <button mat-dialog-close="true" class="dismissBtn">Hủy</button>
+                <button type="submit" [mat-dialog-close]="true" [disabled]="addStaffForm.invalid||!onPasswordMatch()||checkEmailExists()" class="actionBtn">Thêm</button>
             </div>
         </form>
     </mat-dialog-content>

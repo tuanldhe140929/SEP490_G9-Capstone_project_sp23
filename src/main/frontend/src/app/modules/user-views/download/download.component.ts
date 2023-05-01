@@ -79,10 +79,6 @@ export class DownloadComponent implements OnInit {
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-
-
-
-
         //window.open(url); // open the URL in a new tab to initiate the download
       },
       error => {

@@ -20,7 +20,7 @@ export class AdminGuard implements CanActivate {
       if(authResponse.roles.includes('ROLE_ADMIN')){
         return true;
       }else{
-        this.router.navigate(['login']);
+        this.router.navigate(['unauthorized']);
       }
     }
     return false;

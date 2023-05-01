@@ -120,4 +120,17 @@ public class ProductFileController {
 				.contentType(MediaType.APPLICATION_OCTET_STREAM).contentLength(data.length).body(resource);
 	}
 
+	@GetMapping("downloadForStaff")
+	public ResponseEntity<ByteArrayResource> downloadProductForStaff(
+			@RequestParam(name = "productId", required = true) Long productId,
+			@RequestParam(name = "version", required = true) String version) {
+		Account account = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
+				.getAccount();
+
+		ByteArrayResource resource = productFileService.downloadFileForStaff(account.getId(), productId, version);
+		byte[] data = resource.getByteArray();
+		return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=product.zip")
+				.contentType(MediaType.APPLICATION_OCTET_STREAM).contentLength(data.length).body(resource);
+	}
+
 }

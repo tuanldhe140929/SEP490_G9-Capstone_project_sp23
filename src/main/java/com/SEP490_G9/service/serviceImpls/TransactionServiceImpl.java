@@ -173,6 +173,7 @@ public class TransactionServiceImpl implements TransactionService {
 				pending.setStatus(Status.CANCELED);
 				pending.setDescription("Canceled by transaction");
 				transactionRepo.save(pending);
+				payoutService.cancelPayout(pending.getId());
 			}
 		}
 		List<Change> changes = new ArrayList<>();

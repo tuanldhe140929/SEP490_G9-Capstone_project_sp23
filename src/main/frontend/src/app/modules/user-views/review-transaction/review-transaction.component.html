@@ -11,7 +11,7 @@
     <tbody>
       <tr *ngFor="let item of transaction.cart.items">
         <td>{{item.productDetails.name}}</td>
-        <td>{{item.price}}</td>
+        <td>{{item.price}} (~{{item.price * convertRate | number:'1.0-0'}}VND)</td>
       </tr>
       <tr>
         <td>Phí</td>
@@ -20,7 +20,7 @@
     </tbody>
   </table>
   <div class="total-amount">
-    Tổng: ${{total}}
+    Tổng: ${{total}} (~{{total * convertRate | number:'1.0-0'}})
   </div>
   <div class="" *ngIf="transaction.status==TransactionStatus.FAILED">
     Trạng thái giao dịch: Thất bại

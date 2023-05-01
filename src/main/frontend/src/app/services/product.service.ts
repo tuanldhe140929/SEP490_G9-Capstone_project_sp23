@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, Observable, of, throwError } from 'rxjs';
@@ -12,13 +12,19 @@ const baseUrlProduct = "http://localhost:9000/product";
   providedIn: 'root'
 })
 export class ProductService {
+  public applyLicense(productId: number, licenseId: number):Observable<boolean> {
+    return this.httpClient.get<boolean>(baseUrlProduct + '/applyLicense?productId=' + productId + '&licenseId=' + licenseId);
+  }
 
-  public getAllLicense():Observable<License[]>{
-    return this.httpClient.get<License[]>(baseUrlProduct+'/getLicense');
+  public getLicenceByProductId(productId: number): Observable<License> {
+    return this.httpClient.get<License>(baseUrlProduct + '/getLicenseByProductId?productId=' + productId);
+  }
+  public getAllLicense(): Observable<License[]> {
+    return this.httpClient.get<License[]>(baseUrlProduct + '/getLicense');
   }
 
   getTotalPurchasedCount(productId: number): Observable<number> {
-    return this.httpClient.get<number>(baseUrl + "/getTotalPurchasedCount?productId="+productId);
+    return this.httpClient.get<number>(baseUrl + "/getTotalPurchasedCount?productId=" + productId);
   }
   getProductByIdAndVersion(productId: number, version: string): Observable<Product> {
     return this.httpClient.post<Product>(baseUrl + '/getByIdAndVersion', null, {
@@ -43,10 +49,10 @@ export class ProductService {
     return this.httpClient.delete<boolean>(baseUrlProduct + "/deleteProduct/" + id);//.pipe(catchError(x => this.handleException(x)));
   }
   createNewProduct(sellerid: number): Observable<ProductDTO> {
-    return this.httpClient.post<ProductDTO>(baseUrlProduct+"/createNewProduct", null);
+    return this.httpClient.post<ProductDTO>(baseUrlProduct + "/createNewProduct", null);
   }
 
-  constructor(private httpClient: HttpClient,private router: Router) { }
+  constructor(private httpClient: HttpClient, private router: Router) { }
 
   public getProductById(productId: number): Observable<Product> {
     return this.httpClient.get<Product>(baseUrl + "/getActiveVersion", {
@@ -55,7 +61,14 @@ export class ProductService {
       }
     });
   }
-
+  public getProductByIdForStaff(productId: number, version: string): Observable<Product> {
+    return this.httpClient.post<Product>(baseUrl + "/getProductForStaff", null, {
+      params: {
+        productId: productId,
+        version: version
+      }
+    });
+  }
   public getProductByIdForDownload(productId: number): Observable<Product> {
     return this.httpClient.get<Product>(baseUrl + "/getActiveVersionForDownload", {
       params: {
@@ -71,84 +84,84 @@ export class ProductService {
       }
     });
   }
-  public GetProductDetails(sellerId: number): Observable<Product[]>{
-    return this.httpClient.get<Product[]>(baseUrl+"/getProductDetails",{
-      params:{
+  public GetProductDetails(sellerId: number): Observable<Product[]> {
+    return this.httpClient.get<Product[]>(baseUrl + "/getProductDetails", {
+      params: {
         sellerId: sellerId
       }
     })
   }
 
-  getAllProducts(): Observable<any>{
+  getAllProducts(): Observable<any> {
     return this.httpClient.get<any>(baseUrl + '/getAllProducts');
   }
 
-  getProductsByKeyword(keyword: string): Observable<any>{
+  getProductsByKeyword(keyword: string): Observable<any> {
     return this.httpClient.get<any>(baseUrl + "/getProductsByKeyword/" + keyword);
   }
 
-  getProductsForSearching(keyword: string, categoryid: number, tagidlist: number[], min: number, max: number): Observable<any>{
-    let params = new HttpParams().set('keyword', keyword).set('categoryid',categoryid).set('tagidlist',tagidlist.join(',')).set("min",min).set("max",max);
-    return this.httpClient.get<any>("http://localhost:9000/productDetails/getProductsForSearching", {params});
+  getProductsForSearching(keyword: string, categoryid: number, tagidlist: number[], min: number, max: number): Observable<any> {
+    let params = new HttpParams().set('keyword', keyword).set('categoryid', categoryid).set('tagidlist', tagidlist.join(',')).set("min", min).set("max", max);
+    return this.httpClient.get<any>("http://localhost:9000/productDetails/getProductsForSearching", { params });
   }
 
-  getProductsBySellerForSeller(sellerid: number, keyword: string,categoryid: number, tagidlist: number[], min: number, max: number): Observable<any>{
-    let params = new HttpParams().set('sellerid',sellerid).set('keyword', keyword).set('categoryid',categoryid).set('tagidlist',tagidlist.join(',')).set("min",min).set("max",max);
-    return this.httpClient.get<any>("http://localhost:9000/productDetails/getProductsBySellerForSeller", {params});
+  getProductsBySellerForSeller(sellerid: number, keyword: string, categoryid: number, tagidlist: number[], min: number, max: number): Observable<any> {
+    let params = new HttpParams().set('sellerid', sellerid).set('keyword', keyword).set('categoryid', categoryid).set('tagidlist', tagidlist.join(',')).set("min", min).set("max", max);
+    return this.httpClient.get<any>("http://localhost:9000/productDetails/getProductsBySellerForSeller", { params });
   }
 
-  getProductsBySellerForUser(sellerid: number, keyword: string,categoryid: number, tagidlist: number[], min: number, max: number): Observable<any>{
-    let params = new HttpParams().set('sellerid',sellerid).set('keyword', keyword).set('categoryid',categoryid).set('tagidlist',tagidlist.join(',')).set("min",min).set("max",max);
-    return this.httpClient.get<any>("http://localhost:9000/productDetails/getProductsBySellerForUser", {params});
+  getProductsBySellerForUser(sellerid: number, keyword: string, categoryid: number, tagidlist: number[], min: number, max: number): Observable<any> {
+    let params = new HttpParams().set('sellerid', sellerid).set('keyword', keyword).set('categoryid', categoryid).set('tagidlist', tagidlist.join(',')).set("min", min).set("max", max);
+    return this.httpClient.get<any>("http://localhost:9000/productDetails/getProductsBySellerForUser", { params });
   }
 
-  getProductsByReportStatus(status: string): Observable<any>{
+  getProductsByReportStatus(status: string): Observable<any> {
     const params = {
       status: status
     }
-    return this.httpClient.get<any>("http://localhost:9000/productDetails/getProductsByReportStatus", {params})
+    return this.httpClient.get<any>("http://localhost:9000/productDetails/getProductsByReportStatus", { params })
   }
 
-  getByApprovalStatus(status: string): Observable<any>{
+  getByApprovalStatus(status: string): Observable<any> {
     const params = {
       status: status
     }
-    return this.httpClient.get<any>("http://localhost:9000/productDetails/getByApprovalStatus",{params})
+    return this.httpClient.get<any>("http://localhost:9000/productDetails/getByApprovalStatus", { params })
   }
 
 
 
-  updateApprovalStatus(productId: number, version: string, status: string): Observable<any>{
+  updateApprovalStatus(productId: number, version: string, status: string): Observable<any> {
     const params = {
       productId: productId,
       version: version,
       status: status
     }
-    return this.httpClient.put<any>("http://localhost:9000/productDetails/updateApprovalStatus",null,{params});
+    return this.httpClient.put<any>("http://localhost:9000/productDetails/updateApprovalStatus", null, { params });
   }
 
-  getByIdAndVersion(productId: number, version: string): Observable<any>{
+  getByIdAndVersion(productId: number, version: string): Observable<any> {
     const params = {
       productId: productId,
       version: version
     }
-    return this.httpClient.post<any>("http://localhost:9000/productDetails/getByIdAndVersion",null,{params});
+    return this.httpClient.post<any>("http://localhost:9000/productDetails/getByIdAndVersion", null, { params });
   }
 
-  getAllProductsLatestVers(){
+  getAllProductsLatestVers() {
     return this.httpClient.get<any>("http://localhost:9000/productDetails/allProductsLatestVers");
   }
 
-  getActiveVersion(productId: number){
+  getActiveVersion(productId: number) {
     const params = {
       productId: productId
     }
-    return this.httpClient.get<any>("http://localhost:9000/productDetails/getActiveVersion",{params});
+    return this.httpClient.get<any>("http://localhost:9000/productDetails/getActiveVersion", { params });
   }
-  getAllProductForHome(){
+  getAllProductForHome() {
     return this.httpClient.get<any>("http://localhost:9000/productDetails/GetAllProductForHomePage");
   }
-  getLastestUpdatedProductForHomePage(){
+  getLastestUpdatedProductForHomePage() {
     return this.httpClient.get<any>("http://localhost:9000/productDetails/getLastestUpdatedProductForHomePage");
   }
 
@@ -163,7 +176,7 @@ export class ProductService {
     return throwError(err);
   }
 
-  public verifyProduct(id:number,version:string): Observable<Product> {
+  public verifyProduct(id: number, version: string): Observable<Product> {
     return this.httpClient.post<Product>(baseUrl + '/verifyProduct', null, {
       params: {
         productId: id,
@@ -181,10 +194,19 @@ export class ProductService {
     });
   }
 
-  public getCurrentVersion(productId: number): Observable<string>{
+  public getCurrentVersion(productId: number): Observable<string> {
     const params = {
       productId: productId
     }
-    return this.httpClient.get<string>(baseUrl+'/getCurrentVersion',{params});
+    return this.httpClient.get<string>(baseUrl + '/getCurrentVersion', { params });
+  }
+
+  public getVNDRate(): Observable<any>{
+    // var option: Object = {
+    //   headers: new HttpHeaders({
+    //     "apikey" : "Wq2SQjxvCfLjQsGkbLaPRPkcOJ0VysG5"
+    //   })
+    // }
+    return this.httpClient.get<any>("https://v6.exchangerate-api.com/v6/a18d0a6ce200fc9b0114abc8/pair/USD/VND/1");
   }
 }
