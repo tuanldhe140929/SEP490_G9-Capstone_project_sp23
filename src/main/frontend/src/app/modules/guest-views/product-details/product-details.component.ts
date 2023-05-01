@@ -117,11 +117,7 @@ export class ProductDetailsComponent implements OnInit {
           console.log(this.product);
           if (this.DescriptionTab) {
             this.DescriptionTab.innerHTML = this.product.details;
-
           }
-        
-      
-
           this.owner = data.seller;
           this.getSellerTotalProductCount(this.owner.id);
           this.getProfileImage();
