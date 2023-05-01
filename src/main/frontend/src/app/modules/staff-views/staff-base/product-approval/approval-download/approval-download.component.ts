@@ -41,7 +41,7 @@ export class ApprovalDownloadComponent implements OnInit {
     }
   }
   getProduct(productId: number) {
-    const getProductReq = this.productService.getProductById(productId);
+    const getProductReq = this.productService.getByIdAndVersion(this.data.productId, this.data.version);
     getProductReq.subscribe(
       (data) => {
         this.product = data;
@@ -65,7 +65,7 @@ export class ApprovalDownloadComponent implements OnInit {
   }
 
   download() {
-    this.productFileService.download(this.data.productId, this.token).subscribe(
+    this.productFileService.downloadForStaff(this.data.productId, this.data.version).subscribe(
       response => {
         console.log(response);
 

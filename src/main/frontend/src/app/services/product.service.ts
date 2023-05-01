@@ -61,7 +61,14 @@ export class ProductService {
       }
     });
   }
-
+  public getProductByIdForStaff(productId: number, version: string): Observable<Product> {
+    return this.httpClient.get<Product>(baseUrl + "/getProductForStaff", {
+      params: {
+        productId: productId,
+        version: version
+      }
+    });
+  }
   public getProductByIdForDownload(productId: number): Observable<Product> {
     return this.httpClient.get<Product>(baseUrl + "/getActiveVersionForDownload", {
       params: {

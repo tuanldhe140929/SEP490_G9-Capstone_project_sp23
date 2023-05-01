@@ -132,6 +132,14 @@ public class ProductDetailsController {
 		ProductDetailsDTO ret = new ProductDetailsDTO(productDetails);
 		return ResponseEntity.ok(ret);
 	}
+	
+	@PostMapping(value = "getProductForStaff")
+	public ResponseEntity<?> getproductForStaff(@RequestParam(name = "productId", required = true) Long productId,
+			@RequestParam(name = "version", required = true) String newVersion) {
+		ProductDetails productDetails = productDetailsService.getByProductIdAndVersion(productId, newVersion);
+		ProductDetailsDTO ret = new ProductDetailsDTO(productDetails);
+		return ResponseEntity.ok(ret);
+	}
 
 	@PostMapping(value = "verifyProduct")
 	public ResponseEntity<?> verfyProduct(@RequestParam(name = "productId", required = true) Long productId,
@@ -234,6 +242,7 @@ public class ProductDetailsController {
 		return ResponseEntity.ok(allDtoPd);
 	}
 
+	g
 	@GetMapping(value = "GetAllProductForHomePage")
 	public ResponseEntity<?> GetAllProductForHomePage() {
 		List<ProductDetails> allProducts = productDetailsService.getAll();
