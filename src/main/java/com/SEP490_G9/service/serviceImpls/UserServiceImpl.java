@@ -147,11 +147,7 @@ public class UserServiceImpl implements UserService {
 			if(!validator.validateNumber(profileImage.getSize(), 1, 1024*1024*20)) {
 				throw new IllegalArgumentException();
 			}
-			
-			
-			
-			
-			
+	
 			User user = getUserById();
 			String profileImageLocation = "account_id_" + user.getId() + "/profile";
 			File coverImageDir = new File(ROOT_LOCATION + profileImageLocation);

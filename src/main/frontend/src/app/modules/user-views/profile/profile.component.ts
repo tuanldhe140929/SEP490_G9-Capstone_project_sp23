@@ -36,9 +36,9 @@ export class ProfileComponent implements OnInit {
   }
 
   public Profileform = this.FormBuilder.group({
-    "newFirstName": ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
+    "newFirstName": ['', [Validators.required, Validators.minLength(1), Validators.maxLength(50)]],
     "newUsername": ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
-    "newLastName": ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]]
+    "newLastName": ['', [Validators.required, Validators.minLength(1), Validators.maxLength(50)]]
   });
 
   get Form() {
