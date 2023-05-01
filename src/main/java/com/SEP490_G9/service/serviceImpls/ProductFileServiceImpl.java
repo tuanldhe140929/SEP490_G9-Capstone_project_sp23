@@ -380,6 +380,61 @@ public class ProductFileServiceImpl implements ProductFileService {
 		return resource;
 	}
 
+	@Override
+	public ByteArrayResource downloadFileForStaff(Long userId, Long productId, String version) {
+
+		List<File> productFiles = new ArrayList<>();
+		ProductDetails pversion = null;
+		Product p = productRepo.findById(productId).orElseThrow();
+
+		for (ProductDetails pd : p.getProductDetails()) {
+			if (pd.getVersion().equalsIgnoreCase(version)) {
+				pversion = pd;
+				break;
+			}
+		}
+		List<ProductFile> pfs = pversion.getFiles();
+		for (ProductFile pf : pfs) {
+			if (pf.isEnabled())
+				productFiles.add(new File(ROOT_LOCATION + pf.getSource()));
+		}
+
+		// Compress the files into a zip archive
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		ZipOutputStream zos = new ZipOutputStream(baos);
+
+		try {
+			for (File file : productFiles) {
+				ZipEntry entry = new ZipEntry(file.getName());
+				zos.putNextEntry(entry);
+				FileInputStream fis = new FileInputStream(file);
+				byte[] buffer = new byte[1024];
+				int len;
+				while ((len = fis.read(buffer)) > 0) {
+					zos.write(buffer, 0, len);
+				}
+				fis.close();
+				zos.closeEntry();
+			}
+		} catch (IOException e) {
+
+		} finally {
+			try {
+				zos.close();
+				baos.close();
+			} catch (IOException e) {
+
+			}
+		}
+		ByteArrayResource resource = new ByteArrayResource(baos.toByteArray()) {
+			@Override
+			public String getFilename() {
+				return "product.zip";
+			}
+		};
+		return resource;
+	}
+	
 	boolean isStaff(Account account) {
 		boolean ret = false;
 		for (Role role : account.getRoles()) {
