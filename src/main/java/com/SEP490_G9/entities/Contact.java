@@ -40,30 +40,38 @@ public class Contact implements Serializable{
 	@Column(name="phone", unique = false, nullable = false, insertable = true)
 	private String phone;
 	
+	@Column(name="address", unique = false, nullable = false, insertable = true)
+	private String address;
+	
 	@Column(name="message", unique = false, nullable = false, insertable = true)
 	private String message;
 	
-	@OneToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "account_id", unique = false, nullable = true) 
-	private Account account;
+	@Column(name="email", unique = false, nullable = false, insertable = true)
+	private String email;
 	
 	public Contact() {
-
 	}
 
-	public Contact(Long id, String first, String last, Date created_date, String phone, String message,
-			Account account) {
+	public Contact(Long id, String first, String last, Date created_date, String phone, String address, String message,
+			String email) {
 		super();
 		this.id = id;
 		this.first = first;
 		this.last = last;
 		this.created_date = created_date;
 		this.phone = phone;
+		this.address = address;
 		this.message = message;
-		this.account = account;
+		this.email = email;
 	}
 
+	public String getAddress() {
+		return address;
+	}
 
+	public void setAddress(String address) {
+		this.address = address;
+	}
 
 	public Long getId() {
 		return id;
@@ -89,12 +97,12 @@ public class Contact implements Serializable{
 		this.last = last;
 	}
 
-	public Account getAccount() {
-		return account;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setAccount(Account account) {
-		this.account = account;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public Date getCreated_date() {
@@ -120,6 +128,5 @@ public class Contact implements Serializable{
 	public void setMessage(String message) {
 		this.message = message;
 	}
-	
 	
 }
