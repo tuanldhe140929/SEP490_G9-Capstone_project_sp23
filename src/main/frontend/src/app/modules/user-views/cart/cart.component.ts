@@ -57,6 +57,8 @@ export class CartComponent implements OnInit {
               this.updated.push(this.cart.changes[i]);
             } 
             this.openChangeModal();
+
+            this.getAllCartItem();
           }
          
         }
@@ -150,7 +152,7 @@ export class CartComponent implements OnInit {
               this.openInfoModal();
               break;
             case TransactionStatus.CANCELED:
-              this.info = "Bạn đã hủy thanh toán";
+              this.info = "Đã hủy thanh toán";
               this.openInfoModal();
               break;
           }

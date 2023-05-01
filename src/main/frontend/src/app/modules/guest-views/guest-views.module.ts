@@ -19,6 +19,7 @@ import { VgCoreModule } from '@videogular/ngx-videogular/core';
 import { VgControlsModule } from '@videogular/ngx-videogular/controls';
 import { VgOverlayPlayModule } from '@videogular/ngx-videogular/overlay-play';
 import { VgBufferingModule } from '@videogular/ngx-videogular/buffering';
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSelectModule } from '@angular/material/select';
 import { MatRadioModule } from '@angular/material/radio';
@@ -72,7 +73,7 @@ import { SearchResultTagComponent } from './search-result-tag/search-result-tag.
     CommonViewsModule,
     NgxPaginationModule,
     MatIconModule,
-    
+    CKEditorModule
   ]
 })
 export class GuestViewsModule { }

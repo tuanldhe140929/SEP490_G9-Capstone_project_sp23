@@ -31,6 +31,11 @@ export class ReviewTransactionComponent implements OnInit {
 
   }
   ngOnInit(): void {
+    this.getTransaction();
+    
+  }
+
+  getTransaction() {
     this.paymentId = this.route.snapshot.queryParams['paymentId'];
     this.token = this.route.snapshot.queryParams['token'];
     this.payerId = this.route.snapshot.queryParams['PayerID'];
@@ -103,6 +108,7 @@ export class ReviewTransactionComponent implements OnInit {
               this.updated.push(this.transaction.cart.changes[i]);
             }
           }
+          this.getTransaction();
           this.openChangeModal();
         } else {
         

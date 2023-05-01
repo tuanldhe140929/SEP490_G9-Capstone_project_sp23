@@ -11,7 +11,7 @@ END $$;
   IF NOT EXISTS (
     SELECT 1 FROM pg_type WHERE typname = 'Transaction_Status'
   ) THEN								
-    CREATE TYPE TransactionStatus AS ENUM('CREATED', 'COMPLETED', 'CANCELED', 'FAILED','APPROVED','EXPIRED');
+    CREATE TYPE TransactionStatus AS ENUM('CREATED', 'COMPLETED', 'CANCELED', 'FAILED','APPROVED','EXPIRED', 'PROCESSING');
   END IF;
 END $$;
 
@@ -36,14 +36,14 @@ END $$;
  create table accounts (id bigint not null, created_date timestamp(6) not null, email varchar(320) not null, enabled boolean not null, last_modified timestamp(6), password varchar(100) not null, primary key (id));
  create table cart_items (cart_id bigint not null, product_id bigint not null, version varchar(30) not null,price real not null, changed boolean not null, primary key (cart_id, product_id, version));
  create table carts (id bigint not null, account_id bigint not null, primary key (id));
- create table categories (id serial not null, name varchar(255) unique not null, primary key (id));
- create table files (id bigint not null, created_date timestamp(6) not null, enabled boolean not null, last_modified timestamp(6) not null, name varchar(255) not null, new_uploaded boolean not null, reviewed boolean not null, size bigint not null, source varchar(255), type varchar(255) not null, product_id bigint not null, version varchar(30) not null, primary key (id));
- create table licenses (id serial not null, acrynosm varchar(255), details varchar(1024) not null, name varchar(255) not null, provider varchar(255), reference_link varchar(255), primary key (id));
+ create table categories (id serial not null, name varchar(255) unique not null, description varchar(255), primary key (id));
+ create table files (id bigint not null, created_date timestamp(6) not null, enabled boolean not null, last_modified timestamp(6) not null, name varchar(255) not null, deleted boolean not null, new_uploaded boolean not null, reviewed boolean not null, size bigint not null, source varchar(255), type varchar(255) not null, product_id bigint not null, version varchar(30) not null, primary key (id));
+ create table licenses (id serial not null, acronyms varchar(255), details varchar(1024) not null, name varchar(255) not null, provider varchar(255), reference_link varchar(255), primary key (id));
  create table payouts (id bigint not null, amount real check (amount >= 0) not null, batch_id varchar(255) not null, created_date timestamp(6) not null, description varchar(255), last_modified timestamp(6) not null, payout_fee float(53) not null, payout_status PayoutStatus not null, account_id bigint, transaction_id bigint, primary key (id));
  create table previews (id bigint not null, source varchar(255) not null, type varchar(255) not null, product_id bigint not null, version varchar(30) not null, primary key (id));
- create table product_versions (product_id bigint not null, version varchar(30) not null, status Status not null, cover_image varchar(255), upload_date timestamp(6) not null, description varchar(100), detail_description varchar(1000), flagged boolean not null, instruction varchar(255), last_update timestamp(6) not null, name varchar(30), price real not null check (price >= 0 and price<=1000), category_id integer, license_id integer, primary key (product_id, version));
+ create table product_versions (product_id bigint not null, version varchar(30) not null, status Status not null, cover_image varchar(255),approved_date timestamp(6), upload_date timestamp(6) not null, description varchar(100), detail_description varchar(1000), flagged boolean not null, instruction varchar(255), last_update timestamp(6) not null, name varchar(30), price real not null check (price >= 0 and price<=1000), category_id integer, license_id integer, primary key (product_id, version));
  create table product_version_tag (product_id bigint not null, version varchar(30) not null, tag_id integer not null);
- create table products (id bigint not null, active_version varchar(30) not null, draft boolean not null, enabled boolean, seller_id bigint not null, primary key (id));
+ create table products (id bigint not null, active_version varchar(30) not null, draft boolean not null, enabled boolean, seller_id bigint not null,created_date timestamp(6), last_modified timestamp(6), primary key (id));
  create table refresh_token (id bigint not null, expiry_date timestamp(6) with time zone not null, token varchar(255) not null, account_id bigint not null, primary key (id));
  create table reports (product_id bigint not null, account_id bigint not null, version varchar(255) not null, created_date timestamp(6) not null, description varchar(255) not null, status varchar(255) not null, violation_type_id bigint not null, primary key (product_id, account_id, version));
  create table roles (id serial not null, name varchar(255) not null, primary key (id));

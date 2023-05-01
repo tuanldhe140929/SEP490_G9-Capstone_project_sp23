@@ -47,7 +47,7 @@ export class SearchResultTagComponent {
     this.tagId = Number(this.activatedRoute.snapshot.paramMap.get('tagId'));
     this.checkedTags.push(this.tagId);
     console.log(this.checkedTags);
-    this.productService.getFilteredProducts(this.keyword,0,this.checkedTags,0,1000).subscribe(
+    this.productService.getProductsForSearching(this.keyword,0,this.checkedTags,0,1000).subscribe(
       data => {
         this.resultList = data;
         this.totalResult = this.resultList.length;
@@ -108,7 +108,7 @@ export class SearchResultTagComponent {
 
   refresh(){
     console.log(this.checkedTags);
-    this.productService.getFilteredProducts(this.keyword,this.chosenCategory, this.checkedTags,this.minprice,this.maxprice).subscribe(
+    this.productService.getProductsForSearching(this.keyword,this.chosenCategory, this.checkedTags,this.minprice,this.maxprice).subscribe(
       data => {
         this.resultList = data;
         this.totalResult = this.resultList.length;

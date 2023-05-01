@@ -23,7 +23,7 @@ export class ReportService {
   }
 
   //xem 1 thằng đã report version ấy chưa
-  getReportByProductUserVersion(productId: number, accountId: number, version: string): Observable<any>{
+  getReportByProductVersionAndUser(productId: number, accountId: number, version: string): Observable<any>{
     const params = {
       productId: productId,
       accountId: accountId,
@@ -38,8 +38,8 @@ export class ReportService {
     return this.httpClient.put<any>(this.BaseUrl+"/updateReportStatus",null,{params})
   }
 
-  //lấy các sản phẩm theo product details
-  getByProductDetailsAndStatus(productId: number, version: string, status: string): Observable<any>{
+  //lấy theo pv and status
+  getByProductVersionAndStatus(productId: number, version: string, status: string): Observable<any>{
     const params = {
       productId: productId,
       version: version,
