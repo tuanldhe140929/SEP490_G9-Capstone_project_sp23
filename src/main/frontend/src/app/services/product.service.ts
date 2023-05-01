@@ -62,7 +62,7 @@ export class ProductService {
     });
   }
   public getProductByIdForStaff(productId: number, version: string): Observable<Product> {
-    return this.httpClient.get<Product>(baseUrl + "/getProductForStaff", {
+    return this.httpClient.post<Product>(baseUrl + "/getProductForStaff", null, {
       params: {
         productId: productId,
         version: version

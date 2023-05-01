@@ -1,7 +1,7 @@
 import { style } from '@angular/animations';
 import { DecimalPipe } from '@angular/common';
 import { Component, OnInit, Inject } from '@angular/core';
-import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AuthResponse } from 'src/app/dtos/AuthResponse';
@@ -21,9 +21,11 @@ import { License } from '../../../../../dtos/License';
 import { ApprovalDownloadComponent } from '../approval-download/approval-download.component';
 import { UpdateApprovalComponent } from '../update-approval/update-approval.component';
 
+
 class DisplayPreview {
   preview: Preview;
   thumb: string;
+
 
   constructor() {
     this.preview = new Preview;
@@ -69,6 +71,8 @@ export class ApprovalProductDetailsComponent implements OnInit {
   report: Report;
   dots: number[] = [0];
   isOwner: boolean;
+  errorCode: number = 200;
+  
 
   displayPreviews: DisplayPreview[] = [];
   constructor(
@@ -83,7 +87,7 @@ export class ApprovalProductDetailsComponent implements OnInit {
     private productFileService: ProductFileService,
     private toastr: ToastrService,
     private userService: UserService,
-
+    private dialogRef: MatDialogRef<ApprovalProductDetailsComponent>,
     private reportService: ReportService) {
   }
 
@@ -172,7 +176,7 @@ export class ApprovalProductDetailsComponent implements OnInit {
           this.license = data;
         }
       );
-      this.productService.getProductById(+productId).subscribe(
+      this.productService.getProductByIdForStaff(this.data.productId, this.data.version).subscribe(
         data => {
           this.product = data;
           this.version = this.product.version;
@@ -215,7 +219,11 @@ export class ApprovalProductDetailsComponent implements OnInit {
           this.currentPreview = this.displayPreviews[0];
         },
         error => {
-          this.router.navigate(['error']);
+          if(error.status === 404){
+            this.errorCode = 404;
+          }else{
+            this.router.navigate(['error']);
+          }
         })
     }
   }
@@ -438,17 +446,28 @@ export class ApprovalProductDetailsComponent implements OnInit {
   }
 
   updateApproval(productId: number, productName: string, version: string){
-    const dialogRef = this.dialog.open(UpdateApprovalComponent, {
-      data: {
-        productId: productId,
-        productName: productName,
-        version: version
+    this.productService.getProductByIdForStaff(productId, version).subscribe(
+      response => {
+        const dialogRef = this.dialog.open(UpdateApprovalComponent, {
+          data: {
+            productId: productId,
+            productName: productName,
+            version: version
+          },
+        });
+        dialogRef.afterClosed().subscribe(result => {
+          if(result.data == 'error' || result.data == 'done'){
+            this.dialogRef.close()
+          }
+          this.refresh(this.data.productId);
+        });
       },
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
-      this.refresh(this.data.productId);
-    });
+      error => {
+        this.toastr.error("Sản phẩm đã không còn tồn tại");
+        this.dialogRef.close();
+      }
+    )
+    
   }
 
   openDownload(productId: number, productName: string, version: string){

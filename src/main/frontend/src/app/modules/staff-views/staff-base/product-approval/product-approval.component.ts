@@ -12,6 +12,10 @@ import { CategoryService } from 'src/app/services/category.service';
 import { ProductService } from 'src/app/services/product.service';
 import { ApprovalProductDetailsComponent } from './approval-product-details/approval-product-details.component';
 import { UpdateApprovalComponent } from './update-approval/update-approval.component';
+import { ScrollStrategy } from '@angular/cdk/overlay';
+import { error } from 'jquery';
+import { ProductApprovalErrorComponent } from './product-approval-error/product-approval-error.component';
+
 @Component({
   selector: 'app-product-approval',
   templateUrl: './product-approval.component.html',
@@ -21,6 +25,7 @@ export class ProductApprovalComponent {
   selectedOption: string = "PENDING";  
   displayedColumns: string[] = ['Mã sản phẩm', 'Phiên bản','Ngày đăng','Chi tiết'];
   dataSource: MatTableDataSource<Product>;
+  scrollStrategy: ScrollStrategy;
 
   productList: Product[] = [];
   nameList: string[] = [];
@@ -89,18 +94,32 @@ export class ProductApprovalComponent {
   }
 
   openDetails(productId: number, productName: string, version: string){
-    const dialogRef = this.dialog.open(ApprovalProductDetailsComponent, {
-      data: {
-        productId: productId,
-        productName: productName,
-        version: version
+    this.productService.getProductByIdForStaff(productId, version).subscribe(
+      response => {
+        const dialogRef = this.dialog.open(ApprovalProductDetailsComponent, {
+          data: {
+            productId: productId,
+            productName: productName,
+            version: version
+          },
+          height: "90%"
+        });
+        dialogRef.afterClosed().subscribe(result => {
+          console.log(`Dialog result: ${result}`);
+          setTimeout(() => this.refresh(this.selectedOption),400)
+        });
       },
-      height: "90%",
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
-      setTimeout(() => this.refresh(this.selectedOption),400)
-    });
+      error => {
+        const dialogRef = this.dialog.open(ProductApprovalErrorComponent, {
+          width: "30%"
+        });
+        dialogRef.afterClosed().subscribe(result => {
+          console.log(`Dialog result: ${result}`);
+          setTimeout(() => this.refresh(this.selectedOption),400)
+        });
+      }
+    )
+
   }
 
   refresh(status: string) {
