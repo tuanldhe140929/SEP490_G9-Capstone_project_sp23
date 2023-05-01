@@ -16,6 +16,7 @@ import { ProductService } from 'src/app/services/product.service';
 import { ReportService } from 'src/app/services/report.service';
 import { UserService } from 'src/app/services/user.service';
 import { ReportedProductDetailsComponent } from './reported-product-details/reported-product-details.component';
+import { ReportErrorComponent } from './report-error/report-error.component';
 
 interface ReportEntity{
   productId: number
@@ -162,18 +163,30 @@ export class ReportListComponent {
   }
 
   openDetails(productId: number, version: string){
-    const dialogRef = this.dialog.open(ReportedProductDetailsComponent, {
-      data: {
-        productId: productId,
-        version: version,
-        status: this.selectedOption
+    this.productService.getProductById(productId).subscribe(
+      response => {
+        const dialogRef = this.dialog.open(ReportedProductDetailsComponent, {
+          data: {
+            productId: productId,
+            version: version,
+            status: this.selectedOption
+          },
+          height: "90%",
+        });
+        dialogRef.afterClosed().subscribe(result => {
+          console.log(`Dialog result: ${result}`);
+          setTimeout(() => this.refresh(this.selectedOption),400)
+        });
       },
-      height: "90%",
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
-      setTimeout(() => this.refresh(this.selectedOption),400)
-    });
+      error => {
+        const dialogRef = this.dialog.open(ReportErrorComponent, {});
+        dialogRef.afterClosed().subscribe(result => {
+          console.log(`Dialog result: ${result}`);
+          setTimeout(() => this.refresh(this.selectedOption),400)
+        });
+      }
+    )
+    
   }
 
   getCurrentVersion(productId: number){

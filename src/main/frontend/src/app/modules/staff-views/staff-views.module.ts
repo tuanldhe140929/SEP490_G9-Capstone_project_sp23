@@ -37,6 +37,7 @@ import { ReportedProductDownloadComponent } from './staff-base/report-list/repor
 import { UpdateReportStatusComponent } from './staff-base/report-list/update-report-status/update-report-status.component';
 import { ReportDescriptionComponent } from './staff-base/report-list/report-description/report-description.component';
 import { ProductApprovalErrorComponent } from './staff-base/product-approval/product-approval-error/product-approval-error.component';
+import { ReportErrorComponent } from './staff-base/report-list/report-error/report-error.component';
 
 
 
@@ -53,6 +54,7 @@ import { ProductApprovalErrorComponent } from './staff-base/product-approval/pro
     UpdateReportStatusComponent,
     ReportDescriptionComponent,
     ProductApprovalErrorComponent,
+    ReportErrorComponent,
   ],
   imports: [
     CommonModule,

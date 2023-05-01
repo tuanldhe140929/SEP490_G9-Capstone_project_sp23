@@ -1,5 +1,5 @@
 import { Component, Inject , OnInit} from '@angular/core';
-import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { Report } from 'src/app/dtos/Report';
 import { User } from 'src/app/dtos/User';
@@ -51,7 +51,8 @@ export class UpdateReportStatusComponent implements AfterViewInit{
     private violationService: ViolationService,
     private productService: ProductService,
     private dialog: MatDialog,
-    private toastr: ToastrService 
+    private toastr: ToastrService,
+    private dialogRef: MatDialogRef<UpdateReportStatusComponent> 
   ){
     this.reportService.getByProductVersionAndStatus(dataInjected.productId, dataInjected.version, dataInjected.status).subscribe(reports => {
       this.reportList = reports
@@ -102,18 +103,28 @@ export class UpdateReportStatusComponent implements AfterViewInit{
   }
 
   updateStatus(){
-    let data = this.dataSource.data;
-    let userIdList = [];
-    let statusList = [];
-    for(let i = 0; i<data.length;i++){
-      let userData = data[i];
-      userIdList.push(userData.userId);
-      statusList.push(userData.checked ? "ACCEPTED":"DENIED");
-    }
-    this.reportService.updateReportStatus(this.dataInjected.productId, this.dataInjected.version, userIdList, statusList).subscribe(data => {
-      console.log(data);
-      this.toastr.success('Cập nhật trạng thái báo cáo thành công');
-    })
+    this.productService.getProductById(this.dataInjected.productId).subscribe(
+      response => {
+        let data = this.dataSource.data;
+        let userIdList = [];
+        let statusList = [];
+        for(let i = 0; i<data.length;i++){
+          let userData = data[i];
+          userIdList.push(userData.userId);
+          statusList.push(userData.checked ? "ACCEPTED":"DENIED");
+        }
+        this.reportService.updateReportStatus(this.dataInjected.productId, this.dataInjected.version, userIdList, statusList).subscribe(data => {
+        console.log(data);
+        this.toastr.success('Cập nhật trạng thái báo cáo thành công');
+        this.dialogRef.close({data: "done"});
+      })
+      },
+      error => {
+        this.toastr.error("Sản phẩm đã không còn tồn tại");
+        this.dialogRef.close({data: "error"});
+      }
+    )
+    
     
   }
 

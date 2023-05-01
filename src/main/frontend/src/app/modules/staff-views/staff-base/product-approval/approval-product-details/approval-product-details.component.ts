@@ -471,18 +471,31 @@ export class ApprovalProductDetailsComponent implements OnInit {
   }
 
   openDownload(productId: number, productName: string, version: string){
-    const dialogRef = this.dialog.open(ApprovalDownloadComponent, {
-      data: {
-        productId: productId,
-        productName: productName,
-        version: version
+    this.productService.getProductByIdForStaff(productId, version).subscribe(
+      response => {
+        const dialogRef = this.dialog.open(ApprovalDownloadComponent, {
+          data: {
+            productId: productId,
+            productName: productName,
+            version: version
+          },
+          width: '70%',
+          height: '70%'
+        });
+        dialogRef.afterClosed().subscribe(result => {
+          if(result.data = "error"){
+            this.toastr.error("Sản phẩm đã không còn tồn tại");
+            this.dialogRef.close();
+          }
+          console.log(`Dialog result: ${result}`);
+          this.refresh(this.data.productId);
+        });
       },
-      width: '70%',
-      height: '70%'
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
-      this.refresh(this.data.productId);
-    });
+      error => {
+        this.toastr.error("Sản phẩm đã không còn tồn tại");
+        this.dialogRef.close();
+      }
+    )
+    
   }
 }

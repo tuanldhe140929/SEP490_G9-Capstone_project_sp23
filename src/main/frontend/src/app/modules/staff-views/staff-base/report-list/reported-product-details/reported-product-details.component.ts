@@ -1,7 +1,7 @@
 import { style } from '@angular/animations';
 import { DecimalPipe } from '@angular/common';
 import { Component, OnInit, Inject } from '@angular/core';
-import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AuthResponse } from 'src/app/dtos/AuthResponse';
@@ -88,7 +88,7 @@ export class ReportedProductDetailsComponent implements OnInit {
     private productFileService: ProductFileService,
     private toastr: ToastrService,
     private userService: UserService,
-
+    private dialogRef: MatDialogRef<ReportedProductDetailsComponent>,
     private reportService: ReportService) {
   }
   license: License
@@ -415,37 +415,57 @@ export class ReportedProductDetailsComponent implements OnInit {
   }
 
   updateReport(){
-    const dialogRef = this.dialog.open(UpdateReportStatusComponent, {
-      data: {
-        productId: this.productId,
-        version: this.data.version,
-       
-        status: this.data.status
+    this.productService.getProductById(this.productId).subscribe(
+      response => {
+        const dialogRef = this.dialog.open(UpdateReportStatusComponent, {
+          data: {
+            productId: this.productId,
+            version: this.data.version,
+            status: this.data.status
+          },
+          width: '80%'
+    
+        });
+        dialogRef.afterClosed().subscribe(result => {
+          console.log(`Dialog result: ${result}`);
+          this.refresh(this.data.productId);
+        });
       },
-      width: '80%'
-
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
-      this.refresh(this.data.productId);
-    });
+      error => {
+        this.toastr.error("Sản phẩm đã không còn tồn tại");
+        this.dialogRef.close();
+      }
+    )
+    
   }
 
   openDownload(){
-    const dialogRef = this.dialog.open(ReportedProductDownloadComponent, {
-      data: {
-        productId: this.productId,
-        productName: this.product.name,
-        version: this.product.version
+    this.productService.getProductById(this.productId).subscribe(
+      response => {
+        const dialogRef = this.dialog.open(ReportedProductDownloadComponent, {
+          data: {
+            productId: this.productId,
+            productName: this.product.name,
+            version: this.product.version
+          },
+          width: '70%',
+          height: '70%'
+        });
+        dialogRef.afterClosed().subscribe(result => {
+          if(result.data = "error" || result.data == "done"){
+            this.dialogRef.close();
+          }
+          console.log(`Dialog result: ${result}`);
+          this.refresh(this.data.productId);
+        });
       },
-      width: '70%',
-      height: '70%'
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
-      this.refresh(this.data.productId);
-    });
+      error => {
+        this.toastr.error("Sản phẩm đã không còn tồn tại");
+        this.dialogRef.close();
+      }
+    )
   }
+
   getFilesCount(): number {
     var count = 0;
     for (let i = 0; i < this.product.files.length; i++) {
