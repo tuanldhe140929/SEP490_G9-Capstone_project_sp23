@@ -22,6 +22,7 @@ export class SellerGuardGuard implements CanActivate {
     }
     else {
       this.router.navigate(['unauthorized']);
+      return false;
     }
     return false;
   }

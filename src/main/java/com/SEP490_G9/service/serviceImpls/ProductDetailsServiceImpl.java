@@ -345,7 +345,7 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 	@Override
 	public ProductDetails getByProductIdAndVersion(Long productId, String version) {
 		ProductDetails ret = productDetailsRepo.findByProductIdAndProductVersionKeyVersion(productId, version);
-		if (ret == null) {
+		if (ret == null || !ret.getProduct().isEnabled()) {
 			throw new ResourceNotFoundException("product", "id and version", productId + " " + version);
 		}
 		return ret;

@@ -26,9 +26,9 @@ import com.SEP490_G9.entities.ViolationType;
 import com.SEP490_G9.repository.AccountRepository;
 import com.SEP490_G9.repository.ViolationRepository;
 import com.SEP490_G9.repository.ViolationTypeRepository;
+import com.SEP490_G9.security.JwtTokenUtil;
 import com.SEP490_G9.service.AccountService;
 import com.SEP490_G9.service.ViolationService;
-
 
 @RequestMapping(value = "violation")
 
@@ -36,29 +36,35 @@ import com.SEP490_G9.service.ViolationService;
 public class ViolationController {
 	@Autowired
 	ViolationService violationService;
-	
+
 	@Autowired
 	AccountService accountService;
-	
+
+	@Autowired
+	JwtTokenUtil jwtTokenUtil;
+
 	@PostMapping("addviolation")
-	public ResponseEntity<?> addViolation(@RequestParam("account_id") int account_id, @RequestParam("description") String description) {
+	public ResponseEntity<?> addViolation(@RequestParam("account_id") int account_id,
+			@RequestParam("description") String description) {
 		Violation vio = new Violation();
 		vio.setDescription(description);
 		Account account = accountService.getById(account_id);
 		vio.setAccount(account);
 		Violation vioAdd = violationService.addViolation(vio);
-		System.out.println(description+account_id);
+		System.out.println(description + account_id);
 		return ResponseEntity.ok(vioAdd);
 	}
-	
+
 	@PutMapping("updateSellerStatus")
-	public ResponseEntity<?> updateSellerStatus(@RequestParam(name = "id") long id){
+	public ResponseEntity<?> updateSellerStatus(@RequestParam(name = "id") long id) {
 		Account updateStatus = violationService.updateSellerStatus(id);
+		String sellerAccessToken = jwtTokenUtil.generateToken(updateStatus.getEmail());
+		jwtTokenUtil.invalidateToken(sellerAccessToken);
 		return ResponseEntity.ok(updateStatus);
 	}
-	
+
 	@GetMapping("getAllVioTypes")
-	public ResponseEntity<?> getAllViolationType(){
+	public ResponseEntity<?> getAllViolationType() {
 		List<ViolationType> vioTypeList = violationService.getVioTypeList();
 		return ResponseEntity.ok(vioTypeList);
 	}
