@@ -12,6 +12,7 @@ import { SellerSearchResultComponent } from './seller-search-result/seller-searc
 import { VerifyEmailComponent } from './verify-email/verify-email.component';
 import { SearchResultCategoryComponent } from './search-result-category/search-result-category.component';
 import { SearchResultTagComponent } from './search-result-tag/search-result-tag.component';
+import { ContactComponent } from '../common-views/contact/contact.component';
 
 const routes: Routes = [{
   path: 'login',
@@ -33,6 +34,11 @@ const routes: Routes = [{
 	component:HomeComponent,
 	title: 'Trang chủ DPM'
   },
+  {
+    path:  'contact',
+    component:ContactComponent,
+    title: 'Trang contact'
+    },
   {
     path: 'auth/login-with-google',
     component: LoginWithGoogleComponent,
