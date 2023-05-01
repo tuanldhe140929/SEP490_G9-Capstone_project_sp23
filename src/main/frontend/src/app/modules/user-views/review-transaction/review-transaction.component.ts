@@ -5,6 +5,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Change, Type } from '../../../dtos/Cart';
 import { Transaction, TransactionStatus } from '../../../dtos/Transaction';
 import { TransactionService } from '../../../services/transaction.service';
+import { ProductService } from 'src/app/services/product.service';
 
 @Component({
   selector: 'app-review-transaction',
@@ -25,12 +26,15 @@ export class ReviewTransactionComponent implements OnInit {
   token: string;
   updated: Change[] = [];
   removed: Change[] = [];
+  convertRate: number;
   constructor(private route: ActivatedRoute,
     private transactionService: TransactionService,
-    private modalService: NgbModal) {
+    private modalService: NgbModal,
+    private productService: ProductService) {
 
   }
   ngOnInit(): void {
+    this.getVNDPrice();
     this.getTransaction();
     
   }
@@ -172,5 +176,14 @@ export class ReviewTransactionComponent implements OnInit {
 
   get TransactionStatus() {
     return TransactionStatus;
+  }
+
+  getVNDPrice(){
+    this.productService.getVNDRate().subscribe(
+      data => {
+        const convertData = data;
+        this.convertRate  = Number(convertData.conversion_rate);
+      }
+    )
   }
 }

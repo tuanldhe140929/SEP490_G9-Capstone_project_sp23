@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, Observable, of, throwError } from 'rxjs';
@@ -199,5 +199,14 @@ export class ProductService {
       productId: productId
     }
     return this.httpClient.get<string>(baseUrl + '/getCurrentVersion', { params });
+  }
+
+  public getVNDRate(): Observable<any>{
+    // var option: Object = {
+    //   headers: new HttpHeaders({
+    //     "apikey" : "Wq2SQjxvCfLjQsGkbLaPRPkcOJ0VysG5"
+    //   })
+    // }
+    return this.httpClient.get<any>("https://v6.exchangerate-api.com/v6/a18d0a6ce200fc9b0114abc8/pair/USD/VND/1");
   }
 }
