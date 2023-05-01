@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { ProductService } from 'src/app/services/product.service';
 
@@ -11,7 +11,8 @@ import { ProductService } from 'src/app/services/product.service';
 export class UpdateApprovalComponent {
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: {productId: number, productName: string, version: string}, 
+    @Inject(MAT_DIALOG_DATA) public data: {productId: number, productName: string, version: string},
+    private dialogRef: MatDialogRef<UpdateApprovalComponent>, 
     private productService: ProductService,
     private toastr: ToastrService){
 
@@ -26,6 +27,11 @@ export class UpdateApprovalComponent {
           }else{
             this.toastr.success(this.data.productName+' phiên bản '+this.data.version,'Từ chối sản phẩm thành công')
           }
+          this.dialogRef.close({data: "done"});
+        },
+        error => {
+          this.toastr.error("Sản phẩm đã không còn tồn tại");
+          this.dialogRef.close({data: "error"});
         }
       )
     }

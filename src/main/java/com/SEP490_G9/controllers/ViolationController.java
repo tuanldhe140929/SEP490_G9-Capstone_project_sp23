@@ -51,7 +51,6 @@ public class ViolationController {
 		Account account = accountService.getById(account_id);
 		vio.setAccount(account);
 		Violation vioAdd = violationService.addViolation(vio);
-		System.out.println(description + account_id);
 		return ResponseEntity.ok(vioAdd);
 	}
 
