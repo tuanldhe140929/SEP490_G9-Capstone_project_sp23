@@ -18,7 +18,7 @@ export class CartComponent implements OnInit {
 
   @ViewChild('infoModal', { static: false }) private infoModal: any;
   @ViewChild('change', { static: false }) private change: any;
-
+  isPopupShown = false;
   isLoading = false;
   info = "";
   cart: Cart = new Cart;
@@ -95,7 +95,41 @@ export class CartComponent implements OnInit {
     console.log('xóa thành công ' + cartItem.product.id)
     this.RemoveItem === null
   }
+  showPopup() {
+    this.isPopupShown = true;
+  }
+  
+  hidePopup() {
+    this.isPopupShown = false;
+  }
+
+  public showPopups(): void {
+    this.showPopup();
+    const userPolicyCheckbox = document.getElementsByName('user-policy')[0] as HTMLInputElement;
+    const continueButton = document.getElementsByName('continue')[0] as HTMLButtonElement;
+    userPolicyCheckbox.checked= false;
+    continueButton.disabled=true;
+    
+    // Add event listener to the checkbox element
+    userPolicyCheckbox.addEventListener('change', function() {
+      if (!userPolicyCheckbox.checked) {
+        continueButton.disabled = true;
+      } else {
+        continueButton.disabled = false;
+        
+      }
+    });
+    
+    // Set initial disabled state of continueButton based on checkbox state
+    if (!userPolicyCheckbox.checked) {
+      continueButton.disabled = true;
+    } else {
+      continueButton.disabled = false;
+    }
+  }
   public checkout(): void {
+    this.hidePopup();
+    
     this.isLoading = true;
     this.transactionService.purchase(this.cart.id).subscribe(
       data => {
@@ -209,7 +243,7 @@ export class CartComponent implements OnInit {
     const lastPrice = Number.parseFloat(this.Fee) + Number.parseFloat(this.TotalPrice);
     return lastPrice.toFixed(2);
   }
-
+  
   get LastPriceVND() {
     const lastPrice = (Number.parseFloat(this.Fee) + Number.parseFloat(this.TotalPrice))* this.convertRate;
     return lastPrice.toFixed(2);
@@ -223,4 +257,5 @@ export class CartComponent implements OnInit {
       }
     )
   }
+
 }
