@@ -22,7 +22,7 @@
       <!-- Weight Column -->
       <ng-container matColumnDef="description">
         <th mat-header-cell *matHeaderCellDef> Chi tiết </th>
-        <td mat-cell *matCellDef="let element"> <button class="btn btn-success" (click)="openReportDescription(element.username, element.version ,element.violationTypeName, element.description, element.createdDate)">Mở</button> </td>
+        <td mat-cell *matCellDef="let element"> <button class="actionBtn" (click)="openReportDescription(element.username, element.version ,element.violationTypeName, element.description, element.createdDate)">Mở</button> </td>
       </ng-container>
   
       <!-- Checkbox Column -->
@@ -43,7 +43,7 @@
                    aria-label="Select page of periodic elements">
     </mat-paginator>
     <div align="end">
-        <button class="btn btn-warning" mat-dialog-close>Đóng</button>
-        <button *ngIf="dataInjected.status=='PENDING'" class="btn btn-success" (click)="updateStatus()" mat-dialog-close>Xác nhận</button>
+        <button class="dismissBtn" mat-dialog-close>Đóng</button>
+        <button *ngIf="dataInjected.status=='PENDING'" class="actionBtn" (click)="updateStatus()" mat-dialog-close>Xác nhận</button>
     </div>
   </div>

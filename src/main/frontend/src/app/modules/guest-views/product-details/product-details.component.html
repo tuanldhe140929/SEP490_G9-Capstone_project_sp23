@@ -120,7 +120,7 @@
           </div> <!-- rating-wrap.// -->
 
           <div class="mb-3">
-            <var class="price h5" style="color: #212529; font-size: 28px; font-weight: 600; line-height: 1.2; ">${{Price}}</var>
+            <var class="price h5" style="color: #212529; font-size: 28px; font-weight: 600; line-height: 1.2; ">${{Price}} (~{{convertRate*Price | number:'1.0-0'}}VND)</var>
 
           </div>
           <div>
@@ -134,24 +134,30 @@
             </div>
             <div class="row metadata_details" style="margin-top:10px;">
               <div class="col-5"><label>Phân loại</label></div>
-              <div class="col-7"><a class="details_value" (click)="searchByCategory(product.category.id)">{{product.category.name}}</a></div>
+              <div class="col-7 cateSen"><a class="details_value" (click)="searchByCategory(product.category.id)">{{product.category.name}}</a>
+                                 <span id="cate">{{product.category.description}}</span>
+                                 </div>
+        
             </div>
             <div class="row metadata_details">
               <div class="col-5" style="display: flex; align-items: center; "><label>Nhãn</label></div>
-              <div class="col-7" style="display:flex;">
-                <div class="tags" *ngFor="let tag of product.tags"  style="width: auto;">
-                  <a style="cursor:pointer; text-decoration:none;color:white;" (click)="searchTag(tag.id)">{{tag.name}}</a>
+              <div class="col-7 tagSen">
+                <i class="fas fa-ellipsis-h tagSen"></i>
+                <div class="pTags">
+                  <div *ngFor="let tag of product.tags" class="t" (click)="searchTag(tag.id)">
+                    {{tag.name}}
+                  </div>
                 </div>
               </div>
             </div>
             <div class="row metadata_details">
               <div class="col-5"><label>Giấy phép</label></div>
               <div class="col-7 sen">
-                <div *ngIf="product.license!=null">
-                  <a class="details_value" href="{{product.license.referenceLink}}">{{product.license.name}}</a>
-                  <span class="details_value_hover">{{product.license.details}}</span>
+                <div *ngIf="license!=null">
+                  <a class="details_value" href="{{license.referenceLink}}">{{license.name}}</a>
+                  <span class="details_value_hover">{{license.details}}</span>
                 </div>
-                <div *ngIf="product.license==null">
+                <div *ngIf="license==null">
                   <a class="details_value">Không</a>
 
                 </div>
@@ -171,10 +177,10 @@
             <div class="card">
               <header class="card-header">
                 <ul class="nav nav-tabs card-header-tabs">
-                  <li class="nav-item">
+                  <li class="nav-item" style="border-radius:3px;">
                     <a href="#" data-bs-target="#tab_overview" data-bs-toggle="tab" class="nav-link active">Thông tin</a>
                   </li>
-                  <li class="nav-item">
+                  <li class="nav-item" style="border-radius:3px;">
                     <a href="#" data-bs-target="#tab_details" data-bs-toggle="tab" class="nav-link">Chi tiết</a>
                   </li>
                 </ul>

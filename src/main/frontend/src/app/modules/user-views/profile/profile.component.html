@@ -26,12 +26,11 @@
           <button class="actionBtn" (click)="UpdateInfo()">Cập nhật thông tin</button>
 
           <button class="actionBtn" (click)="changePassword()">Đổi mật khẩu <i class="fa-sharp fa-solid fa-arrow-right" style="color: #262626;"></i></button>
-
-          <button class="actionBtn" (click)="becomeSeller()">Trở thành người bán <i class="fa-sharp fa-solid fa-arrow-right" style="color: #262626;"></i></button>
-
           <button class="actionBtn" (click)="viewPurchased()">Sản phẩm đã mua <i class="fa-sharp fa-solid fa-arrow-right" style="color: #262626;"></i></button>
 
           <button *ngIf="isSeller()" class="actionBtn" (click)="viewPayouts()">Lịch sử bán hàng <i class="fa-sharp fa-solid fa-arrow-right" style="color: #262626;"></i></button>
+          <button class="actionBtn" *ngIf="!isSeller()" (click)="becomeSeller()">Trở thành người bán <i class="fa-sharp fa-solid fa-arrow-right" style="color: #262626;"></i></button>
+
         </div>
       </div><!--/col-3-->
       <div class="col-sm-9">

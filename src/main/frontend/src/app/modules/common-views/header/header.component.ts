@@ -37,7 +37,7 @@ export class HeaderComponent implements OnInit {
   filteredOptions: Observable<string[]>;
   myControl = new FormControl('');
   chosenOption: string = "PRODUCTS";
-  keyword: string;
+  keyword: string = "";
 
   constructor(
     private storageService: StorageService,

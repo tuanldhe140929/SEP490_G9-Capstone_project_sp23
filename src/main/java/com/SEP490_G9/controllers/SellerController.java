@@ -52,11 +52,12 @@ public class SellerController {
 	public ResponseEntity<?> createNewSeller(@RequestParam("paypalEmail") String paypalEmail,
 			HttpServletRequest request) {
 
-		boolean seller  ;
+		boolean seller;
 
 		seller = sellerService.createNewSeller(paypalEmail);
 		return ResponseEntity.ok(seller);
 	}
+
 	@GetMapping(value = "/getSellerByPaypalEmail")
 	public ResponseEntity<?> getSellerByPaypalEmail(@RequestParam("paypalEmail") String paypalEmail) {
 		Seller seller = sellerService.getSellerByPaypalEmail(paypalEmail);

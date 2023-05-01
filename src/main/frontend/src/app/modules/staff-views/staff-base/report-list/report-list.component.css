@@ -14,3 +14,48 @@ table {
 .noResult{
   color: white;
 }
+
+.classification_picker_body {
+  padding: 8px;
+  border: 2px solid;
+  border-color: #cdcdcd;
+  background-color: white;
+  border-radius: 2px;
+  width: 100%;
+  margin: 6px 0;
+  cursor: pointer;
+}
+
+.actionButton {
+	background-color: #543fdf;
+	border: none;
+	color: white;
+	padding: 0 10px;
+	font-size: 14px;
+	text-align: center;
+	line-height: 33px;
+	font-weight: bold;
+	height: 35px;
+	border: 1px solid rgba(0, 0, 0, 0.1);
+	box-shadow: inset 0 0 1px rgb(255 255 255/ 21%);
+	cursor: pointer;
+	border-radius: 3px;
+	border: none;
+}
+
+.actionButton:hover {
+	background-color: #0d0690;
+	border: none;
+	color: white;
+	padding: 0 10px;
+	font-size: 14px;
+	text-align: center;
+	line-height: 33px;
+	font-weight: bold;
+	height: 35px;
+	border: 1px solid rgba(0, 0, 0, 0.1);
+	box-shadow: inset 0 0 1px rgb(255 255 255/ 21%);
+	cursor: pointer;
+	border-radius: 3px;
+	border: none;
+}

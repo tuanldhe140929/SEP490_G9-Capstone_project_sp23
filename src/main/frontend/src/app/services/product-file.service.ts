@@ -12,6 +12,18 @@ export class ProductFileService {
 
   constructor(private httpClient: HttpClient) { }
 
+  downloadForStaff(pid: number, version: string) {
+    return this.httpClient.get(baseUrl + "/downloadForStaff", {
+      params: {
+        productId: pid,
+        version: version
+      },
+      headers: {
+        "Content-Type": 'application/zip'
+      },
+      responseType: "blob"
+    })
+  }
   uploadProductFile(data: any): Observable<HttpEvent<any>> {
     return this.httpClient.post<HttpEvent<any>>(baseUrl + '/uploadProductFile', data, {
       reportProgress: true,

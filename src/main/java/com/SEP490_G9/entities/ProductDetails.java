@@ -58,10 +58,6 @@ public class ProductDetails implements Serializable,Comparable<ProductDetails> {
 	@Column(name = "flagged", nullable = false)
 	private boolean flagged;
 
-	@ManyToOne
-	@JoinColumn(name = "license_id")
-	private License license;
-
 	@Enumerated(EnumType.STRING)
 	@Column(name = "status", nullable = false)
 	private Status approved = Status.NEW;
@@ -97,7 +93,6 @@ public class ProductDetails implements Serializable,Comparable<ProductDetails> {
 		this.name = productDetailsDTO.getName();
 		this.description = productDetailsDTO.getDescription();
 		this.price = productDetailsDTO.getPrice();
-		this.license = productDetailsDTO.getLicense();
 		this.tags = productDetailsDTO.getTags();
 		this.detailDescription = productDetailsDTO.getDetails();
 		this.flagged = productDetailsDTO.isFlagged();
@@ -198,14 +193,6 @@ public class ProductDetails implements Serializable,Comparable<ProductDetails> {
 
 	public void setLastModified(Date lastModified) {
 		this.lastModified = lastModified;
-	}
-
-	public License getLicense() {
-		return license;
-	}
-
-	public void setLicense(License license) {
-		this.license = license;
 	}
 
 	public Category getCategory() {

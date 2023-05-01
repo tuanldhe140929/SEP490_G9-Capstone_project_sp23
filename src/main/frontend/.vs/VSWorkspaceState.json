@@ -3,14 +3,17 @@
     "",
     "\\src",
     "\\src\\app",
-    "\\src\\app\\interceptors",
     "\\src\\app\\modules",
     "\\src\\app\\modules\\guest-views",
     "\\src\\app\\modules\\guest-views\\login",
     "\\src\\app\\modules\\guest-views\\product-details",
+    "\\src\\app\\modules\\guest-views\\product-details\\report-product",
     "\\src\\app\\modules\\staff-views",
-    "\\src\\app\\modules\\user-views\\review-transaction"
+    "\\src\\app\\modules\\staff-views\\staff-base",
+    "\\src\\app\\modules\\staff-views\\staff-base\\report-list",
+    "\\src\\app\\modules\\staff-views\\staff-base\\report-list\\reported-product-details",
+    "\\src\\app\\services"
   ],
-  "SelectedNode": "\\src\\app\\interceptors\\auth.interceptor.ts",
+  "SelectedNode": "\\src\\app\\services\\account.service.ts",
   "PreviewInSolutionExplorer": false
 }

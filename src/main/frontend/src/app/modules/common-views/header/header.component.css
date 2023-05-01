@@ -35,3 +35,12 @@
 /* .btn-light{
   background: rgb(11, 196, 226);
 } */
+
+.category_details{
+    display:none;
+}
+.cate:hover .category_details{
+    display:block;
+    position:absolute;
+    left:100%;
+}
