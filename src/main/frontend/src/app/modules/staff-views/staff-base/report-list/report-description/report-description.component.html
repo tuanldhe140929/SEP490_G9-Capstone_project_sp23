@@ -4,10 +4,10 @@
         <label>Người báo cáo: </label>
         <b>{{data.username}}</b>
     </div>
-    <div>
+    <!-- <div>
         <label>Phiên bản sản phẩm lúc báo cáo: </label>
         <b>{{data.version}}</b>
-    </div>
+    </div> -->
     <div>
         <label>Loại vi phạm: </label>
         <b>{{data.violationTypeName}}</b>
@@ -23,6 +23,6 @@
         <b>{{data.reportedDate | date: 'dd/MM/yyyy HH:mm'}}</b>
     </div>
     <div align="end">
-        <button class="btn btn-warning" mat-dialog-close>Đóng</button>
+        <button class="dismissBtn" mat-dialog-close>Đóng</button>
     </div>
 </div>
