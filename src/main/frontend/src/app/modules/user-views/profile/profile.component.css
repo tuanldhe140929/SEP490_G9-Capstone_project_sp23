@@ -108,3 +108,14 @@ input {
 .actionBtn:hover::before {
   height: 180%;
 }
+img {
+  height: 100%;
+  width: 100%;
+
+
+  border-radius: 10%;
+}
+.text-center{
+  width: fit-content;
+  height: fit-content;
+}
