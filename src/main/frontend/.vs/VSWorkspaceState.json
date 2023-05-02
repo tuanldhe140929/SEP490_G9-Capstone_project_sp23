@@ -4,16 +4,13 @@
     "\\src",
     "\\src\\app",
     "\\src\\app\\modules",
+    "\\src\\app\\modules\\common-views\\error",
+    "\\src\\app\\modules\\for-admin\\for-admin-base\\banseller",
     "\\src\\app\\modules\\guest-views",
     "\\src\\app\\modules\\guest-views\\login",
-    "\\src\\app\\modules\\guest-views\\product-details",
-    "\\src\\app\\modules\\guest-views\\product-details\\report-product",
-    "\\src\\app\\modules\\staff-views",
-    "\\src\\app\\modules\\staff-views\\staff-base",
-    "\\src\\app\\modules\\staff-views\\staff-base\\report-list",
-    "\\src\\app\\modules\\staff-views\\staff-base\\report-list\\reported-product-details",
-    "\\src\\app\\services"
+    "\\src\\app\\modules\\seller-views",
+    "\\src\\app\\modules\\seller-views\\update-product"
   ],
-  "SelectedNode": "\\src\\app\\services\\account.service.ts",
+  "SelectedNode": "\\src\\app\\modules\\seller-views\\update-product\\update-product.component.ts",
   "PreviewInSolutionExplorer": false
 }

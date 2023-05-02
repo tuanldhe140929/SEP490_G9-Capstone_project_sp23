@@ -31,6 +31,9 @@
   <div class="" *ngIf="transaction.status==TransactionStatus.CREATED || transaction.status==TransactionStatus.APPROVED">
     Trạng thái giao dịch: Chưa thanh toán
   </div>
+  <div class="" *ngIf="transaction.status==TransactionStatus.PROCESSING">
+    Trạng thái giao dịch: Đang xử lí
+  </div>
   <div class="" *ngIf="transaction.status==TransactionStatus.CANCELED">
     Trạng thái giao dịch: Đã hủy
   </div>

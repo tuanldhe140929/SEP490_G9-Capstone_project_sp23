@@ -14,8 +14,6 @@ import {MatTableDataSource} from '@angular/material/table';
 import {SelectionModel} from '@angular/cdk/collections';
 import { ReportDescriptionComponent } from '../report-description/report-description.component';
 import { Product } from 'src/app/dtos/Product';
-import { error } from 'jquery';
-
 interface ReportEntity{
   userId: number,
   username: string,

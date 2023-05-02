@@ -363,22 +363,22 @@
   </div>
 </ng-template>
 
-<ng-template #specifyVersionModal let-modal style="border-radius: 3px;">
+<ng-template #specifyVersionModal let-modal class="modal">
   <div class="modal-header">
     <h4 class="modal-title" style="color:black"> Cập nhật phiên bản mới của sản phẩm</h4>
     <button type="button" class="btn-close" aria-label="Close" (click)="dismissError()"></button>
   </div>
-  <div class="modal-body">
+  <div class="modal-body" style="min-height:400px;">
     <table>
       <tr>
-        <th style="width:100px;"></th>
-        <th style="width:100px;"></th>
+        <th style="width:200px;"></th>
+        <th style="width:200px;"></th>
         <th style="width:200px;">Ngày tạo</th>
         <th style="width:200px;">Chỉnh sửa cuối</th>
         <th>Trạng thái</th>
       </tr>
-      <tr *ngFor="let ver of productVersions" style="margin-bottom:10px;">
-        <td><div class="ver" (click)="chooseVersion(ver)">{{ver.version}}</div></td>
+      <tr *ngFor="let ver of productVersions">
+        <td><div class="ver" style="width:fit-content;" (click)="chooseVersion(ver)">{{ver.version}}</div></td>
         <td>
           <div *ngIf="isCurrent(ver); then showActive else optionActive"></div>
           <ng-template #showActive> <div class="current_version" style="border-radius:3px;">Hiện tại</div></ng-template>
