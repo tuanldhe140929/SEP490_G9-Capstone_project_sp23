@@ -203,18 +203,17 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		return disabledPd;
 	}
 
-	
 	@Override
 	public List<ProductDetails> getProductByTime(List<ProductDetails> listPd) {
 		List<ProductDetails> mutableList = new ArrayList<>(listPd);
 		Collections.sort(mutableList, new Comparator<ProductDetails>() {
-		    public int compare(ProductDetails pd1, ProductDetails pd2) {
-		        return pd1.getLastModified().compareTo(pd2.getLastModified()) < 0 ? 1 : -1;
-		    }
+			public int compare(ProductDetails pd1, ProductDetails pd2) {
+				return pd1.getLastModified().compareTo(pd2.getLastModified()) < 0 ? 1 : -1;
+			}
 		});
 		return mutableList;
 	}
-	
+
 	@Override
 	public List<ProductDetails> getByKeyword(List<ProductDetails> listPd, String keyword) {
 		if (keyword.trim().isEmpty()) {
@@ -351,7 +350,7 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		}
 		return ret;
 	}
-	
+
 	@Override
 	public ProductDetails getByProductIdAndVersion(Long productId, String version) {
 		ProductDetails ret = productDetailsRepo.findByProductIdAndProductVersionKeyVersion(productId, version);
@@ -398,12 +397,12 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		if (newVersion.isBlank() || newVersion.isEmpty() || newVersion.length() > 30) {
 			throw new IllegalArgumentException("Version name length is 1 to 30");
 		}
-		if (newVersion.contains("")) {
+		if (newVersion.contains(" ")) {
 			throw new IllegalArgumentException("Version name cannot contains spaces");
 		}
 		ProductDetails productDetails = getActiveVersion(id);
 		int size = productDetails.getProduct().getProductDetails().size();
-		if(size>=10) {
+		if (size >= 10) {
 			throw new IllegalArgumentException("Cannot have more than 10 versions");
 		}
 		ProductDetails newPD = new ProductDetails();
@@ -534,8 +533,8 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 
 	// hien san pham theo tu khoa
 	@Override
-	public List<ProductDetails> getProductForSearching(String keyword, int categoryid, List<Integer> tagIdList, double min,
-			double max) {
+	public List<ProductDetails> getProductForSearching(String keyword, int categoryid, List<Integer> tagIdList,
+			double min, double max) {
 		List<ProductDetails> allPd = getAll();
 		List<ProductDetails> allLatestPd = getByLatestVer(allPd);
 		List<ProductDetails> allApprovedPd = getByApproved(allLatestPd);
@@ -600,7 +599,8 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 			for (Report report : allReports) {
 				Product product = report.getProduct();
 				if ((report.getStatus().equals("ACCEPTED") || report.getStatus().equals("DENIED"))) {
-					ProductDetails pd = getByProductIdAndVersionIncludingDisabled(report.getProduct().getId(), report.getVersion());
+					ProductDetails pd = getByProductIdAndVersionIncludingDisabled(report.getProduct().getId(),
+							report.getVersion());
 					result.add(pd);
 				}
 			}
@@ -629,19 +629,15 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 		}
 		return allStatusPd;
 	}
-
+	
 	@Override
-	public ProductDetails updateApprovalStatus(long productId, String version, String status) {
+	public ProductDetails cancelVerify(long productId, String version, String status) {
 		ProductDetails pd = getByProductIdAndVersion(productId, version);
 		if (pd == null) {
 			throw new ResourceNotFoundException("product details", "id and version",
 					"id: " + productId + ", version:" + version);
 		}
-		
-		if (pd.getApproved().equals(Status.APPROVED) || pd.getApproved().equals(Status.REJECTED)) {
-			throw new ResourceNotFoundException("Product version has been approved/rejected", "id and version", "id: "+productId+" version: "+version);
-		}
-		
+
 		List<ProductFile> newFiles = new ArrayList<>();
 		List<ProductFile> originalFile = new ArrayList<>();
 		for (ProductFile files : pd.getFiles()) {
@@ -695,7 +691,78 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 			}
 			break;
 		}
-pd.setLastModified(new Date());
+		pd.setLastModified(new Date());
+		productDetailsRepo.save(pd);
+		return pd;
+	}
+
+	@Override
+	public ProductDetails updateApprovalStatus(long productId, String version, String status) {
+		ProductDetails pd = getByProductIdAndVersion(productId, version);
+		if (pd == null) {
+			throw new ResourceNotFoundException("product details", "id and version",
+					"id: " + productId + ", version:" + version);
+		}
+
+		if (pd.getApproved().equals(Status.APPROVED) || pd.getApproved().equals(Status.REJECTED)) {
+			throw new ResourceNotFoundException("Product version has been approved/rejected", "id and version",
+					"id: " + productId + " version: " + version);
+		}
+
+		List<ProductFile> newFiles = new ArrayList<>();
+		List<ProductFile> originalFile = new ArrayList<>();
+		for (ProductFile files : pd.getFiles()) {
+			if (files.isNewUploaded()) {
+				newFiles.add(files);
+			}
+			if (!files.isNewUploaded()) {
+				originalFile.add(files);
+			}
+		}
+		switch (status) {
+		case "APPROVED":
+			pd.setApproved(Status.APPROVED);
+			List<CartItem> items = cartItemRepository.findByProductDetails(pd);
+			for (CartItem item : items) {
+				item.setChanged(true);
+			}
+			cartItemRepository.saveAll(items);
+			for (ProductFile file : newFiles) {
+				file.setNewUploaded(false);
+				file.setReviewed(true);
+			}
+
+			for (ProductFile file : originalFile) {
+				file.setNewUploaded(false);
+				file.setReviewed(true);
+			}
+			pd.setApprovedDate(new Date());
+			break;
+		case "REJECTED":
+			pd.setApproved(Status.REJECTED);
+			for (ProductFile file : newFiles) {
+				pd.getFiles().remove(file);
+			}
+
+			for (ProductFile file : originalFile) {
+				file.setNewUploaded(false);
+				file.setReviewed(true);
+				if (!file.isEnabled()) {
+					file.setEnabled(true);
+				}
+			}
+			break;
+		case "PENDING":
+			pd.setApproved(Status.PENDING);
+			break;
+		case "NEW":
+			pd.setApproved(Status.NEW);
+			for (ProductFile file : originalFile) {
+				file.setNewUploaded(false);
+			}
+			break;
+		}
+		pd.setLastModified(new Date());
 		productDetailsRepo.save(pd);
 		return pd;
 	}
