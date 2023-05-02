@@ -15,6 +15,7 @@ import com.SEP490_G9.entities.Report;
 import com.SEP490_G9.entities.User;
 import com.SEP490_G9.entities.ViolationType;
 import com.SEP490_G9.entities.embeddable.ReportItemKey;
+import com.SEP490_G9.exception.InternalServerException;
 import com.SEP490_G9.exception.NumberException;
 import com.SEP490_G9.repository.ProductDetailsRepository;
 import com.SEP490_G9.repository.ProductRepository;
@@ -118,6 +119,9 @@ public class ReportServiceImpl implements ReportService {
 
 	@Override
 	public List<Report> updateReportStatus(long productId, String version , List<Long> userIdList, List<String> statusList) {
+		if(isReported(productId, version)) {
+			throw new InternalServerException("Something went wrong");
+		}
 		List<Report> updatedList = new ArrayList<>();
 		for(int i=0;i<userIdList.size();i++) {
 			long userId = userIdList.get(i);
@@ -194,8 +198,21 @@ public class ReportServiceImpl implements ReportService {
 		return finalResult;
 	}
 
-
-
-
-
+	@Override
+	public boolean isReported(long productId, String version){
+		boolean reported = false;
+		List<Report> allReports = getAllReports();
+		List<Report> productVersionReports = new ArrayList<>();
+		for(Report r: allReports) {
+			if(r.getProduct().getId()==productId && r.getVersion().equalsIgnoreCase(version)) {
+				productVersionReports.add(r);
+			}
+		}
+		for(Report r: productVersionReports) {
+			if(r.getStatus().equalsIgnoreCase("ACCEPTED")||r.getStatus().equalsIgnoreCase("DENIED")) {
+				reported = true;
+			}
+		}
+		return reported;
+	}
 }

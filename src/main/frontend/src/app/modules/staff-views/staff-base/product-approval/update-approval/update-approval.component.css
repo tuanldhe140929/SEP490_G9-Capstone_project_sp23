@@ -72,7 +72,7 @@
     height: 35px;
   }
 
-  .dismissBtn {
+  .dismissBtn:hover{
     margin: 10px 10px 10px 0;
     background-color: #837f7f;
     height: 40px;

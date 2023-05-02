@@ -95,7 +95,7 @@ export class ApprovalDownloadComponent implements OnInit {
         )
       },
       error => {
-        this.toastr.error("Sản phẩm đã không còn tồn tại");
+        this.toastr.error("Đã có lỗi xảy ra");
         this.dialogRef.close({data: "error"});
       }
     )

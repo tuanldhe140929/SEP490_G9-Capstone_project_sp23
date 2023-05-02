@@ -75,6 +75,8 @@ public interface ProductDetailsService {
 	public List<ProductDetails> getProductBySellerForUser(long sellerId, String keyword, int categoryId, List<Integer> tagidlist ,double min,
 			double max);
 
+	public ProductDetails getByProductIdAndVersionIncludingDisabled(Long productId, String version);
+	
 	public ProductDetails getByProductIdAndVersion(Long productId, String version);
 	
 	public List<ProductDetails> getProductsByReportStatus(String report);

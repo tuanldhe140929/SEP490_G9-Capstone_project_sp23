@@ -35,6 +35,7 @@ import com.SEP490_G9.entities.Tag;
 import com.SEP490_G9.entities.Transaction;
 import com.SEP490_G9.entities.UserDetailsImpl;
 import com.SEP490_G9.exception.DuplicateFieldException;
+import com.SEP490_G9.exception.ErrorResponse;
 import com.SEP490_G9.exception.NumberException;
 import com.SEP490_G9.exception.ResourceNotFoundException;
 import com.SEP490_G9.repository.CartItemRepository;
@@ -343,6 +344,15 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 	}
 
 	@Override
+	public ProductDetails getByProductIdAndVersionIncludingDisabled(Long productId, String version) {
+		ProductDetails ret = productDetailsRepo.findByProductIdAndProductVersionKeyVersion(productId, version);
+		if (ret == null) {
+			throw new ResourceNotFoundException("product", "id and version", productId + " " + version);
+		}
+		return ret;
+	}
+	
+	@Override
 	public ProductDetails getByProductIdAndVersion(Long productId, String version) {
 		ProductDetails ret = productDetailsRepo.findByProductIdAndProductVersionKeyVersion(productId, version);
 		if (ret == null || !ret.getProduct().isEnabled()) {
@@ -566,7 +576,7 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 	@Override
 	public List<ProductDetails> getProductsByReportStatus(String status) {
 		List<ProductDetails> allPd = productDetailsRepo.findAll();
-		List<ProductDetails> allLatestPd = getByLatestVer(allPd);
+
 		List<Report> allReports = reportRepo.findAll();
 		List<ProductDetails> result = new ArrayList<>();
 		if (status.equalsIgnoreCase("PENDING")) {
@@ -583,7 +593,7 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 			for (Report report : allReports) {
 				Product product = report.getProduct();
 				if ((report.getStatus().equals("ACCEPTED") || report.getStatus().equals("DENIED"))) {
-					ProductDetails pd = getByProductIdAndVersion(report.getProduct().getId(), report.getVersion());
+					ProductDetails pd = getByProductIdAndVersionIncludingDisabled(report.getProduct().getId(), report.getVersion());
 					result.add(pd);
 				}
 			}
@@ -620,7 +630,11 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 			throw new ResourceNotFoundException("product details", "id and version",
 					"id: " + productId + ", version:" + version);
 		}
-
+		
+		if (pd.getApproved().equals(Status.APPROVED) || pd.getApproved().equals(Status.REJECTED)) {
+			throw new ResourceNotFoundException("Product version has been approved/rejected", "id and version", "id: "+productId+" version: "+version);
+		}
+		
 		List<ProductFile> newFiles = new ArrayList<>();
 		List<ProductFile> originalFile = new ArrayList<>();
 		for (ProductFile files : pd.getFiles()) {
