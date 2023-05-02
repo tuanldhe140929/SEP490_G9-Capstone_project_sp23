@@ -79,7 +79,7 @@ public class TransactionServiceImpl implements TransactionService {
 	@Override
 	public Transaction getByPaymentId(String paymentId) {
 		Transaction ret = transactionRepo.findByPaypalId(paymentId);
-		if (!ret.getStatus().equals(Status.APPROVED) || !ret.getStatus().equals(Status.CREATED)) {
+		if (!ret.getStatus().equals(Status.APPROVED) && !ret.getStatus().equals(Status.CREATED)) {
 			return ret;
 		}
 		List<Change> changes = new ArrayList<>();
@@ -336,13 +336,31 @@ public class TransactionServiceImpl implements TransactionService {
 	@Override
 	public Transaction executeTransaction(String paymentId, String payerId) {
 		Transaction transaction = transactionRepo.findByPaypalId(paymentId);
-		if (payerId.isBlank() || payerId.isEmpty()) {
-			throw new IllegalArgumentException("PayerId can not be blank");
-		}
 		if (transaction == null) {
 			throw new ResourceNotFoundException("transaction", "paymentId", paymentId);
 		}
+		
 		Transaction ret = null;
+		if (transaction.getStatus().equals(Transaction.Status.CREATED)) {
+			throw new IllegalAccessError("The transaction isnt ready");
+		}
+		if(transaction.getStatus().equals(Transaction.Status.COMPLETED)) {
+			throw new IllegalAccessError("The transaction has been compeleted");
+		}
+		if(transaction.getStatus().equals(Transaction.Status.FAILED)) {
+			throw new IllegalAccessError("The transaction has been failed");
+		}
+		if(transaction.getStatus().equals(Transaction.Status.CANCELED)) {
+			throw new IllegalAccessError("The transaction has been cancelled");
+		}
+		if (transaction.getStatus().equals(Transaction.Status.EXPIRED)) {
+			ret = transaction;
+			return ret;
+		}
+		if (payerId.isBlank() || payerId.isEmpty()) {
+			throw new IllegalArgumentException("PayerId can not be blank");
+		}
+	
 		List<Change> changes = new ArrayList<>();
 		List<CartItem> removeItems = new ArrayList<>();
 		List<CartItem> updatedItems = new ArrayList<>();
@@ -401,16 +419,7 @@ public class TransactionServiceImpl implements TransactionService {
 			return transaction;
 		}
 
-		if (transaction.getStatus().equals(Transaction.Status.CREATED)
-				|| transaction.getStatus().equals(Transaction.Status.COMPLETED)
-				|| transaction.getStatus().equals(Transaction.Status.FAILED)
-				|| transaction.getStatus().equals(Transaction.Status.CANCELED)) {
-			throw new IllegalAccessError("The transaction isn't ready or has been commit");
-		}
-		if (transaction.getStatus().equals(Transaction.Status.EXPIRED)) {
-			ret = transaction;
-			return ret;
-		}
+		
 		Long time = System.currentTimeMillis() + 15 * 60 * 1000;
 		transaction.setExpiredDate(new Date(time));
 		transaction.setStatus(Status.PROCESSING);

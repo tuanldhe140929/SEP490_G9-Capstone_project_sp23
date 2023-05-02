@@ -4,13 +4,12 @@
     "\\src",
     "\\src\\app",
     "\\src\\app\\modules",
-    "\\src\\app\\modules\\common-views\\error",
-    "\\src\\app\\modules\\for-admin\\for-admin-base\\banseller",
     "\\src\\app\\modules\\guest-views",
-    "\\src\\app\\modules\\guest-views\\login",
-    "\\src\\app\\modules\\seller-views",
-    "\\src\\app\\modules\\seller-views\\update-product"
+    "\\src\\app\\modules\\guest-views\\product-details",
+    "\\src\\app\\modules\\staff-views",
+    "\\src\\app\\modules\\staff-views\\staff-base",
+    "\\src\\app\\modules\\staff-views\\staff-base\\product-approval",
+    "\\src\\app\\modules\\staff-views\\staff-base\\product-approval\\approval-product-details"
   ],
-  "SelectedNode": "\\src\\app\\modules\\seller-views\\update-product\\update-product.component.ts",
   "PreviewInSolutionExplorer": false
 }
