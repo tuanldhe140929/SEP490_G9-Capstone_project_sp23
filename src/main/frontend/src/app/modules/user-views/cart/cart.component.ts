@@ -89,17 +89,26 @@ export class CartComponent implements OnInit {
         this.cartItemList = data.items;
       },
       (error) => {
-        console.log(error);
+        if (error.error.messages.includes('Cart is currently checking out')) {
+          this.info = 'Không thể xóa sản phẩm do đang có giao dịch đang xảy ra';
+          this.openInfoModal();
+        }
       }
     )
     console.log('xóa thành công ' + cartItem.product.id)
     this.RemoveItem === null
   }
   showPopup() {
+    if (this.cartItemList.length == 0) {
+      this.info = 'Không có sản phẩm nào trong giỏ hàng';
+      this.openInfoModal();
+      return;
+    }
     this.isPopupShown = true;
   }
   
   hidePopup() {
+    this.isCheckboxChecked = false;
     this.isPopupShown = false;
   }
 
@@ -184,20 +193,28 @@ export class CartComponent implements OnInit {
               setTimeout(checkStatus, 3000);
               break;
             case TransactionStatus.FAILED:
+              this.getAllCartItem();
               this.info = "Thanh toán không thành công";
               this.openInfoModal();
-              break;
+              return;
             case TransactionStatus.COMPLETED:
               this.getAllCartItem();
               this.info = "Thanh toán thành công";
               this.openInfoModal();
-              break;
+              return;
             case TransactionStatus.CANCELED:
               this.info = "Đã hủy thanh toán";
+              this.getAllCartItem();
               this.openInfoModal();
-              break;
+              return;
+            case TransactionStatus.EXPIRED:
+              this.info = "Giao dịch đã hết hạn";
+              this.getAllCartItem();
+              this.openInfoModal();
+              return;
           }
           console.log(data);
+          
         },
         error => {
           console.log(error);
@@ -213,8 +230,11 @@ export class CartComponent implements OnInit {
     return this.cart.totalPrice.toFixed(2);
   }
 
-  get TotalPriceVND(){
-    return Number(this.cart.totalPrice.toFixed(2)) * this.convertRate;
+  get TotalPriceVND() {
+    if (this.convertRate != null && this.cart.totalPrice != null)
+      return Number(this.cart.totalPrice.toFixed(2)) * this.convertRate;
+    else
+      return 0;
   }
   openInfoModal() {
     this.modalService.open(this.infoModal, { centered: true });
@@ -237,9 +257,13 @@ export class CartComponent implements OnInit {
     return fee.toFixed(2);
   }
 
-  get FeeVND(){
-    const fee = Number.parseFloat(this.TotalPrice)*this.convertRate / 10;
-    return fee.toFixed(2);
+  get FeeVND() {
+    if (this.TotalPrice != null && this.convertRate != null) {
+      const fee = Number.parseFloat(this.TotalPrice) * this.convertRate / 10;
+      return fee.toFixed(2);
+    } else {
+      return 0;
+    }
   }
 
   get LastPrice() {
@@ -260,5 +284,8 @@ export class CartComponent implements OnInit {
       }
     )
   }
-
+  isCheckboxChecked = false;
+  checkboxEvent($event: any) {
+    this.isCheckboxChecked = $event.target.checked;
+  }
 }

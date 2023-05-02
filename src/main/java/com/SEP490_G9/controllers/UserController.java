@@ -105,7 +105,7 @@ public class UserController {
 			throws ClientProtocolException, IOException {
 		System.out.println(code);
 		User googleLoginUser = googleAuthService.getUserInfo(code);
-		if (userService.getByEmail(googleLoginUser.getEmail()) != null) {
+		if (userService.getByEmail(googleLoginUser.getEmail()) == null) {
 			String randomPassword = passwordGenerator.generatePassword(8).toString();
 			String encodedPassword = new BCryptPasswordEncoder().encode(randomPassword);
 			googleLoginUser.setPassword(encodedPassword);

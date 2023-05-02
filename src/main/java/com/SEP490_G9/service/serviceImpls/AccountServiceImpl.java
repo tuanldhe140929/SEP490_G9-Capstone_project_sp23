@@ -49,9 +49,6 @@ public class AccountServiceImpl implements AccountService {
 	@Override
 	public Account getByEmail(String email) {
 		Account ret = accountRepo.findByEmail(email);
-		if (ret == null) {
-			throw new ResourceNotFoundException("account", "email", email);
-		}
 		return ret;
 	}
 

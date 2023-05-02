@@ -102,13 +102,13 @@ export class ProductDetailsComponent implements OnInit {
     // tôi đang có việc cần phải cho hẳn vào đây
     var productIdAndName = this.activatedRoute.snapshot.paramMap.get('productId');
     if (productIdAndName) {
-      
+
       var productId = productIdAndName.split("-")[0];
       this.productService.getLicenceByProductId(+productId).subscribe(
         data => {
           this.license = data;
         }
-        );
+      );
       this.productService.getProductById(+productId).subscribe(
         data => {
           this.product = data;
@@ -128,7 +128,7 @@ export class ProductDetailsComponent implements OnInit {
             for (let i = 0; i < this.product.previewPictures.length; i++) {
               var a = DisplayPreview.fromPreview(this.product.previewPictures[i]);
               this.displayPreviews.push(a);
-          
+
             }
           console.log(this.displayPreviews);
           if (this.BlackThumbs.length > 0)
@@ -144,9 +144,9 @@ export class ProductDetailsComponent implements OnInit {
             dum.thumb = "https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty.jpg";
             this.displayPreviews.push(dum);
           }
-         
+
           this.currentPreview = this.displayPreviews[0];
-            //sau phần getProduct
+          //sau phần getProduct
           this.productId = Number(this.activatedRoute.snapshot.paramMap.get('productId'));
           if (this.storageService.getToken()) {
             this.userService.getCurrentUserInfo().subscribe(
@@ -159,14 +159,14 @@ export class ProductDetailsComponent implements OnInit {
                   this.isOwner = false;
                 }
                 this.cartService.isPurchasedByUser(this.visitor.id, this.product.id).subscribe(
-            data => {
-              this.isPurchased = data;
+                  data => {
+                    this.isPurchased = data;
                     console.log(data);
-            },
-            error => {
-              console.log(error);
-            }
-          )
+                  },
+                  error => {
+                    console.log(error);
+                  }
+                )
                 this.reportService.getReportByProductVersionAndUser(this.productId, this.visitorId, this.version).subscribe((data: any) => {
                   this.report = data;
                 })
@@ -257,8 +257,8 @@ export class ProductDetailsComponent implements OnInit {
 
 
   searchTag(tagId: number) {
-    this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
-      this.router.navigate(['tag/'+tagId]);
+    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+      this.router.navigate(['tag/' + tagId]);
     })
   }
 
@@ -272,7 +272,7 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   getPreviewPictureSource(): string {
-   
+
     if (this.currentPreview.preview.id == -1) {
       return "https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty.jpg";
     }
@@ -406,13 +406,18 @@ export class ProductDetailsComponent implements OnInit {
       (data) => {
         // Success, show a message to the user
         this.toastr.success('Sản phẩm đã được thêm vào giỏ hàng.')
-      
+
       },
       (err) => {
         console.log(err);
         if (err.error.messages.includes('Cart already has item')) {
           this.toastr.error('Sản phẩm đã có trong giỏ hàng')
-        } else if (err.error.messages.includes('Exeeded max number of items')) {
+        }
+        else if (err.error.messages.includes('Cart is currently checking out')) {
+          this.toastr.error('Không thể thêm vào giỏ hàng do đang có giao dịch đang xảy ra');
+
+        }
+        else if (err.error.messages.includes('Exeeded max number of items')) {
           this.toastr.error('Giỏ hàng chỉ có thể chứa tối đa 10 sản phẩm')
         } else if (err.error.messages.includes('Cart already has item')) {
           this.toastr.error('Bạn đã sở hữu sản phẩm này')
@@ -439,7 +444,7 @@ export class ProductDetailsComponent implements OnInit {
     return count;
   }
 
- 
+
   get TotalSize() {
     var totalSize = 0;
     for (let i = 0; i < this.product.files.length; i++) {
@@ -491,17 +496,17 @@ export class ProductDetailsComponent implements OnInit {
     );
   }
 
-  searchByCategory(categoryId: number){
-    this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
-      this.router.navigate(['category/'+categoryId]);
+  searchByCategory(categoryId: number) {
+    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+      this.router.navigate(['category/' + categoryId]);
     })
   }
 
-  getVNDPrice(){
+  getVNDPrice() {
     this.productService.getVNDRate().subscribe(
       data => {
         const convertData = data;
-        this.convertRate  = Number(convertData.conversion_rate);
+        this.convertRate = Number(convertData.conversion_rate);
       }
     )
   }

@@ -146,11 +146,24 @@ export class ReviewTransactionComponent implements OnInit {
       },
       error => {
         this.isLoading = false;
+        if (error.error.messages.includes('The transaction isnt ready')) {
+          this.transaction.status = TransactionStatus.CREATED;
+        }
+        if (error.error.messages.includes('The transaction has been compeleted')) {
+          this.transaction.status = TransactionStatus.COMPLETED;
+        }
+        if (error.error.messages.includes('The transaction has been failed')) {
+          this.transaction.status = TransactionStatus.FAILED;
+        }
+        if (error.error.messages.includes('The transaction has been cancelled')) {
+          this.transaction.status = TransactionStatus.CANCELED;
+        }
         this.info = "Không thể thực hiện hành động này";
         this.openInfoModal();
         console.log(error);
       }
     );
+	
   }
 
   cancelPayment() {
