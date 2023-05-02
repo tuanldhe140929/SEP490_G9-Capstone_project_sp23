@@ -386,9 +386,16 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 			throw new DuplicateFieldException("version", newVersion);
 		}
 		if (newVersion.isBlank() || newVersion.isEmpty() || newVersion.length() > 30) {
-			throw new IllegalArgumentException("Not valid version name");
+			throw new IllegalArgumentException("Version name length is 1 to 30");
+		}
+		if (newVersion.contains("")) {
+			throw new IllegalArgumentException("Version name cannot contains spaces");
 		}
 		ProductDetails productDetails = getActiveVersion(id);
+		int size = productDetails.getProduct().getProductDetails().size();
+		if(size>=10) {
+			throw new IllegalArgumentException("Cannot have more than 10 versions");
+		}
 		ProductDetails newPD = new ProductDetails();
 		newPD = createProductDetails(productDetails.getProduct(), newVersion);
 		newPD.setCoverImage(productDetails.getCoverImage());
