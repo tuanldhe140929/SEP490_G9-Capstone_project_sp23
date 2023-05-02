@@ -21,6 +21,8 @@ public interface ReportService {
 	
 	List<Report> getByUser(List<Report> reportList, User user);
 	
+	boolean isReported(long productId, String version);
+	
 	Report getByProductUserVersion(long productId, long userId, String version);
 	
 	List<Report> updateReportStatus(long productId, String version, List<Long> userIdList, List<String> statusList);

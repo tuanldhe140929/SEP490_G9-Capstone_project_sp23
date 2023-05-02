@@ -219,9 +219,8 @@ public class ProductDetailsController {
 	@GetMapping(value = "getByApprovalStatus")
 	public ResponseEntity<?> getByApprovalStatus(@RequestParam(name = "status") String status) {
 		List<ProductDetails> allStatusPd = productDetailsService.getProductsByApprovalStatus(status);
-		List<ProductDetails> enableds = productDetailsService.getByEnabled(allStatusPd);
 		List<ProductDetailsDTO> allDtoPd = new ArrayList<>();
-		for (ProductDetails pd : enableds) {
+		for (ProductDetails pd : allStatusPd) {
 			allDtoPd.add(new ProductDetailsDTO(pd));
 		}
 		return ResponseEntity.ok(allDtoPd);
@@ -288,6 +287,15 @@ public class ProductDetailsController {
 		return currentVer;
 	}
 
+	@GetMapping(value = "getAll")
+	public ResponseEntity<?> getAll(){
+		List<ProductDetails> allPd = productDetailsService.getAll();
+		List<ProductDetailsDTO> allDto = new ArrayList<>();
+		for(ProductDetails pd: allPd) {
+			allDto.add(new ProductDetailsDTO(pd));
+		}
+		return ResponseEntity.ok(allDto);
+	}
 
 
 

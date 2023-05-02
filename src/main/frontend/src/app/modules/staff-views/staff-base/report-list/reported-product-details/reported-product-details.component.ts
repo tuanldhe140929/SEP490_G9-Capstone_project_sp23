@@ -427,12 +427,15 @@ export class ReportedProductDetailsComponent implements OnInit {
     
         });
         dialogRef.afterClosed().subscribe(result => {
+          if(result.data == "done"){
+            this.dialogRef.close();
+          }
           console.log(`Dialog result: ${result}`);
           this.refresh(this.data.productId);
         });
       },
       error => {
-        this.toastr.error("Sản phẩm đã không còn tồn tại");
+        this.toastr.error("Đã có lỗi xảy ra");
         this.dialogRef.close();
       }
     )
@@ -452,7 +455,7 @@ export class ReportedProductDetailsComponent implements OnInit {
           height: '70%'
         });
         dialogRef.afterClosed().subscribe(result => {
-          if(result.data = "error" || result.data == "done"){
+          if(result.data == "error" || result.data == "done"){
             this.dialogRef.close();
           }
           console.log(`Dialog result: ${result}`);
@@ -460,7 +463,7 @@ export class ReportedProductDetailsComponent implements OnInit {
         });
       },
       error => {
-        this.toastr.error("Sản phẩm đã không còn tồn tại");
+        this.toastr.error("Đã có lỗi xảy ra");
         this.dialogRef.close();
       }
     )

@@ -14,6 +14,7 @@ import {MatTableDataSource} from '@angular/material/table';
 import {SelectionModel} from '@angular/cdk/collections';
 import { ReportDescriptionComponent } from '../report-description/report-description.component';
 import { Product } from 'src/app/dtos/Product';
+import { error } from 'jquery';
 
 interface ReportEntity{
   userId: number,
@@ -113,14 +114,19 @@ export class UpdateReportStatusComponent implements AfterViewInit{
           userIdList.push(userData.userId);
           statusList.push(userData.checked ? "ACCEPTED":"DENIED");
         }
-        this.reportService.updateReportStatus(this.dataInjected.productId, this.dataInjected.version, userIdList, statusList).subscribe(data => {
-        console.log(data);
-        this.toastr.success('Cập nhật trạng thái báo cáo thành công');
-        this.dialogRef.close({data: "done"});
-      })
+        this.reportService.updateReportStatus(this.dataInjected.productId, this.dataInjected.version, userIdList, statusList).subscribe(
+          data => {
+            console.log(data);
+            this.toastr.success('Cập nhật trạng thái báo cáo thành công');
+            this.dialogRef.close({data: "done"});
+          },
+          error => {
+            this.toastr.error("Đã có lỗi xảy ra");
+            this.dialogRef.close({data: "error"});
+          })
       },
       error => {
-        this.toastr.error("Sản phẩm đã không còn tồn tại");
+        this.toastr.error("Đã có lỗi xảy ra");
         this.dialogRef.close({data: "error"});
       }
     )

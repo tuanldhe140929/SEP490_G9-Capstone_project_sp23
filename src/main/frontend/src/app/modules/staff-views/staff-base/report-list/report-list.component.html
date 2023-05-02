@@ -32,7 +32,19 @@
 
     <ng-container matColumnDef="Chi tiết">
         <th mat-header-cell *matHeaderCellDef> Chi tiết </th>
-        <td mat-cell *matCellDef="let row"> <button class="actionButton" (click)="openDetails(row.id, row.version)">Mở</button> </td>
+        <td mat-cell *matCellDef="let row"> 
+          <div *ngIf="selectedOption == 'PENDING'">
+            <button class="actionButton" (click)="openDetails(row.id, row.version)">Mở</button> 
+          </div>
+          <div *ngIf="selectedOption == 'HANDLED'">
+            <div *ngIf="row.flagged == false">
+              Không bị cấm
+            </div>
+            <div *ngIf="row.flagged == true">
+              Bị cấm
+            </div>
+          </div>
+        </td>
       </ng-container>
 
       

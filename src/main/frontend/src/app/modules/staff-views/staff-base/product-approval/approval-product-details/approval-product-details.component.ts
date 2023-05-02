@@ -463,7 +463,7 @@ export class ApprovalProductDetailsComponent implements OnInit {
         });
       },
       error => {
-        this.toastr.error("Sản phẩm đã không còn tồn tại");
+        this.toastr.error("Đã có lỗi xảy ra");
         this.dialogRef.close();
       }
     )
@@ -484,7 +484,7 @@ export class ApprovalProductDetailsComponent implements OnInit {
         });
         dialogRef.afterClosed().subscribe(result => {
           if(result.data = "error"){
-            this.toastr.error("Sản phẩm đã không còn tồn tại");
+            this.toastr.error("Đã có lỗi xảy ra");
             this.dialogRef.close();
           }
           console.log(`Dialog result: ${result}`);
@@ -492,7 +492,7 @@ export class ApprovalProductDetailsComponent implements OnInit {
         });
       },
       error => {
-        this.toastr.error("Sản phẩm đã không còn tồn tại");
+        this.toastr.error("Đã có lỗi xảy ra");
         this.dialogRef.close();
       }
     )
