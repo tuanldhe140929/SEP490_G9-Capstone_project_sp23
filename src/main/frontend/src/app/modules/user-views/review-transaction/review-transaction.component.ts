@@ -137,6 +137,9 @@ export class ReviewTransactionComponent implements OnInit {
             this.info = "Thanh toán đã bị hủy";
             console.log('CANCELED');
             break;
+          case TransactionStatus.PROCESSING:
+            this.info = "Đang xử lí";
+            break;
         }
           this.openInfoModal();
         }

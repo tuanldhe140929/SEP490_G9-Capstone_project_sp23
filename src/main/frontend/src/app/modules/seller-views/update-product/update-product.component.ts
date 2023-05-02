@@ -22,7 +22,6 @@ import { ProductService } from '../../../services/product.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ApplyLicenseComponent } from './apply-license/apply-license.component';
 
-
 const MSG100 = 'Tên sản phẩm không được để trống';
 const MSG1001 = 'Tên sản phẩm có độ dài từ 3 đến 30 kí tự'
 const MSG1002 = 'Độ dài tối đa của mô tả là 100';
@@ -38,7 +37,7 @@ const MSG105 = 'Định dạng này không được hỗ trợ';
 const IMAGE_EXTENSIONS = ['image/png', 'image/jpeg', 'image/svg+xml'];
 const VIDEO_EXTENSIONS = ['video/mp4', 'video/x-matroska', 'video/quicktime'];
 const baseUrl = "http://localhost:9000/private/manageProduct";
-const MAX_SIZE = 1024*1024*2000;
+const MAX_SIZE = 1024 * 1024 * 2000;
 const MAX_FILE_COUNT = 10;
 const CHUNK_SIZE = 50000000;
 const MAX_FILE_SIZE = 1024 * 1024 * 500;
@@ -147,7 +146,7 @@ export class UpdateProductComponent implements OnInit {
         'bulletedList',
         'numberedList',
         'removeFormat',
-        
+
       ]
     }
   };
@@ -180,18 +179,18 @@ export class UpdateProductComponent implements OnInit {
           this.openFileSizeErrorModal();
           return;
         }
-        
+
         if ($event.target.files[i].size > MAX_FILE_SIZE) {
           this.fileError = "File đăng tải có kích thước: tối đa 500Mb";
           this.openFileSizeErrorModal();
           return;
         }
-        
-             if($event.target.files[i].name.length>100 || 0> $event.target.files[i].name.length){
-	 	 this.fileError = "Tên tệp từ 1 đến 100 kí tự";
-      this.openFileSizeErrorModal();
-      return;
-	}
+
+        if ($event.target.files[i].name.length > 100 || 0 > $event.target.files[i].name.length) {
+          this.fileError = "Tên tệp từ 1 đến 100 kí tự";
+          this.openFileSizeErrorModal();
+          return;
+        }
 
         for (let j = 0; j < this.fileDisplayList.length; j++) {
           if (this.fileDisplayList[j].file.name === $event.target.files[i].name) {
@@ -258,9 +257,10 @@ export class UpdateProductComponent implements OnInit {
               }
             }
           },
-          (error) => { console.log(error);
+          (error) => {
+            console.log(error);
             if (error.status === 400)
-            fileDisplay.file.fileState = FileState.ERROR;
+              fileDisplay.file.fileState = FileState.ERROR;
             this.info = "Không thể tải lên file " + file.name;
             this.openInfoModal();
             var index = -1;
@@ -271,7 +271,7 @@ export class UpdateProductComponent implements OnInit {
                 break;
               }
             }
-           
+
             this.fileDisplayList = this.fileDisplayList.slice(0, index);
             this.cd.detectChanges();
             console.log(this.fileDisplayList.slice(0, 4));
@@ -305,7 +305,7 @@ export class UpdateProductComponent implements OnInit {
       return (fileSize / 1000000).toFixed(3) + 'Mb';
     }
   }
-  
+
   confirm = "";
   deleteFile(file: ProductFile) {
     if (this.product.approved != Status.NEW) {
@@ -314,29 +314,29 @@ export class UpdateProductComponent implements OnInit {
       return;
     }
 
-      if (file) {
-        const formData = new FormData();
-        formData.append("fileId", file.id.toString());
-        formData.append("productId", this.product.id.toString());
-        formData.append("version", this.product.version);
-        const upload$ = this.productFileService.deleteProductFile(formData).subscribe(
-          (data: ProductFile) => {
-            var index = -1;
-            for (let i = 0; i < this.fileDisplayList.length; i++) {
-              if (this.fileDisplayList[i].file.id === data.id) {
-                index = i;
-              }
+    if (file) {
+      const formData = new FormData();
+      formData.append("fileId", file.id.toString());
+      formData.append("productId", this.product.id.toString());
+      formData.append("version", this.product.version);
+      const upload$ = this.productFileService.deleteProductFile(formData).subscribe(
+        (data: ProductFile) => {
+          var index = -1;
+          for (let i = 0; i < this.fileDisplayList.length; i++) {
+            if (this.fileDisplayList[i].file.id === data.id) {
+              index = i;
             }
-            if (index != -1) {
-              this.fileDisplayList.splice(index, 1);
-              console.log(this.fileDisplayList.length);
-            }
-          },
-          (error) => {
-            console.log(error);
           }
-        )
-      }
+          if (index != -1) {
+            this.fileDisplayList.splice(index, 1);
+            console.log(this.fileDisplayList.length);
+          }
+        },
+        (error) => {
+          console.log(error);
+        }
+      )
+    }
   }
 
   swapElements(index1: number, index2: number) {
@@ -431,9 +431,9 @@ export class UpdateProductComponent implements OnInit {
           for (let i = 0; i < this.product.files.length; i++) {
             var productFile: ProductFile = this.product.files[i];
             if (productFile.enabled) {
-            var fileDisplay = new FileDisplay();
-            fileDisplay.file = productFile;
-            fileDisplay.file.fileState = FileState.STORED;
+              var fileDisplay = new FileDisplay();
+              fileDisplay.file = productFile;
+              fileDisplay.file.fileState = FileState.STORED;
               this.fileDisplayList.push(fileDisplay);
             }
           }
@@ -582,22 +582,31 @@ export class UpdateProductComponent implements OnInit {
   fileFormatError = MSG105;
   onCoverImageUpload($event: any) {
     if (this.product.approved != Status.NEW) {
+
       this.fileError = "Bạn cần click vào nút 'Tiếp tục cập nhật' để thực hiện hành động này";
       this.openFileSizeErrorModal();
       return;
     }
     const file: File = $event.target.files[0];
-
-	if(file.name.length>100){
-		this.fileError = "Tên tệp từ 1 đến 100 kí tự";
+    console.log(file.type);
+    if (file.name.length > 100) {
+      this.fileError = "Tên tệp từ 1 đến 100 kí tự";
       this.openFileSizeErrorModal();
       return;
-	}
+    }
+    if (file.size > 1024 * 1024 * 20) {
+      this.fileError = "Độ lớn tối đa của ảnh: 20Mb";
+      this.openFileSizeErrorModal();
+      return;
+    }
     if (file) {
       console.log(file.type);
       if (!this.checkFileType(file.type, IMAGE_EXTENSIONS)) {
         this.openFormatErrorModal();
-      } else {
+        return;
+      }
+
+      else {
         //this.fileName = file.name;
         const formData = new FormData();
         formData.set("enctype", "multipart/form-data");
@@ -620,6 +629,7 @@ export class UpdateProductComponent implements OnInit {
         )
       }
     }
+    $event.target.reset;
   }
 
   getPreviewVideoSource(): string {
@@ -635,13 +645,18 @@ export class UpdateProductComponent implements OnInit {
       this.openFileSizeErrorModal();
       return;
     }
- 
+
     const file: File = $event.target.files[0];
-    if(file.name.length>100 || file.name.length<0){
-	  this.fileError = "Tên tệp từ 1 đến 100 kí tự";
+    if (file.name.length > 100 || file.name.length < 0) {
+      this.fileError = "Tên tệp từ 1 đến 100 kí tự";
       this.openFileSizeErrorModal();
       return;
-	}
+    }
+    if (file.size > 1024 * 1024 * 200) {
+      this.fileError = "Kích thước tối đa: 200Mb";
+      this.openFileSizeErrorModal();
+      return;
+    }
     if (file) {
       if (!this.checkFileType(file.type, VIDEO_EXTENSIONS)) {
         this.openFormatErrorModal();
@@ -698,12 +713,17 @@ export class UpdateProductComponent implements OnInit {
           if (!this.checkFileType(files[i].type, IMAGE_EXTENSIONS)) {
             valid = false;
           }
+          if (files[i].size > 1024 * 1024 * 20) {
+            this.fileError = "Độ lớn tối đa của ảnh: 20Mb";
+            this.openFileSizeErrorModal();
+            return;
+          }
+          if (files[i].name.length > 100 || files[i].name.length < 0) {
+            this.fileError = "Tên tệp từ 1 đến 100 kí tự";
+            this.openFileSizeErrorModal();
+            return;
+          }
           
-            if(files[i].name.length>100 || files[i].name.length<0){
-	  this.fileError = "Tên tệp từ 1 đến 100 kí tự";
-      this.openFileSizeErrorModal();
-      return;
-	}
         }
         if (!valid) {
           this.openFormatErrorModal();
@@ -974,7 +994,7 @@ export class UpdateProductComponent implements OnInit {
 
 
 
- 
+
 
     if (this.errors.length == 0) {
 
@@ -982,7 +1002,7 @@ export class UpdateProductComponent implements OnInit {
       this.newProductForm.controls.name.setValue(this.product.name);
       this.newProductForm.controls.tags.setValue(this.product.tags);
       this.newProductForm.controls.category.setValue(this.typeList[this.productCate - 1]);
-       this.newProductForm.controls.details.setValue(this.productDetails);
+      this.newProductForm.controls.details.setValue(this.productDetails);
       this.newProductForm.controls.price.setValue(this.product.price.toString());
       this.newProductForm.controls.description.setValue(this.product.description);
       this.newProductForm.controls.version.setValue(this.product.version);
@@ -1021,17 +1041,32 @@ export class UpdateProductComponent implements OnInit {
           this.fileError = 'Tên phiên bản đã tồn tại';
           this.openFileSizeErrorModal();
           return;
-        }
-        else {
-          this.productService.createNewVersion(this.product, this.NewVersionSpecify.value).subscribe(
-            data => {
-              console.log(data);
-              window.location.href = 'http://localhost:4200/product/update/' + this.product.id + '/' + this.NewVersionSpecify.value;
-            },
-            error => {
-              console.log(error);
-            });
-        }
+        } else
+          if (this.versions.length >= 10) {
+            this.fileError = 'Không thể có nhiều hơn 10 phiên bản';
+            this.openFileSizeErrorModal();
+            return;
+          }
+          else {
+            this.productService.createNewVersion(this.product, this.NewVersionSpecify.value).subscribe(
+              data => {
+                console.log(data);
+                window.location.href = 'http://localhost:4200/product/update/' + this.product.id + '/' + this.NewVersionSpecify.value;
+              },
+              error => {
+                if (error.status === 409) {
+                  this.fileError = 'Tên phiên bản đã tồn tại';
+
+                } else if (error.error.messages.includes('Version name length is 1 to 30')) {
+                  this.fileError = "Tên phiên bản có độ dài từ 1 đến 30 kí tự";
+                } else if (error.error.messages.includes('Version name cannot contains spaces')) {
+                  this.fileError = "Tên phiên bản không bao gồm khoảng trống";
+                } else if (error.error.messages.includes('Không thể có nhiều hơn 10 phiên bản')) {
+                  this.fileError = "Tên phiên bản không bao gồm khoảng trống";
+                }
+                this.openFileSizeErrorModal();
+              });
+          }
   }
 
   get PayBtn() {
@@ -1075,7 +1110,7 @@ export class UpdateProductComponent implements OnInit {
   }
 
   openSpecifyVersionModal() {
-    this.modalService.open(this.specifyVersionModal, { centered: true, size: "lg" });
+    this.modalService.open(this.specifyVersionModal, { centered: true, size: "xl" });
   }
 
   get DefaultTagSelectOption() {
@@ -1202,7 +1237,7 @@ export class UpdateProductComponent implements OnInit {
   }
 
 
-  exclusiveKey = [13, 32,190];
+  exclusiveKey = [13, 32, 190];
   exclusiveKey2 = [8, 190, 189]
 
 
@@ -1357,7 +1392,7 @@ export class UpdateProductComponent implements OnInit {
       if (this.product.price < 2) {
         this.errors.push("Số tiền tối thiểu là 2$");
       }
-      console.log(this.product.price*10 % 1);
+      console.log(this.product.price * 10 % 1);
       if ((this.product.price * 10 % 1) != 0) {
         this.errors.push('Số tiền là bội số của 0.1');
       }

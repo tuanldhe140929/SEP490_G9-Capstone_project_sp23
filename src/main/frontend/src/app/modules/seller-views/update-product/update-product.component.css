@@ -429,5 +429,14 @@ section {
 .back_to_shop:hover{
     opacity:.7;
 }
+button:active {
+  box-shadow: 0 1px #666;
+  transform: translateY(3px);
+}
 
 
+
+.modal-dialog{
+  border-radius: 3px;
+  min-height:300px;
+}
