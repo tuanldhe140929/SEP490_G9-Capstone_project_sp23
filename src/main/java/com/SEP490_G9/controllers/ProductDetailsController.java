@@ -153,7 +153,7 @@ public class ProductDetailsController {
 	@PostMapping(value = "cancelVerifyProduct")
 	public ResponseEntity<?> cancelVerfyProduct(@RequestParam(name = "productId", required = true) Long productId,
 			@RequestParam(name = "version", required = true) String version) {
-		ProductDetails pd = productDetailsService.updateApprovalStatus(productId, version, "NEW");
+		ProductDetails pd = productDetailsService.cancelVerify(productId, version, "NEW");
 		ProductDetailsDTO ret = new ProductDetailsDTO(pd);
 		return ResponseEntity.ok(ret);
 	}

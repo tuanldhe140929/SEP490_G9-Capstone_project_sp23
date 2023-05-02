@@ -94,6 +94,8 @@ public interface ProductDetailsService {
 	public int getTotalPurchasedCount(Long productId);
 	
 	public String getCurrentVersion(long productId);
+
+	ProductDetails cancelVerify(long productId, String version, String status);
 	
 	
 	
