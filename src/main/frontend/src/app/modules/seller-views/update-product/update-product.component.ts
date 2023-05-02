@@ -1465,6 +1465,16 @@ export class UpdateProductComponent implements OnInit {
   }
   license: License;
   openLicense() {
+    if (this.product.approved != Status.NEW) {
+      this.info = "Bạn cần click vào nút 'Tiếp tục cập nhật để thực hiện hành động này'";
+      this.openInfoModal();
+      return;
+    }
+    if (this.product.approvedDate != null) {
+      this.info = "Chỉ có thể cập nhật giấy phép 1 lần";
+      this.openInfoModal();
+      return;
+    }
     const data = {
       productId: this.product.id,
     }

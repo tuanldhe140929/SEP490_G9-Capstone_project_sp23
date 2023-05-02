@@ -35,8 +35,10 @@ export class Product {
   flagged: boolean;
   tags: Tag[];
   category: Category;
+  approvedDate: Date;
 
   constructor() {
+    this.approvedDate = new Date;
 	  this.approved = Status.REJECTED;
     this.id = -1;
     this.version = "";
