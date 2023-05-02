@@ -122,5 +122,16 @@
   </div>
 </ng-template>
 
+<ng-template #changeName let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" style="color:red">Lỗi</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="dismissError()"></button>
+  </div>
+  <div class="modal-body">
+    <small style="color:red;">{{errors}}<br/></small>
+  </div>
+</ng-template>
+
+
 <app-footer></app-footer>
 

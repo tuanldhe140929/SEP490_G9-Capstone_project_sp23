@@ -912,7 +912,6 @@ export class UpdateProductComponent implements OnInit {
     this.newProductForm.markAsDirty;
     if (this.product.name != null)
       this.product.name = this.removeSpaces(this.product.name);
-
     if (this.product.name == null || this.product.name == '') {
       this.errors.push(MSG100);
     } else {

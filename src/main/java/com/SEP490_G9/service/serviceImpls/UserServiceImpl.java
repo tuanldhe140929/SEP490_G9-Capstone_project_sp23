@@ -96,11 +96,13 @@ public class UserServiceImpl implements UserService {
 			throw new IllegalArgumentException();
 		}
 
-		if (!validator.validateLength(user.getFirstName(), 0, 255, true)) {
+		if (!validator.validateLength(user.getFirstName(), 0, 50, true)
+				||validator.containsSpecialCharacter(user.getFirstName())) {
 			throw new IllegalArgumentException();
 		}
 
-		if (!validator.validateLength(user.getLastName(), 0, 255, true)) {
+		if (!validator.validateLength(user.getLastName(), 0, 50, true)
+				||validator.containsSpecialCharacter(user.getLastName())) {
 			throw new IllegalArgumentException();
 		}
 

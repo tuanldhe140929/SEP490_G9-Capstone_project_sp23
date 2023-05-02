@@ -51,13 +51,14 @@ a:hover {
 }
 
 .dot {
+
   cursor: pointer;
-  height: 13px;
-  width: 13px;
-  margin: 0 5px;
-  background-color: #fff;
+  height: 15px;
+  width: 15px;
+  margin: 5px 5px;
+  background-color: #000000;
   border-radius: 50%;
-  display: inline-block;
+  display: flex;
   transition: opacity 0.6s ease;
   opacity: 0.5;
 }
@@ -92,4 +93,8 @@ a:hover {
   border: 0;
   cursor: pointer;
 
+}
+.section-heading{
+  text-align: center;
+  margin-top: 10px;
 }
