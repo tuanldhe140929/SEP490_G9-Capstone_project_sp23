@@ -177,6 +177,9 @@ export class CartComponent implements OnInit {
             case TransactionStatus.CREATED:
               setTimeout(checkStatus, 3000);
               break;
+            case TransactionStatus.PROCESSING:
+              setTimeout(checkStatus, 3000);
+              break;
             case TransactionStatus.APPROVED:
               setTimeout(checkStatus, 3000);
               break;
@@ -194,7 +197,7 @@ export class CartComponent implements OnInit {
               this.openInfoModal();
               break;
           }
-
+          console.log(data);
         },
         error => {
           console.log(error);
