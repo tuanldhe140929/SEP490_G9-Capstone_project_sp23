@@ -21,7 +21,6 @@ import { TagService } from 'src/app/services/tag.service';
 import { ProductService } from '../../../services/product.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ApplyLicenseComponent } from './apply-license/apply-license.component';
-import * as FileType from 'file-type';
 
 const MSG100 = 'Tên sản phẩm không được để trống';
 const MSG1001 = 'Tên sản phẩm có độ dài từ 3 đến 30 kí tự'
