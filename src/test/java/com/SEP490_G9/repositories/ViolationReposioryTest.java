@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,8 +23,6 @@ import com.SEP490_G9.entities.Report;
 import com.SEP490_G9.entities.Tag;
 import com.SEP490_G9.entities.Violation;
 import com.SEP490_G9.entities.ViolationType;
-import com.SEP490_G9.repository.AccountRepository;
-import com.SEP490_G9.repository.CartRepository;
 import com.SEP490_G9.repository.ViolationRepository;
 import com.SEP490_G9.repository.ViolationTypeRepository;
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -37,8 +34,6 @@ class ViolationReposioryTest {
 	@Autowired
 	ViolationRepository vioTypeRepo;
 	
-	@Autowired
-	private AccountRepository accountRepo;
 	
 	@Test
 	void test() {
@@ -49,9 +44,9 @@ class ViolationReposioryTest {
 	void testFindById() {
 		Violation viotype = new Violation();
 		viotype.setId(1L);
-		viotype.setCreated_date(new Date());
-		viotype.setDescription("abc");
-		viotype.setAccount(accountRepo.getById((long)1));
+		viotype.setCreated_date(null);
+		viotype.setDescription(null);
+		viotype.setAccount(null);
 		Optional<Violation> result = vioTypeRepo.findById(1L);
 		assertEquals(viotype, result);
 	}
@@ -60,9 +55,9 @@ class ViolationReposioryTest {
 	void testFindAll(){
 		Violation viotype = new Violation();
 		viotype.setId(1L);
-		viotype.setCreated_date(new Date());
-		viotype.setDescription("abc");
-		viotype.setAccount(accountRepo.getById((long)1));
+		viotype.setCreated_date(null);
+		viotype.setDescription(null);
+		viotype.setAccount(null);
 		Violation result = (Violation) vioTypeRepo.findAll();
 		assertEquals(viotype, result);
 	}
@@ -71,9 +66,9 @@ class ViolationReposioryTest {
 	void testFindByName(){
 		Violation viotype = new Violation();
 		viotype.setId(1L);
-		viotype.setCreated_date(new Date());
-		viotype.setDescription("abc");
-		viotype.setAccount(accountRepo.getById((long)1));
+		viotype.setCreated_date(null);
+		viotype.setDescription(null);
+		viotype.setAccount(null);
 		Violation result = vioTypeRepo.findByName("Spam");
 		assertEquals(viotype, result);
 	}
