@@ -44,7 +44,7 @@ class ViolationServiceTest {
 		Violation vio = new Violation((long) 1, "Người bán này lấy cắp ý tưởng của tôi", datecreate, acc);
 
 		Mockito.when(vioRepo.save(vio)).thenReturn(vio);
-		boolean result = vioService.addViolation(vio);
+		Violation result = vioService.addViolation(vio);
 		assertEquals(expected, result);
 	}
 
@@ -56,7 +56,7 @@ class ViolationServiceTest {
 		Violation vio = new Violation((long) 1, "Người bán này lấy cắp ý tưởng của tôi", datecreate, acc);
 
 		Mockito.when(vioRepo.save(vio)).thenReturn(vio);
-		boolean result = vioService.addViolation(vio);
+		Violation result = vioService.addViolation(vio);
 		assertEquals(expected, result);
 	}
 
@@ -68,7 +68,7 @@ class ViolationServiceTest {
 		Violation vio = new Violation((long) 1, "Người bán này lấy cắp ý tưởng của tôi", datecreate, acc);
 
 		Mockito.when(vioRepo.save(vio)).thenReturn(vio);
-		boolean result = vioService.addViolation(vio);
+		Violation result = vioService.addViolation(vio);
 		assertEquals(expected, result);
 	}
 
@@ -80,7 +80,7 @@ class ViolationServiceTest {
 		Violation vio = new Violation((long) 1, "Người bán này lấy cắp ý tưởng của tôi", datecreate, acc);
 
 		Mockito.when(vioRepo.save(vio)).thenReturn(vio);
-		boolean result = vioService.addViolation(vio);
+		Violation result = vioService.addViolation(vio);
 		assertEquals(expected, result);
 	}
 
@@ -92,7 +92,7 @@ class ViolationServiceTest {
 		Violation vio = new Violation((long) 1, "Người bán này lấy cắp ý tưởng của tôi", datecreate, acc);
 
 		Mockito.when(vioRepo.save(vio)).thenReturn(vio);
-		boolean result = vioService.addViolation(vio);
+		Violation result = vioService.addViolation(vio);
 		assertEquals(expected, result);
 	}
 
@@ -104,7 +104,7 @@ class ViolationServiceTest {
 		Violation vio = new Violation((long) 1, "Người bán này lấy cắp ý tưởng của tôi", datecreate, acc);
 
 		Mockito.when(vioRepo.save(vio)).thenReturn(vio);
-		boolean result = vioService.addViolation(vio);
+		Violation result = vioService.addViolation(vio);
 		assertEquals(expected, result);
 	}
 
@@ -116,7 +116,7 @@ class ViolationServiceTest {
 		Violation vio = new Violation((long) 1, "Người bán này lấy cắp ý tưởng của tôi", datecreate, acc);
 
 		Mockito.when(vioRepo.save(vio)).thenReturn(vio);
-		boolean result = vioService.addViolation(vio);
+		Violation result = vioService.addViolation(vio);
 		assertEquals(expected, result);
 	}
 
@@ -128,7 +128,7 @@ class ViolationServiceTest {
 		Violation vio = new Violation((long) 1, "Người bán này lấy cắp ý tưởng của tôi", datecreate, acc);
 
 		Mockito.when(vioRepo.save(vio)).thenReturn(vio);
-		boolean result = vioService.addViolation(vio);
+		Violation result = vioService.addViolation(vio);
 		assertEquals(expected, result);
 	}
 }
