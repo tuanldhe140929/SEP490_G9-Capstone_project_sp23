@@ -15,6 +15,7 @@ import { CategoryService } from 'src/app/services/category.service';
 import { Category } from 'src/app/dtos/Category';
 import { TagService } from 'src/app/services/tag.service';
 import { Tag } from 'src/app/dtos/Tag';
+import { Role } from 'src/app/dtos/Role';
 
 const removeMark = require("vietnamese-tonemarkless");
 
@@ -182,4 +183,16 @@ export class HeaderComponent implements OnInit {
       this.router.navigate(['tag/'+tagid]);
     })
   }
+
+  viewPayouts() {
+    this.router.navigate(['payout']);
+  }
+  viewPurchased() {
+    this.router.navigate(['purchased']);
+  }
+
+  // isSeller(): boolean {
+  //   const sellerRole: Role = { id: 4, name: 'ROLE_SELLER' };
+  //   return this.user.roles.some(role => role.id === sellerRole.id);
+  // }
 }
