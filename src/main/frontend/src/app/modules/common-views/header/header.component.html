@@ -22,7 +22,7 @@
                   <span class="ms-1">Cá nhân </span>
                   <i class="fa fa-chevron-down"></i>
                 </a>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink2">
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink2" style="padding:0;">
                   <li class="optionItem">
                     <a class="dropdown-item" routerLink="/profile"><i class="fa fa-user" aria-hidden="true"></i><span> Trang cá nhân</span></a>
                   </li>
@@ -48,7 +48,7 @@
         <div class="col-lg-5 col-md-12 col-12">
           <form class="" (submit)="toSearchResult()">
             <div class="input-group">
-              <input style="border-radius:3px !important;" type="search" class="form-control" style="width:55%" placeholder="Search" [formControl]="myControl" [matAutocomplete]="auto" [(ngModel)]="keyword">
+              <input style="border-radius: 3px !important; width: 55%" type="search" class="form-control" placeholder="Search" [formControl]="myControl" [matAutocomplete]="auto" [(ngModel)]="keyword">
               <mat-autocomplete autoActiveFirstOption="false" #auto="matAutocomplete" (optionSelected)="onOptionSelected($event)">
                 <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
                   {{option}}
