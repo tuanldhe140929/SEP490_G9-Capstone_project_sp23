@@ -79,6 +79,9 @@ public class TransactionServiceImpl implements TransactionService {
 	@Override
 	public Transaction getByPaymentId(String paymentId) {
 		Transaction ret = transactionRepo.findByPaypalId(paymentId);
+		if(ret==null) {
+			throw new ResourceNotFoundException(paymentId, paymentId, ret);
+		}
 		if (!ret.getStatus().equals(Status.APPROVED) && !ret.getStatus().equals(Status.CREATED)) {
 			return ret;
 		}
@@ -175,7 +178,7 @@ public class TransactionServiceImpl implements TransactionService {
 			if (pending.getStatus().equals(Transaction.Status.CREATED)
 					|| pending.getStatus().equals(Transaction.Status.APPROVED)) {
 				pending.setStatus(Status.CANCELED);
-				pending.setDescription("Canceled by transaction");
+				pending.setDescription("Canceled by create new transaction");
 				transactionRepo.save(pending);
 				payoutService.cancelPayout(pending.getId());
 			}

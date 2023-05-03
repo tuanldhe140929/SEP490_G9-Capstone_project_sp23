@@ -125,6 +125,7 @@ public class PayoutServiceImpl implements PayoutService {
 			System.out.println(state);
 			if (state.equals("SUCCESS")) {
 				double fee = Double.parseDouble(paypalService.getPayoutFee(batchId));
+				payout.setDescription("Payout send successfully");
 				payout.setStatus(Payout.Status.SUCCESS);
 				payout.setPayoutFee(fee);
 				payoutRepository.save(payout);
