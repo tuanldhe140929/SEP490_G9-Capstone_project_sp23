@@ -44,3 +44,14 @@
     position:absolute;
     left:100%;
 }
+.dropdown-item{
+  color: black;
+  text-decoration: none;
+  border-color: 0px;
+  cursor: pointer;
+  border: none;
+}
+
+.optionItem{
+  border: 0px white;
+}
