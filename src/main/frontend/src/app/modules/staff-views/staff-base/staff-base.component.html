@@ -6,15 +6,15 @@
    <span class="example-spacer"></span>
    <span>
    <button mat-button (click)="logout()">
-     Đăng xuất
+    <i class="fa fa-sign-out" aria-hidden="true"></i><span> Đăng xuất</span>
    </button>
    </span>
  </mat-toolbar>
 <mat-sidenav-container>
     <mat-sidenav #sidebar mode="side">
         <mat-list>
-            <mat-list-item (click)="openProductApproval()" [ngClass]="{chosenTab :productApprovalChosen}"><a>Danh sách chờ duyệt</a></mat-list-item>
-            <mat-list-item (click)="openReportList()" [ngClass]="{chosenTab :reportListChosen}"><a>Danh sách bị báo cáo</a></mat-list-item>
+            <mat-list-item (click)="openProductApproval()" [ngClass]="{chosenTab :productApprovalChosen}"><a><i class="fa fa-clock" aria-hidden="true"></i><span> Danh sách chờ duyệt</span></a></mat-list-item>
+            <mat-list-item (click)="openReportList()" [ngClass]="{chosenTab :reportListChosen}"><a><i class="fa fa-exclamation-triangle" aria-hidden="true"></i><span> Danh sách báo cáo</span></a></mat-list-item>
         </mat-list>
     </mat-sidenav>
     <mat-sidenav-content>

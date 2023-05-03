@@ -404,11 +404,13 @@ export class UpdateProductComponent implements OnInit {
 
           if (this.product.price != 0) {
             this.PayBtn.className += ' active';
+            this.nopayment = false;
             this.formattedPrice = this.getFormattedValue(this.product.price);
           } else {
             console.log("no payment");
             this.NoPaymentBtn.className += ' active';
             this.price = 0;
+            this.nopayment = true;
             const paid = (<HTMLElement>this.ElByClassName.nativeElement).querySelector(
               '.paid'
             );
@@ -492,9 +494,11 @@ export class UpdateProductComponent implements OnInit {
           console.log(this.fileDisplayList);
 
           if (this.product.price != 0) {
+            this.nopayment = false;
             this.PayBtn.className += ' active';
             this.formattedPrice = this.getFormattedValue(this.product.price);
           } else {
+            this.nopayment = true;
             console.log("no payment");
             this.NoPaymentBtn.className += ' active';
             this.price = 0;
@@ -859,7 +863,6 @@ export class UpdateProductComponent implements OnInit {
   }
   onPriceChange($event: any): void {
     const keyCode = $event.keyCode;
-    var minPrice = 1;
     const excludedKeys = [8, 37, 39, 46];
     if (!((keyCode >= 48 && keyCode <= 57) ||
       (keyCode >= 96 && keyCode <= 105) ||
@@ -895,6 +898,7 @@ export class UpdateProductComponent implements OnInit {
       clickedElement.className += " active";
 
       if (clickedElement.className == "payment_mode_paid active") {
+        this.nopayment = false;
         if (paid != null) {
           paid.setAttribute("style", "display:block;");
         }
@@ -904,6 +908,8 @@ export class UpdateProductComponent implements OnInit {
       }
       if (clickedElement.className == "payment_mode_no_paid active") {
         // this.newProductForm.value.priceUnformated = '0';
+        this.product.price = 0;
+        this.nopayment = true;
         if (paid != null) {
           paid.setAttribute("style", "display:none; ");
         }
@@ -1306,7 +1312,7 @@ export class UpdateProductComponent implements OnInit {
         this.openFileSizeErrorModal();
       });
   }
-
+  nopayment = true;
   dateFormat(date1: Date): string {
     var date: Date = new Date(date1.toString());
     const day = date.getDate();
@@ -1379,7 +1385,7 @@ export class UpdateProductComponent implements OnInit {
     }
 
     if (this.Paid.style.display === 'none') {
-      this.price = 0;
+      this.product.price = 0;
     } else {
 
       var priceString = this.formattedPrice.replace(",", "");
