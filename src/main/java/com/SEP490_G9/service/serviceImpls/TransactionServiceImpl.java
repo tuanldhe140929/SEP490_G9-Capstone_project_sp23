@@ -439,25 +439,31 @@ public class TransactionServiceImpl implements TransactionService {
 			if (state.equals("approved")) {
 				System.out.println("Payment has been approved.");
 				transaction.setStatus(Transaction.Status.COMPLETED);
-				payoutService.executePayout(transaction.getId());
+				Transaction finalTransaction = transaction;
+				new Thread(() -> payoutService.executePayout(finalTransaction.getId())).start();
 				return transactionRepo.save(transaction);
 
 			} else if (state.equals("completed")) {
 				System.out.println("Payment has been complete.");
 				transaction.setStatus(Transaction.Status.COMPLETED);
-				payoutService.executePayout(transaction.getId());
+				Transaction finalTransaction = transaction;
+				new Thread(() -> payoutService.executePayout(finalTransaction.getId())).start();
 				return transactionRepo.save(transaction);
 
 			} else if (state.equals("failed")) {
 				payoutService.cancelPayout(transaction.getId());
 				transaction.setStatus(Transaction.Status.FAILED);
 				transaction.setDescription("Payment has failed");
+				Transaction finalTransaction = transaction;
+				new Thread(() -> payoutService.cancelPayout(finalTransaction.getId())).start();
 				return transactionRepo.save(transaction);
 
 			} else if (state.equals("canceled")) {
 				payoutService.cancelPayout(transaction.getId());
 				transaction.setStatus(Transaction.Status.CANCELED);
 				transaction.setDescription("Payment has been canceled");
+				Transaction finalTransaction = transaction;
+				new Thread(() -> payoutService.cancelPayout(finalTransaction.getId())).start();
 				return transactionRepo.save(transaction);
 
 			}
@@ -473,6 +479,8 @@ public class TransactionServiceImpl implements TransactionService {
 				|| !transaction.getStatus().equals(Transaction.Status.FAILED))
 			transaction.setStatus(Transaction.Status.FAILED);
 		transaction.setDescription("fetch payment status timeout");
+		Transaction finalTransaction = transaction;
+		payoutService.cancelPayout(finalTransaction.getId());
 		transaction = transactionRepo.save(transaction);
 
 		return transaction;

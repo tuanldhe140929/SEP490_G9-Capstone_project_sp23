@@ -44,13 +44,13 @@ export class CartComponent implements OnInit {
     this.cartService.getAllProduct().subscribe(
       data => {
       
-        this.cart = data;
-        console.log(this.cart);
-        this.cartItemList = data.items;
+       
+       
         for (let i = 0; i < data.items.length; i++) {
           data.items[i].product.price = Number.parseFloat(data.items[i].product.price.toFixed(1));
         }
-
+        this.cart = data;
+        this.cartItemList = data.items;
         if (this.cart.changes.length != 0) {
           for (let i = 0; i < this.cart.changes.length; i++) {
             if (this.cart.changes[i].type == Type.REMOVED) {
@@ -85,13 +85,21 @@ export class CartComponent implements OnInit {
 
     this.cartService.removeItem(cartItem).subscribe(
       (data) => {
-        this.cart = data;
+      
+        for (let i = 0; i < data.items.length; i++) {
+          data.items[i].product.price = Number.parseFloat(data.items[i].product.price.toFixed(1));
+        }  this.cart = data;
         this.cartItemList = data.items;
       },
       (error) => {
         if (error.error.messages.includes('Cart is currently checking out')) {
           this.info = 'Không thể xóa sản phẩm do đang có giao dịch đang xảy ra';
           this.openInfoModal();
+        }
+        if (error.error.messages.includes('Cart does not have product with id:'+cartItem.product.id)) {
+          this.info = 'Sản phẩm này không có trong giỏ hàng';
+          this.openInfoModal();
+          this.getAllCartItem();
         }
       }
     )
@@ -272,8 +280,12 @@ export class CartComponent implements OnInit {
   }
   
   get LastPriceVND() {
+    if(this.convertRate!=null){
     const lastPrice = (Number.parseFloat(this.Fee) + Number.parseFloat(this.TotalPrice))* this.convertRate;
-    return lastPrice.toFixed(2);
+    return lastPrice.toFixed(2);}
+    else{
+      return 0;
+    }
   }
 
   getVNDPrice(){

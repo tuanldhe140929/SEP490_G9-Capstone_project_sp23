@@ -100,11 +100,13 @@ public class PayoutServiceImpl implements PayoutService {
 				payout.setLastModified(new Date());
 				payout.setDescription("commited payout");
 				payout.setStatus(Payout.Status.PROCESSING);
+				
 				PayoutBatch batch = paypalService.executePayout(payout.getSeller().getEmail(), payout.getAmount());
 				payout.setBatchId(batch.getBatchHeader().getPayoutBatchId());
+				payoutRepository.save(payout);
 				fetchPayoutStatus(payout.getId(), batch.getBatchHeader().getPayoutBatchId());
 			}
-			payouts = payoutRepository.saveAll(payouts);
+			
 		}
 		return payouts;
 	}
