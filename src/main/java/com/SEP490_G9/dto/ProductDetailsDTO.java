@@ -66,6 +66,7 @@ public class ProductDetailsDTO {
 	
 	private boolean flagged;
 
+	private Date approvedDate;
 	public ProductDetailsDTO() {
 		// TODO Auto-generated constructor stub
 	}
@@ -85,7 +86,7 @@ public class ProductDetailsDTO {
 		this.draft = productDetails.getProduct().isDraft();
 		this.price = productDetails.getPrice();
 		this.activeVersion = productDetails.getProduct().getActiveVersion();
-
+		this.approvedDate = productDetails.getApprovedDate();
 		this.previewVideo = getPreviewVideoSource(productDetails);
 		this.previewPictures = getPreviewPicturesSource(productDetails);
 		this.seller = new SellerDTO(productDetails.getProduct().getSeller());
@@ -129,6 +130,14 @@ public class ProductDetailsDTO {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public Date getApprovedDate() {
+		return approvedDate;
+	}
+
+	public void setApprovedDate(Date approvedDate) {
+		this.approvedDate = approvedDate;
 	}
 
 	public String getName() {

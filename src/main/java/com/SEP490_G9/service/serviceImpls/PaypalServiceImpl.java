@@ -9,10 +9,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import org.hibernate.resource.transaction.spi.TransactionStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.SEP490_G9.entities.Transaction.Status;
 import com.SEP490_G9.entities.TransactionFee;
+import com.SEP490_G9.exception.InternalServerException;
+import com.SEP490_G9.repository.TransactionRepository;
 import com.SEP490_G9.service.PaypalService;
 import com.paypal.api.payments.Amount;
 import com.paypal.api.payments.Currency;
@@ -39,7 +43,10 @@ public class PaypalServiceImpl implements PaypalService {
 	final String RETURN_URL = "http://localhost:4200/transaction/reviewTransaction";
 	final String CANCEL_URL = "transaction/cancel";
 	final String INTENT = "sale";
-
+    
+	@Autowired
+	TransactionRepository transactionRepo;
+	
 	@Autowired
 	private APIContext apiContext;
 
@@ -81,14 +88,17 @@ public class PaypalServiceImpl implements PaypalService {
 		try {
 			ret = payment.create(apiContext);
 		} catch (PayPalRESTException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			t.setStatus(Status.FAILED);
+			t.setDescription("failed to create transaction");
+			transactionRepo.save(t);
+			throw new InternalServerException("Cannot create payment");
 		}
 		return ret;
 	}
 
 	@Override
 	public Payment executePayment(String paymentId, String payerId) {
+		com.SEP490_G9.entities.Transaction t = transactionRepo.findByPaypalId(paymentId);
 		Payment payment = new Payment();
 		payment.setId(paymentId);
 		PaymentExecution paymentExecute = new PaymentExecution();
@@ -97,8 +107,10 @@ public class PaypalServiceImpl implements PaypalService {
 		try {
 			ret = payment.execute(apiContext, paymentExecute);
 		} catch (PayPalRESTException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			t.setStatus(Status.FAILED);
+			t.setDescription("failed to execute payment");
+			transactionRepo.save(t);
+			throw new InternalServerException("Cannot create payment");
 		}
 		return ret;
 	}

@@ -65,6 +65,14 @@ public class CartServiceImplement implements CartService {
 	@Override
 	public Cart addItem(Long productId, Long cartId) {
 		Cart cart = getById(cartId);
+		List<Transaction> currentTransactions = transactionRepo.findByCartId(cartId);
+		for(Transaction transaction: currentTransactions) {
+			if(transaction.getStatus().equals(Transaction.Status.PROCESSING) || 
+					transaction.getStatus().equals(Transaction.Status.CREATED) ||
+							transaction.getStatus().equals(Transaction.Status.APPROVED)){
+								throw new IllegalArgumentException("Cart is currently checking out");
+							}
+		}
 		if (cart.getItems().size() == 10) {
 			throw new IllegalArgumentException("Exeeded max number of items");
 		}
@@ -104,6 +112,14 @@ public class CartServiceImplement implements CartService {
 	@Override
 	public Cart removeItem(Long productId, Long cartId) {
 		Cart cart = getById(cartId);
+		List<Transaction> currentTransactions = transactionRepo.findByCartId(cartId);
+		for(Transaction transaction: currentTransactions) {
+			if(transaction.getStatus().equals(Transaction.Status.PROCESSING) || 
+					transaction.getStatus().equals(Transaction.Status.CREATED) ||
+							transaction.getStatus().equals(Transaction.Status.APPROVED)){
+								throw new IllegalArgumentException("Cart is currently checking out");
+							}
+		}
 		CartItem itemToRemove = null;
 		for (CartItem item : cart.getItems()) {
 			if (item.getProductDetails().getProductVersionKey().getProductId().equals(productId)) {

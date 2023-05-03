@@ -79,6 +79,9 @@ public class TransactionServiceImpl implements TransactionService {
 	@Override
 	public Transaction getByPaymentId(String paymentId) {
 		Transaction ret = transactionRepo.findByPaypalId(paymentId);
+		if (!ret.getStatus().equals(Status.APPROVED) && !ret.getStatus().equals(Status.CREATED)) {
+			return ret;
+		}
 		List<Change> changes = new ArrayList<>();
 		List<CartItem> removeItems = new ArrayList<>();
 		List<CartItem> updatedItems = new ArrayList<>();
@@ -117,8 +120,8 @@ public class TransactionServiceImpl implements TransactionService {
 
 		ret.getCart().setChanges(changes);
 		cartItemRepo.saveAll(ret.getCart().getItems());
-		for(Change change: ret.getCart().getChanges()) {
-			if(change.getType().equals(Change.Type.REMOVED)) {
+		for (Change change : ret.getCart().getChanges()) {
+			if (change.getType().equals(Change.Type.REMOVED)) {
 				ret.setStatus(Transaction.Status.CANCELED);
 				ret.setDescription("Canceled by the system");
 				ret = transactionRepo.save(ret);
@@ -161,15 +164,16 @@ public class TransactionServiceImpl implements TransactionService {
 		if (cart.getItems().size() == 0) {
 			throw new IllegalArgumentException("Cart is empty");
 		}
-		
+
 		List<Transaction> cartTransactions = transactionRepo.findByCartId(cart.getId());
-		for(Transaction processing: cartTransactions) {
-			if(processing.getStatus().equals(Transaction.Status.PROCESSING)) {
+		for (Transaction processing : cartTransactions) {
+			if (processing.getStatus().equals(Transaction.Status.PROCESSING)) {
 				throw new IllegalArgumentException("Another transaction is processing");
 			}
 		}
-		for(Transaction pending: cartTransactions) {
-			if(pending.getStatus().equals(Transaction.Status.CREATED) || pending.getStatus().equals(Transaction.Status.APPROVED)) {
+		for (Transaction pending : cartTransactions) {
+			if (pending.getStatus().equals(Transaction.Status.CREATED)
+					|| pending.getStatus().equals(Transaction.Status.APPROVED)) {
 				pending.setStatus(Status.CANCELED);
 				pending.setDescription("Canceled by transaction");
 				transactionRepo.save(pending);
@@ -332,13 +336,31 @@ public class TransactionServiceImpl implements TransactionService {
 	@Override
 	public Transaction executeTransaction(String paymentId, String payerId) {
 		Transaction transaction = transactionRepo.findByPaypalId(paymentId);
-		if (payerId.isBlank() || payerId.isEmpty()) {
-			throw new IllegalArgumentException("PayerId can not be blank");
-		}
 		if (transaction == null) {
 			throw new ResourceNotFoundException("transaction", "paymentId", paymentId);
 		}
+		
 		Transaction ret = null;
+		if (transaction.getStatus().equals(Transaction.Status.CREATED)) {
+			throw new IllegalAccessError("The transaction isnt ready");
+		}
+		if(transaction.getStatus().equals(Transaction.Status.COMPLETED)) {
+			throw new IllegalAccessError("The transaction has been compeleted");
+		}
+		if(transaction.getStatus().equals(Transaction.Status.FAILED)) {
+			throw new IllegalAccessError("The transaction has been failed");
+		}
+		if(transaction.getStatus().equals(Transaction.Status.CANCELED)) {
+			throw new IllegalAccessError("The transaction has been cancelled");
+		}
+		if (transaction.getStatus().equals(Transaction.Status.EXPIRED)) {
+			ret = transaction;
+			return ret;
+		}
+		if (payerId.isBlank() || payerId.isEmpty()) {
+			throw new IllegalArgumentException("PayerId can not be blank");
+		}
+	
 		List<Change> changes = new ArrayList<>();
 		List<CartItem> removeItems = new ArrayList<>();
 		List<CartItem> updatedItems = new ArrayList<>();
@@ -372,7 +394,8 @@ public class TransactionServiceImpl implements TransactionService {
 				change.setType(Change.Type.UPDATED);
 				changes.add(change);
 			}
-			if(item.getProductDetails().getApproved() != ProductDetails.Status.APPROVED || !item.getProductDetails().getProduct().isEnabled()) {
+			if (item.getProductDetails().getApproved() != ProductDetails.Status.APPROVED
+					|| !item.getProductDetails().getProduct().isEnabled()) {
 				cartItemRepo.delete(item);
 				Change change = new Change();
 				change.setItem(item.getProductDetails().getName());
@@ -385,8 +408,8 @@ public class TransactionServiceImpl implements TransactionService {
 		transaction.getCart().setChanges(changes);
 
 		if (transaction.isChange()) {
-			for(Change change: transaction.getCart().getChanges()) {
-				if(change.getType().equals(Change.Type.REMOVED)) {
+			for (Change change : transaction.getCart().getChanges()) {
+				if (change.getType().equals(Change.Type.REMOVED)) {
 					transaction.setStatus(Transaction.Status.CANCELED);
 					transaction.setDescription("Canceled by the system");
 					transactionRepo.save(transaction);
@@ -396,16 +419,7 @@ public class TransactionServiceImpl implements TransactionService {
 			return transaction;
 		}
 
-		if (transaction.getStatus().equals(Transaction.Status.CREATED)
-				|| transaction.getStatus().equals(Transaction.Status.COMPLETED)
-				|| transaction.getStatus().equals(Transaction.Status.FAILED)
-				|| transaction.getStatus().equals(Transaction.Status.CANCELED)) {
-			throw new IllegalAccessError("The transaction isn't ready or has been commit");
-		}
-		if (transaction.getStatus().equals(Transaction.Status.EXPIRED)) {
-			ret = transaction;
-			return ret;
-		}
+		
 		Long time = System.currentTimeMillis() + 15 * 60 * 1000;
 		transaction.setExpiredDate(new Date(time));
 		transaction.setStatus(Status.PROCESSING);
