@@ -37,19 +37,19 @@ public class ReportServiceImpl implements ReportService {
 
 	@Autowired
 	private ProductRepository productRepository;
-	
+
 	@Autowired
 	private ProductDetailsService productDetailsService;
-	
+
 	@Autowired
 	private ProductDetailsRepository productDetailsRepository;
-	
+
 	@Autowired
 	private ViolationTypeRepository vioTypeRepository;
 
 	@Override
-	public Report sendReport (long productId, long accountId, String version, String description, long violationTypeId) {
-		if(description.length()<10||description.length()>255) {
+	public Report sendReport(long productId, long accountId, String version, String description, long violationTypeId) {
+		if (description.length() < 10 || description.length() > 255) {
 			throw new NumberException("report length must be from 10 and 255 characters");
 		}
 		Report report = new Report();
@@ -73,12 +73,12 @@ public class ReportServiceImpl implements ReportService {
 		List<Report> allReports = reportRepository.findAll();
 		return allReports;
 	}
-	
+
 	@Override
 	public List<Report> getByProductDetails(List<Report> reportList, Product product, String version) {
 		List<Report> reportsByProduct = new ArrayList<>();
-		for(Report report: reportList) {
-			if(report.getProduct().equals(product)&&report.getVersion().equalsIgnoreCase(version)) {
+		for (Report report : reportList) {
+			if (report.getProduct().equals(product) && report.getVersion().equalsIgnoreCase(version)) {
 				reportsByProduct.add(report);
 			}
 		}
@@ -88,8 +88,8 @@ public class ReportServiceImpl implements ReportService {
 	@Override
 	public List<Report> getByUser(List<Report> reportList, User user) {
 		List<Report> reportsByUser = new ArrayList<>();
-		for(Report report: reportList) {
-			if(report.getUser().equals(user)) {
+		for (Report report : reportList) {
+			if (report.getUser().equals(user)) {
 				reportsByUser.add(report);
 			}
 		}
@@ -103,9 +103,9 @@ public class ReportServiceImpl implements ReportService {
 		List<Report> allReports = getAllReports();
 		List<Report> reportsByProduct = getByProductDetails(allReports, product, version);
 		List<Report> reportsByUser = getByUser(reportsByProduct, user);
-		if(reportsByUser.size()>0) {
+		if (reportsByUser.size() > 0) {
 			return reportsByUser.get(0);
-		}else {
+		} else {
 			return null;
 		}
 	}
@@ -118,12 +118,15 @@ public class ReportServiceImpl implements ReportService {
 	}
 
 	@Override
-	public List<Report> updateReportStatus(long productId, String version , List<Long> userIdList, List<String> statusList) {
-		if(isReported(productId, version)) {
-			throw new InternalServerException("Something went wrong");
+	public List<Report> updateReportStatus(long productId, String version, List<Long> userIdList,
+			List<String> statusList) {
+		for (long userId : userIdList) {
+			if (isReported(productId, userId, version)) {
+				throw new InternalServerException("report has been handled");
+			}
 		}
 		List<Report> updatedList = new ArrayList<>();
-		for(int i=0;i<userIdList.size();i++) {
+		for (int i = 0; i < userIdList.size(); i++) {
 			long userId = userIdList.get(i);
 			String status = statusList.get(i);
 			Report report = getByProductUserVersion(productId, userId, version);
@@ -135,12 +138,12 @@ public class ReportServiceImpl implements ReportService {
 		ProductDetails pd = productDetailsService.getByProductIdAndVersion(productId, version);
 		ProductDetails latestPd = productDetailsService.getActiveVersion(productId);
 		int accepted = 0;
-		for(String str: statusList) {
-			if(str.equalsIgnoreCase("ACCEPTED")) {
+		for (String str : statusList) {
+			if (str.equalsIgnoreCase("ACCEPTED")) {
 				accepted = accepted + 1;
 			}
 		}
-		if(accepted>0) {
+		if (accepted > 0) {
 			pd.setFlagged(true);
 			Product bannedProduct = pd.getProduct();
 			bannedProduct.setEnabled(false);
@@ -153,8 +156,8 @@ public class ReportServiceImpl implements ReportService {
 	public List<Report> getByStatus(String status) {
 		List<Report> allReports = reportRepository.findAll();
 		List<Report> statusReports = new ArrayList<>();
-		for(Report report: allReports) {
-			if(report.getStatus().equalsIgnoreCase(status)) {
+		for (Report report : allReports) {
+			if (report.getStatus().equalsIgnoreCase(status)) {
 				statusReports.add(report);
 			}
 		}
@@ -167,11 +170,12 @@ public class ReportServiceImpl implements ReportService {
 		Product product = productRepository.findById(productId).get();
 		List<Report> allByProduct = getByProductDetails(allReports, product, version);
 		List<Report> allByStatus = new ArrayList<>();
-		for(Report report: allByProduct) {
-			if(status.equalsIgnoreCase("PENDING") && report.getStatus().equalsIgnoreCase("PENDING")) {
+		for (Report report : allByProduct) {
+			if (status.equalsIgnoreCase("PENDING") && report.getStatus().equalsIgnoreCase("PENDING")) {
 				allByStatus.add(report);
 			}
-			if(status.equalsIgnoreCase("HANDLED") && (report.getStatus().equalsIgnoreCase("ACCEPTED")||report.getStatus().equalsIgnoreCase("DENIED"))) {
+			if (status.equalsIgnoreCase("HANDLED") && (report.getStatus().equalsIgnoreCase("ACCEPTED")
+					|| report.getStatus().equalsIgnoreCase("DENIED"))) {
 				allByStatus.add(report);
 			}
 		}
@@ -182,15 +186,18 @@ public class ReportServiceImpl implements ReportService {
 	public List<Report> getByProductDetailsAndStatus(long productId, String version, String status) {
 		List<Report> allReports = getAllReports();
 		List<Report> finalResult = new ArrayList<>();
-		if(status.equalsIgnoreCase("PENDING")) {
-			for(Report report: allReports) {
-				if(report.getProduct().getId()==productId&& report.getVersion().equals(version) && report.getStatus().equalsIgnoreCase("PENDING")) {
+		if (status.equalsIgnoreCase("PENDING")) {
+			for (Report report : allReports) {
+				if (report.getProduct().getId().equals(productId) && report.getVersion().equals(version)
+						&& report.getStatus().equalsIgnoreCase("PENDING")) {
 					finalResult.add(report);
 				}
 			}
-		}else {
-			for(Report report: allReports) {
-				if(report.getProduct().getId()==productId&& report.getVersion().equals(version) && (report.getStatus().equalsIgnoreCase("ACCEPTED")||report.getStatus().equalsIgnoreCase("DENIED"))) {
+		} else {
+			for (Report report : allReports) {
+				if (report.getProduct().getId().equals(productId) && report.getVersion().equals(version)
+						&& (report.getStatus().equalsIgnoreCase("ACCEPTED")
+								|| report.getStatus().equalsIgnoreCase("DENIED"))) {
 					finalResult.add(report);
 				}
 			}
@@ -199,17 +206,18 @@ public class ReportServiceImpl implements ReportService {
 	}
 
 	@Override
-	public boolean isReported(long productId, String version){
+	public boolean isReported(long productId, long accountId, String version) {
 		boolean reported = false;
 		List<Report> allReports = getAllReports();
 		List<Report> productVersionReports = new ArrayList<>();
-		for(Report r: allReports) {
-			if(r.getProduct().getId()==productId && r.getVersion().equalsIgnoreCase(version)) {
+		for (Report r : allReports) {
+			if (r.getProduct().getId().equals(productId) && r.getVersion().equalsIgnoreCase(version)
+					&& r.getUser().getId().equals(accountId)) {
 				productVersionReports.add(r);
 			}
 		}
-		for(Report r: productVersionReports) {
-			if(r.getStatus().equalsIgnoreCase("ACCEPTED")||r.getStatus().equalsIgnoreCase("DENIED")) {
+		for (Report r : productVersionReports) {
+			if (r.getStatus().equalsIgnoreCase("ACCEPTED") || r.getStatus().equalsIgnoreCase("DENIED")) {
 				reported = true;
 			}
 		}

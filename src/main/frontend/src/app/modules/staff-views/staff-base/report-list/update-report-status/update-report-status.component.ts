@@ -119,6 +119,7 @@ export class UpdateReportStatusComponent implements AfterViewInit{
             this.dialogRef.close({data: "done"});
           },
           error => {
+            console.log(error);
             this.toastr.error("Đã có lỗi xảy ra");
             this.dialogRef.close({data: "error"});
           })

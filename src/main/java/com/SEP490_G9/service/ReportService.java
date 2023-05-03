@@ -21,7 +21,7 @@ public interface ReportService {
 	
 	List<Report> getByUser(List<Report> reportList, User user);
 	
-	boolean isReported(long productId, String version);
+	boolean isReported(long productId, long accountId, String version);
 	
 	Report getByProductUserVersion(long productId, long userId, String version);
 	
