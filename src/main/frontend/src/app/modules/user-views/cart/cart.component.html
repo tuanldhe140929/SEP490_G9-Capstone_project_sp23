@@ -68,16 +68,16 @@
           <div class="card-body">
             <dl class="dlist-align">
               <dt>Giỏ hàng:</dt>
-              <dd class="text-end text-dark h5"> ${{TotalPrice}} (~${{TotalPriceVND | number:'1.0-0'}}VND)</dd>
+              <dd class="text-end text-dark h5"> ${{TotalPrice}} (~{{TotalPriceVND | number:'1.0-0'}}VND)</dd>
             </dl>
             <dl class="dlist-align">
               <dt>Phí:</dt>
-              <dd class="text-end text-dark h5"> ${{Fee}} (~${{FeeVND | number:'1.0-0'}}VND)</dd>
+              <dd class="text-end text-dark h5"> ${{Fee}} (~{{FeeVND | number:'1.0-0'}}VND)</dd>
             </dl>
             <hr>
             <dl class="dlist-align">
               <dt>Tổng tiền:</dt>
-              <dd class="text-end text-dark h5"> ${{LastPrice}} (~${{LastPriceVND | number:'1.0-0'}}VND)</dd>
+              <dd class="text-end text-dark h5"> ${{LastPrice}} (~{{LastPriceVND | number:'1.0-0'}}VND)</dd>
             </dl>
             <div class="d-grid gap-2 my-3">
               <a button (click)="showPopups()" class="btn w-100 buyBtn"> Thanh toán  </a>

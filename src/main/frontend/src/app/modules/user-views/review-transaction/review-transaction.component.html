@@ -20,7 +20,7 @@
     </tbody>
   </table>
   <div class="total-amount">
-    Tổng: ${{total}} (~{{total * convertRate | number:'1.0-0'}})
+    Tổng: ${{total}} (~{{total * convertRate | number:'1.0-0'}}VND)
   </div>
   <div class="" *ngIf="transaction.status==TransactionStatus.FAILED">
     Trạng thái giao dịch: Thất bại
