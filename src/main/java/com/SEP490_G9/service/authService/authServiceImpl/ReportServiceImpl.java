@@ -208,18 +208,23 @@ public class ReportServiceImpl implements ReportService {
 	@Override
 	public boolean isReported(long productId, long accountId, String version) {
 		boolean reported = false;
-		List<Report> allReports = getAllReports();
-		List<Report> productVersionReports = new ArrayList<>();
-		for (Report r : allReports) {
-			if (r.getProduct().getId().equals(productId) && r.getVersion().equalsIgnoreCase(version)
-					&& r.getUser().getId().equals(accountId)) {
-				productVersionReports.add(r);
-			}
-		}
-		for (Report r : productVersionReports) {
-			if (r.getStatus().equalsIgnoreCase("ACCEPTED") || r.getStatus().equalsIgnoreCase("DENIED")) {
-				reported = true;
-			}
+//		List<Report> allReports = getAllReports();
+//		List<Report> productVersionReports = new ArrayList<>();
+//		for (Report r : allReports) {
+//			if (r.getProduct().getId().equals(productId) && r.getVersion().equalsIgnoreCase(version)
+//					&& r.getUser().getId().equals(accountId)) {
+//				productVersionReports.add(r);
+//			}
+//		}
+//		for (Report r : productVersionReports) {
+//			if (r.getStatus().equalsIgnoreCase("ACCEPTED") || r.getStatus().equalsIgnoreCase("DENIED")) {
+//				reported = true;
+//			}
+//		}
+//		return reported;
+		Report report = getByProductUserVersion(productId, accountId, version);
+		if(report.getStatus().equalsIgnoreCase("ACCEPT")||report.getStatus().equalsIgnoreCase("DENIED")) {
+			reported = true;
 		}
 		return reported;
 	}
