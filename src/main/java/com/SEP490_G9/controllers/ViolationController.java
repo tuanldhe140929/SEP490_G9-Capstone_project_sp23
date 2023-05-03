@@ -18,12 +18,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.SEP490_G9.dto.ViolationDTO;
 import com.SEP490_G9.entities.Account;
+import com.SEP490_G9.entities.Product;
 import com.SEP490_G9.entities.Report;
 import com.SEP490_G9.entities.Tag;
 import com.SEP490_G9.entities.UserDetailsImpl;
 import com.SEP490_G9.entities.Violation;
 import com.SEP490_G9.entities.ViolationType;
 import com.SEP490_G9.repository.AccountRepository;
+import com.SEP490_G9.repository.ProductRepository;
 import com.SEP490_G9.repository.ViolationRepository;
 import com.SEP490_G9.repository.ViolationTypeRepository;
 import com.SEP490_G9.security.JwtTokenUtil;
@@ -43,6 +45,9 @@ public class ViolationController {
 	@Autowired
 	JwtTokenUtil jwtTokenUtil;
 
+	@Autowired
+	ProductRepository productRepository;
+
 	@PostMapping("addviolation")
 	public ResponseEntity<?> addViolation(@RequestParam("account_id") int account_id,
 			@RequestParam("description") String description) {
@@ -59,6 +64,11 @@ public class ViolationController {
 		Account updateStatus = violationService.updateSellerStatus(id);
 		String sellerAccessToken = jwtTokenUtil.generateToken(updateStatus.getEmail());
 		jwtTokenUtil.invalidateToken(sellerAccessToken);
+		List<Product> sellerProduct = productRepository.findBySellerIdAndEnabled(updateStatus.getId(), true);
+		for (Product p : sellerProduct) {
+			p.setEnabled(false);
+		}
+		productRepository.saveAll(sellerProduct);
 		return ResponseEntity.ok(updateStatus);
 	}
 

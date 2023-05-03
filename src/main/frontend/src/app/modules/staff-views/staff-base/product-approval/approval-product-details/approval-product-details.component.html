@@ -203,7 +203,7 @@
                 </article> <!-- tab-content.// -->
                 <article id="tab_details" class="tab-pane card-body">
                   <div *ngFor="let file of product.files" style="margin-bottom:12px;">
-                    <div *ngIf="(file.enabled==true && file.newUploaded==false && file.reviewed==true) || (file.enabled == false && file.newUploaded == false && file.reviewed == false)">
+                    <div *ngIf="(file.enabled==true)">
                       <strong class="upload_display_name">{{file.name}}</strong>&#183;<span class="file_size">{{formatFileSize(file.size)}}</span>
                     </div>
                   </div>

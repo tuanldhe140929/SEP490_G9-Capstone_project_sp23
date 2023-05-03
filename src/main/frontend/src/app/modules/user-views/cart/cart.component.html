@@ -11,7 +11,7 @@
       <div class="col-lg-9">
 
         <div class="card" style="border-radius:3px;">
-          <div class="content-body" style="min-height:400px;">
+          <div class="content-body" style="min-height:450px;">
             <h4 class="card-title mb-4">Giỏ hàng của bạn</h4>
             <div *ngIf="cartItemList.length == 0">
               <b>Chưa có sản phẩm nào trong giỏ hàng </b>
@@ -68,16 +68,16 @@
           <div class="card-body">
             <dl class="dlist-align">
               <dt>Giỏ hàng:</dt>
-              <dd class="text-end text-dark h5"> ${{TotalPrice}} (~${{TotalPriceVND | number:'1.0-0'}}VND)</dd>
+              <dd class="text-end text-dark h5"> ${{TotalPrice}} (~{{TotalPriceVND | number:'1.0-0'}}VND)</dd>
             </dl>
             <dl class="dlist-align">
               <dt>Phí:</dt>
-              <dd class="text-end text-dark h5"> ${{Fee}} (~${{FeeVND | number:'1.0-0'}}VND)</dd>
+              <dd class="text-end text-dark h5"> ${{Fee}} (~{{FeeVND | number:'1.0-0'}}VND)</dd>
             </dl>
             <hr>
             <dl class="dlist-align">
               <dt>Tổng tiền:</dt>
-              <dd class="text-end text-dark h5"> ${{LastPrice}} (~${{LastPriceVND | number:'1.0-0'}}VND)</dd>
+              <dd class="text-end text-dark h5"> ${{LastPrice}} (~{{LastPriceVND | number:'1.0-0'}}VND)</dd>
             </dl>
             <div class="d-grid gap-2 my-3">
               <a button (click)="showPopups()" class="btn w-100 buyBtn"> Thanh toán  </a>

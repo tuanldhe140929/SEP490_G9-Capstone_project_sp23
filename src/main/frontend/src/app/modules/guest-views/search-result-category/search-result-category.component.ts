@@ -48,6 +48,9 @@ export class SearchResultCategoryComponent {
     this.productService.getProductsForSearching(this.keyword,this.categoryId,[],0,1000).subscribe(
       data => {
         this.resultList = data;
+        for(let i=0; i<this.resultList.length;i++){
+          this.resultList[i].price = Number.parseFloat(this.resultList[i].price.toFixed(1));
+        }
         this.totalResult = this.resultList.length;
       }
     )
@@ -109,6 +112,9 @@ export class SearchResultCategoryComponent {
     this.productService.getProductsForSearching(this.keyword,this.chosenCategory, this.checkedTags,this.minprice,this.maxprice).subscribe(
       data => {
         this.resultList = data;
+        for(let i=0; i<this.resultList.length;i++){
+          this.resultList[i].price = Number.parseFloat(this.resultList[i].price.toFixed(1));
+        }
         this.totalResult = this.resultList.length;
       }
     )

@@ -51,7 +51,7 @@
         <div class="col-lg-5 col-md-12 col-12">
           <form class="" (submit)="toSearchResult()">
             <div class="input-group">
-              <input style="border-radius:3px;" type="search" class="form-control" style="width:55%" placeholder="Search" [formControl]="myControl" [matAutocomplete]="auto" [(ngModel)]="keyword">
+              <input style="border-radius:3px !important;" type="search" class="form-control" style="width:55%" placeholder="Search" [formControl]="myControl" [matAutocomplete]="auto" [(ngModel)]="keyword">
               <mat-autocomplete autoActiveFirstOption="false" #auto="matAutocomplete" (optionSelected)="onOptionSelected($event)">
                 <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
                   {{option}}

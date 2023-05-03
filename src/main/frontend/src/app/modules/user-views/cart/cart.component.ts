@@ -44,13 +44,13 @@ export class CartComponent implements OnInit {
     this.cartService.getAllProduct().subscribe(
       data => {
       
-        this.cart = data;
-        console.log(this.cart);
-        this.cartItemList = data.items;
+       
+       
         for (let i = 0; i < data.items.length; i++) {
           data.items[i].product.price = Number.parseFloat(data.items[i].product.price.toFixed(1));
         }
-
+        this.cart = data;
+        this.cartItemList = data.items;
         if (this.cart.changes.length != 0) {
           for (let i = 0; i < this.cart.changes.length; i++) {
             if (this.cart.changes[i].type == Type.REMOVED) {
@@ -85,13 +85,21 @@ export class CartComponent implements OnInit {
 
     this.cartService.removeItem(cartItem).subscribe(
       (data) => {
-        this.cart = data;
+      
+        for (let i = 0; i < data.items.length; i++) {
+          data.items[i].product.price = Number.parseFloat(data.items[i].product.price.toFixed(1));
+        }  this.cart = data;
         this.cartItemList = data.items;
       },
       (error) => {
         if (error.error.messages.includes('Cart is currently checking out')) {
           this.info = 'Không thể xóa sản phẩm do đang có giao dịch đang xảy ra';
           this.openInfoModal();
+        }
+        if (error.error.messages.includes('Cart does not have product with id:'+cartItem.product.id)) {
+          this.info = 'Sản phẩm này không có trong giỏ hàng';
+          this.openInfoModal();
+          this.getAllCartItem();
         }
       }
     )
@@ -116,25 +124,30 @@ export class CartComponent implements OnInit {
     this.showPopup();
     const userPolicyCheckbox = document.getElementsByName('user-policy')[0] as HTMLInputElement;
     const continueButton = document.getElementsByName('continue')[0] as HTMLButtonElement;
-    userPolicyCheckbox.checked= false;
-    continueButton.disabled=true;
-    
-    // Add event listener to the checkbox element
-    userPolicyCheckbox.addEventListener('change', function() {
+    if(userPolicyCheckbox!=null && continueButton!=null){
+      userPolicyCheckbox.checked= false;
+      continueButton.disabled=true;
+      
+      // Add event listener to the checkbox element
+  
+  
+      userPolicyCheckbox.addEventListener('change', function() {
+        if (!userPolicyCheckbox.checked) {
+          continueButton.disabled = true;
+        } else {
+          continueButton.disabled = false;
+          
+        }
+      });
+      
+      // Set initial disabled state of continueButton based on checkbox state
       if (!userPolicyCheckbox.checked) {
         continueButton.disabled = true;
       } else {
         continueButton.disabled = false;
-        
       }
-    });
-    
-    // Set initial disabled state of continueButton based on checkbox state
-    if (!userPolicyCheckbox.checked) {
-      continueButton.disabled = true;
-    } else {
-      continueButton.disabled = false;
     }
+    
   }
   public checkout(): void {
     this.hidePopup();
@@ -169,9 +182,14 @@ export class CartComponent implements OnInit {
 
         this.fetchTransactionStatus();
       },
-      error => {
-        this.isLoading = false;
-        this.info = "Không thể thực hiện hành động";
+      error => {this.isLoading = false;
+
+        if(error.error.messages.includes('Another transaction is processing')){
+          this.info = "Đang có giao dịch diễn ra";
+          
+        }
+        else{
+        this.info = "Không thể thực hiện hành động";}
         this.openInfoModal();
       }
     )
@@ -272,8 +290,12 @@ export class CartComponent implements OnInit {
   }
   
   get LastPriceVND() {
+    if(this.convertRate!=null){
     const lastPrice = (Number.parseFloat(this.Fee) + Number.parseFloat(this.TotalPrice))* this.convertRate;
-    return lastPrice.toFixed(2);
+    return lastPrice.toFixed(2);}
+    else{
+      return 0;
+    }
   }
 
   getVNDPrice(){
