@@ -926,8 +926,7 @@ export class UpdateProductComponent implements OnInit {
   }
 
   saveProduct() {
-    console.log("asdasdasdasdas");
-
+    this.errors = [];
     this.newProductForm.markAllAsTouched;
     this.newProductForm.markAsDirty;
     if (this.product.name != null)
@@ -1333,6 +1332,7 @@ export class UpdateProductComponent implements OnInit {
   }
 
   setPending() {
+    this.errors = [];
     this.newProductForm.markAllAsTouched;
     this.newProductForm.markAsDirty;
     if (this.product.name != null)

@@ -435,6 +435,7 @@ export class ReportedProductDetailsComponent implements OnInit {
         });
       },
       error => {
+        console.log(error);
         this.toastr.error("Đã có lỗi xảy ra");
         this.dialogRef.close();
       }

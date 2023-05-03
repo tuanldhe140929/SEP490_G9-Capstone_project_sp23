@@ -1,6 +1,6 @@
 import { OnInit, ViewChild } from '@angular/core';
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Change, Type } from '../../../dtos/Cart';
 import { Transaction, TransactionStatus } from '../../../dtos/Transaction';
@@ -30,7 +30,8 @@ export class ReviewTransactionComponent implements OnInit {
   constructor(private route: ActivatedRoute,
     private transactionService: TransactionService,
     private modalService: NgbModal,
-    private productService: ProductService) {
+    private productService: ProductService,
+    private router: Router) {
 
   }
   ngOnInit(): void {
@@ -67,6 +68,9 @@ export class ReviewTransactionComponent implements OnInit {
       },
       error => {
         console.log(error);
+        if(error.status===404){
+          this.router.navigate(['error']);
+        }
       })
   }
   openChangeModal() {

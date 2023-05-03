@@ -46,6 +46,9 @@ export class SearchResultComponent implements OnInit{
     this.productService.getProductsForSearching(this.keyword,0,[],0,1000).subscribe(
       data => {
         this.resultList = data;
+        for(let i=0; i<this.resultList.length;i++){
+          this.resultList[i].price = Number.parseFloat(this.resultList[i].price.toFixed(1));
+        }
         this.totalResult = this.resultList.length;
       }
     )

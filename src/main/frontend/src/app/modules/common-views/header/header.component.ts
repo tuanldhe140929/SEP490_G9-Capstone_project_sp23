@@ -73,6 +73,7 @@ export class HeaderComponent implements OnInit {
       data => {
         this.productList = data;
         for (let i = 0; i <= this.productList.length; i++) {
+          if(this.productList[i]!=null)
           this.nameList.push(this.productList[i].name);
         }
       }
@@ -81,6 +82,7 @@ export class HeaderComponent implements OnInit {
       data => {
         this.sellerList = data;
         for(let i = 0;i <= this.sellerList.length; i++){
+          if(this.sellerList[i]!=null)
           this.sellerNameList.push(this.sellerList[i].username);
         }
       }
