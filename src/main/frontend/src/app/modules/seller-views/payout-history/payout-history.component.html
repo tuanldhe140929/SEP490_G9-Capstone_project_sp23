@@ -17,7 +17,7 @@
 				itemsPerPage: 5,
 				currentPage: page,
 				totalItems:totalLength}">
-					<td>{{payout.amount}}$</td>
+					<td>${{payout.amount}}</td>
 					<td>{{formatTime(payout.createdDate)}}</td>
 					<td>{{payoutStatus(payout)}}</td>
 				</tr>
