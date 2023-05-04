@@ -54,10 +54,10 @@ export class DownloadComponent implements OnInit {
   }
 
   getFileSize(file: ProductFile) {
-    if (file.size < 1000000) {
-      return file.size / 1000 + 'kb';
+    if (file.size < 1024 * 1024) {
+      return (file.size / 1024).toFixed(3) + 'KB';
     } else {
-      return (file.size / 1000000).toFixed(3) + 'Mb';
+      return (file.size / (1024 * 1024)).toFixed(3) + 'MB';
     }
   }
 

@@ -299,10 +299,10 @@ export class UpdateProductComponent implements OnInit {
 
 
   formatFileSize(fileSize: number) {
-    if (fileSize < 1000000) {
-      return fileSize / 1000 + 'kb';
+    if (fileSize < 1024 * 1024) {
+      return (fileSize / 1024).toFixed(3) + 'KB';
     } else {
-      return (fileSize / 1000000).toFixed(3) + 'Mb';
+      return (fileSize / (1024 * 1024)).toFixed(3) + 'MB';
     }
   }
 
