@@ -18,7 +18,7 @@
 			   currentPage: page,
 			   totalItems:totalLength}">
 					<td><span (click)="viewProduct(item)" class="pName">{{item.item.productDetails.name}}</span></td>
-					<td>{{item.item.price}}$</td>
+					<td>${{item.item.price}}</td>
 					<td>{{formatTime(item.date)}}</td>
 					<td><button class="downloadBtn" (click)="download(item)">Tải xuống</button></td>
 				</tr>
